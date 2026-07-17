@@ -9,6 +9,7 @@ import { Transport } from '@ds/components/kid/Transport.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
+import { pageAudioSource } from '@/lib/reader/page-audio-source';
 import {
   currentChapter,
   currentPage,
@@ -55,9 +56,19 @@ export function Reader({
   const showMap = state.chapterIdx === null;
   const lastPage = isLastPage(book, state);
 
-  // Feed the current page's text into the transport. Slice 5 supplies a real
-  // TtsSource; for now the transport falls through to device speechSynthesis.
-  const transportPage = useMemo(() => (page ? { text: page.text } : null), [page]);
+  // Feed the current page's text + layered TtsSource into the transport.
+  // Any layer failure (missing / stale audio) falls through to speechSynth.
+  const transportPage = useMemo(() => {
+    if (!page || state.chapterIdx === null) return null;
+    return {
+      text: page.text,
+      source: pageAudioSource({
+        bookId: book.id,
+        chapterIdx: state.chapterIdx,
+        pageIdx: state.pageIdx,
+      }),
+    };
+  }, [book.id, page, state.chapterIdx, state.pageIdx]);
 
   const onAutoNext = useCallback(() => {
     // Auto-turn only advances within a chapter. Chapter end is handled by the

@@ -17,7 +17,8 @@
     "db:migrate": "supabase migration up",
     "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
     "content:import-pack-000": "tsx scripts/import-pack-000.ts",
-    "canon:reconvert": "tsx scripts/reconvert-canon.ts"
+    "canon:reconvert": "tsx scripts/reconvert-canon.ts",
+    "audio:generate": "tsx scripts/generate-audio.ts"
   },
   "dependencies": {
     "@supabase/server": "^1.4.0",
