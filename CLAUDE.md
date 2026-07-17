@@ -4,9 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**Phase 0 complete (2026-07-17).** Next.js 15 + React 19 + Supabase scaffold; strict TypeScript; ESLint + Vitest + GitHub Actions CI; multi-tenant schema live locally; parent magic-link auth + scoped child-device token; design-system tokens/components consumed via `@ds/*`; prompt package built from `lib/prompts/canon/` (canon re-converted from RTFs — recovered ~1,600 lines); pack-000 imported to the seed household. Kid shelf renders at `/read`.
+**Phase 1 complete (2026-07-17).** On top of Phase 0's foundation, the reader now delivers PRD §6 Phase 1 exit criterion end-to-end:
+- `/read/story/[id]` renders quick + chapter books; ChapterMap first for chapter books
+- `useReaderTransport` ported verbatim from archive (`lib/reader/transport.ts`) — §A3 invariants locked in tests
+- `lib/reader/speech.ts` layered TTS: page-audio-source (IndexedDB → Supabase Storage → speechSynth), with per-layer staleness verification against page text
+- Tap-any-word: mid-narration seek, paused = speakOne, star-save into `wordbook_entries` (dedupe via unique constraint)
+- Progress sync: debounced write-through to `book_progress`, cross-device resume via RSC prefetch
+- Service worker: git-sha-stamped cache, cache-first for immutable/audio/static, network-first for HTML, offline shell
+- ElevenLabs pre-generated audio for Bramble's Hello (21 pages, ~$1.95) — other 8 books fall through to device TTS
 
-**Next:** Phase 1 — the reader (transport, TTS layering + staleness, word-tap, service-worker precache). See PRD §6.
+**Next:** Phase 2 — Buddy world memory (B1-B5), comprehension checkpoints (A10-A11), full D2 sync merge engine. See PRD §6.
 
 The previous implementation is at `../little-fables [archive]/` — audited in `docs/AUDIT.md`, mined for the twelve modules worth porting (listed in PRD §5), and retired. Do not extend it. Do not port whole files without checking against the audit's "leave behind" list.
 
@@ -15,17 +22,17 @@ The previous implementation is at `../little-fables [archive]/` — audited in `
 | Command | Purpose |
 |---|---|
 | `pnpm dev` | Next.js dev (Turbopack) on :3000 |
-| `pnpm build` | Prod build (fails on type errors) |
+| `pnpm build` | Prod build (fails on type errors). Runs `prebuild` (stamp SW) + `postbuild` (restore placeholder). |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm lint` | ESLint (400-line soft ceiling) |
-| `pnpm test` | Vitest (unit + integration if local Supabase is up) |
-| `pnpm db:start` / `db:stop` | Local Supabase (Docker) |
-| `pnpm db:reset` | Drop + recreate + apply migrations + seed |
-| `pnpm db:types` | Regenerate `types/database.ts` |
+| `pnpm test` | Vitest (unit + integration if Supabase reachable) |
+| `pnpm audio:generate -- --book <id>` | Pre-generate ElevenLabs audio for a book (`--check` for dry-run) |
 | `pnpm content:import-pack-000` | Upsert family originals into seed household |
 | `pnpm canon:reconvert` | RTF → `lib/prompts/canon/azi-verse/*.md` (pandoc) |
+| `pnpm db:reset` | Drop + recreate + apply migrations + seed |
+| `pnpm db:types` | Regenerate `types/database.ts` from linked hosted schema |
 
-Local Supabase URLs: API :54321, DB :54322, Studio :54323, Inbucket (mail) :54324.
+Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co` (Canada Central).
 
 ## The source-of-truth documents
 
@@ -77,5 +84,8 @@ A signed-in child device renders a synced shelf; zero red CI. Prerequisites: rep
 - Edits to `PRD.md` are spec changes — treat them like breaking API changes and mention downstream impact (which pillar/phase moves).
 - Edits to `design-system/` require a `CHANGELOG.md` entry; the system was accepted 2026-07-17 after two Saturday Drive acceptance runs — don't silently mutate accepted specs. Do not modify the JSX components; add ambient types in the root `design-system.d.ts` instead.
 - Content in `content/originals/` and `reference/azi-verse/source-rtf/` is irreplaceable source material. Never overwrite; convert into derived files under `lib/prompts/canon/`.
-- Every route handler in `app/api/*` MUST call `requireParentSession()` or `requireChildDevice()` from `lib/server/require-auth.ts` — no route is guarded by middleware alone (audit C3 fix).
+- Every route handler in `app/api/*` MUST call `requireChildDevice()` from `lib/server/require-auth.ts` — no route is guarded by middleware alone (audit C3 fix). Parent auth was removed (single-user mode); add a `PARENT_PASSWORD` gate before deploying to Vercel.
 - Schema changes are additive migrations under `supabase/migrations/YYYYMMDDHHMMSS_*.sql`. Update the enum lists in `lib/models/book.ts` in the same commit — `tests/models/schema-sync.spec.ts` will fail if they drift (audit C2 fix).
+- Reader modules under `lib/reader/` must stay under ~400 lines each (PRD §4.1 vs archive's 2,094-line reader page — audit S1). State + selectors live in `state.ts` (pure, testable); the client orchestrator (`app/read/story/[id]/reader.tsx`) is composition only.
+- Do not add another design-system component without extending `design-system.d.ts` in the same commit.
+- Audio pipeline: `pnpm audio:generate -- --book <id>` uploads to Supabase Storage. Generated MP3s + timestamps never enter git (PRD §4.4).

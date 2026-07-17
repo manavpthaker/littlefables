@@ -1,0 +1,19 @@
+{
+  "name": "Little Fables",
+  "short_name": "Fables",
+  "description": "A reading companion for young children.",
+  "start_url": "/read",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2e7d3",
+  "theme_color": "#f2e7d3",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

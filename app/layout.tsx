@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { RegisterSW } from './register-sw';
 
 export const metadata: Metadata = {
   title: 'Little Fables',
   description: 'A reading companion for young children.',
+  manifest: '/manifest.webmanifest',
 };
 
 // PRD F2: userScalable stays enabled at the root. Only the /read (kid) subtree
@@ -19,7 +21,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <RegisterSW />
+      </body>
     </html>
   );
 }

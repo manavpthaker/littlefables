@@ -4,52 +4,53 @@ A reading companion for young children — built for Azad first, engineered as a
 
 ## Status
 
-**Phase 0 complete.** A signed-in child device renders a synced shelf; CI is green.
-- Next.js + Supabase scaffold; strict TypeScript, ESLint, Vitest, GitHub Actions.
-- Multi-tenant schema (households → parents → children → child_devices → books → world/wordbook/badges/…) with generated `types/database.ts`.
-- Parent magic-link auth + scoped child-device token (SHA-256 hash, HttpOnly cookie, 90-day TTL).
-- Design tokens wired verbatim from [`design-system/`](./design-system/); JSX components imported via `@ds/*`.
-- Prompt package at [`lib/prompts/`](./lib/prompts/) with canon re-converted from `reference/azi-verse/source-rtf/` (recovered ~1,600 lines the old .md conversions had dropped).
-- pack-000 (8 family stories, 12 chapters, 279 pages) imported into the seed household.
+**Phase 1 complete.** A signed-in child device reads a family book offline in the car with word highlighting, taps a word to hear it, stars it; progress appears on a second device.
 
-**Next:** Phase 1 — the reader (transport, TTS layering + staleness, word-tap, service-worker precache).
+- Multi-tenant schema (households → parents → children → child_devices → books → world/wordbook/badges/…) with generated `types/database.ts`.
+- Scoped child-device token (SHA-256 hash, HttpOnly cookie, 90-day TTL) gates every `/api/child/*` route.
+- `/read/story/[id]` renders quick + chapter books via the design-system components (`StoryText`, `ChapterMap`, `ReaderTopBar`, `Transport`, `Buddy`, `WordCapsule`, `ContinueCard`) consumed verbatim from `@ds/*`.
+- `useReaderTransport` ported verbatim from the archive: play never navigates, prev/next never plays, 1.5s breath auto-turn, iOS autoplay refusal preserves intent.
+- ElevenLabs pre-generated audio + word-level timestamps for **Bramble's Hello** in Supabase Storage `page-audio` bucket, cached in IndexedDB with staleness guard. Other 8 books fall through to device speechSynth.
+- Tap-any-word: mid-narration = seek, paused = speak-alone; second tap saves to wordbook.
+- Progress syncs across devices via debounced write-through to `book_progress`.
+- Service worker registered post-build with git-sha-stamped cache name; cache-first for immutable content, network-first for HTML, offline fallback shell.
+
+**Next:** Phase 2 — Buddy, world memory, comprehension checkpoints, full D2 sync merge engine.
 
 ## Quickstart
 
 ```bash
-# 1) Prereqs: Node 22+, pnpm 10+, Docker Desktop (for local Supabase).
+# Prereqs: Node 22+, pnpm 10+
 pnpm install
 
-# 2) Local Supabase (Docker). Anon + service-role keys land in .env.local already.
-pnpm db:start
-
-# 3) Apply migrations + seed household + import pack-000.
-pnpm db:reset
-pnpm content:import-pack-000
-
-# 4) Verify green.
+# Verify quality gate green
 pnpm typecheck && pnpm lint && pnpm test && pnpm build
 
-# 5) Dev server on http://localhost:3000.
+# Dev server on http://localhost:3000
 pnpm dev
 ```
 
 Walkthrough after `pnpm dev`:
-1. Open `http://localhost:3000` — redirects to `/parent/auth/login`.
-2. Enter your email → check magic link at [Inbucket](http://127.0.0.1:54324) → click.
-3. Land on `/parent` → click **Send Azad to this device** → cookie set → redirect to `/read`.
-4. Kid shelf renders 9 family-original BookCards.
+1. Open `http://localhost:3000` — redirects to `/parent`.
+2. `/parent` opens unauthenticated (single-household mode; add PARENT_PASSWORD before deploying) → click **Send Azad to this device** → cookie set → redirect to `/read`.
+3. Kid shelf renders 9 family originals. If you've read something before, a ContinueCard shows at the top.
+4. Click **Bramble's Hello** → tap play → narration streams with word-level highlighting from real ElevenLabs timestamps.
+5. Tap a word mid-narration → narration seeks to that word. Tap a word while paused → hear the word alone. A star appears; tap again to save (blooms into the top-bar WordCapsule).
+6. Turn 3 pages → close tab → return → resumes at the same page. Open in an incognito tab (fresh minted token) → ContinueCard shows Bramble at the same page.
+7. Airplane mode after a first-online visit → reload → still reads (SW cache), audio still plays (IndexedDB cache).
 
 ## Repo layout
 
-- **[`PRD.md`](./PRD.md)** — product requirements. Pillars A–F, architecture rules (§4), phased plan (§6). Every functional requirement is numbered (A1, C3a, D4) — cite it in commit messages.
-- **[`docs/AUDIT.md`](./docs/AUDIT.md)** — audit of the archived codebase. C1–C5 are the four live defects the rebuild exists to prevent.
-- **[`design-system/`](./design-system/)** — accepted v3 (27 components, 9 token files). Consumed verbatim (PRD F1). `SKILL.md` for entry; `guidelines/rules-of-use.md` is binding.
-- **[`reference/`](./reference/)** — Azi-Verse canon + research. Runtime code reads from `lib/prompts/canon/` (built once from the RTFs), not from here.
+- **[`PRD.md`](./PRD.md)** — product requirements. Pillars A–F, architecture rules (§4), phased plan (§6). Every requirement is numbered (A1, C3a, D4) — cite in commits.
+- **[`docs/AUDIT.md`](./docs/AUDIT.md)** — audit of the archived codebase. C1–C5 are the four defects the rebuild exists to prevent.
+- **[`design-system/`](./design-system/)** — accepted v3 (27 components, 9 token files). Consumed verbatim (PRD F1). `SKILL.md` entry; `guidelines/rules-of-use.md` binding.
+- **[`reference/`](./reference/)** — Azi-Verse canon + research. Runtime reads from `lib/prompts/canon/` (built from the RTFs), not from here.
 - **[`content/`](./content/)** — pack-000, family originals, character bible. Irreplaceable.
-- **[`lib/`](./lib/)** — feature modules (auth, supabase, models, prompts, server). ~400-line file ceiling.
-- **[`app/`](./app/)** — Next.js App Router routes. Composition only; no god-files.
-- **[`supabase/migrations/`](./supabase/migrations/)** — linear, date-prefixed. One migration = one commit.
+- **[`lib/reader/`](./lib/reader/)** — reader modules: `state.ts` (reducer + selectors), `transport.ts` (ported hook), `speech.ts` (layered TTS), `audio-cache.ts` (IndexedDB), `page-audio-source.ts`, `wordbook.ts`, `progress.ts`. All under ~400 lines.
+- **[`lib/`](./lib/)** — auth, supabase, models, prompts, server helpers.
+- **[`app/`](./app/)** — Next.js App Router. Pages are composition; state and side-effects live in `lib/`.
+- **[`supabase/migrations/`](./supabase/migrations/)** — linear, date-prefixed.
+- **[`public/sw.js`](./public/sw.js)** — service worker. Git holds the placeholder version; `pnpm build` stamps it with the git SHA, `postbuild` restores the placeholder for a clean working tree.
 
 Previous implementation lives at `../little-fables [archive]/` — audited, retired, mined for the twelve carry-over modules PRD §5 lists.
 
@@ -57,21 +58,20 @@ Previous implementation lives at `../little-fables [archive]/` — audited, reti
 
 | Command | Purpose |
 |---|---|
-| `pnpm dev` | Next.js dev server (Turbopack) |
-| `pnpm build` | Production build (fails on type errors) |
+| `pnpm dev` | Next dev (Turbopack) on :3000 |
+| `pnpm build` | Prod build. Runs `prebuild` (stamp SW) and `postbuild` (restore placeholder) automatically. |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm lint` | ESLint (400-line file soft ceiling) |
-| `pnpm test` | Vitest — unit + integration when local Supabase is up |
-| `pnpm test:watch` | Vitest watch mode |
-| `pnpm db:start` / `db:stop` | Local Supabase (Docker) |
-| `pnpm db:reset` | Drop + recreate + apply all migrations + seed |
-| `pnpm db:types` | Regenerate `types/database.ts` from schema |
-| `pnpm content:import-pack-000` | Import family originals to the seed household |
-| `pnpm canon:reconvert` | Re-convert `reference/azi-verse/source-rtf/*.rtf` → `lib/prompts/canon/azi-verse/*.md` (pandoc) |
+| `pnpm lint` | ESLint (400-line soft ceiling) |
+| `pnpm test` | Vitest — unit + integration when Supabase is reachable |
+| `pnpm audio:generate -- --book <id>` | Pre-generate ElevenLabs audio + timestamps for a book, upload to page-audio bucket. `--check` for dry-run cost estimate. |
+| `pnpm content:import-pack-000` | Upsert family originals into the seed household |
+| `pnpm canon:reconvert` | Re-convert `reference/azi-verse/source-rtf/*.rtf` → `lib/prompts/canon/azi-verse/*.md` |
+| `pnpm db:reset` | Drop + recreate local Supabase + all migrations + seed |
+| `pnpm db:types` | Regenerate `types/database.ts` from the linked hosted schema |
 
-## Hosted Supabase (deferred)
+## Supabase
 
-`.env.hosted.example` parks the archive project credentials. Deploying to a hosted Supabase is a Phase 1+ decision — see PRD §8 open question 4. The archive DB holds 94 approved art artifacts worth preserving; a one-shot migration script will move them into the new schema when we're ready to link.
+Hosted at `fzcjwsxyaweqtvroycjm.supabase.co` (Canada Central). Env vars in `.env.local` (gitignored) use the new Supabase naming (`SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `SUPABASE_JWKS_URL`).
 
 ## The rules that shape everything
 

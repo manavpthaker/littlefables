@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#f2e7d3"/>
+  <g transform="translate(96 96)">
+    <!-- Simple terracotta "open book" pictogram -->
+    <path d="M0 40 C60 10, 100 10, 160 40 L160 260 C100 230, 60 230, 0 260 Z" fill="#c9613c"/>
+    <path d="M320 40 C260 10, 220 10, 160 40 L160 260 C220 230, 260 230, 320 260 Z" fill="#c9613c" opacity="0.85"/>
+    <path d="M160 40 L160 260" stroke="#46362a" stroke-width="6" fill="none"/>
+  </g>
+</svg>
