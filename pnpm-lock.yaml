@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@supabase/server':
+        specifier: ^1.4.0
+        version: 1.4.0(@supabase/supabase-js@2.110.7)
       '@supabase/ssr':
         specifier: ^0.6.1
         version: 0.6.1(@supabase/supabase-js@2.110.7)
@@ -935,6 +938,25 @@ packages:
   '@supabase/realtime-js@2.110.7':
     resolution: {integrity: sha512-AMtZjyFA2gsmjuxopPNS/sRznLQHG0Ht5x+ytTPTOh3vAcOTUlVRLx7gW4/CONNnbb3PKOkE+HmM35HOSbmomQ==}
     engines: {node: '>=22.0.0'}
+
+  '@supabase/server@1.4.0':
+    resolution: {integrity: sha512-zPCtVEIXSyrzCAegYU/+5UpMoTJz0CogL/xnETX5Sx6HBs2bZot9bQNgHhN1vyGq3su14x3JdAbuOKa/YmdH+w==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@nestjs/common': ^10.0.0 || ^11.0.0
+      '@supabase/supabase-js': ^2.0.0
+      elysia: ^1.4.0
+      h3: ^2.0.0
+      hono: ^4.0.0
+    peerDependenciesMeta:
+      '@nestjs/common':
+        optional: true
+      elysia:
+        optional: true
+      h3:
+        optional: true
+      hono:
+        optional: true
 
   '@supabase/ssr@0.6.1':
     resolution: {integrity: sha512-QtQgEMvaDzr77Mk3vZ3jWg2/y+D8tExYF7vcJT+wQ8ysuvOeGGjYbZlvj5bHYsj/SpC0bihcisnwPrM4Gp5G4g==}
@@ -1979,6 +2001,9 @@ packages:
   iterator.prototype@1.1.5:
     resolution: {integrity: sha512-H0dkQoCa3b2VEeKQBOxFph+JAbcrQdE7KC0UkqwpLmv2EC4P41QXP+rqo9wYodACiG5/WM5s9oDApTU8utwj9g==}
     engines: {node: '>= 0.4'}
+
+  jose@6.2.3:
+    resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -3348,6 +3373,11 @@ snapshots:
       '@supabase/phoenix': 0.4.5
       tslib: 2.8.1
 
+  '@supabase/server@1.4.0(@supabase/supabase-js@2.110.7)':
+    dependencies:
+      '@supabase/supabase-js': 2.110.7
+      jose: 6.2.3
+
   '@supabase/ssr@0.6.1(@supabase/supabase-js@2.110.7)':
     dependencies:
       '@supabase/supabase-js': 2.110.7
@@ -4627,6 +4657,8 @@ snapshots:
       get-proto: 1.0.1
       has-symbols: 1.1.0
       set-function-name: 2.0.2
+
+  jose@6.2.3: {}
 
   js-tokens@4.0.0: {}
 

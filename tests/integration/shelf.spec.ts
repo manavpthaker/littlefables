@@ -14,18 +14,17 @@ config({ path: '.env.local' });
 // A full HTTP test would require booting Next in CI; that's a Phase 1 addition.
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 const SEED_HOUSEHOLD_ID = '00000000-0000-0000-0000-000000000001';
 const SEED_CHILD_ID = '00000000-0000-0000-0000-000000000100';
 
-// Integration tests require a running local Supabase (`pnpm db:start`).
-// CI sets a placeholder service key that would fail immediately — skip in that
-// case. Local dev with the real CLI keys runs these automatically.
-const isPlaceholder = SERVICE_KEY === 'build-time-placeholder' || !SERVICE_KEY;
+// Integration tests require Supabase reachable at NEXT_PUBLIC_SUPABASE_URL.
+// CI sets a placeholder secret that would fail immediately — skip in that case.
+const isPlaceholder = SECRET_KEY === 'build-time-placeholder' || !SECRET_KEY;
 const canRun = Boolean(SUPABASE_URL && !isPlaceholder);
 
 describe.skipIf(!canRun)('shelf integration', () => {
-  const client = createClient<Database>(SUPABASE_URL!, SERVICE_KEY!, {
+  const client = createClient<Database>(SUPABASE_URL!, SECRET_KEY!, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
   let tokenRaw: string | null = null;

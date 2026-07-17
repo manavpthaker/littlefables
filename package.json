@@ -15,11 +15,12 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:migrate": "supabase migration up",
-    "db:types": "supabase gen types typescript --local --schema public > types/database.ts",
+    "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
     "content:import-pack-000": "tsx scripts/import-pack-000.ts",
     "canon:reconvert": "tsx scripts/reconvert-canon.ts"
   },
   "dependencies": {
+    "@supabase/server": "^1.4.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.53.0",
     "next": "^15.5.20",

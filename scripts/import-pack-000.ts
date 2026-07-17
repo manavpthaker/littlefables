@@ -15,8 +15,8 @@ const SEED_HOUSEHOLD_ID = '00000000-0000-0000-0000-000000000001';
 
 async function main(): Promise<void> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY required');
+  const key = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !key) throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY required');
 
   const packPath = path.resolve('content/packs/pack-000-family-originals.json');
   const raw = JSON.parse(readFileSync(packPath, 'utf8'));
