@@ -1,0 +1,11 @@
+:root{
+/* nothing casts gray — cool (sky) shadows by day, warm (lamplight) at dusk */
+--shadow-cool:rgba(93,106,138,.28);--shadow-warm:rgba(138,96,58,.30);
+--shadow-color:var(--shadow-cool);
+--elev-rest:0 1px 3px var(--shadow-color);
+--elev-card:0 3px 10px var(--shadow-color);
+--elev-raised:0 8px 24px var(--shadow-color);
+--elev-float:0 14px 40px var(--shadow-color);/* sheets, buddy speech */
+--elev-press:0 1px 2px var(--shadow-color);/* press = settle down, not disappear */
+--inset-well:inset 0 2px 6px rgba(138,96,58,.14);/* wells, wordbook slots */
+}

@@ -1,0 +1,37 @@
+# Node
+node_modules/
+npm-debug.log*
+pnpm-debug.log*
+
+# Next
+.next/
+out/
+next-env.d.ts
+
+# TypeScript
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+.env.*.local
+.env.hosted
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Generated assets — PRD §4.4: never enter git
+public/audio/
+public/art/
+content/art/candidates/
+content/art/live/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Test / coverage
+coverage/
+.vitest-cache/

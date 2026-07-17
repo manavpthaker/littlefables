@@ -1,0 +1,32 @@
+:root{
+/* durations named by feeling */
+--dur-tap:160ms;/* @kind other *//* press acknowledgment */
+--dur-settle:320ms;/* @kind other *//* things arriving/leaving — nothing teleports */
+--dur-wobble:500ms;/* @kind other *//* playful attention */
+--dur-page:700ms;/* @kind other *//* page-turn */
+--dur-bloom:900ms;/* @kind other *//* celebrations blooming in */
+--dur-breath:2600ms;/* @kind other *//* idle life: buddy, listening orb */
+--dur-develop:1400ms;/* @kind other *//* watercolor develop: art reveal, wet paper drying */
+--motion-develop:lf-develop var(--dur-develop) var(--ease-settle) 1;/* @kind other */
+--motion-paint:lf-paint 2s linear infinite;/* @kind other *//* painting shimmer; reduced: static two-tone + slow pulse */
+/* easings */
+--ease-settle:cubic-bezier(.2,.7,.2,1);/* @kind other *//* default: quick out, gentle in */
+--ease-wobble:cubic-bezier(.34,1.56,.64,1);/* @kind other *//* small overshoot, never for large surfaces */
+--ease-drift:cubic-bezier(.45,0,.55,1);/* @kind other *//* breathing, ambient */
+--ease-page:cubic-bezier(.4,.05,.2,1);/* @kind other */
+}
+@keyframes lf-breath{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes lf-wobble{0%,100%{transform:rotate(0)}30%{transform:rotate(-2.5deg)}60%{transform:rotate(2deg)}}
+@keyframes lf-bloom{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.06);opacity:1}100%{transform:scale(1)}}
+@keyframes lf-pulse{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes lf-listening{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(93,127,168,.45)}50%{transform:scale(1.05);box-shadow:0 0 0 12px rgba(93,127,168,0)}}
+@keyframes lf-thinking{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes lf-paint{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes lf-develop{0%{opacity:0;filter:blur(10px) saturate(.25)}55%{opacity:1;filter:blur(3px) saturate(.7)}100%{opacity:1;filter:blur(0) saturate(1)}}/* edges first, color blooming inward — reduced-motion: simple fade */
+@media (prefers-reduced-motion:reduce){
+:root{--dur-tap:0ms;/* @kind other */--dur-settle:0ms;/* @kind other */--dur-wobble:0ms;/* @kind other */--dur-page:200ms;/* @kind other */--dur-bloom:200ms;/* @kind other */--dur-breath:0ms/* @kind other */}
+*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.15s !important}
+/* reduced-motion equivalents: breath→static, wobble→none, bloom→fade, page-turn→crossfade, listening→steady ring, thinking→static dots, confetti→single glow, develop→simple fade */
+:root{--motion-develop:lf-fade-in 200ms var(--ease-settle) 1;/* @kind other */--motion-paint:lf-pulse 4s var(--ease-drift) infinite;/* @kind other */}/* paint reduced: calm static two-tone, slow opacity pulse */
+}
+@keyframes lf-fade-in{0%{opacity:0}100%{opacity:1}}

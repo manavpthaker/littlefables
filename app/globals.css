@@ -1,0 +1,27 @@
+/* Little Fables design-system tokens. Consumed verbatim per PRD F1.
+ * Import order matters: fonts first (loads webfonts), then base, then semantic layers.
+ * Do NOT add a parallel Tailwind layer (audit S5). Do NOT inline colors here. */
+@import '../design-system/tokens/fonts.css';
+@import '../design-system/tokens/base.css';
+@import '../design-system/tokens/colors.css';
+@import '../design-system/tokens/spacing.css';
+@import '../design-system/tokens/typography.css';
+@import '../design-system/tokens/elevation.css';
+@import '../design-system/tokens/motion.css';
+@import '../design-system/tokens/lighting.css';
+
+/* Global layout defaults. Kid vs parent density is set at the subtree via data-density. */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
