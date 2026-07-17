@@ -15,7 +15,7 @@ export const viewport: Viewport = {
 export default async function ReadLayout({ children }: { children: React.ReactNode }) {
   const ctx = await requireChildDevice();
   // requireChildDevice returns a NextResponse when auth fails; convert to redirect for RSC.
-  if (ctx instanceof NextResponse) redirect('/parent/auth/login');
+  if (ctx instanceof NextResponse) redirect('/parent');
 
   return <div data-density="kid">{children}</div>;
 }

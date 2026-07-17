@@ -13,10 +13,10 @@ config({ path: '.env.local' });
 //
 // A full HTTP test would require booting Next in CI; that's a Phase 1 addition.
 
+import { SEED_HOUSEHOLD_ID, SEED_CHILD_ID } from '@/lib/models/seed';
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
-const SEED_HOUSEHOLD_ID = '00000000-0000-0000-0000-000000000001';
-const SEED_CHILD_ID = '00000000-0000-0000-0000-000000000100';
 
 // Integration tests require Supabase reachable at NEXT_PUBLIC_SUPABASE_URL.
 // CI sets a placeholder secret that would fail immediately — skip in that case.
@@ -67,10 +67,11 @@ describe.skipIf(!canRun)('shelf integration', () => {
   });
 
   it('cross-household leak: another household sees nothing', async () => {
+    // A random valid v4 UUID belonging to no household.
     const { data } = await client
       .from('books')
       .select('id')
-      .eq('household_id', '00000000-0000-0000-0000-000000009999');
+      .eq('household_id', '11111111-2222-4333-8444-555555555555');
     expect(data).toEqual([]);
   });
 

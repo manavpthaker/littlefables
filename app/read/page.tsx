@@ -11,7 +11,7 @@ const KID_VISIBLE_STATUSES = ['complete', 'published', 'awaiting-choice'];
 
 export default async function ReadHome() {
   const ctx = await requireChildDevice();
-  if (ctx instanceof NextResponse) redirect('/parent/auth/login');
+  if (ctx instanceof NextResponse) redirect('/parent');
 
   const { data } = await admin()
     .from('books')

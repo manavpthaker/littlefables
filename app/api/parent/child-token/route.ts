@@ -1,21 +1,17 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
-import { requireParentSession } from '@/lib/server/require-auth';
 import { admin } from '@/lib/supabase/admin';
 import { mintChildToken, CHILD_TOKEN_COOKIE, CHILD_TOKEN_TTL_DAYS } from '@/lib/auth/child-token';
 
-// PRD D3 + D6. Parent-authed mint. Validates body via zod (no verbatim
-// interpolation), verifies the child belongs to the parent's household, mints
-// a token, sets it as an HttpOnly cookie on this device.
+// Mint a child-device token. Single-household mode: no parent auth. The child
+// must exist in the DB (a mint request for a random UUID returns 404). Add a
+// PARENT_PASSWORD gate here before deploying to the internet.
 const bodySchema = z.object({
   childId: z.string().uuid(),
   deviceLabel: z.string().max(60).optional(),
 });
 
 export async function POST(request: NextRequest) {
-  const parent = await requireParentSession();
-  if (parent instanceof NextResponse) return parent;
-
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
 
@@ -25,9 +21,7 @@ export async function POST(request: NextRequest) {
     .eq('id', body.data.childId)
     .maybeSingle();
 
-  if (!child || child.household_id !== parent.householdId) {
-    return NextResponse.json({ error: 'not_found' }, { status: 404 });
-  }
+  if (!child) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 
   const token = await mintChildToken({
     childId: child.id,

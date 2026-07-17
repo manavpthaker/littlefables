@@ -8,10 +8,9 @@ import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { packSchema } from '../lib/models/book';
+import { SEED_HOUSEHOLD_ID } from '../lib/models/seed';
 
 config({ path: '.env.local' });
-
-const SEED_HOUSEHOLD_ID = '00000000-0000-0000-0000-000000000001';
 
 async function main(): Promise<void> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

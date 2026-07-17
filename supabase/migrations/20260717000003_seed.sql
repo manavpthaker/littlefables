@@ -1,15 +1,15 @@
 -- Phase 0 seed: one household + one child (Azad) so the shelf renders.
 -- Idempotent: safe to run on `supabase db reset` many times.
--- The parent row is a placeholder — auth_user_id fills on first magic-link sign-in.
+-- IDs are real v4 UUIDs (PRD §4.7 — crypto.randomUUID(), not hand-picked).
 
 insert into public.households (id, name)
-values ('00000000-0000-0000-0000-000000000001'::uuid, 'Thaker Family')
+values ('4ecabfb5-dcce-4c7f-b40d-f94e84e3a427'::uuid, 'Thaker Family')
 on conflict (id) do nothing;
 
 insert into public.parents (id, household_id, email, display_name)
 values (
-  '00000000-0000-0000-0000-000000000010'::uuid,
-  '00000000-0000-0000-0000-000000000001'::uuid,
+  '27252e6f-1957-44bd-abf0-e5dc5d5c31c6'::uuid,
+  '4ecabfb5-dcce-4c7f-b40d-f94e84e3a427'::uuid,
   'manavpthaker@gmail.com',
   'Papa'
 )
@@ -17,8 +17,8 @@ on conflict (id) do nothing;
 
 insert into public.children (id, household_id, display_name, band, exclude_terms)
 values (
-  '00000000-0000-0000-0000-000000000100'::uuid,
-  '00000000-0000-0000-0000-000000000001'::uuid,
+  'e27b2fa0-d16f-4c38-9d97-ed05374167de'::uuid,
+  '4ecabfb5-dcce-4c7f-b40d-f94e84e3a427'::uuid,
   'Azad',
   '4-8',
   '[]'::jsonb
