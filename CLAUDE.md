@@ -4,16 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**Phase 1 complete (2026-07-17).** On top of Phase 0's foundation, the reader now delivers PRD §6 Phase 1 exit criterion end-to-end:
-- `/read/story/[id]` renders quick + chapter books; ChapterMap first for chapter books
-- `useReaderTransport` ported verbatim from archive (`lib/reader/transport.ts`) — §A3 invariants locked in tests
-- `lib/reader/speech.ts` layered TTS: page-audio-source (IndexedDB → Supabase Storage → speechSynth), with per-layer staleness verification against page text
-- Tap-any-word: mid-narration seek, paused = speakOne, star-save into `wordbook_entries` (dedupe via unique constraint)
-- Progress sync: debounced write-through to `book_progress`, cross-device resume via RSC prefetch
-- Service worker: git-sha-stamped cache, cache-first for immutable/audio/static, network-first for HTML, offline shell
-- ElevenLabs pre-generated audio for Bramble's Hello (21 pages, ~$1.95) — other 8 books fall through to device TTS
+**Phase 2 complete (2026-07-17).** On top of Phase 1's reader, the world now remembers Azad and asks him about what he read:
+- Home surface: Buddy (from roster of 5 — Bramble default, Jujy, Dory, Miko, Rocky; living/nonliving mix per §B1) with computed world-memory greeting (welcome / callback / word / streak / default tones); SunsRow for the week.
+- Reading days auto-mark on reader mount; `world_states` growth counters (booksOpened, wordsSaved, daysRead, checkpointsAsked/Correct) drive greetings and badges.
+- Badge auto-earn on wordbook save + reading day + checkpoint-correct → CelebrationQueue blooms in the reader.
+- Comprehension checkpoints at chapter end (PRD A10/A11): Anthropic Haiku generates a warm story-specific question rotating recall/inference/prediction/connection; Whisper transcribes the child's spoken answer; Anthropic judges with mercy semantics (never "wrong"). Records saved to `comprehension_records`.
+- Parent Corner extended: CheckpointTranscript per record, WordbookEntry grid, SunsRow, BuddyPicker. All inside `[data-density="parent"]`.
+- D2 sync engine: `lib/sync/outbox.ts` — IndexedDB queue for offline-tolerant mutations. saveWord + pushProgress route through the outbox. Background flush on online + 30s timer. StateBanner surfaces sync state on the reader.
+- `lib/anthropic.ts` + `lib/openai.ts` wrappers call `bump_usage` BEFORE every external call — PRD §4.6 fail-closed on money.
 
-**Next:** Phase 2 — Buddy world memory (B1-B5), comprehension checkpoints (A10-A11), full D2 sync merge engine. See PRD §6.
+**Next:** Phase 3 — Maker + QA pipeline (PRD C). Generated stories with real branching choices (A4 ask/choice/breathe), C3a status contract, three-stage QA. See PRD §6.
 
 The previous implementation is at `../little-fables [archive]/` — audited in `docs/AUDIT.md`, mined for the twelve modules worth porting (listed in PRD §5), and retired. Do not extend it. Do not port whole files without checking against the audit's "leave behind" list.
 
@@ -89,3 +89,5 @@ A signed-in child device renders a synced shelf; zero red CI. Prerequisites: rep
 - Reader modules under `lib/reader/` must stay under ~400 lines each (PRD §4.1 vs archive's 2,094-line reader page — audit S1). State + selectors live in `state.ts` (pure, testable); the client orchestrator (`app/read/story/[id]/reader.tsx`) is composition only.
 - Do not add another design-system component without extending `design-system.d.ts` in the same commit.
 - Audio pipeline: `pnpm audio:generate -- --book <id>` uploads to Supabase Storage. Generated MP3s + timestamps never enter git (PRD §4.4).
+- Every Anthropic / OpenAI call MUST go through `lib/anthropic.ts` or `lib/openai.ts` (they call `bump_usage` before the external call — audit §4.6 fail-closed on money). Direct SDK usage in routes is a lint-time smell.
+- Client mutations that need to survive offline use the sync outbox (`lib/sync/outbox.ts`), not direct `fetch`. The outbox retries, backs off, and surfaces failures via `subscribe()` — the StateBanner reads that.

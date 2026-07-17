@@ -1,11 +1,11 @@
 'use client';
 
 import type { ProgressInput, ProgressRecord } from '@/lib/models/progress';
+import { enqueueAndSend } from '@/lib/sync/outbox';
 
-// Debounced progress writer. Coalesces rapid page turns into one POST.
-// Failures are queued locally and retried on the next successful call —
-// PRD A7 / audit C1 fix (never silent-drop). Phase 2's full D2 sync will
-// replace this with a proper offline outbox.
+// Debounced progress writer. Coalesces rapid page turns into one enqueue.
+// The sync outbox owns durability — offline writes stay queued and flush on
+// reconnect. Phase 2 D2 pattern: any mutation goes through outbox.
 
 const DEBOUNCE_MS = 500;
 
@@ -14,48 +14,13 @@ interface Pending {
   timer: ReturnType<typeof setTimeout>;
 }
 const pendingByBook = new Map<string, Pending>();
-let lastFailure: ProgressInput | null = null;
-
-async function post(input: ProgressInput): Promise<void> {
-  const res = await fetch('/api/child/progress', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(input),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-}
-
-async function flush(input: ProgressInput): Promise<void> {
-  try {
-    // If there's a stored failure for this book from earlier, flush it first —
-    // but only if the pending progress is later than the failed one.
-    if (
-      lastFailure &&
-      lastFailure.bookId === input.bookId &&
-      (lastFailure.chapterIdx < input.chapterIdx ||
-        (lastFailure.chapterIdx === input.chapterIdx && lastFailure.pageIdx < input.pageIdx))
-    ) {
-      // The newer post supersedes; drop the queued one.
-      lastFailure = null;
-    } else if (lastFailure && lastFailure.bookId === input.bookId) {
-      // Older queued value — flush it first, then send this one.
-      await post(lastFailure).catch(() => {
-        /* keep queued */
-      });
-      lastFailure = null;
-    }
-    await post(input);
-  } catch {
-    lastFailure = input;
-  }
-}
 
 export function pushProgress(input: ProgressInput): void {
   const prev = pendingByBook.get(input.bookId);
   if (prev) clearTimeout(prev.timer);
   const timer = setTimeout(() => {
     pendingByBook.delete(input.bookId);
-    void flush(input);
+    void enqueueAndSend('/api/child/progress', JSON.stringify(input));
   }, DEBOUNCE_MS);
   pendingByBook.set(input.bookId, { input, timer });
 }

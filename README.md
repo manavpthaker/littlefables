@@ -4,18 +4,17 @@ A reading companion for young children — built for Azad first, engineered as a
 
 ## Status
 
-**Phase 1 complete.** A signed-in child device reads a family book offline in the car with word highlighting, taps a word to hear it, stars it; progress appears on a second device.
+**Phase 2 complete.** On top of Phase 1's reader, the world remembers Azad and asks him about what he read. Home has a Buddy with a world-memory greeting; chapter-ends open a warm comprehension question; parents see every Q&A in Parent Corner.
 
-- Multi-tenant schema (households → parents → children → child_devices → books → world/wordbook/badges/…) with generated `types/database.ts`.
-- Scoped child-device token (SHA-256 hash, HttpOnly cookie, 90-day TTL) gates every `/api/child/*` route.
-- `/read/story/[id]` renders quick + chapter books via the design-system components (`StoryText`, `ChapterMap`, `ReaderTopBar`, `Transport`, `Buddy`, `WordCapsule`, `ContinueCard`) consumed verbatim from `@ds/*`.
-- `useReaderTransport` ported verbatim from the archive: play never navigates, prev/next never plays, 1.5s breath auto-turn, iOS autoplay refusal preserves intent.
-- ElevenLabs pre-generated audio + word-level timestamps for **Bramble's Hello** in Supabase Storage `page-audio` bucket, cached in IndexedDB with staleness guard. Other 8 books fall through to device speechSynth.
-- Tap-any-word: mid-narration = seek, paused = speak-alone; second tap saves to wordbook.
-- Progress syncs across devices via debounced write-through to `book_progress`.
-- Service worker registered post-build with git-sha-stamped cache name; cache-first for immutable content, network-first for HTML, offline fallback shell.
+- Multi-tenant schema, scoped child-device token, ElevenLabs pre-generated audio for Bramble's Hello (Phase 1 foundation intact).
+- **World memory:** `world_states` growth counters + `reading_days` + `badges` + `wordbook_entries` + `comprehension_records`. Home surface computes a greeting from the world blob (welcome / callback / word / streak).
+- **Buddy roster (5 to start):** Bramble (default), Jujy, Dory, Miko, Rocky. Papa can switch active buddy from Parent Corner. Living/nonliving mix per PRD §B1.
+- **Comprehension checkpoints (A10 + A11):** chapter-end triggers a warm story-specific question from Anthropic Haiku, rotates recall/inference/prediction/connection. Child taps mic → Whisper transcribes → Anthropic judges with mercy semantics (never "wrong"). Q&A record saved.
+- **Parent Corner:** CheckpointTranscript per record, WordbookEntry grid, SunsRow, BuddyPicker — all inside `[data-density="parent"]`.
+- **D2 sync outbox:** IndexedDB queue for offline-tolerant mutations. Auto-flushes on `online` + every 30s. Failures surface via StateBanner.
+- **Cost guardrails:** every Anthropic + Whisper call bumps `usage_counters` BEFORE the external call. Guarded by `RESPOND_DAILY_LIMIT`, `SCORE_DAILY_LIMIT`, `LISTEN_DAILY_LIMIT`. Roughly $0.02 per checkpoint round-trip.
 
-**Next:** Phase 2 — Buddy, world memory, comprehension checkpoints, full D2 sync merge engine.
+**Next:** Phase 3 — Maker + QA pipeline. Generated stories with real branching choices (A4 ask/choice/breathe), server-persisted QA records, Draft → Checking → Published → Blocked lifecycle.
 
 ## Quickstart
 

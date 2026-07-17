@@ -148,9 +148,11 @@ export function Reader({
         pageIdx: state.pageIdx,
       })
         .then((res) => {
-          if (res.newlyEarned.length) {
+          if (res && res.newlyEarned.length) {
             setPendingBadges((prev) => [...prev, ...res.newlyEarned]);
           }
+          // res === null means the write is queued for later (offline). The
+          // optimistic bloom stays; sync banner surfaces the pending state.
         })
         .catch(() => {
           // Rollback bloom on failure — PRD C1 (audit C1 fix) — never silent-drop.
