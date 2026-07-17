@@ -20,3 +20,38 @@ declare module '@ds/components/kid/BookCard.jsx' {
   import type { BookCardProps } from '@ds/components/kid/BookCard';
   export function BookCard(props: BookCardProps): JSX.Element;
 }
+
+declare module '@ds/components/kid/Buddy.jsx' {
+  import type { BuddyProps } from '@ds/components/kid/Buddy';
+  export function Buddy(props: BuddyProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/Transport.jsx' {
+  import type { TransportProps } from '@ds/components/kid/Transport';
+  export function Transport(props: TransportProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/WordCapsule.jsx' {
+  import type { WordCapsuleProps } from '@ds/components/kid/WordCapsule';
+  export function WordCapsule(props: WordCapsuleProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/ContinueCard.jsx' {
+  import type { ContinueCardProps } from '@ds/components/kid/ContinueCard';
+  export function ContinueCard(props: ContinueCardProps): JSX.Element;
+}
+
+declare module '@ds/components/reader/StoryText.jsx' {
+  import type { StoryTextProps } from '@ds/components/reader/StoryText';
+  export function StoryText(props: StoryTextProps): JSX.Element;
+}
+
+declare module '@ds/components/reader/ChapterMap.jsx' {
+  import type { ChapterMapProps } from '@ds/components/reader/ChapterMap';
+  export function ChapterMap(props: ChapterMapProps): JSX.Element;
+}
+
+declare module '@ds/components/reader/ReaderTopBar.jsx' {
+  import type { ReaderTopBarProps } from '@ds/components/reader/ReaderTopBar';
+  export function ReaderTopBar(props: ReaderTopBarProps): JSX.Element;
+}
