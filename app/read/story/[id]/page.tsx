@@ -4,6 +4,8 @@ import { admin } from '@/lib/supabase/admin';
 import { requireChildDevice } from '@/lib/server/require-auth';
 import { bookSchema } from '@/lib/models/book';
 import { toReaderBook } from '@/lib/reader/state';
+import { todayIsoUtc } from '@/lib/world/dates';
+import { bumpGrowth } from '@/lib/world/state';
 import type { ProgressRecord } from '@/lib/models/progress';
 import { Reader } from './reader';
 
@@ -43,6 +45,19 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
   const initialProgress: ProgressRecord | null = prog
     ? { bookId: prog.book_id, chapterIdx: prog.chapter_idx, pageIdx: prog.page_idx, updatedAt: prog.updated_at }
     : null;
+
+  // Mark today as a reading day (PRD B3). Idempotent per (child_id, day).
+  // Also bump the world's booksOpened counter — only on the first-ever open
+  // for this book (checked via absence of prior progress).
+  await admin()
+    .from('reading_days')
+    .upsert(
+      { child_id: ctx.childId, day: todayIsoUtc() },
+      { onConflict: 'child_id,day', ignoreDuplicates: true },
+    );
+  if (!prog) {
+    await bumpGrowth(ctx.childId, 'booksOpened', 1);
+  }
 
   const readerBook = toReaderBook(parsed.data);
   return <Reader book={readerBook} initialProgress={initialProgress} />;

@@ -22,3 +22,9 @@ export const wordbookEntrySchema = z.object({
   ownedAt: z.string().nullable(),
 });
 export type WordbookEntry = z.infer<typeof wordbookEntrySchema>;
+
+export const saveWordResponseSchema = z.object({
+  entry: wordbookEntrySchema,
+  newlyEarned: z.array(z.string()).default([]),
+});
+export type SaveWordResponse = z.infer<typeof saveWordResponseSchema>;

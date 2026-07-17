@@ -2,8 +2,16 @@ import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
 import { requireChildDevice } from '@/lib/server/require-auth';
+import { isoToWeekIdx, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
+import { loadWorldState } from '@/lib/world/state';
+import { loadEarnedBadges } from '@/lib/world/badges';
+import { activeBuddy } from '@/lib/world/buddy-roster';
+import { composeGreeting } from '@/lib/world/greeting';
+import type { WorldBundle } from '@/lib/world/types';
 import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
+import { SunsRow } from './suns-row';
+import { HomeBuddy } from './home-buddy';
 
 // Kid shelf home. Server component fetches books directly via service-role +
 // household scope (child-device auth was verified in the layout AND is
@@ -14,7 +22,16 @@ export default async function ReadHome() {
   const ctx = await requireChildDevice();
   if (ctx instanceof NextResponse) redirect('/parent');
 
-  const [{ data: bookRows }, { data: progressRows }] = await Promise.all([
+  const week = weekWindowUtc();
+  const [
+    { data: bookRows },
+    { data: progressRows },
+    { data: readingDayRows },
+    { data: recentWordsRows },
+    { data: recentProgressRows },
+    world,
+    badges,
+  ] = await Promise.all([
     admin()
       .from('books')
       .select('id, title, kind, source, status, cover_emoji, cover_bg, book')
@@ -27,7 +44,51 @@ export default async function ReadHome() {
       .eq('child_id', ctx.childId)
       .order('updated_at', { ascending: false })
       .limit(1),
+    admin()
+      .from('reading_days')
+      .select('day')
+      .eq('child_id', ctx.childId)
+      .in('day', week),
+    admin()
+      .from('wordbook_entries')
+      .select('word, saved_at')
+      .eq('child_id', ctx.childId)
+      .order('saved_at', { ascending: false })
+      .limit(5),
+    admin()
+      .from('book_progress')
+      .select('book_id, books!inner(id, title)')
+      .eq('child_id', ctx.childId)
+      .order('updated_at', { ascending: false })
+      .limit(3),
+    loadWorldState(ctx.childId),
+    loadEarnedBadges(ctx.childId),
   ]);
+
+  const today = todayIsoUtc();
+  const todayIdx = isoToWeekIdx(today);
+  const earnedIdx = (readingDayRows ?? [])
+    .map((r) => week.indexOf(r.day))
+    .filter((i) => i >= 0);
+  const readingDays = (readingDayRows ?? []).map((r) => r.day);
+
+  const buddy = activeBuddy(world.activeBuddyId);
+  const bundle: WorldBundle = {
+    world,
+    readingDays,
+    todayEarned: readingDays.includes(today),
+    todayIdx,
+    badges,
+    recentWords: (recentWordsRows ?? []).map((r) => ({ word: r.word, savedAt: r.saved_at })),
+    recentBooks: ((recentProgressRows ?? []) as Array<{
+      book_id: string;
+      books: { id: string; title: string } | { id: string; title: string }[] | null;
+    }>).map((r) => {
+      const book = Array.isArray(r.books) ? r.books[0] : r.books;
+      return { id: book?.id ?? r.book_id, title: book?.title ?? '' };
+    }),
+  };
+  const greeting = composeGreeting(bundle, buddy);
 
   const books: ShelfBook[] = (bookRows ?? []).map((b) => ({
     id: b.id,
@@ -54,9 +115,11 @@ export default async function ReadHome() {
 
   return (
     <main>
-      <header style={{ padding: 'var(--space-4) var(--space-4) 0', display: 'grid', gap: 'var(--space-1)' }}>
+      <HomeBuddy buddy={buddy} utterance={greeting.utterance} />
+      <header style={{ padding: 'var(--space-4) var(--space-4) 0', display: 'grid', gap: 'var(--space-2)' }}>
         <h1 style={{ fontFamily: 'var(--font-display)', margin: 0, fontSize: 28 }}>Your shelf</h1>
         <p style={{ color: 'var(--ink-soft)', margin: 0 }}>{books.length} stories</p>
+        <SunsRow earned={earnedIdx} today={todayIdx} />
       </header>
       {continueTarget && <ContinueBanner target={continueTarget} />}
       <ShelfGrid books={books} />

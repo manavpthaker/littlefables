@@ -55,3 +55,60 @@ declare module '@ds/components/reader/ReaderTopBar.jsx' {
   import type { ReaderTopBarProps } from '@ds/components/reader/ReaderTopBar';
   export function ReaderTopBar(props: ReaderTopBarProps): JSX.Element;
 }
+
+declare module '@ds/components/reader/Checkpoint.jsx' {
+  import type { CheckpointProps } from '@ds/components/reader/Checkpoint';
+  export function Checkpoint(props: CheckpointProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/MicOrb.jsx' {
+  import type { MicOrbProps } from '@ds/components/kid/MicOrb';
+  export function MicOrb(props: MicOrbProps): JSX.Element;
+}
+
+declare module '@ds/components/world/SunsRow.jsx' {
+  import type { SunsRowProps } from '@ds/components/world/SunsRow';
+  export function SunsRow(props: SunsRowProps): JSX.Element;
+}
+
+declare module '@ds/components/world/BadgeShelf.jsx' {
+  import type { BadgeShelfProps } from '@ds/components/world/BadgeShelf';
+  export function BadgeShelf(props: BadgeShelfProps): JSX.Element;
+}
+
+declare module '@ds/components/world/Celebration.jsx' {
+  import type { CelebrationProps, CelebrationQueueProps } from '@ds/components/world/Celebration';
+  export function Celebration(props: CelebrationProps): JSX.Element;
+  export function CelebrationQueue(props: CelebrationQueueProps): JSX.Element;
+}
+
+declare module '@ds/components/world/WordbookEntry.jsx' {
+  import type { WordbookEntryProps } from '@ds/components/world/WordbookEntry';
+  export function WordbookEntry(props: WordbookEntryProps): JSX.Element;
+}
+
+declare module '@ds/components/system/SystemStates.jsx' {
+  import type { StateBannerProps, PaintingWashProps, ErrorCharacterProps } from '@ds/components/system/SystemStates';
+  export function StateBanner(props: StateBannerProps): JSX.Element;
+  export function PaintingWash(props: PaintingWashProps): JSX.Element;
+  export function ErrorCharacter(props: ErrorCharacterProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/CheckpointTranscript.jsx' {
+  import type { CheckpointTranscriptProps } from '@ds/components/parent/CheckpointTranscript';
+  export function CheckpointTranscript(props: CheckpointTranscriptProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/ChoiceRecord.jsx' {
+  import type { ChoiceRecordProps } from '@ds/components/parent/ChoiceRecord';
+  export function ChoiceRecord(props: ChoiceRecordProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/ParentPrimitives.jsx' {
+  import type { SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
+  export function SectionHeader(props: SectionHeaderProps): JSX.Element;
+  export function ListRow(props: { children: React.ReactNode }): JSX.Element;
+  export function Field(props: { label: string; children: React.ReactNode }): JSX.Element;
+  export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>): JSX.Element;
+  export function RetellingPlayer(props: { src: string; transcript?: string }): JSX.Element;
+}

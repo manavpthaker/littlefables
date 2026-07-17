@@ -10,6 +10,7 @@ import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
 import { pageAudioSource } from '@/lib/reader/page-audio-source';
+import { Celebrations } from '@/app/read/celebrations';
 import {
   currentChapter,
   currentPage,
@@ -117,6 +118,7 @@ export function Reader({
     if (bloomTimer.current) clearTimeout(bloomTimer.current);
   }, []);
 
+  const [pendingBadges, setPendingBadges] = useState<string[]>([]);
   const onStarWord = useCallback(
     (stem: string) => {
       setSavedWord(stem);
@@ -130,11 +132,17 @@ export function Reader({
         bookId: book.id,
         chapterIdx: state.chapterIdx ?? undefined,
         pageIdx: state.pageIdx,
-      }).catch(() => {
-        // Rollback bloom on failure — PRD C1 (audit C1 fix) — never silent-drop.
-        setJustSaved(false);
-        setSavedWord(null);
-      });
+      })
+        .then((res) => {
+          if (res.newlyEarned.length) {
+            setPendingBadges((prev) => [...prev, ...res.newlyEarned]);
+          }
+        })
+        .catch(() => {
+          // Rollback bloom on failure — PRD C1 (audit C1 fix) — never silent-drop.
+          setJustSaved(false);
+          setSavedWord(null);
+        });
     },
     [book.id, page?.text, state.chapterIdx, state.pageIdx],
   );
@@ -149,6 +157,7 @@ export function Reader({
         justSaved={justSaved}
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
       />
+      <Celebrations newlyEarned={pendingBadges} />
 
       {showMap && book.kind === 'chapter' ? (
         <section style={{ padding: 'var(--space-4)', display: 'grid', gap: 'var(--space-3)' }}>

@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireChildDevice } from '@/lib/server/require-auth';
 import { admin } from '@/lib/supabase/admin';
 import { saveWordSchema, type WordbookEntry } from '@/lib/models/wordbook';
+import { bumpGrowth, loadWorldState } from '@/lib/world/state';
+import { evaluateBadges, insertNewBadges } from '@/lib/world/badges';
 
 // Save a starred word to the child's wordbook (PRD A9).
 // Dedupe is enforced by the unique index on (child_id, lower(word)) in
@@ -30,6 +32,22 @@ export async function POST(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Bump growth + evaluate badges. Newly-earned slugs come back to the client
+  // so it can bloom them via CelebrationQueue.
+  await bumpGrowth(ctx.childId, 'wordsSaved', 1);
+  const world = await loadWorldState(ctx.childId);
+  const { count: readingDaysCount } = await admin()
+    .from('reading_days')
+    .select('day', { head: true, count: 'exact' })
+    .eq('child_id', ctx.childId);
+  const qualified = evaluateBadges({
+    world,
+    readingDaysCount: readingDaysCount ?? 0,
+    hasSavedWord: true,
+    hasCorrectCheckpoint: false,
+  });
+  const newlyEarned = await insertNewBadges(ctx.childId, qualified);
+
   const entry: WordbookEntry = {
     id: data.id,
     word: data.word,
@@ -39,7 +57,7 @@ export async function POST(request: NextRequest) {
     savedAt: data.saved_at,
     ownedAt: data.owned_at,
   };
-  return NextResponse.json({ entry });
+  return NextResponse.json({ entry, newlyEarned });
 }
 
 // GET returns the full wordbook for the child (used by /read wordbook page later).
