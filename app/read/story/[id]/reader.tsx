@@ -11,6 +11,7 @@ import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
 import { pageAudioSource } from '@/lib/reader/page-audio-source';
 import { Celebrations } from '@/app/read/celebrations';
+import { Checkpoint } from './checkpoint';
 import {
   currentChapter,
   currentPage,
@@ -57,6 +58,12 @@ export function Reader({
   const showMap = state.chapterIdx === null;
   const lastPage = isLastPage(book, state);
 
+  // Comprehension gate. Set when narration ends on the last page of a chapter.
+  // Cleared when the child moves on (either mercy or accept).
+  const [inCheckpoint, setInCheckpoint] = useState(false);
+  const chapterKey = `${book.id}:${state.chapterIdx ?? 'none'}`;
+  const seenCheckpoint = useRef(new Set<string>());
+
   // Feed the current page's text + layered TtsSource into the transport.
   // Any layer failure (missing / stale audio) falls through to speechSynth.
   const transportPage = useMemo(() => {
@@ -72,14 +79,21 @@ export function Reader({
   }, [book.id, page, state.chapterIdx, state.pageIdx]);
 
   const onAutoNext = useCallback(() => {
-    // Auto-turn only advances within a chapter. Chapter end is handled by the
-    // page component (Slice 4+); Slice 1 just stops.
+    // Auto-turn only advances within a chapter. Chapter end is handled by
+    // useEffect below (transitions into checkpoint mode).
+    if (lastPage) {
+      if (!seenCheckpoint.current.has(chapterKey)) {
+        seenCheckpoint.current.add(chapterKey);
+        setInCheckpoint(true);
+      }
+      return;
+    }
     dispatch({ type: 'nextPage' });
-  }, []);
+  }, [lastPage, chapterKey]);
 
   const transport = useReaderTransport({
     page: transportPage,
-    gated: false, // Slice 4+ raises this on ask/choice/breathe pages
+    gated: inCheckpoint, // pauses narration while the checkpoint is showing
     onAutoNext,
     isLastPage: lastPage,
   });
@@ -158,6 +172,20 @@ export function Reader({
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
       />
       <Celebrations newlyEarned={pendingBadges} />
+
+      {inCheckpoint && state.chapterIdx !== null && ch ? (
+        <Checkpoint
+          bookId={book.id}
+          chapterIdx={state.chapterIdx}
+          chapterTitle={ch.title}
+          onDone={(result) => {
+            setInCheckpoint(false);
+            if (result?.newlyEarned?.length) {
+              setPendingBadges((prev) => [...prev, ...(result.newlyEarned ?? [])]);
+            }
+          }}
+        />
+      ) : null}
 
       {showMap && book.kind === 'chapter' ? (
         <section style={{ padding: 'var(--space-4)', display: 'grid', gap: 'var(--space-3)' }}>

@@ -1,27 +1,76 @@
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
+import { SEED_HOUSEHOLD_ID, SEED_CHILD_ID } from '@/lib/models/seed';
+import { isoToWeekIdx, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
+import { loadWorldState } from '@/lib/world/state';
 import { SendToDeviceButton } from './send-to-device';
+import { ComprehensionSection, type ComprehensionRecordView } from './comprehension-section';
+import { WordbookSection, type ParentWordbookEntry } from './wordbook-section';
+import { BuddyPicker } from './buddy-picker';
+import { SunsParent } from './suns-parent';
 
 // Parent Corner home. Single-household mode (Phase 0): no auth gate — anyone
 // with the URL is Papa. Add a PARENT_PASSWORD env-gate before deploying.
-// The multi-tenant schema stays (PRD Goal 6); we just hardcode the seed
-// household here. A household picker replaces this in Phase 5.
 
 export default async function ParentHomePage() {
-  const { data: household } = await admin()
-    .from('households')
-    .select('name')
-    .eq('id', SEED_HOUSEHOLD_ID)
-    .maybeSingle();
+  const week = weekWindowUtc();
+  const [
+    { data: household },
+    { data: children },
+    { data: comprehensionRows },
+    { data: wordbookRows },
+    { data: readingDayRows },
+    world,
+  ] = await Promise.all([
+    admin().from('households').select('name').eq('id', SEED_HOUSEHOLD_ID).maybeSingle(),
+    admin()
+      .from('children')
+      .select('id, display_name, band')
+      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .order('display_name'),
+    admin()
+      .from('comprehension_records')
+      .select('id, question, question_type, transcript, judged_signal, asked_at')
+      .eq('child_id', SEED_CHILD_ID)
+      .order('asked_at', { ascending: false })
+      .limit(10),
+    admin()
+      .from('wordbook_entries')
+      .select('id, word, meaning, sentence, owned_at')
+      .eq('child_id', SEED_CHILD_ID)
+      .order('saved_at', { ascending: false })
+      .limit(20),
+    admin()
+      .from('reading_days')
+      .select('day')
+      .eq('child_id', SEED_CHILD_ID)
+      .in('day', week),
+    loadWorldState(SEED_CHILD_ID),
+  ]);
 
-  const { data: children } = await admin()
-    .from('children')
-    .select('id, display_name, band')
-    .eq('household_id', SEED_HOUSEHOLD_ID)
-    .order('display_name');
+  const comprehension: ComprehensionRecordView[] = (comprehensionRows ?? []).map((r) => ({
+    id: r.id,
+    question: r.question,
+    questionType: (r.question_type as ComprehensionRecordView['questionType']) ?? 'recall',
+    transcript: r.transcript,
+    judgedSignal: r.judged_signal as ComprehensionRecordView['judgedSignal'],
+    askedAt: r.asked_at,
+  }));
+
+  const wordbook: ParentWordbookEntry[] = (wordbookRows ?? []).map((w) => ({
+    id: w.id,
+    word: w.word,
+    meaning: w.meaning,
+    sentence: w.sentence,
+    owned: Boolean(w.owned_at),
+  }));
+
+  const earnedIdx = (readingDayRows ?? [])
+    .map((r) => week.indexOf(r.day))
+    .filter((i) => i >= 0);
+  const todayIdx = isoToWeekIdx(todayIsoUtc());
 
   return (
-    <main style={{ maxWidth: 640, margin: '0 auto', display: 'grid', gap: 'var(--space-4)' }}>
+    <main style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 'var(--space-4)' }}>
       <header>
         <h1 style={{ fontFamily: 'var(--font-display)', margin: 0 }}>Parent Corner</h1>
         <p style={{ color: 'var(--ink-soft)', margin: 'var(--space-1) 0 0' }}>
@@ -51,6 +100,11 @@ export default async function ParentHomePage() {
           </div>
         ))}
       </section>
+
+      <ComprehensionSection records={comprehension} />
+      <WordbookSection entries={wordbook} />
+      <SunsParent earned={earnedIdx} today={todayIdx} />
+      <BuddyPicker currentBuddyId={world.activeBuddyId} />
     </main>
   );
 }
