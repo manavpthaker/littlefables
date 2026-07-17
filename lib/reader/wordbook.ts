@@ -1,22 +1,14 @@
 'use client';
 
 import type { SaveWordInput, SaveWordResponse } from '@/lib/models/wordbook';
+import { enqueueAndSend } from '@/lib/sync/outbox';
 
-// Client-side wordbook helpers. saveWord POSTs to /api/child/wordbook and
-// returns the saved entry + any newly-earned badges (for CelebrationQueue).
-// Errors bubble up so the caller can decide whether to reset the just-saved
-// animation state. PRD C1 (audit C1 fix): failures must be surfaced, not
-// silently `console.warn`d.
+// Client-side wordbook helpers. saveWord enqueues through the sync outbox
+// (offline-tolerant) and returns the saved entry envelope when the network
+// call succeeds. Offline calls return null — the UI has already bloomed
+// optimistically, so the save is durable in the outbox for later flush.
+// PRD C1 / audit C1 fix: failures never silently drop.
 
-export async function saveWord(input: SaveWordInput): Promise<SaveWordResponse> {
-  const res = await fetch('/api/child/wordbook', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(input),
-  });
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? `HTTP ${res.status}`);
-  }
-  return (await res.json()) as SaveWordResponse;
+export async function saveWord(input: SaveWordInput): Promise<SaveWordResponse | null> {
+  return enqueueAndSend<SaveWordResponse>('/api/child/wordbook', JSON.stringify(input));
 }
