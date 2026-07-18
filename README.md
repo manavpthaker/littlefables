@@ -4,17 +4,16 @@ A reading companion for young children — built for Azad first, engineered as a
 
 ## Status
 
-**Phase 2 complete.** On top of Phase 1's reader, the world remembers Azad and asks him about what he read. Home has a Buddy with a world-memory greeting; chapter-ends open a warm comprehension question; parents see every Q&A in Parent Corner.
+**Phase 5 complete — all PRD phases shipped.** The reader is a real product surface: Home has a Buddy with a world-memory greeting; chapter-ends open a warm comprehension question; Papa makes stories from one prompt, sees the QA lifecycle, approves art, and can add a second child or provision a whole new household.
 
-- Multi-tenant schema, scoped child-device token, ElevenLabs pre-generated audio for Bramble's Hello (Phase 1 foundation intact).
-- **World memory:** `world_states` growth counters + `reading_days` + `badges` + `wordbook_entries` + `comprehension_records`. Home surface computes a greeting from the world blob (welcome / callback / word / streak).
-- **Buddy roster (5 to start):** Bramble (default), Jujy, Dory, Miko, Rocky. Papa can switch active buddy from Parent Corner. Living/nonliving mix per PRD §B1.
-- **Comprehension checkpoints (A10 + A11):** chapter-end triggers a warm story-specific question from Anthropic Haiku, rotates recall/inference/prediction/connection. Child taps mic → Whisper transcribes → Anthropic judges with mercy semantics (never "wrong"). Q&A record saved.
-- **Parent Corner:** CheckpointTranscript per record, WordbookEntry grid, SunsRow, BuddyPicker — all inside `[data-density="parent"]`.
-- **D2 sync outbox:** IndexedDB queue for offline-tolerant mutations. Auto-flushes on `online` + every 30s. Failures surface via StateBanner.
-- **Cost guardrails:** every Anthropic + Whisper call bumps `usage_counters` BEFORE the external call. Guarded by `RESPOND_DAILY_LIMIT`, `SCORE_DAILY_LIMIT`, `LISTEN_DAILY_LIMIT`. Roughly $0.02 per checkpoint round-trip.
+- **Reader (Phases 0-1):** multi-tenant schema, scoped child-device token, `/read/story/[id]` with word-level highlight from ElevenLabs (Bramble's Hello), tap-any-word → wordbook, cross-device progress, offline via service worker.
+- **World memory (Phase 2):** buddy roster (5 to start; living/nonliving mix), reading days, badges, comprehension checkpoints. Anthropic Haiku generates story-specific questions rotating recall/inference/prediction/connection; Whisper transcribes; judge applies mercy semantics.
+- **Maker + QA (Phase 3):** prompt-first `/parent/make`. Anthropic Sonnet writes the story; three-stage QA (deterministic → hard-gate judge → soft rubric) runs server-side (audit S2 fix). C3a contract enforced — hard-gate fail on final attempt is `blocked`, judge-unavailable is `unverified`. Lifecycle chips in Parent Corner with per-book QA record.
+- **Art (Phase 4):** Gemini Nano Banana Pro generates covers into `art-candidates` (private). Parent approve moves the blob to `art-live` (public) + stitches the URL into the book jsonb. Reader consumes `book.coverImage` on the shelf. Nothing un-approved is ever publicly reachable.
+- **Productizable (Phase 5):** multi-child within a household via AddChildForm. `scripts/new-household.ts` provisions a fresh tenant (household + parent + first child) with no code changes.
+- **Cost guardrails throughout:** every Anthropic / OpenAI / Gemini call bumps `usage_counters` BEFORE the external call. `RESPOND/SCORE/LISTEN/STORY/ART_DAILY_LIMIT` in `.env.local`. Roughly $0.02 per checkpoint, $0.05 per story generation attempt, $0.05 per art image.
 
-**Next:** Phase 3 — Maker + QA pipeline. Generated stories with real branching choices (A4 ask/choice/breathe), server-persisted QA records, Draft → Checking → Published → Blocked lifecycle.
+**Deferred follow-ups:** full interactive-page UI, multi-voice buddies, scene art rendering with PaintingWash, removing SEED_HOUSEHOLD_ID from routes, `PARENT_PASSWORD` env-gate before Vercel deploy, native shell (E3).
 
 ## Quickstart
 

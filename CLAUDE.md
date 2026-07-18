@@ -4,16 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**Phase 2 complete (2026-07-17).** On top of Phase 1's reader, the world now remembers Azad and asks him about what he read:
-- Home surface: Buddy (from roster of 5 — Bramble default, Jujy, Dory, Miko, Rocky; living/nonliving mix per §B1) with computed world-memory greeting (welcome / callback / word / streak / default tones); SunsRow for the week.
-- Reading days auto-mark on reader mount; `world_states` growth counters (booksOpened, wordsSaved, daysRead, checkpointsAsked/Correct) drive greetings and badges.
-- Badge auto-earn on wordbook save + reading day + checkpoint-correct → CelebrationQueue blooms in the reader.
-- Comprehension checkpoints at chapter end (PRD A10/A11): Anthropic Haiku generates a warm story-specific question rotating recall/inference/prediction/connection; Whisper transcribes the child's spoken answer; Anthropic judges with mercy semantics (never "wrong"). Records saved to `comprehension_records`.
-- Parent Corner extended: CheckpointTranscript per record, WordbookEntry grid, SunsRow, BuddyPicker. All inside `[data-density="parent"]`.
-- D2 sync engine: `lib/sync/outbox.ts` — IndexedDB queue for offline-tolerant mutations. saveWord + pushProgress route through the outbox. Background flush on online + 30s timer. StateBanner surfaces sync state on the reader.
-- `lib/anthropic.ts` + `lib/openai.ts` wrappers call `bump_usage` BEFORE every external call — PRD §4.6 fail-closed on money.
+**All 5 PRD phases shipped (2026-07-17).** The system is functionally end-to-end.
 
-**Next:** Phase 3 — Maker + QA pipeline (PRD C). Generated stories with real branching choices (A4 ask/choice/breathe), C3a status contract, three-stage QA. See PRD §6.
+- **Phase 0** — Next.js + Supabase scaffold, multi-tenant schema, child-device token, prompt package, pack-000 imported.
+- **Phase 1** — Reader with ported transport, tap-any-word, ElevenLabs audio for Bramble's Hello, progress sync, service worker.
+- **Phase 2** — World memory (buddy roster + greetings + reading days + badges), comprehension checkpoints (Anthropic + Whisper + mercy), Parent Corner, D2 sync outbox.
+- **Phase 3** — Prompt-first Maker at `/parent/make`, three-stage QA (deterministic + hard-gate judge + soft rubric) with C3a contract, lifecycle chips.
+- **Phase 4** — Gemini art candidates → parent approve → live buckets; approved covers on the shelf; privacy page.
+- **Phase 5** — Multi-child within household; `scripts/new-household.ts` provisions a fresh tenant.
+
+**Deferred to follow-ups:** interactive-page wiring in reader (schema ready), multi-voice buddies (bible is voice-ready), scene-art rendering with PaintingWash, removing SEED_HOUSEHOLD_ID from routes, PARENT_PASSWORD env-gate before Vercel deploy, native shell (E3).
 
 The previous implementation is at `../little-fables [archive]/` — audited in `docs/AUDIT.md`, mined for the twelve modules worth porting (listed in PRD §5), and retired. Do not extend it. Do not port whole files without checking against the audit's "leave behind" list.
 
