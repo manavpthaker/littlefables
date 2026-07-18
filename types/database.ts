@@ -419,6 +419,63 @@ export type Database = {
           },
         ]
       }
+      qa_records: {
+        Row: {
+          attempt: number
+          book_id: string
+          canon_version: string | null
+          created_at: string
+          hard_gates: Json | null
+          household_id: string
+          id: string
+          model: string | null
+          soft_score: Json | null
+          stage0: Json
+          status: string
+        }
+        Insert: {
+          attempt?: number
+          book_id: string
+          canon_version?: string | null
+          created_at?: string
+          hard_gates?: Json | null
+          household_id: string
+          id?: string
+          model?: string | null
+          soft_score?: Json | null
+          stage0?: Json
+          status: string
+        }
+        Update: {
+          attempt?: number
+          book_id?: string
+          canon_version?: string | null
+          created_at?: string
+          hard_gates?: Json | null
+          household_id?: string
+          id?: string
+          model?: string | null
+          soft_score?: Json | null
+          stage0?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qa_records_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qa_records_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reading_days: {
         Row: {
           child_id: string

@@ -35,6 +35,9 @@ export function toReaderBook(book: Book): ReaderBook {
       text: p.text,
       words: wordsOf(p.text),
       star: p.star,
+      ask: p.ask,
+      choice: p.choice,
+      breathe: p.breathe,
     })),
   }));
   return { id: book.id, title: book.title, kind: book.kind, chapters };

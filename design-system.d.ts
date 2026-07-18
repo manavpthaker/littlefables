@@ -46,6 +46,16 @@ declare module '@ds/components/reader/StoryText.jsx' {
   export function StoryText(props: StoryTextProps): JSX.Element;
 }
 
+declare module '@ds/components/reader/ChoiceBlocks.jsx' {
+  import type { ChoiceBlocksProps } from '@ds/components/reader/ChoiceBlocks';
+  export function ChoiceBlocks(props: ChoiceBlocksProps): JSX.Element;
+}
+
+declare module '@ds/components/reader/Sheet.jsx' {
+  import type { SheetProps } from '@ds/components/reader/Sheet';
+  export function Sheet(props: SheetProps): JSX.Element;
+}
+
 declare module '@ds/components/reader/ChapterMap.jsx' {
   import type { ChapterMapProps } from '@ds/components/reader/ChapterMap';
   export function ChapterMap(props: ChapterMapProps): JSX.Element;

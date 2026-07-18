@@ -1,4 +1,4 @@
-import type { Book } from '@/lib/models/book';
+import type { AskBlock, Book, ChoiceBlock } from '@/lib/models/book';
 
 // View types for the reader. They shadow the Book model but strip fields
 // that aren't needed on the client (parentGuide etc.) and add lightweight
@@ -16,6 +16,9 @@ export interface ReaderPage {
   words: ReaderWord[];
   /** starred stem from the pack — always visually highlighted */
   star?: string;
+  ask?: AskBlock;
+  choice?: ChoiceBlock;
+  breathe?: boolean;
 }
 
 export interface ReaderChapter {

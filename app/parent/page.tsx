@@ -7,6 +7,7 @@ import { ComprehensionSection, type ComprehensionRecordView } from './comprehens
 import { WordbookSection, type ParentWordbookEntry } from './wordbook-section';
 import { BuddyPicker } from './buddy-picker';
 import { SunsParent } from './suns-parent';
+import { BooksSection, type ParentBook, type ParentBookStatus } from './books-section';
 
 // Parent Corner home. Single-household mode (Phase 0): no auth gate — anyone
 // with the URL is Papa. Add a PARENT_PASSWORD env-gate before deploying.
@@ -19,6 +20,8 @@ export default async function ParentHomePage() {
     { data: comprehensionRows },
     { data: wordbookRows },
     { data: readingDayRows },
+    { data: bookRows },
+    { data: qaRows },
     world,
   ] = await Promise.all([
     admin().from('households').select('name').eq('id', SEED_HOUSEHOLD_ID).maybeSingle(),
@@ -44,8 +47,44 @@ export default async function ParentHomePage() {
       .select('day')
       .eq('child_id', SEED_CHILD_ID)
       .in('day', week),
+    admin()
+      .from('books')
+      .select('id, title, status, source, updated_at')
+      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .order('updated_at', { ascending: false })
+      .limit(30),
+    admin()
+      .from('qa_records')
+      .select('book_id, attempt, hard_gates, soft_score, created_at')
+      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .order('attempt', { ascending: false }),
     loadWorldState(SEED_CHILD_ID),
   ]);
+
+  // Group latest-attempt QA per book.
+  const latestQAByBook = new Map<string, { hardPassed: boolean | null; softTotal: number | null }>();
+  for (const q of qaRows ?? []) {
+    if (latestQAByBook.has(q.book_id)) continue;
+    const hard = (q.hard_gates as { passed?: boolean } | null) ?? null;
+    const soft = (q.soft_score as { total?: number } | null) ?? null;
+    latestQAByBook.set(q.book_id, {
+      hardPassed: hard ? Boolean(hard.passed) : null,
+      softTotal: soft?.total ?? null,
+    });
+  }
+
+  const books: ParentBook[] = (bookRows ?? []).map((b) => {
+    const qa = latestQAByBook.get(b.id);
+    return {
+      id: b.id,
+      title: b.title,
+      status: b.status as ParentBookStatus,
+      source: b.source,
+      hardGatesPassed: qa?.hardPassed ?? null,
+      softScoreTotal: qa?.softTotal ?? null,
+      updatedAt: b.updated_at,
+    };
+  });
 
   const comprehension: ComprehensionRecordView[] = (comprehensionRows ?? []).map((r) => ({
     id: r.id,
@@ -101,6 +140,7 @@ export default async function ParentHomePage() {
         ))}
       </section>
 
+      <BooksSection books={books} />
       <ComprehensionSection records={comprehension} />
       <WordbookSection entries={wordbook} />
       <SunsParent earned={earnedIdx} today={todayIdx} />

@@ -17,14 +17,30 @@ export const BOOK_STATUSES = [
   'awaiting-choice',
 ] as const;
 
-// Page shape — verified against pack-000: only `text` (always) and `star` (optional).
-// Future generation may add `ask | choice | breathe` — extend here when they land.
+// Page shape — pack-000 uses text + star; generated content (Phase 3+) can
+// additionally carry ask/choice/breathe interactivity per PRD A4.
+export const askBlockSchema = z.object({
+  prompt: z.string(),
+  accept: z.array(z.string()).default([]),
+});
+
+export const choiceBlockSchema = z.object({
+  prompt: z.string(),
+  options: z.array(z.object({ label: z.string(), summary: z.string() })).min(2),
+});
+
 export const pageSchema = z
   .object({
     text: z.string(),
     star: z.string().optional(),
+    ask: askBlockSchema.optional(),
+    choice: choiceBlockSchema.optional(),
+    breathe: z.boolean().optional(),
   })
   .passthrough();
+
+export type AskBlock = z.infer<typeof askBlockSchema>;
+export type ChoiceBlock = z.infer<typeof choiceBlockSchema>;
 
 export const chapterSchema = z
   .object({
