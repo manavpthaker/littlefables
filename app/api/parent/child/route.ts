@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
+import { currentHouseholdId } from '@/lib/server/current-household';
 import { CHILD_BANDS } from '@/lib/models/child';
 
 // Parent-side: add a child to the current household.
@@ -14,6 +14,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const householdId = await currentHouseholdId();
+
   const gate = await requireParentPassword(); if (gate) return gate;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
@@ -22,7 +24,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await admin()
     .from('children')
     .insert({
-      household_id: SEED_HOUSEHOLD_ID,
+      household_id: householdId,
       display_name: body.data.displayName,
       band: body.data.band,
       exclude_terms: body.data.excludeTerms,

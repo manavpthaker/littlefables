@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID, SEED_CHILD_ID } from '@/lib/models/seed';
+import { currentHouseholdId, firstChildIdInHousehold } from '@/lib/server/current-household';
 import { generateStory } from '@/lib/anthropic-story';
 import { runQA } from '@/lib/qa/pipeline';
 import { persistQA } from '@/lib/qa/persist';
@@ -23,6 +23,9 @@ const bodySchema = z.object({
 const MAX_ATTEMPTS = 2;
 
 export async function POST(request: NextRequest) {
+  const householdId = await currentHouseholdId();
+  const childId = (await firstChildIdInHousehold()) ?? '';
+
   const gate = await requireParentPassword(); if (gate) return gate;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
@@ -31,7 +34,7 @@ export async function POST(request: NextRequest) {
   const { data: child } = await admin()
     .from('children')
     .select('id, display_name, band, exclude_terms, pronouns')
-    .eq('id', SEED_CHILD_ID)
+    .eq('id', childId)
     .single();
   if (!child) return NextResponse.json({ error: 'no_child' }, { status: 500 });
 
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
   while (attempt < MAX_ATTEMPTS) {
     attempt += 1;
     const book = await generateStory({
-      householdId: SEED_HOUSEHOLD_ID,
+      householdId: householdId,
       child: childCtx,
       idea: body.data.idea,
       kind: body.data.kind,
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
     };
 
     const qa = await runQA({
-      householdId: SEED_HOUSEHOLD_ID,
+      householdId: householdId,
       book: generatedBook,
       child: { band: childCtx.band, excludeTerms },
       attempt,
@@ -83,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     await persistQA({
       bookId: generatedBook.id,
-      householdId: SEED_HOUSEHOLD_ID,
+      householdId: householdId,
       attempt,
       result: qa,
     });
@@ -115,8 +118,8 @@ export async function POST(request: NextRequest) {
     .from('books')
     .insert({
       id: bestBook.id,
-      household_id: SEED_HOUSEHOLD_ID,
-      child_id: SEED_CHILD_ID,
+      household_id: householdId,
+      child_id: childId,
       title: bestBook.title,
       by_line: bestBook.by ?? null,
       kind: bestBook.kind,

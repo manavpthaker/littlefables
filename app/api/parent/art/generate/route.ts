@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
+import { currentHouseholdId } from '@/lib/server/current-household';
 import { bookSchema } from '@/lib/models/book';
 import { generateImage } from '@/lib/gemini';
 
@@ -19,6 +19,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const householdId = await currentHouseholdId();
+
   const gate = await requireParentPassword(); if (gate) return gate;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
@@ -28,7 +30,7 @@ export async function POST(request: NextRequest) {
     .from('books')
     .select('id, title, book')
     .eq('id', body.data.bookId)
-    .eq('household_id', SEED_HOUSEHOLD_ID)
+    .eq('household_id', householdId)
     .maybeSingle();
   if (!bookRow?.book) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
 
   let image: Buffer;
   try {
-    image = await generateImage({ householdId: SEED_HOUSEHOLD_ID, prompt });
+    image = await generateImage({ householdId: householdId, prompt });
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 502 });
   }
@@ -57,7 +59,7 @@ export async function POST(request: NextRequest) {
   const { data: artRow, error: insErr } = await admin()
     .from('art_artifacts')
     .insert({
-      household_id: SEED_HOUSEHOLD_ID,
+      household_id: householdId,
       kind: body.data.kind,
       character_id: null,
       book_id: book.id,

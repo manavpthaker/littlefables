@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
+import { currentHouseholdId } from '@/lib/server/current-household';
 
 // Parent approval: flips a needs-review book to published so the child can
 // see it. Audio auto-generation is intentionally deferred to a follow-up
@@ -15,6 +15,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const householdId = await currentHouseholdId();
+
   const gate = await requireParentPassword(); if (gate) return gate;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
@@ -24,7 +26,7 @@ export async function POST(request: NextRequest) {
     .from('books')
     .select('id, status, household_id')
     .eq('id', body.data.bookId)
-    .eq('household_id', SEED_HOUSEHOLD_ID)
+    .eq('household_id', householdId)
     .maybeSingle();
   if (!book) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 

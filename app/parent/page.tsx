@@ -1,5 +1,5 @@
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID, SEED_CHILD_ID } from '@/lib/models/seed';
+import { currentHouseholdId, firstChildIdInHousehold } from '@/lib/server/current-household';
 import { isoToWeekIdx, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
 import { loadWorldState } from '@/lib/world/state';
 import { ComprehensionSection, type ComprehensionRecordView } from './comprehension-section';
@@ -12,6 +12,8 @@ import { ArtGrid, type CandidateView } from './art-grid';
 import { ChildrenSection, type ChildRow } from './children-section';
 
 export default async function ParentHomePage() {
+  const householdId = await currentHouseholdId();
+  const childId = (await firstChildIdInHousehold()) ?? '';
   const week = weekWindowUtc();
   const [
     { data: household },
@@ -23,47 +25,47 @@ export default async function ParentHomePage() {
     { data: qaRows },
     world,
   ] = await Promise.all([
-    admin().from('households').select('name').eq('id', SEED_HOUSEHOLD_ID).maybeSingle(),
+    admin().from('households').select('name').eq('id', householdId).maybeSingle(),
     admin()
       .from('children')
       .select('id, display_name, band')
-      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .eq('household_id', householdId)
       .order('display_name'),
     admin()
       .from('comprehension_records')
       .select('id, question, question_type, transcript, judged_signal, asked_at')
-      .eq('child_id', SEED_CHILD_ID)
+      .eq('child_id', childId)
       .order('asked_at', { ascending: false })
       .limit(10),
     admin()
       .from('wordbook_entries')
       .select('id, word, meaning, sentence, owned_at')
-      .eq('child_id', SEED_CHILD_ID)
+      .eq('child_id', childId)
       .order('saved_at', { ascending: false })
       .limit(20),
     admin()
       .from('reading_days')
       .select('day')
-      .eq('child_id', SEED_CHILD_ID)
+      .eq('child_id', childId)
       .in('day', week),
     admin()
       .from('books')
       .select('id, title, status, source, updated_at')
-      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .eq('household_id', householdId)
       .order('updated_at', { ascending: false })
       .limit(30),
     admin()
       .from('qa_records')
       .select('book_id, attempt, hard_gates, soft_score, created_at')
-      .eq('household_id', SEED_HOUSEHOLD_ID)
+      .eq('household_id', householdId)
       .order('attempt', { ascending: false }),
-    loadWorldState(SEED_CHILD_ID),
+    loadWorldState(childId),
   ]);
 
   const { data: pendingArtRows } = await admin()
     .from('art_artifacts')
     .select('id, book_id, kind, chapter_idx, page_idx, candidate_path, created_at')
-    .eq('household_id', SEED_HOUSEHOLD_ID)
+    .eq('household_id', householdId)
     .eq('status', 'pending')
     .order('created_at', { ascending: false })
     .limit(20);

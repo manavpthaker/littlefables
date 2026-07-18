@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
+import { currentHouseholdId } from '@/lib/server/current-household';
 import { bookSchema, type Book } from '@/lib/models/book';
 import type { Json } from '@/types/database';
 
@@ -17,6 +17,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const householdId = await currentHouseholdId();
+
   const gate = await requireParentPassword(); if (gate) return gate;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
@@ -26,7 +28,7 @@ export async function POST(request: NextRequest) {
     .from('art_artifacts')
     .select('id, book_id, chapter_idx, page_idx, kind, candidate_path, status, household_id')
     .eq('id', body.data.artifactId)
-    .eq('household_id', SEED_HOUSEHOLD_ID)
+    .eq('household_id', householdId)
     .maybeSingle();
   if (!artifact) return NextResponse.json({ error: 'not_found' }, { status: 404 });
 
