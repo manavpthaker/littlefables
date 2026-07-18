@@ -1,5 +1,6 @@
 import { callAnthropic, extractJson, BudgetExceededError } from '@/lib/anthropic';
 import { runStage0, decideStatus, MAX_GEN_ATTEMPTS, type QAStatus } from '@/lib/prompts';
+import { CANON_VERSION } from '@/lib/prompts/version';
 import type { Book } from '@/lib/models/book';
 import type { ChildBand } from '@/lib/models/child';
 
@@ -56,7 +57,7 @@ function flattenStoryText(book: Book): string {
 
 export async function runQA(opts: RunOpts): Promise<QAResult> {
   const model = 'claude-haiku-4-5-20251001';
-  const canonVersion = 'unknown';
+  const canonVersion = CANON_VERSION;
 
   // Stage 0 — deterministic (free).
   const stage0 = runStage0(opts.book, { excludeTerms: opts.child.excludeTerms });
