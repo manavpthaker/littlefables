@@ -19,6 +19,12 @@ export interface Buddy {
   species: 'plush' | 'human' | 'nonliving';
   catchphrase: string;
   greetingStyle: string;
+  /** ElevenLabs voice id for this buddy's live TTS. null = use narrator voice.
+   *  Cast per-buddy voices in ElevenLabs Voice Library and paste ids here. */
+  voiceId: string | null;
+  /** Prosody hint for live TTS (stability, style). Roughly maps to the buddy's
+   *  greetingStyle — dreamy Dory drifts, ready Miko revs. */
+  voiceStyle: 'warm' | 'excited' | 'dreamy' | 'ready' | 'still';
 }
 
 export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
@@ -30,6 +36,8 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
     species: 'plush',
     catchphrase: "We're brave together.",
     greetingStyle: 'cozy',
+    voiceId: null,
+    voiceStyle: 'warm',
   },
   {
     id: 'char_jujy',
@@ -39,6 +47,8 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
     species: 'plush',
     catchphrase: 'Whisker-wiggle roll call!',
     greetingStyle: 'excited',
+    voiceId: null,
+    voiceStyle: 'excited',
   },
   {
     id: 'char_dory',
@@ -48,6 +58,8 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
     species: 'plush',
     catchphrase: 'Um… what were we doing?',
     greetingStyle: 'dreamy',
+    voiceId: null,
+    voiceStyle: 'dreamy',
   },
   {
     id: 'char_miko',
@@ -57,6 +69,8 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
     species: 'plush',
     catchphrase: "Vroom vroom, let's zoom!",
     greetingStyle: 'ready',
+    voiceId: null,
+    voiceStyle: 'ready',
   },
   {
     id: 'char_rocky',
@@ -66,6 +80,8 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
     species: 'nonliving',
     catchphrase: '...',
     greetingStyle: 'still',
+    voiceId: null,
+    voiceStyle: 'still',
   },
 ] as const);
 
