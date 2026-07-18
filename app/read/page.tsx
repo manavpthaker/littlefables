@@ -12,6 +12,7 @@ import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
 import { SunsRow } from './suns-row';
 import { HomeBuddy } from './home-buddy';
+import { BadgeStrip } from './badge-strip';
 
 // Kid Home. Composition matters: warm paper background, prominent Buddy with
 // spoken greeting, SunsRow ribbon, ContinueCard if any progress, then the
@@ -152,6 +153,8 @@ export default async function ReadHome() {
       >
         <SunsRow earned={earnedIdx} today={todayIdx} />
       </section>
+
+      <BadgeStrip earned={badges} />
 
       <div style={{ padding: 'var(--space-6) var(--page-pad) var(--space-8)', display: 'grid', gap: 'var(--space-5)' }}>
         {continueTarget && <ContinueBanner target={continueTarget} />}
