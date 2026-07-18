@@ -11,6 +11,7 @@ import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
 import { pageAudioSource } from '@/lib/reader/page-audio-source';
 import { Celebrations } from '@/app/read/celebrations';
+import { StateBannerBoot } from '@/app/read/state-banner';
 import { Checkpoint } from './checkpoint';
 import {
   currentChapter,
@@ -164,7 +165,7 @@ export function Reader({
   );
 
   return (
-    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
       <ReaderTopBar
         onBack={onBack}
         buddyColor="var(--teal)"
@@ -174,6 +175,7 @@ export function Reader({
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
       />
       <Celebrations newlyEarned={pendingBadges} />
+      <StateBannerBoot />
 
       {inCheckpoint && state.chapterIdx !== null && ch ? (
         <Checkpoint
@@ -190,8 +192,39 @@ export function Reader({
       ) : null}
 
       {showMap && book.kind === 'chapter' ? (
-        <section style={{ padding: 'var(--space-4)', display: 'grid', gap: 'var(--space-3)' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', margin: 0, fontSize: 28 }}>{book.title}</h1>
+        <section
+          style={{
+            padding: 'var(--space-7) var(--page-pad) var(--space-6)',
+            display: 'grid',
+            gap: 'var(--space-5)',
+            maxWidth: 720,
+            width: '100%',
+            marginInline: 'auto',
+          }}
+        >
+          <header style={{ display: 'grid', gap: 'var(--space-2)', justifyItems: 'center', textAlign: 'center' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-hand)',
+                color: 'var(--text-muted)',
+                margin: 0,
+                fontSize: 'var(--text-hand)',
+              }}
+            >
+              Pick a chapter to start
+            </p>
+            <h1
+              style={{
+                fontFamily: 'var(--font-display)',
+                margin: 0,
+                fontSize: 'var(--text-display)',
+                lineHeight: 'var(--lh-display)',
+                color: 'var(--text-strong)',
+              }}
+            >
+              {book.title}
+            </h1>
+          </header>
           <ChapterMap
             size="large"
             chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
@@ -206,21 +239,22 @@ export function Reader({
               flex: 1,
               display: 'grid',
               placeItems: 'center',
-              padding: 'var(--space-4)',
+              padding: 'var(--space-6) var(--page-pad)',
             }}
           >
-            <div style={{ maxWidth: 620, width: '100%' }}>
+            <article style={{ maxWidth: 640, width: '100%' }}>
               {book.kind === 'chapter' && (
-                <div
+                <p
                   style={{
                     fontFamily: 'var(--font-hand)',
-                    color: 'var(--ink-soft)',
-                    marginBottom: 'var(--space-2)',
+                    color: 'var(--text-muted)',
+                    margin: '0 0 var(--space-4)',
                     textAlign: 'center',
+                    fontSize: 'var(--text-hand)',
                   }}
                 >
                   {ch.title}
-                </div>
+                </p>
               )}
               <StoryText
                 words={page.words.map((w) => ({ w: w.w }))}
@@ -232,14 +266,15 @@ export function Reader({
                 onHearWord={onHearWord}
                 onStarWord={onStarWord}
               />
-            </div>
+            </article>
           </main>
 
           <footer
             style={{
-              padding: 'var(--space-4)',
+              padding: 'var(--space-4) var(--page-pad) var(--space-6)',
               display: 'grid',
               placeItems: 'center',
+              minHeight: 'var(--reach-zone)',
             }}
           >
             <Transport

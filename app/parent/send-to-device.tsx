@@ -20,27 +20,30 @@ export function SendToDeviceButton({ childId, childName }: { childId: string; ch
       setPending(false);
       return;
     }
-    // Cookie is set server-side on this response — just navigate.
     window.location.href = '/read';
   }
 
   return (
-    <div style={{ display: 'grid', gap: 'var(--space-1)', justifyItems: 'end' }}>
+    <div style={{ display: 'grid', gap: 'var(--space-1)' }}>
       <button
         onClick={onClick}
         disabled={pending}
         style={{
-          padding: 'var(--space-2) var(--space-3)',
+          padding: 'var(--space-3) var(--space-4)',
           background: 'var(--action)',
-          color: 'var(--paper)',
+          color: 'var(--action-ink)',
           border: 'none',
           borderRadius: 'var(--radius-pill)',
+          fontFamily: 'inherit',
+          fontSize: 'var(--text-body)',
+          fontWeight: 600,
           cursor: pending ? 'wait' : 'pointer',
+          boxShadow: 'var(--elev-rest)',
         }}
       >
-        {pending ? 'Sending…' : `Send ${childName} to this device`}
+        {pending ? 'Sending…' : `Send ${childName} to this device →`}
       </button>
-      {error && <span style={{ color: 'var(--danger, #c94a3b)', fontSize: 12 }}>{error}</span>}
+      {error && <span style={{ color: 'var(--life-blocked)', fontSize: 'var(--text-caption)' }}>{error}</span>}
     </div>
   );
 }

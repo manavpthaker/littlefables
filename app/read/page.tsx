@@ -13,9 +13,9 @@ import { ContinueBanner, type ContinueTarget } from './continue-banner';
 import { SunsRow } from './suns-row';
 import { HomeBuddy } from './home-buddy';
 
-// Kid shelf home. Server component fetches books directly via service-role +
-// household scope (child-device auth was verified in the layout AND is
-// re-verified here — every route/RSC that reads child data must call it).
+// Kid Home. Composition matters: warm paper background, prominent Buddy with
+// spoken greeting, SunsRow ribbon, ContinueCard if any progress, then the
+// shelf. Uses design-system tokens (--space-*, --radius-*, --font-*, pigments).
 const KID_VISIBLE_STATUSES = ['complete', 'published', 'awaiting-choice'];
 
 export default async function ReadHome() {
@@ -96,6 +96,7 @@ export default async function ReadHome() {
     kind: b.kind as 'quick' | 'chapter',
     coverEmoji: b.cover_emoji,
     coverBg: b.cover_bg,
+    coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
     status: b.status,
   }));
 
@@ -113,22 +114,55 @@ export default async function ReadHome() {
         }
       : null;
 
+  // Group the shelf: continue-in-flight first (excluded from grid), then rest.
+  const restBooks = continueTarget
+    ? books.filter((b) => b.id !== continueTarget.id)
+    : books;
+
   return (
-    <main>
+    <main
+      style={{
+        minHeight: '100dvh',
+        background: 'var(--surface-page)',
+        display: 'grid',
+        gridTemplateRows: 'auto auto 1fr',
+      }}
+    >
       <HomeBuddy buddy={buddy} utterance={greeting.utterance} />
-      <header style={{ padding: 'var(--space-4) var(--space-4) 0', display: 'grid', gap: 'var(--space-2)' }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', margin: 0, fontSize: 28 }}>Your shelf</h1>
-        <p style={{ color: 'var(--ink-soft)', margin: 0 }}>{books.length} stories</p>
+
+      <section
+        style={{
+          padding: '0 var(--page-pad)',
+          display: 'grid',
+          gap: 'var(--space-3)',
+          justifyItems: 'center',
+        }}
+      >
         <SunsRow earned={earnedIdx} today={todayIdx} />
-      </header>
-      {continueTarget && <ContinueBanner target={continueTarget} />}
-      <ShelfGrid books={books} />
+      </section>
+
+      <div style={{ padding: 'var(--space-6) var(--page-pad) var(--space-8)', display: 'grid', gap: 'var(--space-5)' }}>
+        {continueTarget && <ContinueBanner target={continueTarget} />}
+
+        <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              margin: 0,
+              fontSize: 'var(--text-title)',
+              lineHeight: 'var(--lh-title)',
+              color: 'var(--text-strong)',
+            }}
+          >
+            Your shelf
+          </h2>
+          <ShelfGrid books={restBooks} />
+        </section>
+      </div>
     </main>
   );
 }
 
-// Ratio of pages seen so far over pages in the book. Rough, not exact — the
-// design-system's progress bar renders 0–1.
 function progressFraction(
   book: { book: unknown },
   chapterIdx: number,

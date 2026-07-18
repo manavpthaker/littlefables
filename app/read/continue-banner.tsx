@@ -13,7 +13,7 @@ export interface ContinueTarget {
 export function ContinueBanner({ target }: { target: ContinueTarget }) {
   const router = useRouter();
   return (
-    <section style={{ padding: 'var(--space-4) var(--space-4) 0' }}>
+    <section>
       <ContinueCard
         title={target.title}
         chapter={target.chapterCaption}

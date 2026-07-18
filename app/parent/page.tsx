@@ -2,17 +2,13 @@ import { admin } from '@/lib/supabase/admin';
 import { SEED_HOUSEHOLD_ID, SEED_CHILD_ID } from '@/lib/models/seed';
 import { isoToWeekIdx, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
 import { loadWorldState } from '@/lib/world/state';
-import { SendToDeviceButton } from './send-to-device';
 import { ComprehensionSection, type ComprehensionRecordView } from './comprehension-section';
 import { WordbookSection, type ParentWordbookEntry } from './wordbook-section';
 import { BuddyPicker } from './buddy-picker';
 import { SunsParent } from './suns-parent';
 import { BooksSection, type ParentBook, type ParentBookStatus } from './books-section';
 import { ArtSection, type PendingArt } from './art-section';
-import { AddChildForm } from './add-child-form';
-
-// Parent Corner home. Single-household mode (Phase 0): no auth gate — anyone
-// with the URL is Papa. Add a PARENT_PASSWORD env-gate before deploying.
+import { ChildrenSection, type ChildRow } from './children-section';
 
 export default async function ParentHomePage() {
   const week = weekWindowUtc();
@@ -63,7 +59,6 @@ export default async function ParentHomePage() {
     loadWorldState(SEED_CHILD_ID),
   ]);
 
-  // Pending art candidates + books that could use cover art.
   const { data: pendingArtRows } = await admin()
     .from('art_artifacts')
     .select('id, book_id, kind, chapter_idx, page_idx, candidate_path, created_at')
@@ -91,7 +86,6 @@ export default async function ParentHomePage() {
     });
   }
 
-  // Group latest-attempt QA per book.
   const latestQAByBook = new Map<string, { hardPassed: boolean | null; softTotal: number | null }>();
   for (const q of qaRows ?? []) {
     if (latestQAByBook.has(q.book_id)) continue;
@@ -102,19 +96,6 @@ export default async function ParentHomePage() {
       softTotal: soft?.total ?? null,
     });
   }
-
-  const books: ParentBook[] = (bookRows ?? []).map((b) => {
-    const qa = latestQAByBook.get(b.id);
-    return {
-      id: b.id,
-      title: b.title,
-      status: b.status as ParentBookStatus,
-      source: b.source,
-      hardGatesPassed: qa?.hardPassed ?? null,
-      softScoreTotal: qa?.softTotal ?? null,
-      updatedAt: b.updated_at,
-    };
-  });
 
   const comprehension: ComprehensionRecordView[] = (comprehensionRows ?? []).map((r) => ({
     id: r.id,
@@ -133,44 +114,66 @@ export default async function ParentHomePage() {
     owned: Boolean(w.owned_at),
   }));
 
+  const books: ParentBook[] = (bookRows ?? []).map((b) => {
+    const qa = latestQAByBook.get(b.id);
+    return {
+      id: b.id,
+      title: b.title,
+      status: b.status as ParentBookStatus,
+      source: b.source,
+      hardGatesPassed: qa?.hardPassed ?? null,
+      softScoreTotal: qa?.softTotal ?? null,
+      updatedAt: b.updated_at,
+    };
+  });
+
   const earnedIdx = (readingDayRows ?? [])
     .map((r) => week.indexOf(r.day))
     .filter((i) => i >= 0);
   const todayIdx = isoToWeekIdx(todayIsoUtc());
 
+  const childRows: ChildRow[] = (children ?? []).map((c) => ({
+    id: c.id,
+    displayName: c.display_name,
+    band: c.band,
+  }));
+
+  const generatedBookCount = books.filter((b) => b.source === 'generated').length;
+  const totalWords = wordbook.length;
+  const totalCheckpoints = comprehension.length;
+
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gap: 'var(--space-4)' }}>
-      <header>
-        <h1 style={{ fontFamily: 'var(--font-display)', margin: 0 }}>Parent Corner</h1>
-        <p style={{ color: 'var(--ink-soft)', margin: 'var(--space-1) 0 0' }}>
-          {household?.name ?? 'Household'}
+    <main style={{ display: 'grid', gap: 'var(--space-7)' }}>
+      <header style={{ display: 'grid', gap: 'var(--space-3)' }}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--text-display)',
+            margin: 0,
+            color: 'var(--text-strong)',
+          }}
+        >
+          Parent Corner
+        </h1>
+        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+          Everything you can do for and with the reader.
         </p>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: 'var(--space-3)',
+            marginTop: 'var(--space-3)',
+          }}
+        >
+          <Stat label="Books" value={books.length} sublabel={`${generatedBookCount} generated`} />
+          <Stat label="Words saved" value={totalWords} />
+          <Stat label="Checkpoints" value={totalCheckpoints} />
+          <Stat label="Reading days" value={earnedIdx.length} sublabel="this week" />
+        </div>
       </header>
 
-      <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, margin: 0 }}>Children</h2>
-        {(children ?? []).map((child) => (
-          <div
-            key={child.id}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: 'var(--space-3)',
-              background: 'var(--wash-panel)',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
-            <div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: 18 }}>{child.display_name}</div>
-              <div style={{ color: 'var(--ink-soft)', fontSize: 14 }}>Band {child.band}</div>
-            </div>
-            <SendToDeviceButton childId={child.id} childName={child.display_name} />
-          </div>
-        ))}
-        <AddChildForm />
-      </section>
-
+      <ChildrenSection rows={childRows} householdName={household?.name ?? 'Household'} />
       <BooksSection books={books} />
       <ArtSection
         pending={pendingArt}
@@ -181,5 +184,24 @@ export default async function ParentHomePage() {
       <SunsParent earned={earnedIdx} today={todayIdx} />
       <BuddyPicker currentBuddyId={world.activeBuddyId} />
     </main>
+  );
+}
+
+function Stat({ label, value, sublabel }: { label: string; value: number | string; sublabel?: string }) {
+  return (
+    <div
+      style={{
+        background: 'var(--surface-card)',
+        padding: 'var(--space-4)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'var(--elev-rest)',
+      }}
+    >
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: 24, color: 'var(--text-strong)' }}>
+        {value}
+      </div>
+      <div style={{ color: 'var(--text-muted)', fontSize: 'var(--text-caption)' }}>{label}</div>
+      {sublabel && <div style={{ color: 'var(--text-hint)', fontSize: 'var(--text-caption)' }}>{sublabel}</div>}
+    </div>
   );
 }
