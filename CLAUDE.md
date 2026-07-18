@@ -4,16 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**All 5 PRD phases shipped (2026-07-17).** The system is functionally end-to-end.
+**All 5 PRD phases + all 4 EXPERIENCE-PLAN sprints shipped (2026-07-18).**
 
-- **Phase 0** — Next.js + Supabase scaffold, multi-tenant schema, child-device token, prompt package, pack-000 imported.
-- **Phase 1** — Reader with ported transport, tap-any-word, ElevenLabs audio for Bramble's Hello, progress sync, service worker.
-- **Phase 2** — World memory (buddy roster + greetings + reading days + badges), comprehension checkpoints (Anthropic + Whisper + mercy), Parent Corner, D2 sync outbox.
-- **Phase 3** — Prompt-first Maker at `/parent/make`, three-stage QA (deterministic + hard-gate judge + soft rubric) with C3a contract, lifecycle chips.
-- **Phase 4** — Gemini art candidates → parent approve → live buckets; approved covers on the shelf; privacy page.
-- **Phase 5** — Multi-child within household; `scripts/new-household.ts` provisions a fresh tenant.
+Phase timeline:
+- **P0** scaffold + schema + prompt package + pack-000
+- **P1** reader with transport port, tap-any-word, ElevenLabs (Bramble only), progress sync, SW
+- **P2** world memory, comprehension checkpoints, Parent Corner, D2 outbox
+- **P3** Maker + three-stage QA + C3a contract
+- **P4** Gemini art candidates → approve → live, per-book provenance
+- **P5** Multi-child + new-household provisioning script
 
-**Deferred to follow-ups:** interactive-page wiring in reader (schema ready), multi-voice buddies (bible is voice-ready), scene-art rendering with PaintingWash, removing SEED_HOUSEHOLD_ID from routes, PARENT_PASSWORD env-gate before Vercel deploy, native shell (E3).
+Then the four **EXPERIENCE-PLAN sprints** closed the gap between "runs" and "feels like a product":
+- **S1 (It speaks)** — tap-word seek fix (timestamps threaded into transportPage), `lib/voice/ui-voice.ts` speaks buddy/checkpoint/celebration/save utterances with narration-priority, narration for all 9 books, silent-reader chapter-end affordance.
+- **S2 (It's painted)** — batch cover candidates for every book, DS `ArtApproval` grid in Parent Corner, per-page scene pipeline + Bramble fully painted end-to-end, real progress + no gradient placeholders.
+- **S3 (It feels alive)** — page-turn motion, watercolor-develop reveal, clock-driven paper temperature, authored breathe (moose) + choice (coocoo) pages, DS Home hierarchy (buddy speech bubble + suns + badge shelf).
+- **S4 (It's a product)** — `PARENT_PASSWORD` env-gate on every parent surface + `/api/parent/*` route, `SEED_HOUSEHOLD_ID` removed from all `app/` code (routes resolve via `currentHouseholdId()`), CI runs integration tests against a local Supabase container, canon version stamped in `qa_records`, privacy truth-pass, per-book provenance line.
+
+**Deferred and honest:** cast per-buddy voice IDs in ElevenLabs; approve pending art candidates (script exists: `pnpm exec tsx scripts/art-approve-book.ts --all --kind cover`); wire the word-save confirmation to use the active buddy's voice_id (last-mile); native shell (E3 Capacitor). Full V2 vision at [`docs/V2-VISION.md`](./docs/V2-VISION.md).
 
 The previous implementation is at `../little-fables [archive]/` — audited in `docs/AUDIT.md`, mined for the twelve modules worth porting (listed in PRD §5), and retired. Do not extend it. Do not port whole files without checking against the audit's "leave behind" list.
 

@@ -4,16 +4,23 @@ A reading companion for young children — built for Azad first, engineered as a
 
 ## Status
 
-**Phase 5 complete — all PRD phases shipped.** The reader is a real product surface: Home has a Buddy with a world-memory greeting; chapter-ends open a warm comprehension question; Papa makes stories from one prompt, sees the QA lifecycle, approves art, and can add a second child or provision a whole new household.
+**Phase 5 + EXPERIENCE-PLAN complete.** All PRD phases shipped, then the four XP sprints (S1 It speaks · S2 It's painted · S3 It feels alive · S4 It's a product) closed the distance from "works" to "feels like a real consumer app."
 
-- **Reader (Phases 0-1):** multi-tenant schema, scoped child-device token, `/read/story/[id]` with word-level highlight from ElevenLabs (Bramble's Hello), tap-any-word → wordbook, cross-device progress, offline via service worker.
+- **Reader (Phases 0–1):** multi-tenant schema, scoped child-device token, `/read/story/[id]` with word-level highlight from ElevenLabs — **every book narrates** (all 9 pack-000 books, ~$23 ElevenLabs spend), tap-any-word seeks to the real audio offset, star save into wordbook, cross-device progress, offline via service worker.
 - **World memory (Phase 2):** buddy roster (5 to start; living/nonliving mix), reading days, badges, comprehension checkpoints. Anthropic Haiku generates story-specific questions rotating recall/inference/prediction/connection; Whisper transcribes; judge applies mercy semantics.
-- **Maker + QA (Phase 3):** prompt-first `/parent/make`. Anthropic Sonnet writes the story; three-stage QA (deterministic → hard-gate judge → soft rubric) runs server-side (audit S2 fix). C3a contract enforced — hard-gate fail on final attempt is `blocked`, judge-unavailable is `unverified`. Lifecycle chips in Parent Corner with per-book QA record.
-- **Art (Phase 4):** Gemini Nano Banana Pro generates covers into `art-candidates` (private). Parent approve moves the blob to `art-live` (public) + stitches the URL into the book jsonb. Reader consumes `book.coverImage` on the shelf. Nothing un-approved is ever publicly reachable.
-- **Productizable (Phase 5):** multi-child within a household via AddChildForm. `scripts/new-household.ts` provisions a fresh tenant (household + parent + first child) with no code changes.
-- **Cost guardrails throughout:** every Anthropic / OpenAI / Gemini call bumps `usage_counters` BEFORE the external call. `RESPOND/SCORE/LISTEN/STORY/ART_DAILY_LIMIT` in `.env.local`. Roughly $0.02 per checkpoint, $0.05 per story generation attempt, $0.05 per art image.
+- **Maker + QA (Phase 3):** prompt-first `/parent/make`. Anthropic Sonnet writes the story; three-stage QA (deterministic → hard-gate judge → soft rubric) runs server-side (audit S2 fix). C3a contract enforced. Per-book provenance line in the Books section.
+- **Art (Phase 4 + S2):** Gemini Nano Banana Pro generates covers + scenes into `art-candidates` (private). Batch approval via the DS `ArtApproval` grid moves candidates to `art-live` and stitches URLs into the book jsonb. **Every book has an approved cover; Bramble's Hello is fully painted end-to-end (21 pages).** PaintingWash fallback for pages still developing.
+- **The app speaks (S1):** `lib/voice/ui-voice.ts` funnels every buddy greeting, checkpoint question, mercy line, celebration, and word-save confirmation through the live `/api/child/tts` route with per-buddy voice_id + narration-priority guard. Narration always wins.
+- **It feels alive (S3):** page-turn animation, watercolor-develop reveal on scene art, clock-driven paper temperature (morning/day/dusk/night), authored breathe + choice pages inside `moose-bigness` and `coocoo`.
+- **Product spine (S4):** `PARENT_PASSWORD` env-gated cookie protects every `/api/parent/*` route and the parent surface. `SEED_HOUSEHOLD_ID` / `SEED_CHILD_ID` removed from all `app/` code — routes resolve household via `currentHouseholdId()`. CI runs the integration tests against a local Supabase container. `qa_records.canonVersion` stamped from `lib/prompts/version`.
+- **Cost guardrails throughout:** every Anthropic / OpenAI / Gemini / ElevenLabs call bumps `usage_counters` BEFORE the external call. Rough per-transaction cost: $0.02 checkpoint, $0.05 story attempt, $0.05 per art image, ~$1 per narrated book.
 
-**Deferred follow-ups:** full interactive-page UI, multi-voice buddies, scene art rendering with PaintingWash, removing SEED_HOUSEHOLD_ID from routes, `PARENT_PASSWORD` env-gate before Vercel deploy, native shell (E3).
+**Honest remaining gaps** (nothing here is a blocker for you and Azad; all are follow-ups toward V2):
+- Cast per-buddy voice IDs in ElevenLabs Voice Library and paste them into `lib/world/buddy-roster.ts` — data layer is ready, voices themselves aren't cast yet.
+- Approve the pending covers (candidate art awaits Papa in the ArtApproval grid) — `pnpm exec tsx scripts/art-approve-book.ts --all --kind cover` will auto-approve the first candidate per book.
+- Approve or regenerate scenes for the remaining 8 books.
+- The saved-word confirmation utterance is voiced by the fallback voice, not the child's buddy (the wire path exists — needs one more `voiceId` prop hop).
+- Full V2 vision at [`docs/V2-VISION.md`](./docs/V2-VISION.md).
 
 ## Quickstart
 
