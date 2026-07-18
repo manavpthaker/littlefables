@@ -20,6 +20,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { speak, type SpeakHandle, type TtsSource, type WordTimestamp } from '@/lib/reader/speech';
+import { setNarrationActive } from '@/lib/voice/ui-voice';
 
 interface PageAudio {
   /** Pre-generated audio TtsSource — usually a static-file source. */
@@ -62,6 +63,10 @@ const AUTO_TURN_DELAY_MS = 1500;
 export function useReaderTransport({ page, gated, onAutoNext, isLastPage }: Options): ReaderTransport {
   const [playing, setPlaying] = useState(false);
   const [wordIdx, setWordIdx] = useState(-1);
+
+  // Priority rule: UI speech (buddy greetings, checkpoint questions,
+  // celebrations) never rides over narration. See lib/voice/ui-voice.ts.
+  useEffect(() => { setNarrationActive(playing); }, [playing]);
 
   const handleRef = useRef<SpeakHandle | null>(null);
   const autoTurnRef = useRef<ReturnType<typeof setTimeout> | null>(null);

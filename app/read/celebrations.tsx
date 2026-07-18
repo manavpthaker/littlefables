@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CelebrationQueue } from '@ds/components/world/Celebration.jsx';
 import { badgeDisplay } from '@/lib/world/badge-catalog';
+import { speakUtterance } from '@/lib/voice/ui-voice';
 
 // Wrapper around CelebrationQueue that drives it from a rolling list of
 // newly-earned badge slugs. Parents pipe response envelopes into `newlyEarned`;
@@ -18,8 +19,18 @@ export function Celebrations({ newlyEarned }: { newlyEarned: string[] }) {
     [newlyEarned, seen],
   );
 
+  const spokenFor = useRef<Set<string>>(new Set());
   useEffect(() => {
-    if (fresh.length) setSeen((s) => new Set([...s, ...fresh]));
+    if (!fresh.length) return;
+    setSeen((s) => new Set([...s, ...fresh]));
+    // Speak the first fresh celebration's utterance (queue speaks them one at
+    // a time; here we announce whichever slug arrived first this batch).
+    const first = fresh[0];
+    if (first && !spokenFor.current.has(first)) {
+      spokenFor.current.add(first);
+      const b = badgeDisplay(first);
+      if (b.utterance) void speakUtterance(b.utterance, { voice: 'buddy' });
+    }
   }, [fresh]);
 
   const items = useMemo(

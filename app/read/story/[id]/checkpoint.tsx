@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Checkpoint as DsCheckpoint } from '@ds/components/reader/Checkpoint.jsx';
 import type { CheckpointQuestion, GeneratedCheckpointRecord, JudgeSignal } from '@/lib/models/checkpoint';
 import { startRecording, type Recording } from '@/lib/reader/recording';
+import { speakUtterance } from '@/lib/voice/ui-voice';
 
 type MicState = 'idle' | 'listening' | 'processing' | 'heard';
 type MercyStage = 'none' | 'hint' | 'given';
@@ -58,6 +59,8 @@ export function Checkpoint(props: Props) {
         if (cancelled.current) return;
         setQuestion(data.question);
         setRecordId(data.recordId);
+        // Speak the question in the buddy voice when it arrives.
+        void speakUtterance(data.question.question, { voice: 'buddy' });
       } catch (err) {
         if (cancelled.current) return;
         setError((err as Error).message);
@@ -69,6 +72,19 @@ export function Checkpoint(props: Props) {
       recordingRef.current?.stop().catch(() => undefined);
     };
   }, [props.bookId, props.chapterIdx]);
+
+  // Speak mercy lines when mercy escalates.
+  const lastMercy = useRef<MercyStage>('none');
+  useEffect(() => {
+    if (!question) return;
+    if (mercy === lastMercy.current) return;
+    lastMercy.current = mercy;
+    if (mercy === 'hint' && question.hint) {
+      void speakUtterance(question.hint, { voice: 'buddy' });
+    } else if (mercy === 'given' && question.given) {
+      void speakUtterance(question.given, { voice: 'buddy' });
+    }
+  }, [mercy, question]);
 
   const submitAnswer = useCallback(
     async (audio: Blob) => {

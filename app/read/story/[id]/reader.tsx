@@ -13,6 +13,7 @@ import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-so
 import type { WordTimestamp } from '@/lib/reader/speech';
 import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
+import { speakUtterance } from '@/lib/voice/ui-voice';
 import { Checkpoint } from './checkpoint';
 import { InteractivePage } from './interactive-page';
 import {
@@ -191,6 +192,8 @@ export function Reader({
       setJustSaved(true);
       if (bloomTimer.current) clearTimeout(bloomTimer.current);
       bloomTimer.current = setTimeout(() => setJustSaved(false), 1400);
+      // Confirm the save aloud in the buddy voice.
+      void speakUtterance(`${stem} is in your word book!`, { voice: 'buddy' });
 
       saveWord({
         word: stem,
