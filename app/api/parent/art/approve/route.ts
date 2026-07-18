@@ -12,6 +12,7 @@ import type { Json } from '@/types/database';
 const bodySchema = z.object({
   artifactId: z.string().uuid(),
   action: z.enum(['approve', 'reject']),
+  reason: z.string().max(200).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
   if (body.data.action === 'reject') {
     const { error } = await admin()
       .from('art_artifacts')
-      .update({ status: 'rejected' })
+      .update({ status: 'rejected', reject_reason: body.data.reason ?? null })
       .eq('id', artifact.id);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, status: 'rejected' });

@@ -8,6 +8,7 @@ import { BuddyPicker } from './buddy-picker';
 import { SunsParent } from './suns-parent';
 import { BooksSection, type ParentBook, type ParentBookStatus } from './books-section';
 import { ArtSection, type PendingArt } from './art-section';
+import { ArtGrid, type CandidateView } from './art-grid';
 import { ChildrenSection, type ChildRow } from './children-section';
 
 export default async function ParentHomePage() {
@@ -175,8 +176,19 @@ export default async function ParentHomePage() {
 
       <ChildrenSection rows={childRows} householdName={household?.name ?? 'Household'} />
       <BooksSection books={books} />
+      <ArtGrid
+        candidates={pendingArt.map<CandidateView>((p) => ({
+          id: p.id,
+          bookId: p.bookId,
+          bookTitle: p.bookTitle,
+          kind: p.kind,
+          chapterIdx: p.chapterIdx,
+          pageIdx: p.pageIdx,
+          previewUrl: p.previewUrl,
+        }))}
+      />
       <ArtSection
-        pending={pendingArt}
+        pending={[]}
         books={books.map((b) => ({ id: b.id, title: b.title, hasCover: false }))}
       />
       <ComprehensionSection records={comprehension} />

@@ -114,6 +114,11 @@ declare module '@ds/components/parent/ChoiceRecord.jsx' {
   export function ChoiceRecord(props: ChoiceRecordProps): JSX.Element;
 }
 
+declare module '@ds/components/parent/ArtApproval.jsx' {
+  import type { ArtApprovalProps } from '@ds/components/parent/ArtApproval';
+  export function ArtApproval(props: ArtApprovalProps): JSX.Element;
+}
+
 declare module '@ds/components/parent/ParentPrimitives.jsx' {
   import type { SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
   export function SectionHeader(props: SectionHeaderProps): JSX.Element;

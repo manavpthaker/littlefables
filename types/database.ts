@@ -29,6 +29,7 @@ export type Database = {
           model: string | null
           page_idx: number | null
           prompt: string | null
+          reject_reason: string | null
           status: string
         }
         Insert: {
@@ -45,6 +46,7 @@ export type Database = {
           model?: string | null
           page_idx?: number | null
           prompt?: string | null
+          reject_reason?: string | null
           status?: string
         }
         Update: {
@@ -61,6 +63,7 @@ export type Database = {
           model?: string | null
           page_idx?: number | null
           prompt?: string | null
+          reject_reason?: string | null
           status?: string
         }
         Relationships: [
