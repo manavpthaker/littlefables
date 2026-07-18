@@ -62,6 +62,19 @@ export default async function ParentHomePage() {
     loadWorldState(childId),
   ]);
 
+  const { data: latestApprovedArt } = await admin()
+    .from('art_artifacts')
+    .select('book_id, approved_at')
+    .eq('household_id', householdId)
+    .eq('status', 'approved')
+    .order('approved_at', { ascending: false });
+  const artApprovedByBook = new Map<string, string>();
+  for (const a of latestApprovedArt ?? []) {
+    if (a.book_id && a.approved_at && !artApprovedByBook.has(a.book_id)) {
+      artApprovedByBook.set(a.book_id, a.approved_at);
+    }
+  }
+
   const { data: pendingArtRows } = await admin()
     .from('art_artifacts')
     .select('id, book_id, kind, chapter_idx, page_idx, candidate_path, created_at')
@@ -127,6 +140,7 @@ export default async function ParentHomePage() {
       hardGatesPassed: qa?.hardPassed ?? null,
       softScoreTotal: qa?.softTotal ?? null,
       updatedAt: b.updated_at,
+      artApprovedAt: artApprovedByBook.get(b.id) ?? null,
     };
   });
 

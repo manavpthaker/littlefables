@@ -22,6 +22,8 @@ export interface ParentBook {
   hardGatesPassed?: boolean | null;
   softScoreTotal?: number | null;
   updatedAt: string;
+  /** Most recent art-approval timestamp for this book (any kind). Optional. */
+  artApprovedAt?: string | null;
 }
 
 const STATUS_COLOR: Record<ParentBookStatus, { bg: string; text: string }> = {
@@ -91,11 +93,23 @@ function BookRow({ book }: { book: ParentBook }) {
           {status}
         </span>
       </header>
-      <div style={{ display: 'flex', gap: 'var(--space-3)', color: 'var(--ink-soft)', fontSize: 14 }}>
+      <div style={{ display: 'flex', gap: 'var(--space-3)', color: 'var(--ink-soft)', fontSize: 14, flexWrap: 'wrap' }}>
         <span>source: {book.source}</span>
         {book.hardGatesPassed != null && <span>hard-gates: {book.hardGatesPassed ? 'passed' : 'failed'}</span>}
         {book.softScoreTotal != null && <span>score: {Math.round(book.softScoreTotal)}</span>}
       </div>
+      {/* Provenance line — reads left-to-right as a warm sentence about
+          exactly what happened to this book. */}
+      <p style={{ margin: 0, fontFamily: 'var(--font-hand)', color: 'var(--text-muted)', fontSize: 14 }}>
+        {book.source === 'generated'
+          ? 'written with your family universe'
+          : book.source === 'family' || book.source === 'family-original'
+          ? 'family original — carried over from before the app'
+          : 'starter — pack seed'}
+        {book.hardGatesPassed != null && ` · QA ${book.hardGatesPassed ? 'passed' : 'failed'}`}
+        {book.softScoreTotal != null && ` (score ${Math.round(book.softScoreTotal)})`}
+        {book.artApprovedAt && ` · art approved ${new Date(book.artApprovedAt).toLocaleDateString()}`}
+      </p>
       {(status === 'needs-review' || status === 'unverified') && (
         <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
           <button
