@@ -25,3 +25,18 @@ body {
 button {
   font-family: inherit;
 }
+
+/* Page-turn motion (S3.1). Reader main container animates on each
+ * (chapterIdx, pageIdx) change via React key. Slides up + fades in over
+ * --dur-page with --ease-page. Reduced-motion collapses --dur-page to 200ms
+ * (crossfade only) via the motion.css @media block. */
+@keyframes lf-page-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

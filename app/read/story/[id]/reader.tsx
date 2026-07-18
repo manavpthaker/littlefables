@@ -326,15 +326,28 @@ export function Reader({
       ) : ch && page ? (
         <>
           <main
+            key={`${state.chapterIdx}-${state.pageIdx}`}
             style={{
               flex: 1,
               display: 'grid',
               placeItems: 'center',
               padding: 'var(--space-6) var(--page-pad)',
-              background: page.img ? `url(${page.img}) center/cover no-repeat` : undefined,
               position: 'relative',
+              animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
             }}
           >
+            {page.img && (
+              <div
+                key={page.img}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: `url(${page.img}) center/cover no-repeat`,
+                  animation: 'var(--motion-develop)',
+                  pointerEvents: 'none',
+                }}
+              />
+            )}
             {useWashFallback && (
               <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <PaintingWash fullBleed label="painting this page…" />
