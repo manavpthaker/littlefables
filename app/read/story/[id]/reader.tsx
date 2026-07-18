@@ -6,6 +6,7 @@ import { ReaderTopBar } from '@ds/components/reader/ReaderTopBar.jsx';
 import { ChapterMap } from '@ds/components/reader/ChapterMap.jsx';
 import { StoryText } from '@ds/components/reader/StoryText.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
+import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
@@ -241,6 +242,20 @@ export function Reader({
             if (result?.newlyEarned?.length) {
               setPendingBadges((prev) => [...prev, ...(result.newlyEarned ?? [])]);
             }
+            // Advance to next chapter, or fall through per book kind.
+            if (state.chapterIdx === null) return;
+            const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
+            if (!isLastChapter) {
+              dispatch({ type: 'enterChapter', chapterIdx: state.chapterIdx + 1 });
+              return;
+            }
+            // Chapter books return to their map; quick books go back to Home.
+            if (book.kind === 'chapter') {
+              dispatch({ type: 'exitChapter' });
+            } else {
+              transport.stop();
+              router.push('/read');
+            }
           }}
         />
       ) : null}
@@ -365,6 +380,7 @@ export function Reader({
               padding: 'var(--space-4) var(--page-pad) var(--space-6)',
               display: 'grid',
               placeItems: 'center',
+              gap: 'var(--space-3)',
               minHeight: 'var(--reach-zone)',
             }}
           >
@@ -376,6 +392,26 @@ export function Reader({
               canPrev={!isFirstPage(state)}
               canNext={!lastPage}
             />
+            {/* Silent-reader completion: the checkpoint auto-fires only when
+                narration ends (transport.onEnd on the last page). Kids who
+                read the page themselves without ever pressing play never
+                triggered onEnd → could never finish a chapter. This affordance
+                lets them signal they're done. */}
+            {lastPage && !transport.playing && !inCheckpoint && !seenCheckpoint.current.has(chapterKey) && (
+              <Button
+                variant="primary"
+                size="primary"
+                icon="check"
+                utterance="Done with this chapter"
+                onClick={() => {
+                  transport.stop();
+                  seenCheckpoint.current.add(chapterKey);
+                  setInCheckpoint(true);
+                }}
+              >
+                Done with this chapter
+              </Button>
+            )}
           </footer>
         </>
       ) : null}
