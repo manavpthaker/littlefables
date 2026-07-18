@@ -31,9 +31,18 @@ async function main(): Promise<void> {
   for (const story of pack.stories) {
     const { data: existing } = await client
       .from('books')
-      .select('id')
+      .select('id, book, cover_bg')
       .eq('id', story.id)
       .maybeSingle();
+
+    // Preserve img/coverImage that live on the existing row — those get
+    // stitched in by the art-approve pipeline post-import and would be
+    // silently clobbered by a plain upsert (S3.3 fix). We merge the pack's
+    // authoritative text/interactivity with the DB's img fields.
+    const mergedStory = mergePreservingArt(
+      story as unknown as StoredBook,
+      (existing?.book as StoredBook | null) ?? null,
+    );
 
     const row = {
       id: story.id,
@@ -45,8 +54,10 @@ async function main(): Promise<void> {
       source: story.source,
       status: story.status,
       cover_emoji: story.coverEmoji ?? null,
-      cover_bg: story.coverBg ?? null,
-      book: story as unknown as Database['public']['Tables']['books']['Insert']['book'],
+      // Preserve cover_bg URL if approved cover art has already been stitched;
+      // fall back to the pack's cover_bg only when the DB has none.
+      cover_bg: existing?.cover_bg?.startsWith('http') ? existing.cover_bg : (story.coverBg ?? null),
+      book: mergedStory as unknown as Database['public']['Tables']['books']['Insert']['book'],
       parent_guide: story.parentGuide ?? null,
       origin_note: story.originNote ?? null,
     };
@@ -59,6 +70,40 @@ async function main(): Promise<void> {
   }
 
   console.log(`\nDone. ${inserted} inserted, ${updated} updated.`);
+}
+
+interface StoredPage {
+  text?: string;
+  img?: string;
+  [k: string]: unknown;
+}
+interface StoredChapter {
+  title?: string;
+  pages?: StoredPage[];
+  [k: string]: unknown;
+}
+interface StoredBook {
+  chapters?: StoredChapter[];
+  coverImage?: string;
+  [k: string]: unknown;
+}
+
+function mergePreservingArt(fresh: StoredBook, existing: StoredBook | null): StoredBook {
+  if (!existing?.chapters) return fresh;
+  const merged: StoredBook = { ...fresh };
+  if (existing.coverImage) merged.coverImage = existing.coverImage;
+  merged.chapters = (fresh.chapters ?? []).map((chapter, ci) => {
+    const existingChapter = existing.chapters?.[ci];
+    if (!existingChapter?.pages) return chapter;
+    return {
+      ...chapter,
+      pages: (chapter.pages ?? []).map((page, pi) => {
+        const img = existingChapter.pages?.[pi]?.img;
+        return img ? { ...page, img } : page;
+      }),
+    };
+  });
+  return merged;
 }
 
 main().catch((err) => {

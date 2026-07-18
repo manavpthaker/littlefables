@@ -470,6 +470,10 @@
               "text": "Azi breathed out. He counted to six. One... two... three... four... five... six. Mountain air takes its time. It doesn't rush. It moves through the valleys and over the peaks and around the trees, and it never once hurries. You breathe like the mountains breathe - big and slow and patient. Azi breathed again. In for four. Out for six. The tightness in his chest started to soften, like ice melting in the sun."
             },
             {
+              "text": "Try it with Azi now. Breathe in like you're catching a snowflake. Breathe out like you're setting it down gently in the pinecone jar. (Take one whole breath before you turn the page.)",
+              "breathe": true
+            },
+            {
               "text": "(Breathe with Azi now. In... two... three... four... Out... two... three... four... five... six...) Third: Find the soft place behind your strong. The moose's voice was gentler now. Almost a whisper in Azi's mind. Put your hand on your heart. Azi lifted his hand from the window glass and placed it on his chest. Under his rocket pajamas, he could feel his heart beating. Thump... thump... thump."
             },
             {
@@ -684,6 +688,22 @@
             },
             {
               "text": "Yes. That's real. There's a difference between \"this is hard and I need help\" and \"I know how but something in me is sitting on the floor and refusing to move.\" You always feel the difference. You know which one it is. You've always known."
+            },
+            {
+              "text": "The Coocoo turned to Azi with soft eyes. Sometimes we say 'I can't' when we mean something else. What sounds more like you today?",
+              "choice": {
+                "prompt": "Which one sounds true right now?",
+                "options": [
+                  {
+                    "label": "This is hard — I need a hug first",
+                    "summary": "Azi asked for a hug and the hard thing got smaller"
+                  },
+                  {
+                    "label": "I know how — I just don't feel like it",
+                    "summary": "Azi noticed the feeling and picked one small step"
+                  }
+                ]
+              }
             },
             {
               "text": "Azi was quiet. Because it was true. He did always know. The knowing was always there, under the crossed arms, under the \"I can't\" — quiet and certain as the basil in the garden holding still in the dark. He had just been choosing to stand in front of it. (Breathe slowly... in for four... out for four... feel your body getting heavier and softer...)"

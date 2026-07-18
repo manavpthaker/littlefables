@@ -26,3 +26,24 @@ Converted 7 of 8 stories into `content/packs/pack-000-family-originals.json` (12
 ## Schema note (for the build)
 
 Pack stories use the PRD's Book model (`kind: quick|chapter`, `chapters[].pages[]`) plus two additive fields the build must support: `parentGuide` (markdown, Grown-ups surface only) and `breathe: true` pages (render the breathe-along interaction instead of a mic ask). `originNote` is parent-facing metadata.
+
+## S3.3 addition (2026-07-18) — authored interactivity
+
+Two additive edits to the two longest chapter books, per PRD A4 and
+XP-EXPERIENCE-PLAN S3.3. Both written in the story's own voice, at natural
+beats where the narrative already pauses; the text of each new page stands
+alone if the interactive layer is skipped.
+
+- **moose-bigness** ch5 "The Gentle Giant's Secret", inserted after p6:
+  a `breathe: true` page. The chapter is literally teaching a breathing
+  technique (four in, six out); a hand-held breath before turning the page
+  makes the passage embodied instead of instructional.
+
+- **coocoo** ch3 "What the Coocoo Showed Him", inserted after p5: a `choice`
+  page. The Coocoo has just spoken the "there's a difference between 'I
+  can't' and 'I won't'" line; the choice offers the child two ways to
+  interpret the moment — one asks for help, one names the feeling — both
+  land on the same accepting continuation.
+
+Idempotent insertion (the script guards against double-inserting if
+CONVERSION-NOTES has already been amended).
