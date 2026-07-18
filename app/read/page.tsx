@@ -42,8 +42,7 @@ export default async function ReadHome() {
       .from('book_progress')
       .select('book_id, chapter_idx, page_idx, updated_at')
       .eq('child_id', ctx.childId)
-      .order('updated_at', { ascending: false })
-      .limit(1),
+      .order('updated_at', { ascending: false }),
     admin()
       .from('reading_days')
       .select('day')
@@ -90,15 +89,28 @@ export default async function ReadHome() {
   };
   const greeting = composeGreeting(bundle, buddy);
 
-  const books: ShelfBook[] = (bookRows ?? []).map((b) => ({
-    id: b.id,
-    title: b.title,
-    kind: b.kind as 'quick' | 'chapter',
-    coverEmoji: b.cover_emoji,
-    coverBg: b.cover_bg,
-    coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
-    status: b.status,
-  }));
+  // Progress per book — used both by ShelfGrid (per-card ribbon) and by the
+  // ContinueBanner (most-recent).
+  const progressByBook = new Map<string, { chapterIdx: number; pageIdx: number }>();
+  for (const p of progressRows ?? []) {
+    if (!progressByBook.has(p.book_id)) {
+      progressByBook.set(p.book_id, { chapterIdx: p.chapter_idx, pageIdx: p.page_idx });
+    }
+  }
+
+  const books: ShelfBook[] = (bookRows ?? []).map((b) => {
+    const p = progressByBook.get(b.id);
+    return {
+      id: b.id,
+      title: b.title,
+      kind: b.kind as 'quick' | 'chapter',
+      coverEmoji: b.cover_emoji,
+      coverBg: b.cover_bg,
+      coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
+      status: b.status,
+      progress: p ? progressFraction(b, p.chapterIdx, p.pageIdx) : 0,
+    };
+  });
 
   const latestProgress = progressRows?.[0];
   const targetBook = latestProgress

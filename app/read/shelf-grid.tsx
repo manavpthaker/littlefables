@@ -13,16 +13,32 @@ export interface ShelfBook {
   coverBg: string | null;
   coverImage?: string | null;
   status: string;
+  /** 0..1 — how far the child has read this book. From book_progress. */
+  progress: number;
 }
 
 export function ShelfGrid({ books }: { books: ShelfBook[] }) {
+  if (books.length === 0) {
+    return (
+      <p
+        style={{
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font-body)',
+          fontSize: 'var(--text-body)',
+          margin: 0,
+        }}
+      >
+        Ask a grown-up to make a story with you.
+      </p>
+    );
+  }
+
   return (
     <div
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        gap: 'var(--space-4)',
-        padding: 'var(--space-4)',
+        gap: 'var(--space-5)',
       }}
     >
       {books.map((book) => (
@@ -30,7 +46,7 @@ export function ShelfGrid({ books }: { books: ShelfBook[] }) {
           key={book.id}
           title={book.title}
           utterance={book.title}
-          progress={0}
+          progress={book.progress}
           cover={book.coverImage ?? undefined}
           onOpen={() => {
             window.location.href = `/read/story/${book.id}`;
