@@ -60,3 +60,33 @@ export function pageAudioSource({ bookId, chapterIdx, pageIdx }: Options): TtsSo
     },
   };
 }
+
+/** Fetch just the word timestamps for a page — cheap sidecar for the reader
+ *  so `transportPage` can include them BEFORE playback, and tap-word seek
+ *  hits real audio offsets instead of restarting the page. Returns null if
+ *  timestamps aren't available (missing / stale / no network) — the
+ *  transport falls back to restart-at-index, which is acceptable. */
+export async function fetchPageTimestamps(
+  bookId: string,
+  chapterIdx: number,
+  pageIdx: number,
+  pageText: string,
+): Promise<WordTimestamp[] | null> {
+  // Prefer IndexedDB when the full audio is already cached (avoids a network hop).
+  try {
+    const cached = await getCachedAudio(bookId, chapterIdx, pageIdx);
+    if (cached && audioMatchesText(cached.timestamps, pageText)) return cached.timestamps;
+  } catch {
+    /* fall through */
+  }
+  try {
+    const url = `${publicBaseUrl()}/${bookId}/${chapterIdx}-${pageIdx}.timestamps.json`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const ts = (await res.json()) as WordTimestamp[];
+    if (!audioMatchesText(ts, pageText)) return null;
+    return ts;
+  } catch {
+    return null;
+  }
+}

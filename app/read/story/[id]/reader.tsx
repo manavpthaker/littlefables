@@ -9,7 +9,8 @@ import { Transport } from '@ds/components/kid/Transport.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
-import { pageAudioSource } from '@/lib/reader/page-audio-source';
+import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-source';
+import type { WordTimestamp } from '@/lib/reader/speech';
 import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { Checkpoint } from './checkpoint';
@@ -70,8 +71,28 @@ export function Reader({
   const chapterKey = `${book.id}:${state.chapterIdx ?? 'none'}`;
   const seenCheckpoint = useRef(new Set<string>());
 
-  // Feed the current page's text + layered TtsSource into the transport.
-  // Any layer failure (missing / stale audio) falls through to speechSynth.
+  // Word timestamps for the current page — threaded into transportPage so
+  // `transport.seekToWord()` finds a real audio offset (via `page.timestamps`)
+  // and jumps within playback instead of restarting at word 0. Null while
+  // fetching, or when audio isn't available (speechSynth fallback path).
+  const [pageTimestamps, setPageTimestamps] = useState<WordTimestamp[] | null>(null);
+  useEffect(() => {
+    if (!page || state.chapterIdx === null) {
+      setPageTimestamps(null);
+      return;
+    }
+    let cancelled = false;
+    void fetchPageTimestamps(book.id, state.chapterIdx, state.pageIdx, page.text).then((ts) => {
+      if (!cancelled) setPageTimestamps(ts);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [book.id, page, state.chapterIdx, state.pageIdx]);
+
+  // Feed the current page's text + layered TtsSource + timestamps into the
+  // transport. Any layer failure falls through to speechSynth; missing
+  // timestamps mean seek restarts the page (acceptable fallback).
   const transportPage = useMemo(() => {
     if (!page || state.chapterIdx === null) return null;
     return {
@@ -81,8 +102,9 @@ export function Reader({
         chapterIdx: state.chapterIdx,
         pageIdx: state.pageIdx,
       }),
+      timestamps: pageTimestamps ?? undefined,
     };
-  }, [book.id, page, state.chapterIdx, state.pageIdx]);
+  }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps]);
 
   const onAutoNext = useCallback(() => {
     // Auto-turn only advances within a chapter. Chapter end is handled by

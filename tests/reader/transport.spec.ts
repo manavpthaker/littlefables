@@ -90,6 +90,34 @@ describe('useReaderTransport §A3 invariants', () => {
     expect(lastOpts?.startOffset).toBeCloseTo(0.4);
   });
 
+  it('seekToWord with timestamps present does NOT restart from index 0', () => {
+    // Regression: pre-fix, timestamps never threaded into transportPage meant
+    // page.timestamps was undefined and seek fell through to startOffset=undefined
+    // (restart at word 0). This test locks in the wire.
+    const { hook } = setup({
+      page: {
+        text: 'a b c d',
+        timestamps: [
+          { word: 'a', start: 0, end: 0.2 },
+          { word: 'b', start: 0.2, end: 0.4 },
+          { word: 'c', start: 0.4, end: 0.6 },
+          { word: 'd', start: 0.6, end: 0.8 },
+        ],
+      },
+    });
+    act(() => hook.result.current.seekToWord(3));
+    expect(lastOpts?.startOffset).toBeDefined();
+    expect(lastOpts?.startOffset).not.toBe(0);
+    expect(hook.result.current.wordIdx).toBe(3);
+  });
+
+  it('seekToWord without timestamps falls back to restart (word idx only)', () => {
+    const { hook } = setup({ page: { text: 'a b c d' } }); // no timestamps
+    act(() => hook.result.current.seekToWord(2));
+    expect(hook.result.current.wordIdx).toBe(2);
+    expect(lastOpts?.startOffset).toBeUndefined();
+  });
+
   it('speakOne pauses main narration and speaks the word alone', () => {
     const { hook } = setup();
     act(() => hook.result.current.play());
