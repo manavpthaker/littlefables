@@ -100,7 +100,7 @@ declare module '@ds/components/world/WordbookEntry.jsx' {
 declare module '@ds/components/system/SystemStates.jsx' {
   import type { StateBannerProps, PaintingWashProps, ErrorCharacterProps } from '@ds/components/system/SystemStates';
   export function StateBanner(props: StateBannerProps): JSX.Element;
-  export function PaintingWash(props: PaintingWashProps): JSX.Element;
+  export function PaintingWash(props: PaintingWashProps & { fullBleed?: boolean }): JSX.Element;
   export function ErrorCharacter(props: ErrorCharacterProps): JSX.Element;
 }
 

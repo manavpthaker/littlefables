@@ -7,6 +7,7 @@ import { ChapterMap } from '@ds/components/reader/ChapterMap.jsx';
 import { StoryText } from '@ds/components/reader/StoryText.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
+import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
@@ -62,6 +63,15 @@ export function Reader({
   const page = currentPage(book, state);
   const showMap = state.chapterIdx === null;
   const lastPage = isLastPage(book, state);
+
+  // Painted-book policy: if ANY page in this book has approved scene art, a
+  // page without one shows PaintingWash instead of plain paper — partially
+  // arted books look intentional (art still developing), never broken.
+  const bookHasAnyArt = useMemo(
+    () => book.chapters.some((c) => c.pages.some((p) => Boolean(p.img))),
+    [book],
+  );
+  const useWashFallback = bookHasAnyArt && page && !page.img;
 
   // Interactive page detection — PRD A4. Gates the transport (transport won't
   // auto-turn while the child is choosing / breathing / answering).
@@ -325,6 +335,11 @@ export function Reader({
               position: 'relative',
             }}
           >
+            {useWashFallback && (
+              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <PaintingWash fullBleed label="painting this page…" />
+              </div>
+            )}
             {page.img && (
               <div
                 style={{

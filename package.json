@@ -21,7 +21,8 @@
     "content:import-pack-000": "tsx scripts/import-pack-000.ts",
     "canon:reconvert": "tsx scripts/reconvert-canon.ts",
     "audio:generate": "tsx scripts/generate-audio.ts",
-    "art:covers": "tsx scripts/art-covers.ts"
+    "art:covers": "tsx scripts/art-covers.ts",
+    "art:scenes": "tsx scripts/art-scenes.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.112.3",
