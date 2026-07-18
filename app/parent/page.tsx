@@ -8,6 +8,7 @@ import { WordbookSection, type ParentWordbookEntry } from './wordbook-section';
 import { BuddyPicker } from './buddy-picker';
 import { SunsParent } from './suns-parent';
 import { BooksSection, type ParentBook, type ParentBookStatus } from './books-section';
+import { ArtSection, type PendingArt } from './art-section';
 
 // Parent Corner home. Single-household mode (Phase 0): no auth gate — anyone
 // with the URL is Papa. Add a PARENT_PASSWORD env-gate before deploying.
@@ -60,6 +61,34 @@ export default async function ParentHomePage() {
       .order('attempt', { ascending: false }),
     loadWorldState(SEED_CHILD_ID),
   ]);
+
+  // Pending art candidates + books that could use cover art.
+  const { data: pendingArtRows } = await admin()
+    .from('art_artifacts')
+    .select('id, book_id, kind, chapter_idx, page_idx, candidate_path, created_at')
+    .eq('household_id', SEED_HOUSEHOLD_ID)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  const pendingArt: PendingArt[] = [];
+  for (const row of pendingArtRows ?? []) {
+    const { data: signed } = await admin().storage
+      .from('art-candidates')
+      .createSignedUrl(row.candidate_path, 60 * 60);
+    if (!signed?.signedUrl) continue;
+    const bookRow = (bookRows ?? []).find((b) => b.id === row.book_id);
+    pendingArt.push({
+      id: row.id,
+      bookId: row.book_id,
+      bookTitle: bookRow?.title ?? null,
+      kind: row.kind as 'cover' | 'scene' | 'sheet',
+      chapterIdx: row.chapter_idx,
+      pageIdx: row.page_idx,
+      previewUrl: signed.signedUrl,
+      createdAt: row.created_at,
+    });
+  }
 
   // Group latest-attempt QA per book.
   const latestQAByBook = new Map<string, { hardPassed: boolean | null; softTotal: number | null }>();
@@ -141,6 +170,10 @@ export default async function ParentHomePage() {
       </section>
 
       <BooksSection books={books} />
+      <ArtSection
+        pending={pendingArt}
+        books={books.map((b) => ({ id: b.id, title: b.title, hasCover: false }))}
+      />
       <ComprehensionSection records={comprehension} />
       <WordbookSection entries={wordbook} />
       <SunsParent earned={earnedIdx} today={todayIdx} />

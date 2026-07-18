@@ -11,6 +11,7 @@ export interface ShelfBook {
   kind: 'quick' | 'chapter';
   coverEmoji: string | null;
   coverBg: string | null;
+  coverImage?: string | null;
   status: string;
 }
 
@@ -30,8 +31,8 @@ export function ShelfGrid({ books }: { books: ShelfBook[] }) {
           title={book.title}
           utterance={book.title}
           progress={0}
+          cover={book.coverImage ?? undefined}
           onOpen={() => {
-            // Phase 1 wires up navigation to /read/story/[id]. Placeholder for now.
             window.location.href = `/read/story/${book.id}`;
           }}
         />
