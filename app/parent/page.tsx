@@ -9,6 +9,7 @@ import { BuddyPicker } from './buddy-picker';
 import { SunsParent } from './suns-parent';
 import { BooksSection, type ParentBook, type ParentBookStatus } from './books-section';
 import { ArtSection, type PendingArt } from './art-section';
+import { AddChildForm } from './add-child-form';
 
 // Parent Corner home. Single-household mode (Phase 0): no auth gate — anyone
 // with the URL is Papa. Add a PARENT_PASSWORD env-gate before deploying.
@@ -167,6 +168,7 @@ export default async function ParentHomePage() {
             <SendToDeviceButton childId={child.id} childName={child.display_name} />
           </div>
         ))}
+        <AddChildForm />
       </section>
 
       <BooksSection books={books} />
