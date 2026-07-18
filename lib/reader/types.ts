@@ -16,6 +16,8 @@ export interface ReaderPage {
   words: ReaderWord[];
   /** starred stem from the pack — always visually highlighted */
   star?: string;
+  /** approved scene art URL (art-live bucket) — rendered as full-bleed */
+  img?: string;
   ask?: AskBlock;
   choice?: ChoiceBlock;
   breathe?: boolean;

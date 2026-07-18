@@ -35,6 +35,7 @@ export function toReaderBook(book: Book): ReaderBook {
       text: p.text,
       words: wordsOf(p.text),
       star: p.star,
+      img: (p as { img?: string }).img,
       ask: p.ask,
       choice: p.choice,
       breathe: p.breathe,

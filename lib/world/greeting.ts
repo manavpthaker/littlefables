@@ -24,6 +24,15 @@ export function composeGreeting(bundle: WorldBundle, buddy: Buddy = activeBuddy(
     };
   }
 
+  // World-memory callback — set when an interactive-page choice or notable
+  // event landed. Takes precedence over the generic book-reading callback.
+  if (bundle.world.latestCallback) {
+    return {
+      utterance: `${bundle.world.latestCallback}. Want to keep going?`,
+      tone: 'callback',
+    };
+  }
+
   // Reading callback — the most recently opened book that isn't finished today.
   const lastBook = bundle.recentBooks[0];
   if (lastBook && lastBook.title) {

@@ -13,6 +13,7 @@ import { pageAudioSource } from '@/lib/reader/page-audio-source';
 import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { Checkpoint } from './checkpoint';
+import { InteractivePage } from './interactive-page';
 import {
   currentChapter,
   currentPage,
@@ -59,6 +60,10 @@ export function Reader({
   const showMap = state.chapterIdx === null;
   const lastPage = isLastPage(book, state);
 
+  // Interactive page detection — PRD A4. Gates the transport (transport won't
+  // auto-turn while the child is choosing / breathing / answering).
+  const isInteractive = Boolean(page && (page.choice || page.ask || page.breathe));
+
   // Comprehension gate. Set when narration ends on the last page of a chapter.
   // Cleared when the child moves on (either mercy or accept).
   const [inCheckpoint, setInCheckpoint] = useState(false);
@@ -94,10 +99,34 @@ export function Reader({
 
   const transport = useReaderTransport({
     page: transportPage,
-    gated: inCheckpoint, // pauses narration while the checkpoint is showing
+    gated: inCheckpoint || isInteractive, // pauses narration during interactivity
     onAutoNext,
     isLastPage: lastPage,
   });
+
+  // Interactive-page callbacks. Choices write to the buddy's choice_log via
+  // the world API; breathe just advances; ask advances (voice-answer flow can
+  // reuse the Checkpoint pipeline later — deferred).
+  const onChoice = useCallback(
+    (label: string, summary: string) => {
+      if (state.chapterIdx === null) return;
+      // Fire-and-forget — the sync outbox handles offline.
+      void fetch('/api/child/choice', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          bookId: book.id,
+          chapterIdx: state.chapterIdx,
+          label,
+          summary,
+        }),
+      });
+      dispatch({ type: 'nextPage' });
+    },
+    [book.id, state.chapterIdx],
+  );
+  const onBreatheDone = useCallback(() => dispatch({ type: 'nextPage' }), []);
+  const onAskContinue = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
   const onBack = useCallback(() => {
     transport.stop();
@@ -232,6 +261,18 @@ export function Reader({
             onPick={onPickChapter}
           />
         </section>
+      ) : ch && page && isInteractive && state.chapterIdx !== null ? (
+        <main style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 'var(--space-6) var(--page-pad)' }}>
+          <InteractivePage
+            page={page}
+            bookId={book.id}
+            chapterIdx={state.chapterIdx}
+            pageIdx={state.pageIdx}
+            onChoice={onChoice}
+            onBreatheDone={onBreatheDone}
+            onAsk={onAskContinue}
+          />
+        </main>
       ) : ch && page ? (
         <>
           <main
@@ -240,9 +281,33 @@ export function Reader({
               display: 'grid',
               placeItems: 'center',
               padding: 'var(--space-6) var(--page-pad)',
+              background: page.img ? `url(${page.img}) center/cover no-repeat` : undefined,
+              position: 'relative',
             }}
           >
-            <article style={{ maxWidth: 640, width: '100%' }}>
+            {page.img && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(180deg, rgba(70,54,42,0.15), rgba(70,54,42,0.05) 40%, transparent 60%)',
+                  pointerEvents: 'none',
+                }}
+              />
+            )}
+            <article
+              style={{
+                maxWidth: 640,
+                width: '100%',
+                background: page.img ? 'var(--wash-panel)' : 'transparent',
+                backdropFilter: page.img ? 'blur(6px)' : undefined,
+                padding: page.img ? 'var(--space-5) var(--space-6)' : 0,
+                borderRadius: page.img ? 'var(--radius-lg)' : 0,
+                boxShadow: page.img ? 'var(--elev-card)' : 'none',
+                position: 'relative',
+                zIndex: 1,
+              }}
+            >
               {book.kind === 'chapter' && (
                 <p
                   style={{
@@ -265,6 +330,7 @@ export function Reader({
                 ]}
                 onHearWord={onHearWord}
                 onStarWord={onStarWord}
+                overArt={Boolean(page.img)}
               />
             </article>
           </main>
