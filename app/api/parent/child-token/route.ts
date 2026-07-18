@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
 import { mintChildToken, CHILD_TOKEN_COOKIE, CHILD_TOKEN_TTL_DAYS } from '@/lib/auth/child-token';
@@ -12,6 +13,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const gate = await requireParentPassword(); if (gate) return gate;
+
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
 

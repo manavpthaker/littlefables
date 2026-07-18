@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
 import { SEED_HOUSEHOLD_ID } from '@/lib/models/seed';
@@ -16,6 +17,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const gate = await requireParentPassword(); if (gate) return gate;
+
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
 
