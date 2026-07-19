@@ -9,6 +9,8 @@ import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
+import { useRecapOnResume } from '@/lib/reader/use-recap';
+import { useArtPrefetch } from '@/lib/reader/use-art-prefetch';
 import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-source';
 import type { WordTimestamp } from '@/lib/reader/speech';
 import { Celebrations } from '@/app/read/celebrations';
@@ -57,6 +59,11 @@ export function Reader({
       pageIdx: state.pageIdx,
     });
   }, [book.id, state.chapterIdx, state.pageIdx]);
+
+  // Coming back after ≥24h: spoken orientation. Next pages' approved art:
+  // warmed while this one is read, so page turns never flash the wash.
+  useRecapOnResume(book, initialProgress);
+  useArtPrefetch(book, state);
 
   const ch = currentChapter(book, state);
   const page = currentPage(book, state);
