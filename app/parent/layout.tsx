@@ -10,7 +10,10 @@ export const metadata: Metadata = { title: 'Parent Corner · Little Fables' };
 // Password-gated (S4.1). /parent/gate is exempt so the form itself can render.
 export default async function ParentLayout({ children }: { children: React.ReactNode }) {
   const hdrs = await headers();
-  const pathname = hdrs.get('x-invoke-path') ?? hdrs.get('x-pathname') ?? '';
+  // `x-pathname` is set by middleware.ts and is the reliable source; the
+  // `x-invoke-path` fallback is a legacy Next internal that isn't always present
+  // (its absence caused the /parent/gate redirect loop).
+  const pathname = hdrs.get('x-pathname') ?? hdrs.get('x-invoke-path') ?? '';
   const isGate = pathname.startsWith('/parent/gate');
   if (!isGate && !(await isParentAuthed())) {
     redirect('/parent/gate');
