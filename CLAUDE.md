@@ -33,12 +33,18 @@ The previous implementation is at `../little-fables [archive]/` — audited in `
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm lint` | ESLint (400-line soft ceiling) |
 | `pnpm test` | Vitest (unit + integration if Supabase reachable) |
+| `pnpm test tests/reader/state.spec.ts` | Run a single test file |
+| `pnpm test:watch` | Vitest watch mode |
 | `pnpm audio:generate -- --book <id>` | Pre-generate ElevenLabs audio for a book (`--check` for dry-run) |
+| `pnpm art:covers` / `pnpm art:scenes` | Gemini art candidate generation (writes to `art-candidates` bucket) |
+| `pnpm exec tsx scripts/art-approve-book.ts --all --kind cover` | Auto-approve first candidate per book (moves to `art-live`) |
+| `pnpm exec tsx scripts/new-household.ts` | Provision a new household (Phase 5) |
 | `pnpm content:import-pack-000` | Upsert family originals into seed household |
 | `pnpm canon:reconvert` | RTF → `lib/prompts/canon/azi-verse/*.md` (pandoc) |
 | `pnpm db:reset` | Drop + recreate + apply migrations + seed |
 | `pnpm db:types` | Regenerate `types/database.ts` from linked hosted schema |
 
+Toolchain: Node 22+, pnpm 10.11 (pinned via `packageManager` in `package.json`).
 Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co` (Canada Central).
 
 ## The source-of-truth documents
@@ -91,7 +97,9 @@ A signed-in child device renders a synced shelf; zero red CI. Prerequisites: rep
 - Edits to `PRD.md` are spec changes — treat them like breaking API changes and mention downstream impact (which pillar/phase moves).
 - Edits to `design-system/` require a `CHANGELOG.md` entry; the system was accepted 2026-07-17 after two Saturday Drive acceptance runs — don't silently mutate accepted specs. Do not modify the JSX components; add ambient types in the root `design-system.d.ts` instead.
 - Content in `content/originals/` and `reference/azi-verse/source-rtf/` is irreplaceable source material. Never overwrite; convert into derived files under `lib/prompts/canon/`.
-- Every route handler in `app/api/*` MUST call `requireChildDevice()` from `lib/server/require-auth.ts` — no route is guarded by middleware alone (audit C3 fix). Parent auth was removed (single-user mode); add a `PARENT_PASSWORD` gate before deploying to Vercel.
+- **API auth is split by surface, do not mix:**
+  - Every `/api/child/*` handler MUST call `requireChildDevice()` from `lib/server/require-auth.ts` (audit C3 fix — no route relies on middleware alone).
+  - `/api/parent/*` and `/parent/*` are gated by `middleware.ts` (edge runtime, SHA-256 of `PARENT_PASSWORD` vs the `lf_parent` cookie). Do **not** add route-level parent checks — they'd race the middleware redirect. Local dev without `PARENT_PASSWORD` still works: middleware redirects to `/parent/gate`, which sets the cookie.
 - Schema changes are additive migrations under `supabase/migrations/YYYYMMDDHHMMSS_*.sql`. Update the enum lists in `lib/models/book.ts` in the same commit — `tests/models/schema-sync.spec.ts` will fail if they drift (audit C2 fix).
 - Reader modules under `lib/reader/` must stay under ~400 lines each (PRD §4.1 vs archive's 2,094-line reader page — audit S1). State + selectors live in `state.ts` (pure, testable); the client orchestrator (`app/read/story/[id]/reader.tsx`) is composition only.
 - Do not add another design-system component without extending `design-system.d.ts` in the same commit.
