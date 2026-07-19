@@ -4,10 +4,8 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'r
 import { useRouter } from 'next/navigation';
 import { ReaderTopBar } from '@ds/components/reader/ReaderTopBar.jsx';
 import { ChapterMap } from '@ds/components/reader/ChapterMap.jsx';
-import { StoryText } from '@ds/components/reader/StoryText.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
-import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { saveWord } from '@/lib/reader/wordbook';
 import { pushProgress } from '@/lib/reader/progress';
@@ -17,6 +15,7 @@ import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 import { Checkpoint } from './checkpoint';
+import { PageSpread } from './page-spread';
 import { InteractivePage } from './interactive-page';
 import {
   currentChapter,
@@ -325,83 +324,21 @@ export function Reader({
         </main>
       ) : ch && page ? (
         <>
-          <main
-            key={`${state.chapterIdx}-${state.pageIdx}`}
-            style={{
-              flex: 1,
-              display: 'grid',
-              placeItems: 'center',
-              padding: 'var(--space-6) var(--page-pad)',
-              position: 'relative',
-              animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
-            }}
-          >
-            {page.img && (
-              <div
-                key={page.img}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: `url(${page.img}) center/cover no-repeat`,
-                  animation: 'var(--motion-develop)',
-                  pointerEvents: 'none',
-                }}
-              />
-            )}
-            {useWashFallback && (
-              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <PaintingWash fullBleed label="painting this page…" />
-              </div>
-            )}
-            {page.img && (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(180deg, rgba(70,54,42,0.15), rgba(70,54,42,0.05) 40%, transparent 60%)',
-                  pointerEvents: 'none',
-                }}
-              />
-            )}
-            <article
-              style={{
-                maxWidth: 640,
-                width: '100%',
-                background: page.img ? 'var(--wash-panel)' : 'transparent',
-                backdropFilter: page.img ? 'blur(6px)' : undefined,
-                padding: page.img ? 'var(--space-5) var(--space-6)' : 0,
-                borderRadius: page.img ? 'var(--radius-lg)' : 0,
-                boxShadow: page.img ? 'var(--elev-card)' : 'none',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            >
-              {book.kind === 'chapter' && (
-                <p
-                  style={{
-                    fontFamily: 'var(--font-hand)',
-                    color: 'var(--text-muted)',
-                    margin: '0 0 var(--space-4)',
-                    textAlign: 'center',
-                    fontSize: 'var(--text-hand)',
-                  }}
-                >
-                  {ch.title}
-                </p>
-              )}
-              <StoryText
-                words={page.words.map((w) => ({ w: w.w }))}
-                currentIndex={transport.wordIdx}
-                starredWords={[
-                  ...(page.star ? [page.star] : []),
-                  ...(savedWord ? [savedWord] : []),
-                ]}
-                onHearWord={onHearWord}
-                onStarWord={onStarWord}
-                overArt={Boolean(page.img)}
-              />
-            </article>
-          </main>
+          {/* Orientation-aware page layout (PRD F2): portrait = art behind +
+              panel; landscape ≥640px = side-by-side book spread. */}
+          <PageSpread
+            page={page}
+            pageKey={`${state.chapterIdx}-${state.pageIdx}`}
+            chapterTitle={book.kind === 'chapter' ? ch.title : null}
+            useWashFallback={Boolean(useWashFallback)}
+            currentIndex={transport.wordIdx}
+            starredWords={[
+              ...(page.star ? [page.star] : []),
+              ...(savedWord ? [savedWord] : []),
+            ]}
+            onHearWord={onHearWord}
+            onStarWord={onStarWord}
+          />
 
           <footer
             style={{
