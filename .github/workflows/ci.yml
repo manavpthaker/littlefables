@@ -44,11 +44,31 @@ jobs:
         run: supabase db reset --linked=false --no-seed=false
         working-directory: .
 
+      # Export the local stack's REAL keys for later steps. Current CLI
+      # versions issue new-format sb_* keys and no longer honor the legacy
+      # demo JWTs this workflow used to hardcode — requests with those landed
+      # as an unprivileged role and died with "permission denied for table
+      # books" (CI was never green). Reading from `supabase status` also
+      # keeps us correct if the CLI rotates key formats again.
+      - name: Export local Supabase keys
+        run: |
+          supabase status -o env > /tmp/sb.env
+          set -a; source /tmp/sb.env; set +a
+          SECRET="${SECRET_KEY:-${SERVICE_ROLE_KEY:-}}"
+          PUBLISHABLE="${PUBLISHABLE_KEY:-${ANON_KEY:-}}"
+          if [ -z "$SECRET" ] || [ -z "$PUBLISHABLE" ]; then
+            echo "Could not find local Supabase keys. Variables available:"
+            cut -d= -f1 /tmp/sb.env
+            exit 1
+          fi
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=${API_URL:-http://127.0.0.1:54321}"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE"
+            echo "SUPABASE_SECRET_KEY=$SECRET"
+          } >> "$GITHUB_ENV"
+
       - name: Import pack-000
         run: pnpm content:import-pack-000
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          SUPABASE_SECRET_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
 
       - name: Typecheck
         run: pnpm typecheck
@@ -58,15 +78,9 @@ jobs:
 
       - name: Test
         run: pnpm test
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          SUPABASE_SECRET_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
 
       - name: Build
         run: pnpm build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
-          SUPABASE_SECRET_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
           CHILD_TOKEN_SECRET: build-time-placeholder-not-secret
           PARENT_PASSWORD: build-time-placeholder-not-secret
