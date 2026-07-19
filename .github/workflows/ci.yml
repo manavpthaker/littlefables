@@ -67,6 +67,25 @@ jobs:
             echo "SUPABASE_SECRET_KEY=$SECRET"
           } >> "$GITHUB_ENV"
 
+      # Cheap tripwire for the class of failure that kept CI red for its
+      # first three days: shows exactly which roles hold grants on books and
+      # what PostgREST does with each key, so the next auth/grants drift is
+      # a 10-second read instead of an archaeology dig.
+      - name: Diagnose DB grants + REST auth
+        continue-on-error: true
+        run: |
+          supabase status -o env > /tmp/sb.env
+          set -a; source /tmp/sb.env; set +a
+          DB="${DB_URL:-postgresql://postgres:postgres@127.0.0.1:54322/postgres}"
+          psql "$DB" -c "select grantee, privilege_type from information_schema.table_privileges where table_schema='public' and table_name='books' order by grantee, privilege_type;"
+          for K in "$SUPABASE_SECRET_KEY" "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"; do
+            echo "--- REST probe with key ${K:0:18}…"
+            curl -s -o /tmp/resp -w "HTTP %{http_code}\n" \
+              "http://127.0.0.1:54321/rest/v1/books?select=id&limit=1" \
+              -H "apikey: $K" -H "Authorization: Bearer $K"
+            cat /tmp/resp; echo
+          done
+
       - name: Import pack-000
         run: pnpm content:import-pack-000
 
