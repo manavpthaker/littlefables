@@ -27,8 +27,10 @@ function argFlag(name: string): boolean {
   return process.argv.includes(`--${name}`);
 }
 
-const GEMINI_ENDPOINT =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Pro tier by default — it follows the passage far more faithfully than flash
+// (~$0.13 vs $0.05/image, one-time per page). ART_SCENE_MODEL env overrides.
+const GEMINI_MODEL = process.env.ART_SCENE_MODEL || 'gemini-3-pro-image';
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 async function generateImage(prompt: string, apiKey: string, timeoutMs = 90_000): Promise<Buffer> {
   const controller = new AbortController();
@@ -95,11 +97,34 @@ function characterBrief(bookText: string, bible: CharacterBible): string {
     .join('; ');
 }
 
-function scenePrompt(book: { title: string }, pageText: string, palette: string, characters: string): string {
+/** Whole-book anchor: how the story opens + how it ends is enough to hold
+ *  setting, protagonist, and mood steady across every page (ported from the
+ *  little-fables archive's art-direction work). */
+function storyBrief(title: string, pagesText: string[]): string {
+  const opening = pagesText.slice(0, 2).join(' ').slice(0, 380);
+  const closing = pagesText.length > 2 ? (pagesText[pagesText.length - 1] ?? '').slice(0, 220) : '';
   return [
-    "Watercolor scene illustration for a warm children's picture book page.",
-    `Book: "${book.title}".`,
-    `Depict this moment: ${pageText}`,
+    `"${title}".`,
+    opening ? `How it begins: ${opening}` : '',
+    closing ? `How it ends: ${closing}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function scenePrompt(
+  book: { title: string },
+  pageText: string,
+  palette: string,
+  characters: string,
+  brief: string,
+): string {
+  // The MOMENT leads and is binding — the picture must show what the page
+  // says (archive finding: mood-matched generic scenes read as wrong art).
+  return [
+    `Illustrate EXACTLY this moment from a children's picture book: "${pageText}"`,
+    'FAITHFULNESS RULE: the picture must literally depict the actions, objects, and place this passage describes — who is doing what, with what, where. A parent should be able to point at the picture and re-read the passage. Do not substitute a generic scene of the same mood.',
+    `THE STORY'S WORLD (keep the same protagonist look, setting, and mood on every page): ${brief}`,
     characters ? `Characters (draw consistently across the book): ${characters}.` : '',
     `Palette: ${palette}.`,
     'Style: hand-painted watercolor, soft edges, cozy paper feel. One clear focal moment, natural composition — the eye should land somewhere calm.',
@@ -139,8 +164,10 @@ async function main(): Promise<void> {
   if (!parsed.success) throw new Error(`book payload invalid: ${parsed.error.message}`);
   const book = parsed.data;
   const palette = BOOK_PALETTES[bookId] ?? 'warm cozy palette — paper cream, terracotta, marigold, honey, sage';
-  const bookAllText = book.chapters.flatMap((c) => c.pages.map((p) => p.text)).join(' ');
+  const pagesText = book.chapters.flatMap((c) => c.pages.map((p) => p.text));
+  const bookAllText = pagesText.join(' ');
   const characters = characterBrief(bookAllText, bible);
+  const brief = storyBrief(book.title, pagesText);
 
   // Skip pages that already have a candidate or approved artifact.
   const { data: existingArt } = await client
@@ -164,7 +191,7 @@ async function main(): Promise<void> {
     });
   });
 
-  const cost = jobs.length * 0.05;
+  const cost = jobs.length * (GEMINI_MODEL.includes('pro') ? 0.13 : 0.05);
   console.log(
     `Book "${book.title}": ${jobs.length} pages need scene art ≈ $${cost.toFixed(2)}${check ? ' (check-only)' : ''}`,
   );
@@ -179,7 +206,7 @@ async function main(): Promise<void> {
     const label = `[${bookId} ch${job.chapterIdx} p${job.pageIdx}]`;
     try {
       const startedAt = Date.now();
-      const prompt = scenePrompt({ title: book.title }, job.text, palette, characters);
+      const prompt = scenePrompt({ title: book.title }, job.text, palette, characters, brief);
       const image = await generateImage(prompt, apiKey);
       const candidatePath = `${bookId}/scene-${job.chapterIdx}-${job.pageIdx}-${Date.now()}.png`;
       const upload = await client.storage
@@ -195,7 +222,7 @@ async function main(): Promise<void> {
         page_idx: job.pageIdx,
         candidate_path: candidatePath,
         status: 'pending',
-        model: 'gemini-2.5-flash-image',
+        model: GEMINI_MODEL,
         prompt,
       });
       if (insertResult.error) throw new Error(`db: ${insertResult.error.message}`);

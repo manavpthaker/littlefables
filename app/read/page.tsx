@@ -8,6 +8,7 @@ import { loadEarnedBadges } from '@/lib/world/badges';
 import { activeBuddy } from '@/lib/world/buddy-roster';
 import { composeGreeting } from '@/lib/world/greeting';
 import type { WorldBundle } from '@/lib/world/types';
+import { WordsDoor } from './words-door';
 import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
 import { SunsRow } from './suns-row';
@@ -28,7 +29,7 @@ export default async function ReadHome() {
     { data: bookRows },
     { data: progressRows },
     { data: readingDayRows },
-    { data: recentWordsRows },
+    { data: recentWordsRows, count: wordCount },
     { data: recentProgressRows },
     world,
     badges,
@@ -51,7 +52,7 @@ export default async function ReadHome() {
       .in('day', week),
     admin()
       .from('wordbook_entries')
-      .select('word, saved_at')
+      .select('word, saved_at', { count: 'exact' })
       .eq('child_id', ctx.childId)
       .order('saved_at', { ascending: false })
       .limit(5),
@@ -152,6 +153,7 @@ export default async function ReadHome() {
         }}
       >
         <SunsRow earned={earnedIdx} today={todayIdx} />
+        <WordsDoor count={wordCount ?? 0} />
       </section>
 
       <BadgeStrip earned={badges} />
