@@ -28,8 +28,10 @@ function argValue(name: string): string | undefined {
   return i >= 0 && i < process.argv.length - 1 ? process.argv[i + 1] : undefined;
 }
 
-const GEMINI_ENDPOINT =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent';
+// Pro tier by default (matches art-scenes) — better prompt adherence for the
+// one image that sells each book. ART_SCENE_MODEL env overrides.
+const GEMINI_MODEL = process.env.ART_SCENE_MODEL || 'gemini-3-pro-image';
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 async function generateImage(prompt: string, apiKey: string, timeoutMs = 90_000): Promise<Buffer> {
   const controller = new AbortController();
@@ -177,7 +179,7 @@ async function main(): Promise<void> {
           page_idx: null,
           candidate_path: candidatePath,
           status: 'pending',
-          model: 'gemini-2.5-flash-image',
+          model: GEMINI_MODEL,
           prompt,
         });
         if (insertErr) throw new Error(`db: ${insertErr.message}`);
