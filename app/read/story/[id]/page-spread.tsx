@@ -165,7 +165,7 @@ export function PageSpread({
       )}
       <article
         style={{
-          maxWidth: 640,
+          maxWidth: 'var(--reader-measure)',
           width: '100%',
           background: page.img ? 'var(--wash-panel)' : 'transparent',
           backdropFilter: page.img ? 'blur(6px)' : undefined,
