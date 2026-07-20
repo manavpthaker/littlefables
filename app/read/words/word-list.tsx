@@ -23,7 +23,9 @@ export function WordList({
         background: 'var(--surface-page)',
         padding: 'var(--space-6) var(--page-pad) var(--space-8)',
         display: 'grid',
-        alignContent: 'start',
+        // Center the (usually small) word set in the viewport instead of
+        // clustering it at the top over a large empty void on wide/tall screens.
+        alignContent: 'center',
         gap: 'var(--space-5)',
         maxWidth: 720,
         marginInline: 'auto',

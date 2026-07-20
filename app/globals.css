@@ -11,6 +11,12 @@
 @import '../design-system/tokens/lighting.css';
 
 /* Global layout defaults. Kid vs parent density is set at the subtree via data-density. */
+:root {
+  /* Comfortable reading measure — shared by the reader text column and its top
+   * chrome so, on wide screens, content and controls line up instead of the
+   * text sprawling full-width and the chrome flinging to the far corners. */
+  --reader-measure: 700px;
+}
 html,
 body {
   margin: 0;
