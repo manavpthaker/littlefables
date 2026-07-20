@@ -5,7 +5,8 @@ import { requireChildDevice } from '@/lib/server/require-auth';
 import { bookSchema } from '@/lib/models/book';
 import { toReaderBook } from '@/lib/reader/state';
 import { todayIsoUtc } from '@/lib/world/dates';
-import { bumpGrowth } from '@/lib/world/state';
+import { bumpGrowth, loadWorldState } from '@/lib/world/state';
+import { activeBuddy } from '@/lib/world/buddy-roster';
 import type { ProgressRecord } from '@/lib/models/progress';
 import { Reader } from './reader';
 
@@ -59,6 +60,18 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
     await bumpGrowth(ctx.childId, 'booksOpened', 1);
   }
 
+  // Active buddy so the reader's companion is the child's chosen animal (its
+  // emoji + pigment), consistent with Home — not a hardcoded generic blob.
+  const world = await loadWorldState(ctx.childId);
+  const buddy = activeBuddy(world.activeBuddyId);
+
   const readerBook = toReaderBook(parsed.data);
-  return <Reader book={readerBook} initialProgress={initialProgress} />;
+  return (
+    <Reader
+      book={readerBook}
+      initialProgress={initialProgress}
+      buddyEmoji={buddy.emoji}
+      buddyColor={buddy.pigment}
+    />
+  );
 }

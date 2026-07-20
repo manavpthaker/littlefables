@@ -37,9 +37,13 @@ import type { ProgressRecord } from '@/lib/models/progress';
 export function Reader({
   book,
   initialProgress,
+  buddyEmoji,
+  buddyColor = 'var(--teal)',
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
+  buddyEmoji?: string;
+  buddyColor?: string;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -239,7 +243,8 @@ export function Reader({
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
       <ReaderTopBar
         onBack={onBack}
-        buddyColor="var(--teal)"
+        buddyColor={buddyColor}
+        buddyEmoji={buddyEmoji}
         buddyState={transport.playing ? 'speaking' : 'idle'}
         savedWord={savedWord ?? undefined}
         justSaved={justSaved}
@@ -253,6 +258,8 @@ export function Reader({
           bookId={book.id}
           chapterIdx={state.chapterIdx}
           chapterTitle={ch.title}
+          buddyColor={buddyColor}
+          buddyEmoji={buddyEmoji}
           onDone={(result) => {
             setInCheckpoint(false);
             if (result?.newlyEarned?.length) {

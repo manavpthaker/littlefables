@@ -2,6 +2,8 @@
 export interface CheckpointProps {
   buddyName?: string;
   buddyColor?: string;
+  /** buddy's animal face, e.g. "🐱" */
+  buddyEmoji?: string;
   /** question type tints the bubble: recall river · inference plum · prediction marigold · connection sage */
   type?: 'recall' | 'inference' | 'prediction' | 'connection';
   /** the spoken question (voice slot = this text, in the buddy's voice). This is a BUDDY TURN: conversational length allowed, queued as one turn (see rules-of-use voice-slot classes). */

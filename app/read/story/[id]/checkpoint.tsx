@@ -22,6 +22,7 @@ interface Props {
   chapterTitle: string;
   buddyName?: string;
   buddyColor?: string;
+  buddyEmoji?: string;
   onDone: (result: CheckpointResult | null) => void;
 }
 
@@ -184,6 +185,7 @@ export function Checkpoint(props: Props) {
       <DsCheckpoint
         buddyName={props.buddyName}
         buddyColor={props.buddyColor}
+        buddyEmoji={props.buddyEmoji}
         type={question.type}
         question={question.question}
         micState={micState}
