@@ -5,7 +5,7 @@ import { WordCapsule } from '../kid/WordCapsule.jsx';
 import { StateBanner } from '../system/SystemStates.jsx';
 // Reader chrome: the persistent top bar inside the sanctioned top scrim.
 // Layout: capsule back · WordCapsule landing slot (center) · quiet sync capsule + compact Buddy (right).
-export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing = false, buddyColor = 'var(--teal)', buddyState = 'idle' }) {
+export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing = false, buddyColor = 'var(--teal)', buddyEmoji, buddyState = 'idle' }) {
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '14px 0 40px', background: 'var(--scrim-top)' }}>
       {/* Constrain to the reading column so on wide screens the back button and
@@ -16,7 +16,7 @@ export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing 
           {savedWord && <WordCapsule word={savedWord} justSaved={justSaved} onTap={onWordTap} />}
         </div>
         {syncing && <StateBanner state="syncing" density="kid" />}
-        <Buddy compact size={48} color={buddyColor} state={buddyState} />
+        <Buddy compact size={48} color={buddyColor} emoji={buddyEmoji} state={buddyState} />
       </div>
     </div>
   );

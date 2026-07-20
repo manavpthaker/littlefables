@@ -3,6 +3,8 @@ export interface BuddyProps {
   name?: string;
   /** buddy's pigment, e.g. "var(--teal)" — each buddy owns one */
   color?: string;
+  /** buddy's animal face, e.g. "🐱" — rendered large in the avatar; falls back to the two-dot face when absent */
+  emoji?: string;
   /** the system-wide state vocabulary, shown as ring + micro-motion */
   state?: 'idle' | 'speaking' | 'listening' | 'thinking';
   /** avatar px; 96 home header, 56 in-reader compact */

@@ -8,6 +8,8 @@ export interface ReaderTopBarProps {
   /** quiet sync capsule's ONLY reader placement is this top-bar right slot; omit = shows nothing */
   syncing?: boolean;
   buddyColor?: string;
+  /** buddy's animal face, e.g. "🐱" */
+  buddyEmoji?: string;
   buddyState?: 'idle' | 'speaking' | 'listening' | 'thinking';
 }
 // The reader's persistent chrome, always inside the top scrim. Offline shows NOTHING here (default posture).

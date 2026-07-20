@@ -5,12 +5,12 @@ import { ChoiceBlocks } from './ChoiceBlocks.jsx';
 import { Button } from '../core/Button.jsx';
 // Checkpoint: buddy asks a story question, child answers by voice or taps options. Conversational, never quiz-styled (PRD A10).
 const typeTint = { recall: 'var(--river-wash)', inference: 'var(--plum-wash)', prediction: 'var(--marigold-wash)', connection: 'var(--sage-wash)' };
-export function Checkpoint({ buddyName = 'Buddy', buddyColor = 'var(--teal)', type = 'recall', question, options, micState = 'idle', mercy = false, hint, given, onMic, onPick, onMoveOn }) {
+export function Checkpoint({ buddyName = 'Buddy', buddyColor = 'var(--teal)', buddyEmoji, type = 'recall', question, options, micState = 'idle', mercy = false, hint, given, onMic, onPick, onMoveOn }) {
   const stage = mercy === true ? 'hint' : mercy; // 'hint' | 'given' | false
   return (
     <div style={{ background: 'var(--paper-bright)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--elev-float)', padding: 'var(--space-6)', maxWidth: 420 }}>
       <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
-        <Buddy compact size={64} color={buddyColor} state={micState === 'listening' ? 'listening' : 'speaking'} />
+        <Buddy compact size={64} color={buddyColor} emoji={buddyEmoji} state={micState === 'listening' ? 'listening' : 'speaking'} />
         <div style={{ background: typeTint[type] || 'var(--river-wash)', borderRadius: 'var(--radius-lg)', borderTopLeftRadius: 6, padding: 'var(--space-4) var(--space-5)', fontFamily: 'var(--font-body)', fontSize: 22, lineHeight: 1.4, color: 'var(--ink)' }}
           data-utterance={question}>{question}</div>
       </div>

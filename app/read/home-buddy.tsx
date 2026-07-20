@@ -30,6 +30,7 @@ export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; speech?:
       <Buddy
         name={props.buddy.name}
         color={props.buddy.pigment}
+        emoji={props.buddy.emoji}
         state="idle"
         size={112}
         speech={props.speech ?? props.utterance}
