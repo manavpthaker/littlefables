@@ -124,6 +124,7 @@ export default async function ReadHome() {
           id: targetBook.id,
           title: targetBook.title,
           chapterCaption: chapterCaption(targetBook, latestProgress.chapter_idx),
+          cover: targetBook.cover_bg?.startsWith('http') ? targetBook.cover_bg : undefined,
           progress: progressFraction(targetBook, latestProgress.chapter_idx, latestProgress.page_idx),
         }
       : null;
