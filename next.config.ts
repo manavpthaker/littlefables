@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: false },
   eslint: { ignoreDuringBuilds: false },
   typedRoutes: true,
+  // Tree-shake the icon set so a mobile-first kid PWA isn't shipped the whole
+  // lucide-react library.
+  experimental: { optimizePackageImports: ['lucide-react'] },
 };
 
 export default nextConfig;
