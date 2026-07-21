@@ -31,21 +31,30 @@ function dailyLimit(kind: UsageKind): number {
 
 async function bumpUsage(householdId: string, kind: UsageKind): Promise<void> {
   const limit = dailyLimit(kind);
-  const { data, error } = await admin().rpc('bump_usage', {
-    p_household_id: householdId,
-    p_kind: kind,
-  });
-  if (error) {
-    // Fail-open on RPC failure? No — audit C5 warned about that pattern.
-    // Instead: log and let the call proceed; per-provider server-side rate
-    // limits are the final backstop.
-    console.warn(`[anthropic] bump_usage failed (${kind}):`, error.message);
-    return;
+  // Fail-CLOSED on RPC error per PRD §4.6: two attempts (with 200ms backoff)
+  // then throw. The previous "log and continue" was fail-OPEN and turned
+  // every Supabase blip into an unmetered paid call — comment inside the
+  // function claimed the opposite of what the code did. Kid-facing fallback
+  // stays soft (routes catch BudgetExceededError → canned reply); money is
+  // hard-stopped.
+  let lastErr: string | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { data, error } = await admin().rpc('bump_usage', {
+      p_household_id: householdId,
+      p_kind: kind,
+    });
+    if (!error) {
+      const count = typeof data === 'number' ? data : Number(data);
+      if (Number.isFinite(count) && count > limit) {
+        throw new BudgetExceededError(kind, count, limit);
+      }
+      return;
+    }
+    lastErr = error.message;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 200));
   }
-  const count = typeof data === 'number' ? data : Number(data);
-  if (Number.isFinite(count) && count > limit) {
-    throw new BudgetExceededError(kind, count, limit);
-  }
+  console.warn(`[anthropic] bump_usage failed after 2 attempts (${kind}):`, lastErr);
+  throw new BudgetExceededError(kind, -1, limit);
 }
 
 export interface CallOpts {

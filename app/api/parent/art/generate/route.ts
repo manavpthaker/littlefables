@@ -2,9 +2,11 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { currentHouseholdId } from '@/lib/server/current-household';
+import { currentHouseholdId, firstChildIdInHousehold } from '@/lib/server/current-household';
 import { bookSchema } from '@/lib/models/book';
 import { generateImage } from '@/lib/gemini';
+import { loadChildProfile } from '@/lib/server/child-settings';
+import type { ChildBand } from '@/lib/models/child';
 
 // Art generation for a specific book (cover only for now; per-page scene art
 // is a follow-up). Uploads bytes to the art-candidates bucket, inserts an
@@ -41,7 +43,19 @@ export async function POST(request: NextRequest) {
   // Compose the prompt. Style anchor: warm children's-picture-book watercolor,
   // ~4x3, no text, no logos, one focal moment. Body of the book provides
   // ground truth for characters + setting.
-  const prompt = buildPrompt(book, body.data);
+  //
+  // Audit C4 fix: the safety pipeline (band + excludeTerms) MUST run on the
+  // server explicitly — never lazy-imported from a client-oriented module.
+  // Resolve the household's first child (single-family posture) and thread
+  // both signals into the prompt so Gemini has the constraints in-band.
+  const childId = await firstChildIdInHousehold();
+  const child = childId
+    ? await loadChildProfile(childId)
+    : { band: '4-8' as ChildBand, excludeTerms: [] as string[] };
+  const prompt = buildPrompt(book, body.data, {
+    band: child.band,
+    excludeTerms: child.excludeTerms,
+  });
 
   let image: Buffer;
   try {
@@ -78,7 +92,11 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ artifactId: artRow.id, previewUrl: signed?.signedUrl ?? null });
 }
 
-function buildPrompt(book: { title: string; chapters: Array<{ title: string; pages: Array<{ text: string }> }> }, opts: z.infer<typeof bodySchema>): string {
+function buildPrompt(
+  book: { title: string; chapters: Array<{ title: string; pages: Array<{ text: string }> }> },
+  opts: z.infer<typeof bodySchema>,
+  safety: { band: ChildBand; excludeTerms: string[] },
+): string {
   const base = [
     'warm children\'s picture-book watercolor illustration',
     '4:3 aspect ratio, no text, no logos, no watermarks',
@@ -86,10 +104,23 @@ function buildPrompt(book: { title: string; chapters: Array<{ title: string; pag
     'one clear focal moment, natural composition',
   ].join(', ');
 
+  // Safety pipeline (explicit, server-side): age band + hard block list get
+  // baked into every art prompt so the guardrail can't be bypassed by
+  // reformulation or client tampering. Kept as their own paragraph so Gemini
+  // treats them as constraints rather than style hints.
+  const safetyLine = [
+    `Content must be appropriate for children aged ${safety.band}.`,
+    safety.excludeTerms.length > 0
+      ? `Do NOT depict or reference: ${safety.excludeTerms.join(', ')}.`
+      : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   if (opts.kind === 'cover') {
     const firstLine = book.chapters[0]?.pages[0]?.text?.slice(0, 200) ?? '';
-    return `Book cover for "${book.title}". ${base}. Scene: ${firstLine}. ${opts.extraPrompt ?? ''}`.trim();
+    return `Book cover for "${book.title}". ${base}. Scene: ${firstLine}. ${safetyLine} ${opts.extraPrompt ?? ''}`.trim();
   }
   const scene = book.chapters[opts.chapterIdx ?? 0]?.pages[opts.pageIdx ?? 0]?.text ?? '';
-  return `Scene illustration. ${base}. Depict: ${scene}. ${opts.extraPrompt ?? ''}`.trim();
+  return `Scene illustration. ${base}. Depict: ${scene}. ${safetyLine} ${opts.extraPrompt ?? ''}`.trim();
 }

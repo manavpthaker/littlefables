@@ -10,6 +10,10 @@ import { CHILD_BANDS, type ChildBand } from '@/lib/models/child';
 export interface ChildProfile {
   childId: string;
   band: ChildBand;
+  /** Per-child hard block list (audit C4): terms the safety pipeline MUST NOT
+   *  produce — passed explicitly into every generative call (story, art, QA)
+   *  so the guardrail can never be lazy-imported away from a server context. */
+  excludeTerms: string[];
   settings: ChildSettings;
 }
 
@@ -20,13 +24,18 @@ function normalizeBand(raw: string | undefined | null): ChildBand {
 export async function loadChildProfile(childId: string): Promise<ChildProfile> {
   const { data } = await admin()
     .from('children')
-    .select('id, band, settings')
+    .select('id, band, settings, exclude_terms')
     .eq('id', childId)
     .maybeSingle();
+
+  const excludeTerms = Array.isArray(data?.exclude_terms)
+    ? (data.exclude_terms as unknown[]).filter((t): t is string => typeof t === 'string')
+    : [];
 
   return {
     childId,
     band: normalizeBand(data?.band),
+    excludeTerms,
     settings: parseChildSettings(data?.settings),
   };
 }

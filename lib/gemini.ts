@@ -16,18 +16,26 @@ interface GeminiOpts {
 
 async function bumpArt(householdId: string): Promise<void> {
   const limit = Number(process.env.ART_DAILY_LIMIT) || 30;
-  const { data, error } = await admin().rpc('bump_usage', {
-    p_household_id: householdId,
-    p_kind: 'art',
-  });
-  if (error) {
-    console.warn('[gemini] bump_usage failed:', error.message);
-    return;
+  // Fail-CLOSED per PRD §4.6: retry once, then throw so the paid Gemini call
+  // is never made on an unmetered path.
+  let lastErr: string | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { data, error } = await admin().rpc('bump_usage', {
+      p_household_id: householdId,
+      p_kind: 'art',
+    });
+    if (!error) {
+      const count = typeof data === 'number' ? data : Number(data);
+      if (Number.isFinite(count) && count > limit) {
+        throw new BudgetExceededError('respond', count, limit); // kind label nominal
+      }
+      return;
+    }
+    lastErr = error.message;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 200));
   }
-  const count = typeof data === 'number' ? data : Number(data);
-  if (Number.isFinite(count) && count > limit) {
-    throw new BudgetExceededError('respond', count, limit); // reuses the class; kind label is nominal
-  }
+  console.warn('[gemini] bump_usage failed after 2 attempts:', lastErr);
+  throw new BudgetExceededError('respond', -1, limit);
 }
 
 /** Generate an image. Returns raw PNG bytes on success, throws on any failure

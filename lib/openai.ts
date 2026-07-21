@@ -22,18 +22,26 @@ function dailyLimit(): number {
 
 async function bumpListen(householdId: string): Promise<void> {
   const limit = dailyLimit();
-  const { data, error } = await admin().rpc('bump_usage', {
-    p_household_id: householdId,
-    p_kind: 'listen',
-  });
-  if (error) {
-    console.warn('[openai] bump_usage failed:', error.message);
-    return;
+  // Fail-CLOSED per PRD §4.6: retry once, then throw BudgetExceededError so
+  // the paid Whisper call is not made on an unmetered path.
+  let lastErr: string | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { data, error } = await admin().rpc('bump_usage', {
+      p_household_id: householdId,
+      p_kind: 'listen',
+    });
+    if (!error) {
+      const count = typeof data === 'number' ? data : Number(data);
+      if (Number.isFinite(count) && count > limit) {
+        throw new BudgetExceededError('listen', count, limit);
+      }
+      return;
+    }
+    lastErr = error.message;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 200));
   }
-  const count = typeof data === 'number' ? data : Number(data);
-  if (Number.isFinite(count) && count > limit) {
-    throw new BudgetExceededError('listen', count, limit);
-  }
+  console.warn('[openai] bump_usage failed after 2 attempts:', lastErr);
+  throw new BudgetExceededError('listen', -1, limit);
 }
 
 export interface TranscribeOptions {

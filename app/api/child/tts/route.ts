@@ -21,15 +21,26 @@ const bodySchema = z.object({
 
 async function bumpTts(householdId: string): Promise<void> {
   const limit = Number(process.env.TTS_DAILY_LIMIT) || 200;
-  const { data, error } = await admin().rpc('bump_usage', {
-    p_household_id: householdId,
-    p_kind: 'tts',
-  });
-  if (error) return;
-  const count = typeof data === 'number' ? data : Number(data);
-  if (Number.isFinite(count) && count > limit) {
-    throw new BudgetExceededError('respond', count, limit);
+  // Fail-CLOSED per PRD §4.6: retry once, then throw so the paid ElevenLabs
+  // call is never made on an unmetered path.
+  let lastErr: string | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const { data, error } = await admin().rpc('bump_usage', {
+      p_household_id: householdId,
+      p_kind: 'tts',
+    });
+    if (!error) {
+      const count = typeof data === 'number' ? data : Number(data);
+      if (Number.isFinite(count) && count > limit) {
+        throw new BudgetExceededError('respond', count, limit);
+      }
+      return;
+    }
+    lastErr = error.message;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 200));
   }
+  console.warn('[tts] bump_usage failed after 2 attempts:', lastErr);
+  throw new BudgetExceededError('respond', -1, limit);
 }
 
 export async function POST(request: NextRequest) {
@@ -61,6 +72,11 @@ export async function POST(request: NextRequest) {
     if (err instanceof BudgetExceededError) {
       return NextResponse.json({ error: 'budget_exceeded' }, { status: 429 });
     }
+    // Any other error was a hard fail-closed signal from bumpTts (RPC blip,
+    // network hiccup on the Supabase side). Previously the catch swallowed
+    // it and fell through to the paid ElevenLabs call — a live money leak.
+    // Now we surface it as a 500 so the caller retries or degrades.
+    throw err;
   }
 
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}/with-timestamps`;
