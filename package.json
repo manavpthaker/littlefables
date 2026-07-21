@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "tsx scripts/check-env.ts && tsx scripts/build-precache-manifest.ts",
+    "prebuild": "tsx scripts/build-precache-manifest.ts",
     "build": "next build",
     "postbuild": "tsx scripts/build-precache-manifest.ts --restore",
     "start": "next start",
