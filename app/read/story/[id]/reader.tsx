@@ -266,14 +266,14 @@ export function Reader({
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
       <ReaderTopBar
         onBack={onBack}
+        title={`${book.title}${book.kind === 'chapter' && state.chapterIdx !== null ? ` · Ch. ${state.chapterIdx + 1}` : ''}`}
+        segments={ch ? { current: state.pageIdx, total: ch.pages.length } : undefined}
         buddyColor={buddyColor}
         buddyEmoji={buddyEmoji}
         buddyState={transport.playing ? 'speaking' : 'idle'}
         savedWord={savedWord ?? undefined}
         justSaved={justSaved}
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
-        bedtime={bedtime}
-        onBedtime={toggleBedtime}
       />
       <Celebrations newlyEarned={pendingBadges} />
       <StateBannerBoot />
@@ -282,6 +282,7 @@ export function Reader({
         <Checkpoint
           bookId={book.id}
           chapterIdx={state.chapterIdx}
+          chapterCount={book.chapters.length}
           chapterTitle={ch.title}
           buddyColor={buddyColor}
           buddyEmoji={buddyEmoji}
@@ -305,6 +306,7 @@ export function Reader({
       {inRetell && (
         <Retell
           bookId={book.id}
+          bookTitle={book.title}
           buddyColor={buddyColor}
           buddyEmoji={buddyEmoji}
           onDone={() => {
@@ -359,14 +361,37 @@ export function Reader({
               minHeight: 'var(--reach-zone)',
             }}
           >
-            <Transport
-              playing={transport.playing}
-              onPlay={transport.toggle}
-              onPrev={onPrev}
-              onNext={onNext}
-              canPrev={!isFirstPage(state)}
-              canNext={!lastPage}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+              <Transport
+                playing={transport.playing}
+                onPlay={transport.toggle}
+                onPrev={onPrev}
+                onNext={onNext}
+                canPrev={!isFirstPage(state)}
+                canNext={!lastPage}
+              />
+              <button
+                type="button"
+                data-utterance={bedtime ? 'Bright and awake!' : 'Getting cozy for bedtime.'}
+                aria-pressed={bedtime}
+                onClick={toggleBedtime}
+                style={{
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: 'var(--wash-capsule)',
+                  backdropFilter: 'blur(14px)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '10px 16px',
+                  minHeight: 'var(--tap-min)',
+                  boxShadow: bedtime ? '0 0 0 3px var(--marigold), var(--elev-rest)' : 'var(--elev-rest)',
+                  fontFamily: 'var(--font-hand)',
+                  fontSize: 16,
+                  color: 'var(--ink)',
+                }}
+              >
+                🌙 Bedtime
+              </button>
+            </div>
             {/* Silent-reader completion: the checkpoint auto-fires only when
                 narration ends (transport.onEnd on the last page). Kids who
                 read the page themselves without ever pressing play never

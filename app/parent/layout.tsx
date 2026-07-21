@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ParentTabs } from '@ds/components/parent/ParentTabs.jsx';
+import { KidTabBar } from '@/app/read/tab-bar';
 
 const TAB_ITEMS = [
   { key: 'insights', label: 'Insights', href: '/parent' },
@@ -87,6 +88,7 @@ export default async function ParentLayout({ children }: { children: React.React
           <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
         </div>
         {children}
+        <KidTabBar />
       </div>
     </div>
   );

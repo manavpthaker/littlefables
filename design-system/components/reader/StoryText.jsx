@@ -33,7 +33,8 @@ export function StoryText({ words, currentIndex = -1, starredWords = [], onHearW
                 cursor: 'pointer', borderRadius: 'var(--word-current-radius)', display: 'inline-block',
                 padding: state === 'current' || tapped === i ? 'var(--word-current-pad)' : '.06em .04em',
                 margin: '.14em 0',
-                background: state === 'current' ? 'var(--word-current-bg)' : tapped === i ? 'var(--marigold-wash)' : 'transparent',
+                background: state === 'current' ? 'var(--word-current-bg)' : tapped === i ? 'var(--marigold-wash)' : starred ? 'var(--butter-wash)' : 'transparent',
+                fontWeight: starred ? 700 : 400,
                 color: state === 'upcoming' ? 'var(--word-upcoming-ink)' : 'var(--word-spoken-ink)',
                 transition: 'background var(--dur-tap) var(--ease-settle), color var(--dur-settle) var(--ease-settle)',
               }}>{t.w}</span>

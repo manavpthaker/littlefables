@@ -3,6 +3,8 @@ export interface BookCardProps {
   title: string;
   /** cover image URL; omit = watercolor placeholder wash */
   cover?: string;
+  /** CSS background (color/gradient) when there's no cover art — the book's own wash */
+  bg?: string;
   /** 0–1 reading progress, marigold ribbon along bottom */
   progress?: number;
   /** painting = art still generating (shimmer); new = hand-written badge. Drafts/blocked NEVER appear on kid shelf. */
@@ -14,7 +16,7 @@ export interface BookCardProps {
   /** voice slot — spoken on tap; defaults to the title */
   utterance?: string;
   onOpen?: () => void;
-  width?: number;
+  width?: number | string;
 }
 export interface ShelfProps {
   label?: string;

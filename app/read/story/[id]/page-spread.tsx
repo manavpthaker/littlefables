@@ -8,9 +8,8 @@ import { Hotspots } from './hotspots';
 
 // The narrative page's visual layout, in both orientations (PRD F2).
 //
-// PORTRAIT (phones — the primary device): unchanged from the original reader —
-// full-bleed art behind, the text floating over it in the DS panel pattern
-// (rules-of-use: over-art content uses scrim/capsule/panel/sheet only).
+// PORTRAIT (phones — the primary device): mockup layout — rounded art card
+// above, prose on plain paper below (text is never over art anymore).
 //
 // LANDSCAPE ≥640px (phone sideways, iPad, laptop): a book spread — the art
 // becomes the left page (edge to edge in its half), the words sit on plain
@@ -60,7 +59,7 @@ export function PageSpread({
       starredWords={starredWords}
       onHearWord={onHearWord}
       onStarWord={onStarWord}
-      overArt={!landscape && Boolean(page.img)}
+      overArt={false}
     />
   );
 
@@ -127,64 +126,54 @@ export function PageSpread({
     );
   }
 
-  // Portrait (and landscape with no art at all): the original layout.
+  // Portrait (and landscape with no art at all): mockup layout — the art is a
+  // rounded card ABOVE the prose (hotspots live inside it); the words sit on
+  // plain paper below, never over art.
   return (
     <main
       key={pageKey}
       style={{
         flex: 1,
         display: 'grid',
-        placeItems: 'center',
-        padding: 'var(--space-6) var(--page-pad)',
-        position: 'relative',
+        alignContent: 'start',
+        gap: 'var(--space-5)',
+        padding: 'var(--space-4) var(--page-pad) var(--space-6)',
+        maxWidth: 'var(--reader-measure)',
+        width: '100%',
+        marginInline: 'auto',
+        boxSizing: 'border-box',
         animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
       }}
     >
-      {page.img && (
-        <div
-          key={page.img}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: `url(${page.img}) center/cover no-repeat`,
-            animation: 'var(--motion-develop)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {useWashFallback && (
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <PaintingWash fullBleed label="painting this page…" />
-        </div>
-      )}
-      {page.img && (
+      {(page.img || useWashFallback) && (
         <div
           style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(180deg, rgba(70,54,42,0.15), rgba(70,54,42,0.05) 40%, transparent 60%)',
-            pointerEvents: 'none',
+            position: 'relative',
+            aspectRatio: '4/3',
+            borderRadius: 24,
+            overflow: 'hidden',
+            boxShadow: 'var(--elev-raised)',
           }}
-        />
-      )}
-      {page.img && page.hotspots && page.hotspots.length > 0 && (
-        <div aria-hidden={false} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
-          <Hotspots hotspots={page.hotspots} />
+        >
+          {page.img ? (
+            <div
+              key={page.img}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `url(${page.img}) center/cover no-repeat`,
+                animation: 'var(--motion-develop)',
+              }}
+            />
+          ) : (
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <PaintingWash fullBleed label="painting this page…" />
+            </div>
+          )}
+          {page.img && page.hotspots && page.hotspots.length > 0 && <Hotspots hotspots={page.hotspots} />}
         </div>
       )}
-      <article
-        style={{
-          maxWidth: 'var(--reader-measure)',
-          width: '100%',
-          background: page.img ? 'var(--wash-panel)' : 'transparent',
-          backdropFilter: page.img ? 'blur(6px)' : undefined,
-          padding: page.img ? 'var(--space-5) var(--space-6)' : 0,
-          borderRadius: page.img ? 'var(--radius-lg)' : 0,
-          boxShadow: page.img ? 'var(--elev-card)' : 'none',
-          position: 'relative',
-          zIndex: 1,
-        }}
-      >
+      <article>
         {chapterLabel}
         {storyText}
       </article>

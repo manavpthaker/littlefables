@@ -62,7 +62,9 @@ export function ShelfGrid({
       utterance={book.title}
       progress={book.progress}
       cover={book.coverImage ?? undefined}
+      bg={!book.coverImage && book.coverBg && !book.coverBg.startsWith('http') ? book.coverBg : undefined}
       tag={tagFor(book)}
+      width={variant === 'row' ? 168 : undefined}
       onOpen={() => {
         window.location.href = `/read/story/${book.id}`;
       }}
@@ -77,7 +79,7 @@ export function ShelfGrid({
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
         gap: 'var(--space-5)',
       }}
     >

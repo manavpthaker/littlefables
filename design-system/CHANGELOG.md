@@ -65,3 +65,20 @@ a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
 | 9 | WordCapsule `owned` prop | Sage ring + "yours now" voice when a kept word was re-encountered and understood at a checkpoint (PRD B5 ownership). Default appearance unchanged. |
 | 10 | ParentTabs (new parent component) | `components/parent/ParentTabs.jsx` (+ d.ts, prompt.md): Insights · Stories · Settings section tabs, terracotta underline on active (navigation is an action on parent surfaces). |
 | 11 | ComprehensionProfile adopted | First app import of the accepted-but-unused meters component (Insights tab); ambient declaration added in the app's design-system.d.ts (also fixed its Field declaration to carry `hint`, matching FieldProps). |
+
+# CHANGELOG — Mockup-fidelity pass (2026-07-21, same day)
+
+The redesign shipped functionally but read as the old visual language; this pass matches the brief's
+spec mockups (see `docs/REDESIGN-BRIEF.md` figures). Every change below is mockup-driven.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Brighter cards + action gradient | `--paper-bright` #F9F2E3→#FCF7EA (mockup card white); new `--ember #E06A45` pigment + `--action-grad` (marigold→ember) for hero CTAs/mic — terracotta stays the flat action token elsewhere. |
+| 2 | TabBar emoji restyle | Emoji faces (🏠 📚 🔒) over hand labels, marigold active label, inner row constrained to the 520px phone frame; now rendered on the parent surface too (mockup shows it app-wide). |
+| 3 | ContinueCard hero rewrite | Art block on top (cover or night wash), white panel with caps eyebrow + serif title + "📖 Keep reading" gradient pill. |
+| 4 | BookCard square covers | 1:1 rounded-24 cover (art or the book's own `bg` wash), serif title BELOW, thin sage progress line under the title (ribbon overlay removed). `width` accepts strings. |
+| 5 | ReaderTopBar in-flow | X close · caps book/chapter label · page segments (marigold current / sage read) · buddy — normal flow, no top scrim (art is a card now); moon toggle moved to a Bedtime capsule beside the Transport. |
+| 6 | Reader portrait layout | Art = rounded card above the prose; text never renders over art; collectable (starred) words show as bold butter pills in StoryText. |
+| 7 | Sheet chrome (checkpoint/retell) | Shared bottom-sheet: chapter segments, gradient buddy circle, caps eyebrow, centered serif question, 88px MicOrb + "Tap to talk", quiet "Skip for now". |
+| 8 | StorySpine numbered beats | Mockup-driven exception to the kid numerals rule: beat circles show 1·2·3 (list order, not a score); sage fill when told. |
+| 9 | ParentTabs segmented control | Deep-paper pill track, active segment lifts as a bright pill (replaces underline tabs). |

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Icon } from '../core/Icon.jsx';
-// Book cover card for the shelf. Cover = art (or painting shimmer); progress ribbon; status corner.
+// Book cover card for the shelf (mockup-fidelity): big rounded-square cover
+// (art, or the book's own bg wash), layer chip top-left, serif title BELOW,
+// thin sage progress line under the title.
 // tag = developmental layer chip (Redesign 2026-07-21): capsule top-left, calm pigment dot — never terracotta.
-export function BookCard({ title, cover, progress = 0, status, chapters, tag, utterance, onOpen, width = 150 }) {
+export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag, utterance, onOpen, width = '100%' }) {
   const painting = status === 'painting';
   return (
     <button data-utterance={utterance || title} onClick={onOpen} style={{
@@ -14,11 +16,12 @@ export function BookCard({ title, cover, progress = 0, status, chapters, tag, ut
     onPointerUp={e => e.currentTarget.style.transform = ''}
     onPointerLeave={e => e.currentTarget.style.transform = ''}>
       <div style={{
-        aspectRatio: '3/4', borderRadius: 'var(--radius-md)', overflow: 'hidden', position: 'relative',
+        aspectRatio: '1/1', borderRadius: 24, overflow: 'hidden', position: 'relative',
         boxShadow: 'var(--elev-card)',
         background: painting
           ? 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))'
-          : cover ? `url(${cover}) center/cover` : 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
+          : cover ? `url(${cover}) center/cover`
+          : bg || 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
         backgroundSize: painting ? '200% 100%' : undefined,
         animation: painting ? 'var(--motion-paint)' : undefined,
       }}>
@@ -28,12 +31,14 @@ export function BookCard({ title, cover, progress = 0, status, chapters, tag, ut
           {tag.label}
         </span>}
         {status === 'new' && <span style={{ position: 'absolute', top: 8, right: 8, background: 'var(--marigold)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 17, boxShadow: 'var(--elev-rest)' }}>new!</span>}
-        {progress > 0 && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 8, background: 'rgba(70,54,42,.25)' }}>
-          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)', borderRadius: '0 4px 4px 0' }}></div>
-        </div>}
       </div>
-      <div style={{ marginTop: 'var(--space-2)', fontFamily: 'var(--font-display)', fontSize: 17, lineHeight: 1.25 }}>{title}</div>
+      <div style={{ marginTop: 'var(--space-2)', fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, lineHeight: 1.25 }}>{title}</div>
       {chapters && <div style={{ fontSize: 14, color: 'var(--ink-soft)' }}>{chapters}</div>}
+      {progress > 0 && (
+        <div style={{ marginTop: 6, height: 6, borderRadius: 3, background: 'var(--paper-deep)' }}>
+          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--sage)', borderRadius: 3 }}></div>
+        </div>
+      )}
     </button>
   );
 }

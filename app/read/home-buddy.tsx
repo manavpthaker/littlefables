@@ -1,15 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Buddy } from '@ds/components/kid/Buddy.jsx';
 import type { Buddy as BuddyMeta } from '@/lib/world/buddy-roster';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 
-// Home Buddy — the world-memory greeting speaker (PRD B1). The greeting text
-// is computed server-side and passed as both `utterance` (spoken on mount) and
-// `speech` (the visible bubble the child reads along with).
+// Home header (mockup-fidelity): rounded buddy tile + "Hi, {name}!" serif +
+// the world-memory greeting as the hand-font subtitle. Greeting is spoken on
+// mount (PRD B1); bubble text = spoken text, verbatim (DS voice rule).
 
-export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; speech?: string }) {
+export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; childName?: string }) {
   const spokenFor = useRef<string | null>(null);
   useEffect(() => {
     if (!props.utterance) return;
@@ -19,23 +18,31 @@ export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; speech?:
   }, [props.buddy.voiceId, props.utterance]);
 
   return (
-    <section
-      style={{
-        padding: 'var(--space-6) var(--page-pad) var(--space-4)',
-        display: 'grid',
-        placeItems: 'center',
-        gap: 'var(--space-3)',
-      }}
-    >
-      <Buddy
-        name={props.buddy.name}
-        color={props.buddy.pigment}
-        emoji={props.buddy.emoji}
-        state="idle"
-        size={112}
-        speech={props.speech ?? props.utterance}
-        utterance={props.utterance}
-      />
-    </section>
+    <header style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+      <span
+        aria-hidden="true"
+        style={{
+          width: 72,
+          height: 72,
+          flex: 'none',
+          borderRadius: 20,
+          background: `linear-gradient(150deg, color-mix(in oklch, ${props.buddy.pigment} 60%, white), ${props.buddy.pigment})`,
+          display: 'grid',
+          placeItems: 'center',
+          fontSize: 40,
+          boxShadow: 'var(--elev-card)',
+        }}
+      >
+        {props.buddy.emoji}
+      </span>
+      <div style={{ display: 'grid', gap: 2 }}>
+        <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'var(--text-display)', lineHeight: 1.1, color: 'var(--text-strong)' }}>
+          Hi{props.childName ? `, ${props.childName}` : ''}!
+        </h1>
+        <p data-utterance={props.utterance} style={{ margin: 0, fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink-soft)' }}>
+          {props.utterance}
+        </p>
+      </div>
+    </header>
   );
 }
