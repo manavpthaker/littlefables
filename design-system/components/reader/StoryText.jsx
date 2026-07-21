@@ -7,7 +7,7 @@ const stem = w => w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').toLowerCase
 // 30px/1.52 line plus vertical padding); the 16px star icon is visual-only (pointer-events none).
 // Persistence: the affordance stays armed until another word is tapped (which moves it) or the page
 // turns; there is NO timeout — no time pressure. Reduced-motion: the star fades in (bloom collapses).
-export function StoryText({ words, currentIndex = -1, starredWords = [], keptWords = [], onHearWord, onStarWord, overArt = false }) {
+export function StoryText({ words, currentIndex = -1, starredWords = [], keptWords = [], dimUpcoming = true, onHearWord, onStarWord, overArt = false }) {
   const [tapped, setTapped] = useState(null); // index showing the star affordance
   return (
     <p style={{
@@ -40,7 +40,9 @@ export function StoryText({ words, currentIndex = -1, starredWords = [], keptWor
                   : starred ? 'linear-gradient(180deg, transparent 62%, rgba(251,217,138,.7) 62%)'
                   : 'transparent',
                 fontWeight: starred || kept ? 600 : 400,
-                color: state === 'upcoming' ? 'var(--word-upcoming-ink)' : 'var(--word-spoken-ink)',
+                // The upcoming-word dim only means something while the voice is
+                // moving — an idle page is a plain book page, full ink everywhere.
+                color: state === 'upcoming' && dimUpcoming ? 'var(--word-upcoming-ink)' : 'var(--word-spoken-ink)',
                 transition: 'background var(--dur-tap) var(--ease-settle), color var(--dur-settle) var(--ease-settle)',
               }}>{t.w}</span>
             {(starred || tapped === i) && (

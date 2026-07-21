@@ -115,3 +115,14 @@ re-synced to the CSS package.
 | 8 | BookCard `artRatio` prop | Cover aspect override (Home rail passes `126/158`); chip 9.5px uppercase; progress line 4px sage; shelf rail gap 13. |
 | 9 | ContinueCard spec | Radius 34, art 172px `center 30%`, kicker 11px, title 21px, `--marigold-deep` white-text pill. |
 | 10 | TabBar hand labels | 12.5px, 700 active, `.06em` tracking (was 16px) — matches the prototype's small hand labels under the emoji faces. |
+
+# CHANGELOG — UX repair pass (2026-07-21, same day)
+
+Phone-testing feedback: the Home rail wouldn't scroll, idle reader pages looked disabled, the sync
+banner never left. Mechanical fixes, no visual-language changes.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Shelf rail actually scrolls | `Shelf` rail gains `contain: inline-size` — its cards can no longer inflate an ancestor's intrinsically-sized grid track (which left the rail wider than the screen with nothing to scroll and the tail cards unreachable behind the page's overflow clip). Plus momentum scrolling + `scroll-snap-type: x proximity`; `BookCard` gains `flex: none` + `scroll-snap-align: start` so cards neither squash nor land half-cut. |
+| 2 | StoryText `dimUpcoming` prop | The upcoming-word dim (50% ink) now only applies while narration is moving. Idle/paused pages render full ink — a plain book page, not a disabled screen. Default `true` keeps prototype behavior. |
+| 3 | BookCard crop bias | Covers crop `center 30%` (was `center`) — square crops favor the subject like ContinueCard, instead of fur/midsections. |

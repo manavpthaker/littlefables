@@ -121,6 +121,13 @@ body,
   min-width: 0;
   max-width: 100%;
 }
+/* Percentage caps are ignored during intrinsic track sizing, so a wide child
+   (e.g. the shelf rail) can still inflate an auto grid track past the frame —
+   the page is overflow-clipped, so whatever hangs past the edge becomes
+   unreachable. Pin the track to the frame's width instead. */
+.lf-frame {
+  grid-template-columns: minmax(0, 100%);
+}
 
 /* ── Responsive frames (optimization pass) ──────────────────────────────
    Phones get a comfortable single column; desktop widens instead of showing
@@ -167,15 +174,7 @@ body,
   overflow: hidden;
   box-shadow: var(--elev-raised);
 }
-@media (max-width: 420px) {
-  [data-density='kid'] {
-    --text-reading: 26px;
-  }
-}
 @media (max-height: 720px) {
-  [data-density='kid'] {
-    --text-reading: 25px;
-  }
   .lf-art-card {
     max-height: 36dvh;
   }

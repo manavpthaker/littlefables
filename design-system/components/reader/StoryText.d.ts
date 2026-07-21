@@ -8,6 +8,8 @@ export interface StoryTextProps {
   starredWords?: string[];
   /** kept words — fern-wash treatment (pixel-parity II.3) */
   keptWords?: string[];
+  /** dim words past currentIndex (read-along treatment). Pass false while narration is idle/paused so the page reads full-ink, like a book. Default true. */
+  dimUpcoming?: boolean;
   /** tap-any-word: speak it instantly (sliced narration audio / TTS). NEVER pauses or navigates. */
   onHearWord?: (word: string, i: number) => void;
   /** star-save — receives the STEM; wordbook stores stem + original sentence. Display word stays untouched for tap/speech.

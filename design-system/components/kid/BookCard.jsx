@@ -8,7 +8,8 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
   const painting = status === 'painting';
   return (
     <button data-utterance={utterance || title} onClick={onOpen} style={{
-      width, border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left',
+      width, flex: 'none', scrollSnapAlign: 'start',
+      border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left',
       fontFamily: 'var(--font-body)', color: 'var(--ink)',
       transition: 'transform var(--dur-tap) var(--ease-settle)',
     }}
@@ -20,7 +21,7 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
         boxShadow: 'var(--elev-card)',
         background: painting
           ? 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))'
-          : cover ? `url(${cover}) center/cover`
+          : cover ? `url(${cover}) center 30%/cover`
           : bg || 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
         backgroundSize: painting ? '200% 100%' : undefined,
         animation: painting ? 'var(--motion-paint)' : undefined,
@@ -46,11 +47,14 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
   );
 }
 // Horizontal shelf with a wooden-well rail.
+// contain:inline-size — the rail's content must never dictate ancestor width
+// (an intrinsically-sized grid track would grow to fit every card, leaving the
+// rail nothing to scroll and the tail cards unreachable on a clipped page).
 export function Shelf({ label, children }) {
   return (
-    <section>
+    <section style={{ minWidth: 0 }}>
       {label && <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-title)', color: 'var(--ink)', margin: '0 0 var(--space-3)' }}>{label}</h2>}
-      <div style={{ display: 'flex', gap: 13, overflowX: 'auto', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
+      <div style={{ display: 'flex', gap: 13, overflowX: 'auto', contain: 'inline-size', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x proximity', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
     </section>
   );
 }

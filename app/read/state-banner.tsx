@@ -29,6 +29,17 @@ export function StateBannerBoot() {
     };
   }, []);
 
+  // 'synced' is a moment, not a state: without another outbox event to move
+  // things along, the confirmation would sit on screen forever. Let it land,
+  // then get out of the way.
+  useEffect(() => {
+    if (state !== 'synced') return;
+    const t = setTimeout(() => {
+      setState((prev) => (prev === 'synced' ? 'idle' : prev));
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [state]);
+
   if (state === 'idle') return null;
   return <DsStateBanner state={state} density="kid" />;
 }

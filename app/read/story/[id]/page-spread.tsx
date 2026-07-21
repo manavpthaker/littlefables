@@ -23,6 +23,7 @@ export function PageSpread({
   coverImage,
   useWashFallback,
   currentIndex,
+  narrating,
   starredWords,
   keptWords,
   onHearWord,
@@ -35,6 +36,8 @@ export function PageSpread({
   coverImage?: string;
   useWashFallback: boolean;
   currentIndex: number;
+  /** narration in flight — enables the upcoming-word dim; idle pages are full ink */
+  narrating: boolean;
   starredWords: string[];
   /** words already kept — fern-wash treatment (parity II.3) */
   keptWords?: string[];
@@ -65,6 +68,7 @@ export function PageSpread({
     <StoryText
       words={page.words.map((w) => ({ w: w.w }))}
       currentIndex={currentIndex}
+      dimUpcoming={narrating}
       starredWords={starredWords}
       keptWords={keptWords}
       onHearWord={onHearWord}

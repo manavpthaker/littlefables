@@ -17,6 +17,7 @@ import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 import { useBedtime } from '@/lib/reader/use-bedtime';
+import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { Checkpoint } from './checkpoint';
 import { WordPopover } from './word-popover';
@@ -259,6 +260,15 @@ export function Reader({
     [transport],
   );
 
+  // Swipe-to-turn (UX pass): the natural picture-book gesture, mapped to the
+  // exact same prev/next the Transport dispatches (never auto-plays). Off
+  // whenever anything interactive owns the screen.
+  const swipe = useSwipeTurn({
+    enabled: !showMap && !isInteractive && !inCheckpoint && !inRetell && !popWord,
+    onPrev,
+    onNext,
+  });
+
   // Word save (PRD A9) — extracted to lib/reader/use-word-save.ts.
   const [pendingBadges, setPendingBadges] = useState<string[]>([]);
   const { savedWord, justSaved, onStarWord } = useWordSave({
@@ -271,7 +281,11 @@ export function Reader({
   });
 
   return (
-    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
+    <div
+      style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}
+      onTouchStart={swipe.onTouchStart}
+      onTouchEnd={swipe.onTouchEnd}
+    >
       <ReaderTopBar
         onBack={onBack}
         title={`${book.title}${book.kind === 'chapter' && state.chapterIdx !== null ? ` · Ch. ${state.chapterIdx + 1}` : ''}`}
@@ -352,6 +366,7 @@ export function Reader({
             chapterTitle={book.kind === 'chapter' ? ch.title : null}
             useWashFallback={Boolean(useWashFallback)}
             currentIndex={transport.wordIdx}
+            narrating={transport.playing}
             coverImage={book.coverImage}
             starredWords={page.star ? [page.star] : []}
             keptWords={savedWord ? [savedWord] : []}
