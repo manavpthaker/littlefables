@@ -28,3 +28,25 @@ export function weekWindowUtc(today: Date = new Date()): string[] {
   }
   return days;
 }
+
+/** Consecutive-day streak ending today (or yesterday — an unbroken run that
+ *  hasn't been read *yet* today still counts). days = ISO date strings. */
+export function streakLength(days: string[], today: string = todayIsoUtc()): number {
+  const set = new Set(days);
+  const start = set.has(today) ? today : previousIso(today);
+  if (!set.has(start)) return 0;
+  let streak = 0;
+  let cursor = start;
+  while (set.has(cursor)) {
+    streak += 1;
+    cursor = previousIso(cursor);
+  }
+  return streak;
+}
+
+function previousIso(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  const date = new Date(Date.UTC(y ?? 1970, (m ?? 1) - 1, d ?? 1));
+  date.setUTCDate(date.getUTCDate() - 1);
+  return todayIsoUtc(date);
+}

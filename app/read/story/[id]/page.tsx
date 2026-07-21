@@ -64,9 +64,14 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
 
   // Active buddy so the reader's companion is the child's chosen animal (its
   // emoji + pigment), consistent with Home — not a hardcoded generic blob.
-  const [world, profile] = await Promise.all([
+  const [world, profile, { data: todaySessions }] = await Promise.all([
     loadWorldState(ctx.childId),
     loadChildProfile(ctx.childId),
+    admin()
+      .from('reading_sessions')
+      .select('seconds')
+      .eq('child_id', ctx.childId)
+      .eq('day', todayIsoUtc()),
   ]);
   const buddy = activeBuddy(world.activeBuddyId);
 
@@ -79,6 +84,8 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
       buddyColor={buddy.pigment}
       bedtimeWindow={profile.settings.bedtime}
       checksEnabled={profile.settings.checksEnabled}
+      dailyLimitMin={profile.settings.dailyLimitMin}
+      todaySeconds={(todaySessions ?? []).reduce((sum, s) => sum + (s.seconds ?? 0), 0)}
     />
   );
 }

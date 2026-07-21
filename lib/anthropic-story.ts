@@ -12,6 +12,10 @@ interface GenerateOpts {
   child: { displayName: string; band: ChildBand; excludeTerms: string[]; pronouns?: string | null };
   idea: string;
   kind: 'quick' | 'chapter';
+  /** spaced re-encounter words to weave in (PRD B5) */
+  dueWords?: string[];
+  /** adaptivity vocabulary density (brief §IV.3) */
+  vocabDensity?: 'gentle' | 'standard' | 'rich';
 }
 
 const NARRATIVE_MODEL = 'claude-sonnet-4-6';
@@ -29,8 +33,10 @@ const OUTPUT_HINT = [
   '  "status": "draft",',
   '  "coverEmoji": "🌟",',
   '  "teachingGoals": ["..."],',
-  '  "vocab": [{ "word": "...", "meaning": "..." }],',
-  '  "retellPrompts": ["..."],',
+  '  "layerTag": "sleep" | "feelings" | "courage" | "self",',
+  '  "vocab": [{ "word": "...", "meaning": "...", "kidDefinition": "what it means, said to a 4-year-old", "syllables": ["bur", "row"] }],',
+  '  "retellPrompts": ["Can you tell me the whole story of ...?"],',
+  '  "beats": ["3-5 short story facts in order — the retell spine, kid-checkable"],',
   '  "parentGuide": null,',
   '  "originNote": null,',
   '  "chapters": [{',
@@ -59,6 +65,8 @@ export async function generateStory(opts: GenerateOpts): Promise<Book | null> {
     mode: 'start',
     child: opts.child,
     idea: opts.idea,
+    dueWords: opts.dueWords,
+    vocabDensity: opts.vocabDensity,
   });
   const system = assembled.system + OUTPUT_HINT;
 

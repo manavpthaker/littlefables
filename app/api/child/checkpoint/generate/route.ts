@@ -12,6 +12,7 @@ import {
 } from '@/lib/models/checkpoint';
 import { assembleCheckpointPrompt, type QuestionType } from '@/lib/prompts/templates/checkpoint';
 import { pickRung } from '@/lib/comprehension/ladder';
+import { computeAdaptivity } from '@/lib/comprehension/adaptivity';
 import { BudgetExceededError, callAnthropic, extractJson } from '@/lib/anthropic';
 import { loadWorldState, bumpGrowth } from '@/lib/world/state';
 import { loadChildProfile } from '@/lib/server/child-settings';
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
       .select('question_type, judged_signal')
       .eq('child_id', ctx.childId)
       .order('asked_at', { ascending: false })
-      .limit(4),
+      .limit(12),
     admin()
       .from('wordbook_entries')
       .select('word')
@@ -68,14 +69,27 @@ export async function POST(request: NextRequest) {
 
   const recentTypes: QuestionType[] = ((recentRecords ?? [])
     .map((r) => r.question_type)
-    .filter((t): t is QuestionType => t !== 'retell' && Boolean(t)));
+    .filter((t): t is QuestionType => t !== 'retell' && Boolean(t))
+    .slice(0, 4));
+  const recentSignals = (recentRecords ?? [])
+    .map((r) => r.judged_signal)
+    .filter((s): s is string => Boolean(s));
 
   // Ladder (redesign brief §IV.1): rung from chapter position + recent signals.
   const requestedType = pickRung({
     chapterIdx,
     chapterCount: book.chapters.length,
-    recentSignals: (recentRecords ?? []).map((r) => r.judged_signal).filter((s): s is string => Boolean(s)),
+    recentSignals: recentSignals.slice(0, 4),
     recentTypes,
+  });
+
+  // Adaptivity (brief §IV.3): question band follows the child's actual
+  // signal, pinned by the parent's Ease/Auto/Stretch setting.
+  const { effectiveBand } = computeAdaptivity({
+    baseBand: profile.band,
+    readingLevel: profile.settings.readingLevel,
+    recentSignals,
+    recentKeeps: (savedWordsRows ?? []).length,
   });
 
   const assembled = assembleCheckpointPrompt({
@@ -83,7 +97,7 @@ export async function POST(request: NextRequest) {
     chapterTitle: chapter.title,
     chapterIdx,
     pagesText: chapter.pages.map((p) => p.text).join('\n\n'),
-    band: profile.band,
+    band: effectiveBand,
     recentTypes,
     requestedType,
     savedWords: (savedWordsRows ?? []).map((r) => r.word),

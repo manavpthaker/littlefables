@@ -25,6 +25,10 @@ export interface AssemblyInput {
   childIdea?: string;
   comprehensionSummary?: string;
   savedWords?: string[];
+  /** spaced re-encounter words (PRD B5) — weave 2-3 in naturally, never as a list */
+  dueWords?: string[];
+  /** adaptivity vocabulary density (brief §IV.3): gentle | standard | rich */
+  vocabDensity?: 'gentle' | 'standard' | 'rich';
 }
 
 export interface AssembledPrompt {
@@ -55,6 +59,7 @@ export function assembleStoryPrompt(input: AssemblyInput): AssembledPrompt {
     input.child.excludeTerms.length
       ? `- Exclude terms (HARD): ${input.child.excludeTerms.join(', ')}. Never use these words or paraphrases.`
       : '- No child-specific excluded terms.',
+    densityLine(input.vocabDensity),
     '',
     '# 6. Output shape',
     'Return valid JSON matching the Book schema: { title, kind, chapters:[{title, pages:[{text, star?}]}] }.',
@@ -70,6 +75,7 @@ export function assembleStoryPrompt(input: AssemblyInput): AssembledPrompt {
   if (input.worldStateSummary) userParts.push(`World state so far: ${input.worldStateSummary}`);
   if (input.comprehensionSummary) userParts.push(`Comprehension profile: ${input.comprehensionSummary}`);
   if (input.savedWords?.length) userParts.push(`Saved words to weave in naturally: ${input.savedWords.join(', ')}`);
+  if (input.dueWords?.length) userParts.push(`Re-encounter words (it's time these came back — use 2-3 of them naturally in the prose): ${input.dueWords.join(', ')}`);
   if (input.mode === 'chapter' && input.priorChapters?.length) {
     const summary = input.priorChapters
       .map((c, i) => `Ch${i + 1} "${c.title}" (${c.pages.length}p)`)
@@ -81,7 +87,21 @@ export function assembleStoryPrompt(input: AssemblyInput): AssembledPrompt {
   }
 
   const user = userParts.join('\n\n');
-  const cacheKey = `story|${CANON_VERSION}|${input.mode}|${input.child.band}`;
+  const cacheKey = `story|${CANON_VERSION}|${input.mode}|${input.child.band}|${input.vocabDensity ?? 'standard'}`;
 
   return { system, user, cacheKey, canonVersion: CANON_VERSION };
+}
+
+// Adaptivity vocabulary density (brief §II.2 rare-word exposure + §IV.3):
+// deliberately sophisticated words are the collectable targets — density
+// tunes how many, never whether the story is warm.
+function densityLine(density?: 'gentle' | 'standard' | 'rich'): string {
+  switch (density) {
+    case 'gentle':
+      return '- Vocabulary density: GENTLE. Mostly familiar words; one gently new word per chapter, always self-explained by context.';
+    case 'rich':
+      return '- Vocabulary density: RICH. 2-3 deliberately sophisticated words per chapter (vast, furious, gentle territory) — each one a collectable star candidate, meaning inferable from context.';
+    default:
+      return '- Vocabulary density: STANDARD. 1-2 gently sophisticated words per chapter, meaning inferable from context.';
+  }
 }

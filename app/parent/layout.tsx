@@ -2,7 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { ParentTabs } from '@ds/components/parent/ParentTabs.jsx';
 import { isParentAuthed } from '@/lib/server/parent-gate';
+
+const TAB_ITEMS = [
+  { key: 'insights', label: 'Insights', href: '/parent' },
+  { key: 'stories', label: 'Stories', href: '/parent/stories' },
+  { key: 'settings', label: 'Settings', href: '/parent/settings' },
+];
+
+function activeTab(pathname: string): string | null {
+  if (pathname.startsWith('/parent/stories')) return 'stories';
+  if (pathname.startsWith('/parent/settings')) return 'settings';
+  if (pathname === '/parent' || pathname === '/parent/') return 'insights';
+  return null; // make / privacy / gate — no tab highlighted
+}
 
 export const metadata: Metadata = { title: 'Parent Corner · Little Fables' };
 
@@ -76,7 +90,14 @@ export default async function ParentLayout({ children }: { children: React.React
           </div>
         </nav>
       )}
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: 'var(--space-6)' }}>{children}</div>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: 'var(--space-6)' }}>
+        {!isGate && (
+          <div style={{ marginBottom: 'var(--space-6)' }}>
+            <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 }

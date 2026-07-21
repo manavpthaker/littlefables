@@ -7,6 +7,7 @@ import { Transport } from '@ds/components/kid/Transport.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { useWordSave } from '@/lib/reader/use-word-save';
+import { useReadingHeartbeat } from '@/lib/reader/use-reading-heartbeat';
 import { pushProgress } from '@/lib/reader/progress';
 import { useRecapOnResume } from '@/lib/reader/use-recap';
 import { useArtPrefetch } from '@/lib/reader/use-art-prefetch';
@@ -47,6 +48,8 @@ export function Reader({
   buddyColor = 'var(--teal)',
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
   checksEnabled = true,
+  dailyLimitMin = null,
+  todaySeconds = 0,
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
@@ -54,6 +57,8 @@ export function Reader({
   buddyColor?: string;
   bedtimeWindow?: BedtimeWindow;
   checksEnabled?: boolean;
+  dailyLimitMin?: number | null;
+  todaySeconds?: number;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -78,6 +83,7 @@ export function Reader({
   // warmed while this one is read, so page turns never flash the wash.
   useRecapOnResume(book, initialProgress);
   useArtPrefetch(book, state);
+  useReadingHeartbeat(true, { dailyLimitMin, todaySeconds });
 
   const ch = currentChapter(book, state);
   const page = currentPage(book, state);

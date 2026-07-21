@@ -63,3 +63,5 @@ a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
 | 7 | ReaderTopBar bedtime slot | Optional `bedtime`/`onBedtime` moon capsule in the right slot; marigold ring while active (a state, not an action). |
 | 8 | StorySpine (new reader component) | `components/reader/StorySpine.jsx` (+ d.ts, prompt.md): the retell checklist — authored beats fill in (sage wash + drawn check, watercolor develop) as the child recounts the arc. No numerals, no score, no red. |
 | 9 | WordCapsule `owned` prop | Sage ring + "yours now" voice when a kept word was re-encountered and understood at a checkpoint (PRD B5 ownership). Default appearance unchanged. |
+| 10 | ParentTabs (new parent component) | `components/parent/ParentTabs.jsx` (+ d.ts, prompt.md): Insights · Stories · Settings section tabs, terracotta underline on active (navigation is an action on parent surfaces). |
+| 11 | ComprehensionProfile adopted | First app import of the accepted-but-unused meters component (Insights tab); ambient declaration added in the app's design-system.d.ts (also fixed its Field declaration to carry `hint`, matching FieldProps). |

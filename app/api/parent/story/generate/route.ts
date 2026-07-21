@@ -4,6 +4,9 @@ import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
 import { currentHouseholdId, firstChildIdInHousehold } from '@/lib/server/current-household';
 import { generateStory } from '@/lib/anthropic-story';
+import { computeAdaptivity } from '@/lib/comprehension/adaptivity';
+import { parseChildSettings } from '@/lib/models/settings';
+import { dueWords } from '@/lib/world/word-scheduler';
 import { runQA } from '@/lib/qa/pipeline';
 import { persistQA } from '@/lib/qa/persist';
 import type { Book } from '@/lib/models/book';
@@ -33,17 +36,56 @@ export async function POST(request: NextRequest) {
 
   const { data: child } = await admin()
     .from('children')
-    .select('id, display_name, band, exclude_terms, pronouns')
+    .select('id, display_name, band, exclude_terms, pronouns, settings')
     .eq('id', childId)
     .single();
   if (!child) return NextResponse.json({ error: 'no_child' }, { status: 500 });
+
+  // Adaptivity (brief §IV.3): vocabulary density + effective band from the
+  // child's recent signal, pinned by the parent's Ease/Auto/Stretch; due
+  // saved words come back in the new story (PRD B5 / C2).
+  const [{ data: recentRecords }, { data: wordRows }] = await Promise.all([
+    admin()
+      .from('comprehension_records')
+      .select('judged_signal')
+      .eq('child_id', childId)
+      .order('asked_at', { ascending: false })
+      .limit(12),
+    admin()
+      .from('wordbook_entries')
+      .select('word, saved_at, owned_at, last_encounter_at, encounter_count')
+      .eq('child_id', childId)
+      .order('saved_at', { ascending: false })
+      .limit(40),
+  ]);
+  const adaptivity = computeAdaptivity({
+    baseBand: (child.band ?? '4-8') as '3-4' | '4-6' | '4-8' | '6-8',
+    readingLevel: parseChildSettings(child.settings).readingLevel,
+    recentSignals: (recentRecords ?? []).map((r) => r.judged_signal).filter((v): v is string => Boolean(v)),
+    recentKeeps: (wordRows ?? []).filter((w) => {
+      const t = Date.parse(w.saved_at);
+      return Number.isFinite(t) && Date.now() - t < 14 * 24 * 60 * 60 * 1000;
+    }).length,
+  });
+  const due = dueWords(
+    (wordRows ?? []).map((w) => ({
+      word: w.word,
+      savedAt: w.saved_at,
+      ownedAt: w.owned_at,
+      lastEncounterAt: w.last_encounter_at,
+      encounterCount: w.encounter_count ?? 0,
+    })),
+    new Date(),
+  )
+    .slice(0, 3)
+    .map((w) => w.word);
 
   const excludeTerms = Array.isArray(child.exclude_terms)
     ? (child.exclude_terms as string[])
     : [];
   const childCtx = {
     displayName: child.display_name,
-    band: (child.band ?? '4-8') as '3-4' | '4-6' | '4-8' | '6-8',
+    band: adaptivity.effectiveBand,
     excludeTerms,
     pronouns: child.pronouns ?? null,
   };
@@ -60,6 +102,8 @@ export async function POST(request: NextRequest) {
       child: childCtx,
       idea: body.data.idea,
       kind: body.data.kind,
+      dueWords: due,
+      vocabDensity: adaptivity.vocabDensity,
     });
 
     if (!book) {

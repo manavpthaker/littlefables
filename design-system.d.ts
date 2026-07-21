@@ -37,6 +37,16 @@ declare module '@ds/components/kid/WordCapsule.jsx' {
   export function WordCapsule(props: WordCapsuleProps): JSX.Element;
 }
 
+declare module '@ds/components/parent/ParentTabs.jsx' {
+  import type { ParentTabsProps } from '@ds/components/parent/ParentTabs';
+  export function ParentTabs(props: ParentTabsProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/ComprehensionProfile.jsx' {
+  import type { ComprehensionProfileProps } from '@ds/components/parent/ComprehensionProfile';
+  export function ComprehensionProfile(props: ComprehensionProfileProps): JSX.Element;
+}
+
 declare module '@ds/components/reader/StorySpine.jsx' {
   import type { StorySpineProps } from '@ds/components/reader/StorySpine';
   export function StorySpine(props: StorySpineProps): JSX.Element;
@@ -136,10 +146,10 @@ declare module '@ds/components/parent/ArtApproval.jsx' {
 }
 
 declare module '@ds/components/parent/ParentPrimitives.jsx' {
-  import type { SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
+  import type { FieldProps, SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
   export function SectionHeader(props: SectionHeaderProps): JSX.Element;
   export function ListRow(props: { children: React.ReactNode }): JSX.Element;
-  export function Field(props: { label: string; children: React.ReactNode }): JSX.Element;
+  export function Field(props: FieldProps): JSX.Element;
   export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>): JSX.Element;
   export function RetellingPlayer(props: { src: string; transcript?: string }): JSX.Element;
 }
