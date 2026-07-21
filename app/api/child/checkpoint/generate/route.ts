@@ -4,6 +4,7 @@ import { admin } from '@/lib/supabase/admin';
 import { bookSchema } from '@/lib/models/book';
 import {
   checkpointQuestionSchema,
+  clientCheckpointQuestionSchema,
   generateCheckpointBodySchema,
   FALLBACK_QUESTION,
   type CheckpointQuestion,
@@ -12,6 +13,7 @@ import {
 import { assembleCheckpointPrompt, type QuestionType } from '@/lib/prompts/templates/checkpoint';
 import { BudgetExceededError, callAnthropic, extractJson } from '@/lib/anthropic';
 import { loadWorldState, bumpGrowth } from '@/lib/world/state';
+import { loadChildProfile } from '@/lib/server/child-settings';
 
 // Generate ONE checkpoint question for the given book + chapter. Records a
 // placeholder comprehension_records row so the answer endpoint can update it.
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
   const chapter = book.chapters[chapterIdx];
   if (!chapter) return NextResponse.json({ error: 'chapter_not_found' }, { status: 404 });
 
-  const [{ data: recentRecords }, { data: savedWordsRows }, world] = await Promise.all([
+  const [{ data: recentRecords }, { data: savedWordsRows }, world, profile] = await Promise.all([
     admin()
       .from('comprehension_records')
       .select('question_type')
@@ -53,6 +55,7 @@ export async function POST(request: NextRequest) {
       .order('saved_at', { ascending: false })
       .limit(6),
     loadWorldState(ctx.childId),
+    loadChildProfile(ctx.childId),
   ]);
 
   const recentTypes: QuestionType[] = ((recentRecords ?? [])
@@ -64,7 +67,7 @@ export async function POST(request: NextRequest) {
     chapterTitle: chapter.title,
     chapterIdx,
     pagesText: chapter.pages.map((p) => p.text).join('\n\n'),
-    band: '4-8',
+    band: profile.band,
     recentTypes,
     savedWords: (savedWordsRows ?? []).map((r) => r.word),
     worldSummary: `${world.growth.booksOpened} books opened, ${world.growth.wordsSaved} words saved.`,
@@ -111,9 +114,10 @@ export async function POST(request: NextRequest) {
 
   await bumpGrowth(ctx.childId, 'checkpointsAsked', 1);
 
+  // Strip judge material (expectedConcepts) before it reaches the client.
   const response: GeneratedCheckpointRecord = {
     recordId: record.id,
-    question,
+    question: clientCheckpointQuestionSchema.parse(question),
   };
   return NextResponse.json(response);
 }

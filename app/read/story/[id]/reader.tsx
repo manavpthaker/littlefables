@@ -214,7 +214,7 @@ export function Reader({
       if (bloomTimer.current) clearTimeout(bloomTimer.current);
       bloomTimer.current = setTimeout(() => setJustSaved(false), 1400);
       // Confirm the save aloud in the buddy voice.
-      void speakUtterance(`${stem} is in your word book!`, { voice: 'buddy' });
+      void speakUtterance(`${stem} is in your word book!`, { voice: 'buddy', priority: 'tap' });
 
       saveWord({
         word: stem,

@@ -9,6 +9,7 @@
 @import '../design-system/tokens/elevation.css';
 @import '../design-system/tokens/motion.css';
 @import '../design-system/tokens/lighting.css';
+@import '../design-system/tokens/bedtime.css'; /* after lighting: bedtime overrides data-lighting while active */
 
 /* Global layout defaults. Kid vs parent density is set at the subtree via data-density. */
 :root {

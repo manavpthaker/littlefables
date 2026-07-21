@@ -46,3 +46,15 @@ Three token-hygiene nitpicks left for Phase 0 implementation:
 1. `#FBF4E6` (icon-on-pigment) hardcoded in 6 components — promote to a token (e.g. `--ink-on-pigment`).
 2. `ParentPrimitives.jsx` uses raw `#FFF6EA` where `--action-ink` exists.
 3. `Icon.jsx` unknown-name fallback renders a `●` glyph — against the system's own no-glyph rule; draw a dot instead.
+
+# CHANGELOG — Redesign 2026-07-21 (Reading & Comprehension brief)
+
+Additive evolution of accepted v3 — no accepted spec mutated; every change below is a new token,
+a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Missing pigments defined | `tokens/colors.css` + `tokens.json`: `--honey #D9A653` (Bramble) and `--lilac #9B7FAE` (Dory) + washes — both were consumed by the buddy roster but undefined (resolved to nothing). Like marigold/butter they never carry text. |
+| 2 | `--danger` defined | Alias to `--berry`, parent surfaces only — kid surfaces never show failure colors. Was referenced with a raw fallback in parent components. |
+| 3 | Bedtime night palette | New `tokens/bedtime.css`: `[data-bedtime]` block — night surfaces `#1E1930/#2A2440/#171226`, flipped warm-light ink ramp (contrast ≥8:1 body), night word-highlight treatment, night over-art washes/scrims, plum lamplight glow, deep shadows. Imported after `lighting.css` so bedtime overrides any `data-lighting` stage while active. Kid-only; Parent Corner never renders under it. |
+| 4 | TabBar (new kid component) | `components/kid/TabBar.jsx` (+ d.ts, prompt.md): persistent bottom bar — Home · Library · quiet Grown-ups door. ≥64px targets, no numerals, active = marigold ring + breath (terracotta stays action-only), per-tab utterance ('tap' class), bedtime-aware, hidden inside the reader. |

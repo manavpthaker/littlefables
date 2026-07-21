@@ -1,0 +1,26 @@
+/* Bedtime mode ("storybook dusk" night palette, Redesign 2026-07-21).
+   The reader sets data-bedtime on <html> — manually via the moon toggle, or
+   automatically inside the parent-set bedtime window. Import AFTER lighting.css:
+   equal specificity, later source order, so bedtime overrides any data-lighting
+   stage while active. Ink flips to a warm light ramp; pigments stay put
+   (terracotta action reads fine on night paper). Kid-only — Parent Corner
+   never renders under data-bedtime. */
+[data-bedtime]{
+  /* night surfaces (semantic aliases --surface-* follow automatically) */
+  --paper:#1E1930;--paper-bright:#2A2440;--paper-deep:#171226;
+  /* flipped ink ramp — warm candlelight cream, never pure white */
+  --ink:#EFE7DA;--ink-soft:#C9BFAE;--ink-faint:#8F8578;
+  /* contrast-checked: ink/paper ≈13:1 · ink-soft/paper ≈8:1 (AA body) */
+  /* word-highlight treatment on night paper */
+  --word-current-bg:rgba(227,154,50,.30);--word-current-ink:#F9F2E3;
+  --word-spoken-ink:#EFE7DA;
+  --word-upcoming-ink:rgba(239,231,218,.45);
+  /* over-art system — night glass instead of paper glass */
+  --wash-capsule:rgba(23,18,38,.82);--wash-panel:rgba(23,18,38,.92);
+  --scrim-bottom:linear-gradient(180deg,rgba(14,10,24,0) 0%,rgba(14,10,24,.44) 55%,rgba(14,10,24,.68) 100%);/* @kind other */
+  --scrim-top:linear-gradient(180deg,rgba(14,10,24,.48) 0%,rgba(14,10,24,0) 100%);/* @kind other */
+  /* ambience — plum lamplight, deep shadows, quieter wells */
+  --light-glow:rgba(116,86,124,.22);/* @kind color */
+  --shadow-color:rgba(8,5,16,.55);/* @kind color */
+  --inset-well:inset 0 2px 6px rgba(8,5,16,.4);/* @kind other */
+}

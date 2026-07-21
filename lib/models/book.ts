@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { LAYER_TAGS } from './layer-tags';
 
 // AUDIT C2 fix: the enum values below are the single source of truth for
 // Book.kind / .source / .status. The migration file's CHECK constraints must
@@ -29,6 +30,18 @@ export const choiceBlockSchema = z.object({
   options: z.array(z.object({ label: z.string(), summary: z.string() })).min(2),
 });
 
+// Illustration hotspot (redesign brief §VI): a tappable point over approved
+// scene art that speaks what it is. Coordinates are normalized 0..1 so they
+// survive any render size. Max 3 per page; only pages with art carry them.
+export const hotspotSchema = z.object({
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
+  label: z.string().min(1).max(40),
+  emoji: z.string().max(8).optional(),
+  spoken: z.string().min(1).max(120),
+});
+export type Hotspot = z.infer<typeof hotspotSchema>;
+
 export const pageSchema = z
   .object({
     text: z.string(),
@@ -36,6 +49,7 @@ export const pageSchema = z
     ask: askBlockSchema.optional(),
     choice: choiceBlockSchema.optional(),
     breathe: z.boolean().optional(),
+    hotspots: z.array(hotspotSchema).max(3).optional(),
   })
   .passthrough();
 
@@ -50,9 +64,14 @@ export const chapterSchema = z
   })
   .passthrough();
 
+// syllables + kidDefinition are the collectable-word depth from the redesign
+// brief (extends PRD A9): "bur — row", then a definition in kid language.
+// Optional so pre-backfill books still parse.
 export const vocabEntrySchema = z.object({
   word: z.string(),
   meaning: z.string(),
+  syllables: z.array(z.string().min(1)).optional(),
+  kidDefinition: z.string().optional(),
 });
 
 export const bookSchema = z
@@ -69,6 +88,11 @@ export const bookSchema = z
     teachingGoals: z.array(z.string()).default([]),
     vocab: z.array(vocabEntrySchema).default([]),
     retellPrompts: z.array(z.string()).default([]),
+    // Redesign brief additions (backfilled for pack-000, authored by the Maker
+    // for new books). layerTag drives shelf grouping + cover chips; beats are
+    // the retell story-spine (3–5 short story facts in order).
+    layerTag: z.enum(LAYER_TAGS).optional(),
+    beats: z.array(z.string().min(1).max(120)).max(6).default([]),
     parentGuide: z.string().nullable().optional(),
     originNote: z.string().nullable().optional(),
     chapters: z.array(chapterSchema).min(1),

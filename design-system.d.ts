@@ -36,6 +36,11 @@ declare module '@ds/components/kid/WordCapsule.jsx' {
   export function WordCapsule(props: WordCapsuleProps): JSX.Element;
 }
 
+declare module '@ds/components/kid/TabBar.jsx' {
+  import type { TabBarProps } from '@ds/components/kid/TabBar';
+  export function TabBar(props: TabBarProps): JSX.Element;
+}
+
 declare module '@ds/components/kid/ContinueCard.jsx' {
   import type { ContinueCardProps } from '@ds/components/kid/ContinueCard';
   export function ContinueCard(props: ContinueCardProps): JSX.Element;

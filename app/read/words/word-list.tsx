@@ -71,7 +71,7 @@ export function WordList({
               onTap={() =>
                 void speakUtterance(
                   w.sentence ? `${w.word}. From the story: ${w.sentence}` : w.word,
-                  { voice: 'buddy' },
+                  { voice: 'buddy', priority: 'tap' },
                 )
               }
             />

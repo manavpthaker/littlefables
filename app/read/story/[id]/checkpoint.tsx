@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Checkpoint as DsCheckpoint } from '@ds/components/reader/Checkpoint.jsx';
-import type { CheckpointQuestion, GeneratedCheckpointRecord, JudgeSignal } from '@/lib/models/checkpoint';
+import type { ClientCheckpointQuestion, GeneratedCheckpointRecord, JudgeSignal } from '@/lib/models/checkpoint';
 import { startRecording, type Recording } from '@/lib/reader/recording';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 
@@ -31,7 +31,7 @@ const MAX_LISTEN_MS = 10_000; // PRD MicOrb timings
 /** Chapter-end checkpoint (PRD A10/A11). Generates a question, records the
  *  child's spoken answer, transcribes + judges via Anthropic, applies mercy. */
 export function Checkpoint(props: Props) {
-  const [question, setQuestion] = useState<CheckpointQuestion | null>(null);
+  const [question, setQuestion] = useState<ClientCheckpointQuestion | null>(null);
   const [recordId, setRecordId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [micState, setMicState] = useState<MicState>('idle');
@@ -61,7 +61,7 @@ export function Checkpoint(props: Props) {
         setQuestion(data.question);
         setRecordId(data.recordId);
         // Speak the question in the buddy voice when it arrives.
-        void speakUtterance(data.question.question, { voice: 'buddy' });
+        void speakUtterance(data.question.question, { voice: 'buddy', priority: 'checkpoint' });
       } catch (err) {
         if (cancelled.current) return;
         setError((err as Error).message);
@@ -81,9 +81,9 @@ export function Checkpoint(props: Props) {
     if (mercy === lastMercy.current) return;
     lastMercy.current = mercy;
     if (mercy === 'hint' && question.hint) {
-      void speakUtterance(question.hint, { voice: 'buddy' });
+      void speakUtterance(question.hint, { voice: 'buddy', priority: 'checkpoint' });
     } else if (mercy === 'given' && question.given) {
-      void speakUtterance(question.given, { voice: 'buddy' });
+      void speakUtterance(question.given, { voice: 'buddy', priority: 'checkpoint' });
     }
   }, [mercy, question]);
 
