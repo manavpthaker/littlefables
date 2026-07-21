@@ -59,10 +59,21 @@ export function WordList({
       {words.length > 0 && (
         <div
           style={{
+            // The jar vessel (parity V): kept words sit IN a jar, not free-floating.
+            margin: '0 auto',
+            width: 'min(100%, 360px)',
+            background: 'linear-gradient(180deg, var(--paper-bright), var(--paper-deep))',
+            border: '2px solid var(--sand-line)',
+            borderTop: '6px solid var(--sand-line)',
+            borderRadius: '16px 16px 40px 40px',
+            boxShadow: 'var(--inset-well), var(--elev-rest)',
+            padding: 'var(--space-5) var(--space-4) var(--space-6)',
             display: 'flex',
             flexWrap: 'wrap',
             gap: 'var(--space-3)',
             justifyContent: 'center',
+            alignContent: 'flex-end',
+            minHeight: 180,
           }}
         >
           {words.map((w) => (

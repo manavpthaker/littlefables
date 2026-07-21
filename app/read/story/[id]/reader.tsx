@@ -19,6 +19,7 @@ import { speakUtterance } from '@/lib/voice/ui-voice';
 import { useBedtime } from '@/lib/reader/use-bedtime';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { Checkpoint } from './checkpoint';
+import { WordPopover } from './word-popover';
 import { Retell } from './retell';
 import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
@@ -242,13 +243,17 @@ export function Reader({
   const onPrev = useCallback(() => dispatch({ type: 'prevPage' }), []);
   const onNext = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
-  // Word interactions (PRD A9).
+  // Word interactions (PRD A9 + parity II.4): hearing seeks/speaks; a tap
+  // while paused also opens the word popover (syllables, definition, keep).
+  const [popWord, setPopWord] = useState<string | null>(null);
   const onHearWord = useCallback(
     (word: string, wordIdx: number) => {
+      const stem = word.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
       if (transport.playing) {
         transport.seekToWord(wordIdx);
       } else {
         transport.speakOne(word);
+        setPopWord(stem || null);
       }
     },
     [transport],
@@ -347,13 +352,24 @@ export function Reader({
             chapterTitle={book.kind === 'chapter' ? ch.title : null}
             useWashFallback={Boolean(useWashFallback)}
             currentIndex={transport.wordIdx}
-            starredWords={[
-              ...(page.star ? [page.star] : []),
-              ...(savedWord ? [savedWord] : []),
-            ]}
+            coverImage={book.coverImage}
+            starredWords={page.star ? [page.star] : []}
+            keptWords={savedWord ? [savedWord] : []}
             onHearWord={onHearWord}
             onStarWord={onStarWord}
           />
+          {popWord && (
+            <WordPopover
+              word={popWord}
+              entry={book.vocab[popWord]}
+              onAgain={() => transport.speakOne(popWord)}
+              onKeep={() => {
+                onStarWord(popWord);
+                setPopWord(null);
+              }}
+              onClose={() => setPopWord(null)}
+            />
+          )}
 
           <footer
             style={{

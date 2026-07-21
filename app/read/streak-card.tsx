@@ -7,8 +7,9 @@ export function StreakCard({ earned, today, streak }: { earned: number[]; today:
   return (
     <section
       style={{
-        background: 'var(--butter-wash)',
-        borderRadius: 22,
+        background: 'linear-gradient(135deg,#FBEDCF,#F3E0BC)',
+        border: '1.5px solid var(--sand-line)',
+        borderRadius: 26,
         padding: 'var(--space-4) var(--space-5)',
         display: 'grid',
         gap: 'var(--space-3)',
@@ -16,10 +17,10 @@ export function StreakCard({ earned, today, streak }: { earned: number[]; today:
       }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 15, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--marigold)', fontWeight: 700 }}>
+        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--marigold-deep)', fontWeight: 700 }}>
           Reading streak
         </span>
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--ink)' }}>{streak} ☀️</span>
+        <span style={{ fontFamily: 'var(--font-display)', fontSize: 24, color: 'var(--ink)' }}>{streak} ☀️</span>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         {Array.from({ length: 7 }, (_, i) => {

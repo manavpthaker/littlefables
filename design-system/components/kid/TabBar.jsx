@@ -32,7 +32,7 @@ export function TabBar({ items, activeKey, onSelect }) {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 gap: 3, padding: '8px 4px', cursor: 'pointer',
                 color: active ? 'var(--marigold)' : 'var(--ink-faint)',
-                fontFamily: 'var(--font-hand)', fontSize: 16, fontWeight: active ? 600 : 400,
+                fontFamily: 'var(--font-hand)', fontSize: 12.5, fontWeight: active ? 700 : 400, letterSpacing: '.06em',
               }}
             >
               {item.emoji ? (

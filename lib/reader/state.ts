@@ -21,8 +21,19 @@ export function stemOf(word: string): string {
 /** A stem clean enough to keep in the wordbook (Polish VI.1): letters (any
  *  script) with at most an inner apostrophe/hyphen, 2–18 chars. Guards the
  *  jar against partial-word captures and tokenizer junk. */
+const WORD_BLOCKLIST = new Set([
+  // function words — never collectables (parity spec IV)
+  'a','an','as','at','be','by','do','go','he','if','in','is','it','me','my','no','of','on','or','so','to','up','us','we',
+  'and','are','but','can','did','for','get','had','has','her','him','his','its','not','off','one','our','out','she','the','was','you',
+  'that','this','then','they','them','with','were','from','have','into','said','went','when','what',
+  // months + buddy/child names — story furniture, not vocabulary
+  'january','february','march','april','may','june','july','august','september','october','november','december',
+  'bramble','jujy','dory','miko','rocky','azi','azad',
+]);
+
 export function isKeepableWord(stem: string): boolean {
   if (stem.length < 2 || stem.length > 18) return false;
+  if (WORD_BLOCKLIST.has(stem)) return false;
   return /^[\p{L}]+(?:['\u2019-][\p{L}]+)*$/u.test(stem);
 }
 
@@ -52,7 +63,9 @@ export function toReaderBook(book: Book): ReaderBook {
   }));
   const vocab: ReaderBook['vocab'] = {};
   for (const entry of book.vocab) vocab[stemOf(entry.word)] = entry;
-  return { id: book.id, title: book.title, kind: book.kind, chapters, vocab };
+  const coverImage =
+    book.coverImage ?? (book.coverBg?.startsWith('http') ? book.coverBg : undefined);
+  return { id: book.id, title: book.title, kind: book.kind, chapters, vocab, coverImage };
 }
 
 /** Initial state per book kind: quick books enter straight into chapter 0. */

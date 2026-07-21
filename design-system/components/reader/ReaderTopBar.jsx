@@ -19,15 +19,15 @@ export function ReaderTopBar({ onBack, title, segments, savedWord, justSaved, on
             <>
               {title && (
                 <span style={{
-                  fontFamily: 'var(--font-hand)', fontSize: 14, fontWeight: 700, letterSpacing: '.12em',
-                  textTransform: 'uppercase', color: 'var(--marigold)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  fontFamily: 'var(--font-hand)', fontSize: 10.5, fontWeight: 700, letterSpacing: '.14em',
+                  textTransform: 'uppercase', color: 'var(--marigold-deep)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>{title}</span>
               )}
               {segments && segments.total > 1 && (
                 <span aria-hidden="true" style={{ display: 'inline-flex', gap: 4, flex: 'none' }}>
                   {Array.from({ length: Math.min(segments.total, 8) }, (_, i) => (
                     <span key={i} style={{
-                      width: i === segments.current ? 18 : 7, height: 7, borderRadius: 4,
+                      width: i === segments.current ? 18 : 6, height: 6, borderRadius: 4,
                       background: i === segments.current ? 'var(--marigold)' : i < segments.current ? 'var(--sage)' : 'var(--paper-deep)',
                       transition: 'width var(--dur-settle) var(--ease-settle)',
                     }}></span>
@@ -38,7 +38,7 @@ export function ReaderTopBar({ onBack, title, segments, savedWord, justSaved, on
           )}
         </div>
         {syncing && <StateBanner state="syncing" density="kid" />}
-        <Buddy compact size={44} color={buddyColor} emoji={buddyEmoji} state={buddyState} />
+        <Buddy compact size={42} color={buddyColor} emoji={buddyEmoji} state={buddyState} />
       </div>
     </div>
   );

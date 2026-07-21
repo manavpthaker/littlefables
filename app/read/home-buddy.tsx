@@ -22,24 +22,24 @@ export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; childNam
       <span
         aria-hidden="true"
         style={{
-          width: 72,
-          height: 72,
+          width: 56,
+          height: 56,
           flex: 'none',
           borderRadius: 20,
           background: `linear-gradient(150deg, color-mix(in oklch, ${props.buddy.pigment} 60%, white), ${props.buddy.pigment})`,
           display: 'grid',
           placeItems: 'center',
-          fontSize: 40,
+          fontSize: 30,
           boxShadow: 'var(--elev-card)',
         }}
       >
         {props.buddy.emoji}
       </span>
       <div style={{ display: 'grid', gap: 2, minWidth: 0 }}>
-        <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'var(--text-display)', lineHeight: 1.1, color: 'var(--text-strong)' }}>
+        <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 25, lineHeight: 1.04, color: 'var(--text-strong)' }}>
           Hi{props.childName ? `, ${props.childName}` : ''}!
         </h1>
-        <p data-utterance={props.utterance} style={{ margin: 0, fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink-soft)', overflowWrap: 'anywhere' }}>
+        <p data-utterance={props.utterance} style={{ margin: 0, fontFamily: 'var(--font-hand)', fontSize: 12.5, color: 'var(--ink-soft)', overflowWrap: 'anywhere' }}>
           {props.utterance}
         </p>
       </div>

@@ -6,11 +6,11 @@ import React from 'react';
 export function ContinueCard({ title, chapter, cover, progress = 0, utterance, onContinue }) {
   return (
     <article style={{
-      background: 'var(--paper-bright)', borderRadius: 28, overflow: 'hidden',
+      background: 'var(--paper-bright)', borderRadius: 34, overflow: 'hidden',
       boxShadow: 'var(--elev-raised)', display: 'grid',
     }}>
       <div aria-hidden="true" style={{
-        height: 'clamp(150px, 24dvh, 230px)', position: 'relative',
+        height: 172, position: 'relative',
         background: cover
           ? `url(${cover}) center 30%/cover no-repeat`
           : 'linear-gradient(160deg,#3D4E7C 0%,#2E3A61 100%)',
@@ -25,18 +25,18 @@ export function ContinueCard({ title, chapter, cover, progress = 0, utterance, o
         )}
       </div>
       <div style={{ padding: 'var(--space-5)', display: 'grid', gap: 'var(--space-2)', justifyItems: 'start' }}>
-        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 15, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--marigold)', fontWeight: 700 }}>
+        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--marigold-deep)', fontWeight: 700 }}>
           Continue{chapter ? ` · ${chapter}` : ''}
         </span>
-        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(21px, 5.6vw, 26px)', lineHeight: 1.2, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{title}</h3>
+        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 21, lineHeight: 1.2, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{title}</h3>
         <button
           data-utterance={utterance || `Keep reading ${title}!`}
           onClick={onContinue}
           style={{
             marginTop: 6, border: 'none', cursor: 'pointer',
-            background: 'var(--action-grad)', color: 'var(--action-ink)',
+            background: 'var(--marigold-deep)', color: 'var(--action-ink)',
             borderRadius: 'var(--radius-pill)', padding: '14px 26px',
-            minHeight: 'var(--tap-standard)', fontFamily: 'var(--font-hand)', fontSize: 20, fontWeight: 700,
+            minHeight: 'var(--tap-standard)', fontFamily: 'var(--font-hand)', fontSize: 16, fontWeight: 700,
             boxShadow: 'var(--elev-card)',
           }}
         >

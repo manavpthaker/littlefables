@@ -64,7 +64,8 @@ export function ShelfGrid({
       cover={book.coverImage ?? undefined}
       bg={!book.coverImage && book.coverBg && !book.coverBg.startsWith('http') ? book.coverBg : undefined}
       tag={tagFor(book)}
-      width={variant === 'row' ? 168 : undefined}
+      width={variant === 'row' ? 126 : undefined}
+      artRatio={variant === 'row' ? '126/158' : undefined}
       onOpen={() => {
         window.location.href = `/read/story/${book.id}`;
       }}

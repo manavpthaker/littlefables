@@ -1,11 +1,11 @@
 :root{
 /* ── Paper (surfaces — a storybook, not a screen) ── */
---paper:#F4EBD8;--paper-bright:#FCF7EA;--paper-deep:#EADCC0;
+--paper:#F4ECDA;--paper-bright:#FFFCF5;--paper-deep:#EADCC0;--sand-line:#E0CFAD;
 /* ── Ink (warm browns, never black) ── */
---ink:#46362A;--ink-soft:#6C5847;--ink-faint:#98836E;
+--ink:#2B2016;--ink-soft:#7A6A55;--ink-faint:#9C8B75;
 /* contrast-checked: ink/paper 8.9:1 · ink-soft/paper 5.0:1 (AA body) · ink-faint = decorative only */
 /* ── Pigments (watercolor accents) ── */
---marigold:#E39A32;--butter:#EFCE71;--terracotta:#BE5F38;--sage:#7E9770;--river:#5D7FA8;--teal:#4A8C85;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#74567C;--honey:#D9A653;--lilac:#9B7FAE;--ember:#E06A45;
+--marigold:#F2A03D;--marigold-deep:#D9822B;--butter:#EFCE71;--glow:#FBD98A;--terracotta:#BE5F38;--sage:#6E9A57;--sage-deep:#4F7A3E;--river:#5D7FA8;--teal:#4E9A9E;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#8367A6;--honey:#D9A653;--lilac:#9B7FAE;--ember:#E06A45;
 /* deepened vs heritage where a pigment carries text/AA: terracotta #C96F4A→#BE5F38 (4.5:1 w/ paper-bright text), teal −L, berry −L. marigold/butter never carry text. */
 /* honey (Bramble) + lilac (Dory) were consumed by the buddy roster but undefined until Redesign 2026-07-21 — like marigold/butter, they never carry text. */
 /* washes: pigment at watercolor strength on paper, for fills behind ink text */

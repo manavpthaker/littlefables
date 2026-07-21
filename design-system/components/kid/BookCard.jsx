@@ -4,7 +4,7 @@ import { Icon } from '../core/Icon.jsx';
 // (art, or the book's own bg wash), layer chip top-left, serif title BELOW,
 // thin sage progress line under the title.
 // tag = developmental layer chip (Redesign 2026-07-21): capsule top-left, calm pigment dot — never terracotta.
-export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag, utterance, onOpen, width = '100%' }) {
+export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag, artRatio = '1/1', utterance, onOpen, width = '100%' }) {
   const painting = status === 'painting';
   return (
     <button data-utterance={utterance || title} onClick={onOpen} style={{
@@ -16,7 +16,7 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
     onPointerUp={e => e.currentTarget.style.transform = ''}
     onPointerLeave={e => e.currentTarget.style.transform = ''}>
       <div style={{
-        aspectRatio: '1/1', borderRadius: 24, overflow: 'hidden', position: 'relative',
+        aspectRatio: artRatio, borderRadius: 20, overflow: 'hidden', position: 'relative',
         boxShadow: 'var(--elev-card)',
         background: painting
           ? 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))'
@@ -26,10 +26,10 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
         animation: painting ? 'var(--motion-paint)' : undefined,
       }}>
         {/* cover craft (Polish II.3): inner vignette + 1px warm inner border + faint grain */}
-        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 24, boxShadow: 'inset 0 0 0 1px rgba(255,246,234,.35), inset 0 -26px 40px rgba(70,54,42,.18), inset 0 14px 30px rgba(255,252,245,.12)' }}></span>
+        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 20, boxShadow: 'inset 0 0 0 1px rgba(255,246,234,.35), inset 0 -26px 40px rgba(70,54,42,.18), inset 0 14px 30px rgba(255,252,245,.12)' }}></span>
         <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: .05, background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")` }}></span>
         {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)', animation: 'lf-breath var(--dur-breath) var(--ease-drift) infinite' }}><Icon name="brush" size={30} /></div>}
-        {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 15, boxShadow: 'var(--elev-rest)' }}>
+        {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 9.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', boxShadow: 'var(--elev-rest)' }}>
           {tag.emoji ? <span aria-hidden="true">{tag.emoji}</span> : <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', background: `var(${tag.pigment || '--teal'})` }}></span>}
           {tag.label}
         </span>}
@@ -38,8 +38,8 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
       <div style={{ marginTop: 'var(--space-2)', fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, lineHeight: 1.25 }}>{title}</div>
       {chapters && <div style={{ fontSize: 14, color: 'var(--ink-soft)' }}>{chapters}</div>}
       {progress > 0 && (
-        <div style={{ marginTop: 6, height: 6, borderRadius: 3, background: 'var(--paper-deep)' }}>
-          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--sage)', borderRadius: 3 }}></div>
+        <div style={{ marginTop: 6, height: 4, borderRadius: 2, background: 'var(--paper-deep)' }}>
+          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--sage)', borderRadius: 2 }}></div>
         </div>
       )}
     </button>
@@ -50,7 +50,7 @@ export function Shelf({ label, children }) {
   return (
     <section>
       {label && <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-title)', color: 'var(--ink)', margin: '0 0 var(--space-3)' }}>{label}</h2>}
-      <div style={{ display: 'flex', gap: 'var(--card-gap)', overflowX: 'auto', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
+      <div style={{ display: 'flex', gap: 13, overflowX: 'auto', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
     </section>
   );
 }

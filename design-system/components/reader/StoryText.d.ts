@@ -6,6 +6,8 @@ export interface StoryTextProps {
   currentIndex?: number;
   /** saved STEMS (lowercase, punctuation-stripped) — matching is stem-based, so "burrow." matches "burrow"; renders the filled star icon */
   starredWords?: string[];
+  /** kept words — fern-wash treatment (pixel-parity II.3) */
+  keptWords?: string[];
   /** tap-any-word: speak it instantly (sliced narration audio / TTS). NEVER pauses or navigates. */
   onHearWord?: (word: string, i: number) => void;
   /** star-save — receives the STEM; wordbook stores stem + original sentence. Display word stays untouched for tap/speech.

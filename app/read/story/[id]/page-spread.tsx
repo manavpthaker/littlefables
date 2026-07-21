@@ -20,23 +20,32 @@ export function PageSpread({
   page,
   pageKey,
   chapterTitle,
+  coverImage,
   useWashFallback,
   currentIndex,
   starredWords,
+  keptWords,
   onHearWord,
   onStarWord,
 }: {
   page: ReaderPage;
   pageKey: string;
   chapterTitle: string | null;
+  /** book cover — the art fallback when the page has no scene art (parity II.2) */
+  coverImage?: string;
   useWashFallback: boolean;
   currentIndex: number;
   starredWords: string[];
+  /** words already kept — fern-wash treatment (parity II.3) */
+  keptWords?: string[];
   onHearWord: (word: string, wordIdx: number) => void;
   onStarWord: (stem: string) => void;
 }) {
   const landscape = useLandscapeSpread();
-  const hasArtPane = Boolean(page.img) || useWashFallback;
+  // Parity spec II: every page reads as a picture-book spread — scene art,
+  // else the book's cover, else the painting wash.
+  const artUrl = page.img ?? coverImage;
+  const hasArtPane = Boolean(artUrl) || useWashFallback;
 
   const chapterLabel = chapterTitle ? (
     <p
@@ -57,6 +66,7 @@ export function PageSpread({
       words={page.words.map((w) => ({ w: w.w }))}
       currentIndex={currentIndex}
       starredWords={starredWords}
+      keptWords={keptWords}
       onHearWord={onHearWord}
       onStarWord={onStarWord}
       overArt={false}
@@ -77,19 +87,19 @@ export function PageSpread({
       >
         {/* Left page: the art, edge to edge in its half. */}
         <div style={{ position: 'relative', minHeight: 0, overflow: 'hidden' }}>
-          {page.img ? (
+          {artUrl ? (
             <div
-              key={page.img}
+              key={artUrl}
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: `url(${page.img}) center/cover no-repeat`,
+                background: `url(${artUrl}) center/cover no-repeat`,
                 animation: 'var(--motion-develop)',
               }}
             />
           ) : (
             <div style={{ position: 'absolute', inset: 0 }}>
-              <PaintingWash fullBleed label="painting this page…" />
+              <PaintingWash fullBleed label="this one's still being painted for you…" />
             </div>
           )}
           {page.img && page.hotspots && page.hotspots.length > 0 && (
@@ -145,26 +155,24 @@ export function PageSpread({
         animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
       }}
     >
-      {(page.img || useWashFallback) && (
-        <div className="lf-art-card">
-          {page.img ? (
-            <div
-              key={page.img}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `url(${page.img}) center/cover no-repeat`,
-                animation: 'var(--motion-develop)',
-              }}
-            />
-          ) : (
-            <div style={{ position: 'absolute', inset: 0 }}>
-              <PaintingWash fullBleed label="painting this page…" />
-            </div>
-          )}
-          {page.img && page.hotspots && page.hotspots.length > 0 && <Hotspots hotspots={page.hotspots} />}
-        </div>
-      )}
+      <div className="lf-art-card">
+        {artUrl ? (
+          <div
+            key={artUrl}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `url(${artUrl}) center/cover no-repeat`,
+              animation: 'var(--motion-develop)',
+            }}
+          />
+        ) : (
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <PaintingWash fullBleed label="this one's still being painted for you…" />
+          </div>
+        )}
+        {page.img && page.hotspots && page.hotspots.length > 0 && <Hotspots hotspots={page.hotspots} />}
+      </div>
       <article>
         {chapterLabel}
         {storyText}

@@ -16,6 +16,8 @@ export interface BookCardProps {
   /** voice slot — spoken on tap; defaults to the title */
   utterance?: string;
   onOpen?: () => void;
+  /** cover aspect, e.g. '126/158' for the Home rail (parity III) */
+  artRatio?: string;
   width?: number | string;
 }
 export interface ShelfProps {

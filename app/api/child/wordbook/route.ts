@@ -4,7 +4,7 @@ import { requireChildDevice } from '@/lib/server/require-auth';
 import { admin } from '@/lib/supabase/admin';
 import { saveWordSchema, type WordbookEntry } from '@/lib/models/wordbook';
 import { vocabEntrySchema } from '@/lib/models/book';
-import { stemOf } from '@/lib/reader/state';
+import { isKeepableWord, stemOf } from '@/lib/reader/state';
 import { bumpGrowth, loadWorldState } from '@/lib/world/state';
 import { evaluateBadges, insertNewBadges } from '@/lib/world/badges';
 
@@ -41,6 +41,12 @@ export async function POST(request: NextRequest) {
 
   const body = saveWordSchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
+
+  // Parity spec IV: function words, buddy names, and months never enter the
+  // jar — quietly ignore (200 keeps the offline outbox from retrying).
+  if (!isKeepableWord(stemOf(body.data.word))) {
+    return NextResponse.json({ entry: null, newlyEarned: [], ignored: true });
+  }
 
   const { data: existing } = await admin()
     .from('wordbook_entries')
