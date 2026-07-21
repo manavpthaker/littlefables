@@ -4,9 +4,23 @@ import { z } from 'zod';
 // the client renders live here. Records that grow indefinitely (wordbook,
 // comprehension records, badges) have their own tables.
 
+export const choiceEventSchema = z.object({
+  /** Client-generated idempotency key. Present on every choice event so a
+   *  retried outbox send doesn't append the same choice twice. Older rows
+   *  without an id still parse (optional); appends always carry one. */
+  id: z.string().min(1).optional(),
+  bookId: z.string().min(1),
+  chapterIdx: z.number().int().min(0),
+  label: z.string().max(80),
+  summary: z.string().max(200),
+  at: z.string(),
+});
+export type ChoiceEvent = z.infer<typeof choiceEventSchema>;
+
 export const worldStateSchema = z.object({
   activeBuddyId: z.string().default('char_bramble'),
   latestCallback: z.string().nullable().default(null),
+  choiceLog: z.array(choiceEventSchema).default([]),
   growth: z
     .object({
       booksOpened: z.number().int().min(0).default(0),

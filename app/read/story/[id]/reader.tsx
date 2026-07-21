@@ -16,6 +16,7 @@ import type { WordTimestamp } from '@/lib/reader/speech';
 import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { speakUtterance } from '@/lib/voice/ui-voice';
+import { enqueueAndSend } from '@/lib/sync/outbox';
 import { useBedtime } from '@/lib/reader/use-bedtime';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
@@ -173,6 +174,23 @@ export function Reader({
     }
   }, [book.chapters.length, book.kind, router, state.chapterIdx]);
 
+  // Bedtime resolve-and-settle: one settling line, then either drift to the
+  // next chapter (a calm turn, ~1500ms later so the line has room) or, on
+  // the final chapter, quietly exit back to Home. Prior behavior was
+  // asymmetric — audio auto-turn spoke the line then FROZE on the last page;
+  // silent Done skipped the line and pushed abruptly. Same helper now runs
+  // from both entry points.
+  const resolveBedtimeAndMaybeAdvance = useCallback(() => {
+    if (state.chapterIdx === null) return;
+    transportRef.current?.stop();
+    void speakUtterance(BEDTIME_RESOLVE_LINE, { voice: 'narrator', priority: 'checkpoint' });
+    const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
+    if (isLastChapter) return; // hold — the moose settles at rest
+    window.setTimeout(() => {
+      advanceAfterChapter();
+    }, 1500);
+  }, [advanceAfterChapter, book.chapters.length, state.chapterIdx]);
+
   const onAutoNext = useCallback(() => {
     // Auto-turn only advances within a chapter. Chapter end transitions into
     // the checkpoint — or, in bedtime / checks-off, resolves and moves on.
@@ -184,16 +202,14 @@ export function Reader({
         return;
       }
       if (bedtime) {
-        // Resolve, never cliffhang (brief §III.3): one settling line, then a
-        // calm stop — no question, no navigation while he drifts off.
-        void speakUtterance(BEDTIME_RESOLVE_LINE, { voice: 'narrator', priority: 'checkpoint' });
+        resolveBedtimeAndMaybeAdvance();
         return;
       }
       advanceAfterChapter();
       return;
     }
     dispatch({ type: 'nextPage' });
-  }, [lastPage, chapterKey, checksActive, bedtime, advanceAfterChapter]);
+  }, [lastPage, chapterKey, checksActive, bedtime, advanceAfterChapter, resolveBedtimeAndMaybeAdvance]);
 
   const transport = useReaderTransport({
     page: transportPage,
@@ -213,17 +229,17 @@ export function Reader({
   const onChoice = useCallback(
     (label: string, summary: string) => {
       if (state.chapterIdx === null) return;
-      // Fire-and-forget — the sync outbox handles offline.
-      void fetch('/api/child/choice', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          bookId: book.id,
-          chapterIdx: state.chapterIdx,
-          label,
-          summary,
-        }),
-      });
+      // Choice logging goes through the sync outbox (audit C1 fix: raw
+      // fetch here would silently drop the choice offline). Idempotency
+      // key lets the server ignore retried sends without double-appending.
+      const choiceId = crypto.randomUUID();
+      void enqueueAndSend('/api/child/choice', JSON.stringify({
+        choiceId,
+        bookId: book.id,
+        chapterIdx: state.chapterIdx,
+        label,
+        summary,
+      }));
       dispatch({ type: 'nextPage' });
     },
     [book.id, state.chapterIdx],
@@ -433,20 +449,46 @@ export function Reader({
                 lets them signal they're done. */}
             {lastPage && !transport.playing && !inCheckpoint &&
               (checksActive ? !seenCheckpoint.current.has(chapterKey) : true) && (
-              <Button
-                variant="primary"
-                size="primary"
-                icon="check"
-                utterance="Done with this chapter"
-                onClick={() => {
-                  transport.stop();
-                  seenCheckpoint.current.add(chapterKey);
-                  if (checksActive) setInCheckpoint(true);
-                  else advanceAfterChapter();
-                }}
-              >
-                Done with this chapter
-              </Button>
+              // Bedtime: quieter treatment (no terracotta) + runs the same
+              // resolve-and-settle helper the auto-turn uses. Non-bedtime:
+              // primary terracotta as before.
+              bedtime ? (
+                <button
+                  onClick={() => {
+                    seenCheckpoint.current.add(chapterKey);
+                    resolveBedtimeAndMaybeAdvance();
+                  }}
+                  data-utterance="I'm ready to rest"
+                  style={{
+                    padding: 'var(--space-2) var(--space-4)',
+                    background: 'transparent',
+                    color: 'var(--ink-soft)',
+                    border: '1px solid var(--paper-deep)',
+                    borderRadius: 'var(--radius-pill)',
+                    fontFamily: 'var(--font-hand)',
+                    fontSize: 16,
+                    cursor: 'pointer',
+                    justifySelf: 'center',
+                  }}
+                >
+                  I&apos;m ready to rest
+                </button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="primary"
+                  icon="check"
+                  utterance="Done with this chapter"
+                  onClick={() => {
+                    transport.stop();
+                    seenCheckpoint.current.add(chapterKey);
+                    if (checksActive) setInCheckpoint(true);
+                    else advanceAfterChapter();
+                  }}
+                >
+                  Done with this chapter
+                </Button>
+              )
             )}
           </footer>
         </>
