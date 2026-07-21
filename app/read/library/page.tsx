@@ -2,7 +2,14 @@ import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
 import { requireChildDevice } from '@/lib/server/require-auth';
-import { deriveLayerTag, type LayerTag } from '@/lib/models/layer-tags';
+import {
+  deriveLayerTag,
+  LAYER_TAG_EMOJI,
+  LAYER_TAG_LABELS,
+  LAYER_TAGS,
+  type LayerTag,
+} from '@/lib/models/layer-tags';
+import { deriveInteractivity } from '@/lib/models/book';
 import { ShelfGrid, type ShelfBook } from '../shelf-grid';
 
 // Kid Library (redesign brief §III.2): pick a story. A cover grid of every
@@ -46,6 +53,7 @@ export default async function LibraryPage() {
       coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
       status: b.status,
       layerTag: payload?.layerTag ?? deriveLayerTag(payload?.teachingGoals ?? [], b.origin_note),
+      interactivity: deriveInteractivity(payload),
       progress: p ? progressFraction(payload, p.chapterIdx, p.pageIdx) : 0,
     };
   });
@@ -93,7 +101,38 @@ export default async function LibraryPage() {
         </p>
       </header>
 
-      <ShelfGrid books={books} variant="grid" />
+      {books.length === 0 ? (
+        <ShelfGrid books={[]} variant="grid" />
+      ) : (
+        LAYER_TAGS.filter((tag) => books.some((b) => b.layerTag === tag)).map((tag) => {
+          const inTag = books.filter((b) => b.layerTag === tag);
+          return (
+            <section key={tag} style={{ display: 'grid', gap: 'var(--space-3)' }}>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-hand)',
+                  margin: 0,
+                  fontSize: 18,
+                  letterSpacing: '.04em',
+                  color: 'var(--text-strong)',
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '0.4em',
+                }}
+              >
+                <span aria-hidden style={{ fontSize: '1.2em' }}>
+                  {LAYER_TAG_EMOJI[tag]}
+                </span>
+                {LAYER_TAG_LABELS[tag]}
+                <span style={{ color: 'var(--ink-soft)', fontSize: 12, fontWeight: 400 }}>
+                  · {inTag.length}
+                </span>
+              </h2>
+              <ShelfGrid books={inTag} variant="grid" />
+            </section>
+          );
+        })
+      )}
     </main>
   );
 }

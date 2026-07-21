@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
@@ -9,6 +10,7 @@ import { activeBuddy } from '@/lib/world/buddy-roster';
 import { composeGreeting } from '@/lib/world/greeting';
 import type { WorldBundle } from '@/lib/world/types';
 import { deriveLayerTag, type LayerTag } from '@/lib/models/layer-tags';
+import { deriveInteractivity } from '@/lib/models/book';
 import { pickGreetingWord } from '@/lib/world/word-scheduler';
 import { HomeWordJar } from './word-jar';
 import { StreakCard } from './streak-card';
@@ -126,6 +128,7 @@ export default async function ReadHome() {
       coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
       status: b.status,
       layerTag: layerTagOf(b),
+      interactivity: deriveInteractivity(b.book),
       progress: p ? progressFraction(b, p.chapterIdx, p.pageIdx) : 0,
     };
   });
@@ -185,7 +188,7 @@ export default async function ReadHome() {
             >
               {childRow?.display_name ? `${childRow.display_name}'s shelf` : 'Your shelf'}
             </h2>
-            <a
+            <Link
               href="/read/library"
               style={{
                 fontFamily: 'var(--font-hand)',
@@ -196,7 +199,7 @@ export default async function ReadHome() {
               }}
             >
               See all →
-            </a>
+            </Link>
           </div>
           <ShelfGrid books={restBooks} variant="row" />
         </section>

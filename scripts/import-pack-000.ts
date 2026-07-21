@@ -8,6 +8,7 @@ import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { packSchema } from '../lib/models/book';
+import { deriveLayerTag } from '../lib/models/layer-tags';
 import { SEED_HOUSEHOLD_ID } from '../lib/models/seed';
 
 config({ path: '.env.local' });
@@ -43,6 +44,19 @@ async function main(): Promise<void> {
       story as unknown as StoredBook,
       (existing?.book as StoredBook | null) ?? null,
     );
+
+    // Derive a layerTag from teachingGoals when the pack didn't author one.
+    // The AI backfill (scripts/backfill-books.ts) authors a richer answer
+    // including beats + kidDefinitions, but that costs an Anthropic call per
+    // book. This keyword fallback keeps shelf grouping / cover chips working
+    // out-of-the-box on fresh clones and preserves whatever the DB already had.
+    const existingLayer = (existing?.book as { layerTag?: string } | null)?.layerTag;
+    if (!mergedStory.layerTag) {
+      mergedStory.layerTag = existingLayer ?? deriveLayerTag(
+        (story.teachingGoals ?? []),
+        story.originNote ?? null,
+      );
+    }
 
     const row = {
       id: story.id,
@@ -85,6 +99,7 @@ interface StoredChapter {
 interface StoredBook {
   chapters?: StoredChapter[];
   coverImage?: string;
+  layerTag?: string;
   [k: string]: unknown;
 }
 

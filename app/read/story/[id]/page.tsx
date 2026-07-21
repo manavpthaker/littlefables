@@ -25,7 +25,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
 
   const { data } = await admin()
     .from('books')
-    .select('id, book, status')
+    .select('id, book, status, cover_bg')
     .eq('id', id)
     .eq('household_id', ctx.householdId)
     .in('status', KID_VISIBLE_STATUSES)
@@ -36,6 +36,16 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
 
   const parsed = bookSchema.safeParse(data.book);
   if (!parsed.success) notFound();
+
+  // Reader cover-fallback fix: the approved cover URL is written to the
+  // `books.cover_bg` column, not into the jsonb `book` blob. Without this
+  // hydration, `toReaderBook()` sees `book.coverImage`/`book.coverBg` empty
+  // for every book except the ones seeded with an inline cover, and the
+  // reader falls through to the "still being painted for you…" wash on every
+  // page. Mirror the shape used by shelf and library.
+  if (!parsed.data.coverImage && data.cover_bg?.startsWith('http')) {
+    parsed.data.coverImage = data.cover_bg;
+  }
 
   // Fetch existing progress so the reader can resume server-side (avoids a
   // client flicker from initial state → fetched state on mount).

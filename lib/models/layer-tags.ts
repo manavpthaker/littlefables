@@ -28,11 +28,16 @@ export const LAYER_TAG_PIGMENT: Record<LayerTag, string> = {
   self: '--teal',
 };
 
+// Stem-anchored (leading \b, no trailing \b) so plurals / inflections match:
+// `feeling` matches "feelings"; `fear` matches "fears"/"fearful"; `emotion`
+// matches "emotional". Prior form used \bstem\b and missed every inflected
+// form in pack-000 teaching goals — silently collapsing the 4-tag palette
+// to 2 in practice. Rely on PRIORITY order + curated stems to avoid overlap.
 const KEYWORDS: Record<LayerTag, RegExp> = {
-  sleep: /\b(sleep|bedtime|night|rest|dream|calm|quiet|wind[- ]?down)\b/i,
-  courage: /\b(brave|courage|fear|scared|afraid|try|bold|dar(e|ing))\b/i,
-  feelings: /\b(feel|feeling|emotion|sad|angry|mad|happy|worry|worried|frustrat|big feelings)\b/i,
-  self: /\b(self|identity|belong|kind(ness)?|share|sharing|friend|family|who (i|you) am|confiden)\b/i,
+  sleep: /\b(sleep|bedtime|night|rest|dream|calm|quiet|wind[- ]?down|drowsy|snuggle|lullab)/i,
+  courage: /\b(brave|bravery|courage|fear|scared|afraid|try|bold|dar[ei]|risk|new thing|first time)/i,
+  feelings: /\b(feel|felt|emotion|sad|angry|anger|mad|happy|joy|worry|worried|frustrat|upset|cry|tear|big feeling)/i,
+  self: /\b(self|identity|belong|kind|share|sharing|friend|family|who (i|you) am|confiden|proud|pride|grow|becom)/i,
 };
 
 // Order matters: sleep and courage are the most specific signals; feelings is

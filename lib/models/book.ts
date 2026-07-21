@@ -103,6 +103,26 @@ export type Book = z.infer<typeof bookSchema>;
 export type Chapter = z.infer<typeof chapterSchema>;
 export type Page = z.infer<typeof pageSchema>;
 export type VocabEntry = z.infer<typeof vocabEntrySchema>;
+
+// Derived interactivity signal — what kinds of authored moments this book
+// carries (surfaced under card titles so a kid/parent can find "another book
+// where I get to choose"). Cheap enough to compute per shelf render;
+// intentionally NOT stored on the schema.
+export type Interactivity = 'ask' | 'choice' | 'breathe';
+export function deriveInteractivity(bookPayload: unknown): Interactivity[] {
+  const kinds = new Set<Interactivity>();
+  const chapters = (bookPayload as { chapters?: unknown[] } | null)?.chapters ?? [];
+  for (const c of chapters) {
+    const pages = (c as { pages?: unknown[] } | null)?.pages ?? [];
+    for (const p of pages) {
+      const page = p as { ask?: unknown; choice?: unknown; breathe?: unknown };
+      if (page.ask) kinds.add('ask');
+      if (page.choice) kinds.add('choice');
+      if (page.breathe) kinds.add('breathe');
+    }
+  }
+  return Array.from(kinds);
+}
 export type BookKind = (typeof BOOK_KINDS)[number];
 export type BookSource = (typeof BOOK_SOURCES)[number];
 export type BookStatus = (typeof BOOK_STATUSES)[number];
