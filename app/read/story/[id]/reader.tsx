@@ -7,7 +7,7 @@ import { ChapterMap } from '@ds/components/reader/ChapterMap.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
-import { saveWord } from '@/lib/reader/wordbook';
+import { useWordSave } from '@/lib/reader/use-word-save';
 import { pushProgress } from '@/lib/reader/progress';
 import { useRecapOnResume } from '@/lib/reader/use-recap';
 import { useArtPrefetch } from '@/lib/reader/use-art-prefetch';
@@ -16,6 +16,8 @@ import type { WordTimestamp } from '@/lib/reader/speech';
 import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { speakUtterance } from '@/lib/voice/ui-voice';
+import { useBedtime } from '@/lib/reader/use-bedtime';
+import type { BedtimeWindow } from '@/lib/models/settings';
 import { Checkpoint } from './checkpoint';
 import { PageSpread } from './page-spread';
 import { InteractivePage } from './interactive-page';
@@ -34,16 +36,23 @@ import type { ProgressRecord } from '@/lib/models/progress';
 // Word-tap save (Slice 3), progress sync (Slice 4), and pre-generated audio
 // (Slice 5) layer on top without touching this file's core structure.
 
+const BEDTIME_VOICE = { rate: 0.9, volume: 0.85 };
+const BEDTIME_RESOLVE_LINE = 'Safe and cozy. The end for tonight.';
+
 export function Reader({
   book,
   initialProgress,
   buddyEmoji,
   buddyColor = 'var(--teal)',
+  bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
+  checksEnabled = true,
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
   buddyEmoji?: string;
   buddyColor?: string;
+  bedtimeWindow?: BedtimeWindow;
+  checksEnabled?: boolean;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -87,6 +96,11 @@ export function Reader({
   // auto-turn while the child is choosing / breathing / answering).
   const isInteractive = Boolean(page && (page.choice || page.ask || page.breathe));
 
+  // Bedtime (redesign brief §III.3): night tokens + slower/lower narration +
+  // resolving chapter ends instead of questions.
+  const { bedtime, toggleBedtime } = useBedtime(bedtimeWindow);
+  const checksActive = checksEnabled && !bedtime;
+
   // Comprehension gate. Set when narration ends on the last page of a chapter.
   // Cleared when the child moves on (either mercy or accept).
   const [inCheckpoint, setInCheckpoint] = useState(false);
@@ -128,25 +142,57 @@ export function Reader({
     };
   }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps]);
 
+  // Post-chapter advancement, shared by the checkpoint's onDone and the
+  // no-checkpoint paths (bedtime / checks off).
+  const advanceAfterChapter = useCallback(() => {
+    if (state.chapterIdx === null) return;
+    const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
+    if (!isLastChapter) {
+      dispatch({ type: 'enterChapter', chapterIdx: state.chapterIdx + 1 });
+      return;
+    }
+    // Chapter books return to their map; quick books go back to Home.
+    if (book.kind === 'chapter') {
+      dispatch({ type: 'exitChapter' });
+    } else {
+      transportRef.current?.stop();
+      router.push('/read');
+    }
+  }, [book.chapters.length, book.kind, router, state.chapterIdx]);
+
   const onAutoNext = useCallback(() => {
-    // Auto-turn only advances within a chapter. Chapter end is handled by
-    // useEffect below (transitions into checkpoint mode).
+    // Auto-turn only advances within a chapter. Chapter end transitions into
+    // the checkpoint — or, in bedtime / checks-off, resolves and moves on.
     if (lastPage) {
-      if (!seenCheckpoint.current.has(chapterKey)) {
-        seenCheckpoint.current.add(chapterKey);
+      if (seenCheckpoint.current.has(chapterKey)) return;
+      seenCheckpoint.current.add(chapterKey);
+      if (checksActive) {
         setInCheckpoint(true);
+        return;
       }
+      if (bedtime) {
+        // Resolve, never cliffhang (brief §III.3): one settling line, then a
+        // calm stop — no question, no navigation while he drifts off.
+        void speakUtterance(BEDTIME_RESOLVE_LINE, { voice: 'narrator', priority: 'checkpoint' });
+        return;
+      }
+      advanceAfterChapter();
       return;
     }
     dispatch({ type: 'nextPage' });
-  }, [lastPage, chapterKey]);
+  }, [lastPage, chapterKey, checksActive, bedtime, advanceAfterChapter]);
 
   const transport = useReaderTransport({
     page: transportPage,
     gated: inCheckpoint || isInteractive, // pauses narration during interactivity
     onAutoNext,
     isLastPage: lastPage,
+    voiceMod: bedtime ? BEDTIME_VOICE : undefined,
   });
+  // advanceAfterChapter needs stop() but is declared before the transport —
+  // a ref breaks the cycle without re-ordering the hooks.
+  const transportRef = useRef<typeof transport | null>(null);
+  transportRef.current = transport;
 
   // Interactive-page callbacks. Choices write to the buddy's choice_log via
   // the world API; breathe just advances; ask advances (voice-answer flow can
@@ -197,47 +243,15 @@ export function Reader({
     [transport],
   );
 
-  // Word save. Optimistic UI: WordCapsule blooms as soon as the tap lands;
-  // failure resets. Bloom animation is auto-cleared after ~1400ms per DS spec.
-  const [savedWord, setSavedWord] = useState<string | null>(null);
-  const [justSaved, setJustSaved] = useState(false);
-  const bloomTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (bloomTimer.current) clearTimeout(bloomTimer.current);
-  }, []);
-
+  // Word save (PRD A9) — extracted to lib/reader/use-word-save.ts.
   const [pendingBadges, setPendingBadges] = useState<string[]>([]);
-  const onStarWord = useCallback(
-    (stem: string) => {
-      setSavedWord(stem);
-      setJustSaved(true);
-      if (bloomTimer.current) clearTimeout(bloomTimer.current);
-      bloomTimer.current = setTimeout(() => setJustSaved(false), 1400);
-      // Confirm the save aloud in the buddy voice.
-      void speakUtterance(`${stem} is in your word book!`, { voice: 'buddy', priority: 'tap' });
-
-      saveWord({
-        word: stem,
-        sentence: page?.text,
-        bookId: book.id,
-        chapterIdx: state.chapterIdx ?? undefined,
-        pageIdx: state.pageIdx,
-      })
-        .then((res) => {
-          if (res && res.newlyEarned.length) {
-            setPendingBadges((prev) => [...prev, ...res.newlyEarned]);
-          }
-          // res === null means the write is queued for later (offline). The
-          // optimistic bloom stays; sync banner surfaces the pending state.
-        })
-        .catch(() => {
-          // Rollback bloom on failure — PRD C1 (audit C1 fix) — never silent-drop.
-          setJustSaved(false);
-          setSavedWord(null);
-        });
-    },
-    [book.id, page?.text, state.chapterIdx, state.pageIdx],
-  );
+  const { savedWord, justSaved, onStarWord } = useWordSave({
+    book,
+    pageText: page?.text,
+    chapterIdx: state.chapterIdx,
+    pageIdx: state.pageIdx,
+    onBadges: (slugs) => setPendingBadges((prev) => [...prev, ...slugs]),
+  });
 
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
@@ -249,6 +263,8 @@ export function Reader({
         savedWord={savedWord ?? undefined}
         justSaved={justSaved}
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
+        bedtime={bedtime}
+        onBedtime={toggleBedtime}
       />
       <Celebrations newlyEarned={pendingBadges} />
       <StateBannerBoot />
@@ -265,20 +281,7 @@ export function Reader({
             if (result?.newlyEarned?.length) {
               setPendingBadges((prev) => [...prev, ...(result.newlyEarned ?? [])]);
             }
-            // Advance to next chapter, or fall through per book kind.
-            if (state.chapterIdx === null) return;
-            const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
-            if (!isLastChapter) {
-              dispatch({ type: 'enterChapter', chapterIdx: state.chapterIdx + 1 });
-              return;
-            }
-            // Chapter books return to their map; quick books go back to Home.
-            if (book.kind === 'chapter') {
-              dispatch({ type: 'exitChapter' });
-            } else {
-              transport.stop();
-              router.push('/read');
-            }
+            advanceAfterChapter();
           }}
         />
       ) : null}
@@ -376,7 +379,8 @@ export function Reader({
                 read the page themselves without ever pressing play never
                 triggered onEnd → could never finish a chapter. This affordance
                 lets them signal they're done. */}
-            {lastPage && !transport.playing && !inCheckpoint && !seenCheckpoint.current.has(chapterKey) && (
+            {lastPage && !transport.playing && !inCheckpoint &&
+              (checksActive ? !seenCheckpoint.current.has(chapterKey) : true) && (
               <Button
                 variant="primary"
                 size="primary"
@@ -385,7 +389,8 @@ export function Reader({
                 onClick={() => {
                   transport.stop();
                   seenCheckpoint.current.add(chapterKey);
-                  setInCheckpoint(true);
+                  if (checksActive) setInCheckpoint(true);
+                  else advanceAfterChapter();
                 }}
               >
                 Done with this chapter

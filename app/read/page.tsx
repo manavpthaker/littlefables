@@ -8,7 +8,8 @@ import { loadEarnedBadges } from '@/lib/world/badges';
 import { activeBuddy } from '@/lib/world/buddy-roster';
 import { composeGreeting } from '@/lib/world/greeting';
 import type { WorldBundle } from '@/lib/world/types';
-import { WordsDoor } from './words-door';
+import { deriveLayerTag, type LayerTag } from '@/lib/models/layer-tags';
+import { HomeWordJar } from './word-jar';
 import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
 import { SunsRow } from './suns-row';
@@ -36,9 +37,10 @@ export default async function ReadHome() {
   ] = await Promise.all([
     admin()
       .from('books')
-      .select('id, title, kind, source, status, cover_emoji, cover_bg, book')
+      .select('id, title, kind, source, status, cover_emoji, cover_bg, book, origin_note')
       .eq('household_id', ctx.householdId)
       .in('status', KID_VISIBLE_STATUSES)
+      .eq('shelf_enabled', true)
       .order('title'),
     admin()
       .from('book_progress')
@@ -52,7 +54,7 @@ export default async function ReadHome() {
       .in('day', week),
     admin()
       .from('wordbook_entries')
-      .select('word, saved_at', { count: 'exact' })
+      .select('word, saved_at, owned_at', { count: 'exact' })
       .eq('child_id', ctx.childId)
       .order('saved_at', { ascending: false })
       .limit(5),
@@ -110,6 +112,7 @@ export default async function ReadHome() {
       coverBg: b.cover_bg,
       coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
       status: b.status,
+      layerTag: layerTagOf(b),
       progress: p ? progressFraction(b, p.chapterIdx, p.pageIdx) : 0,
     };
   });
@@ -154,7 +157,10 @@ export default async function ReadHome() {
         }}
       >
         <SunsRow earned={earnedIdx} today={todayIdx} />
-        <WordsDoor count={wordCount ?? 0} />
+        <HomeWordJar
+          words={(recentWordsRows ?? []).map((r) => ({ word: r.word, owned: Boolean(r.owned_at) }))}
+          count={wordCount ?? 0}
+        />
       </section>
 
       <BadgeStrip earned={badges} />
@@ -163,22 +169,41 @@ export default async function ReadHome() {
         {continueTarget && <ContinueBanner target={continueTarget} />}
 
         <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
-          <h2
-            style={{
-              fontFamily: 'var(--font-display)',
-              margin: 0,
-              fontSize: 'var(--text-title)',
-              lineHeight: 'var(--lh-title)',
-              color: 'var(--text-strong)',
-            }}
-          >
-            Your shelf
-          </h2>
-          <ShelfGrid books={restBooks} />
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                margin: 0,
+                fontSize: 'var(--text-title)',
+                lineHeight: 'var(--lh-title)',
+                color: 'var(--text-strong)',
+              }}
+            >
+              Your shelf
+            </h2>
+            <a
+              href="/read/library"
+              style={{
+                fontFamily: 'var(--font-hand)',
+                fontSize: 'var(--text-hand)',
+                color: 'var(--ink-soft)',
+                textDecoration: 'none',
+              }}
+            >
+              See all →
+            </a>
+          </div>
+          <ShelfGrid books={restBooks} variant="row" />
         </section>
       </div>
     </main>
   );
+}
+
+function layerTagOf(b: { book: unknown; origin_note: string | null }): LayerTag {
+  const payload = b.book as { layerTag?: LayerTag; teachingGoals?: string[] } | null;
+  if (payload?.layerTag) return payload.layerTag;
+  return deriveLayerTag(payload?.teachingGoals ?? [], b.origin_note);
 }
 
 function progressFraction(

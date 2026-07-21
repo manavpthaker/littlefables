@@ -15,6 +15,7 @@ export async function GET() {
     .select('id, title, kind, source, status, cover_emoji, cover_bg, updated_at')
     .eq('household_id', ctx.householdId)
     .in('status', KID_VISIBLE_STATUSES as unknown as string[])
+    .eq('shelf_enabled', true)
     .order('updated_at', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

@@ -3,7 +3,8 @@ import { requireParentPassword } from '@/lib/server/parent-gate';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
 import { currentHouseholdId } from '@/lib/server/current-household';
-import { bookSchema, type Book } from '@/lib/models/book';
+import { bookSchema, type Book, type Hotspot } from '@/lib/models/book';
+import { generateHotspots } from '@/lib/art/hotspots';
 import type { Json } from '@/types/database';
 
 // Parent approve/reject action for an art artifact. Approving copies the
@@ -87,6 +88,16 @@ export async function POST(request: NextRequest) {
         ) {
           const page = updated.chapters[artifact.chapter_idx]!.pages[artifact.page_idx]!;
           (page as { img?: string }).img = publicUrl;
+          // Author hotspots from the approved art (redesign brief §VI).
+          // Fail-soft: null just means the page ships without tap points.
+          const hotspots = await generateHotspots({
+            householdId,
+            imageUrl: publicUrl,
+            pageText: page.text,
+          });
+          if (hotspots && hotspots.length > 0) {
+            (page as { hotspots?: Hotspot[] }).hotspots = hotspots;
+          }
           await admin()
             .from('books')
             .update({ book: updated as unknown as Json })

@@ -68,3 +68,55 @@ export async function generateImage(opts: GeminiOpts): Promise<Buffer> {
     clearTimeout(timer);
   }
 }
+
+const TEXT_ENDPOINT =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
+interface GeminiVisionOpts {
+  householdId: string;
+  prompt: string;
+  imageBytes: Buffer;
+  mimeType: string;
+  timeoutMs?: number;
+}
+
+/** Vision analysis (image + prompt → text). Same fail-closed bump_usage('art')
+ *  rail as generateImage — hotspot authoring rides the art pipeline's budget. */
+export async function analyzeImage(opts: GeminiVisionOpts): Promise<string> {
+  await bumpArt(opts.householdId);
+
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error('GEMINI_API_KEY is required');
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? 30_000);
+  try {
+    const res = await fetch(`${TEXT_ENDPOINT}?key=${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { inlineData: { data: opts.imageBytes.toString('base64'), mimeType: opts.mimeType } },
+              { text: opts.prompt },
+            ],
+          },
+        ],
+      }),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const raw = await res.text().catch(() => '');
+      throw new Error(`Gemini ${res.status}: ${raw.slice(0, 300)}`);
+    }
+    const json = (await res.json()) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
+    const text = json.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
+    if (!text) throw new Error('Gemini response has no text');
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
+}

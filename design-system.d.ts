@@ -17,8 +17,9 @@ declare module '@ds/components/core/Icon.jsx' {
 }
 
 declare module '@ds/components/kid/BookCard.jsx' {
-  import type { BookCardProps } from '@ds/components/kid/BookCard';
+  import type { BookCardProps, ShelfProps } from '@ds/components/kid/BookCard';
   export function BookCard(props: BookCardProps): JSX.Element;
+  export function Shelf(props: ShelfProps): JSX.Element;
 }
 
 declare module '@ds/components/kid/Buddy.jsx' {
@@ -34,6 +35,11 @@ declare module '@ds/components/kid/Transport.jsx' {
 declare module '@ds/components/kid/WordCapsule.jsx' {
   import type { WordCapsuleProps } from '@ds/components/kid/WordCapsule';
   export function WordCapsule(props: WordCapsuleProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/WordJar.jsx' {
+  import type { WordJarProps } from '@ds/components/kid/WordJar';
+  export function WordJar(props: WordJarProps): JSX.Element;
 }
 
 declare module '@ds/components/kid/TabBar.jsx' {

@@ -12,7 +12,7 @@ import { speakUtterance } from '@/lib/voice/ui-voice';
 export function WordList({
   words,
 }: {
-  words: Array<{ id: string; word: string; sentence: string | null }>;
+  words: Array<{ id: string; word: string; sentence: string | null; meaning: string | null }>;
 }) {
   const router = useRouter();
 
@@ -70,7 +70,13 @@ export function WordList({
               word={w.word}
               onTap={() =>
                 void speakUtterance(
-                  w.sentence ? `${w.word}. From the story: ${w.sentence}` : w.word,
+                  [
+                    `${w.word}.`,
+                    w.meaning ? `${w.meaning.trim().replace(/\.?$/, '.')}` : null,
+                    w.sentence ? `From the story: ${w.sentence}` : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
                   { voice: 'buddy', priority: 'tap' },
                 )
               }

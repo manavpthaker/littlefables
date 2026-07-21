@@ -1,7 +1,8 @@
 import React from 'react';
 import { Icon } from '../core/Icon.jsx';
 // Book cover card for the shelf. Cover = art (or painting shimmer); progress ribbon; status corner.
-export function BookCard({ title, cover, progress = 0, status, chapters, utterance, onOpen, width = 150 }) {
+// tag = developmental layer chip (Redesign 2026-07-21): capsule top-left, calm pigment dot — never terracotta.
+export function BookCard({ title, cover, progress = 0, status, chapters, tag, utterance, onOpen, width = 150 }) {
   const painting = status === 'painting';
   return (
     <button data-utterance={utterance || title} onClick={onOpen} style={{
@@ -22,7 +23,11 @@ export function BookCard({ title, cover, progress = 0, status, chapters, utteran
         animation: painting ? 'var(--motion-paint)' : undefined,
       }}>
         {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)' }}><Icon name="brush" size={30} /></div>}
-        {status === 'new' && <span style={{ position: 'absolute', top: 8, left: 8, background: 'var(--marigold)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 17, boxShadow: 'var(--elev-rest)' }}>new!</span>}
+        {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 15, boxShadow: 'var(--elev-rest)' }}>
+          {tag.emoji ? <span aria-hidden="true">{tag.emoji}</span> : <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', background: `var(${tag.pigment || '--teal'})` }}></span>}
+          {tag.label}
+        </span>}
+        {status === 'new' && <span style={{ position: 'absolute', top: 8, right: 8, background: 'var(--marigold)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 17, boxShadow: 'var(--elev-rest)' }}>new!</span>}
         {progress > 0 && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 8, background: 'rgba(70,54,42,.25)' }}>
           <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)', borderRadius: '0 4px 4px 0' }}></div>
         </div>}

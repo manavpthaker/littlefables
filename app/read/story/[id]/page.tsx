@@ -7,6 +7,7 @@ import { toReaderBook } from '@/lib/reader/state';
 import { todayIsoUtc } from '@/lib/world/dates';
 import { bumpGrowth, loadWorldState } from '@/lib/world/state';
 import { activeBuddy } from '@/lib/world/buddy-roster';
+import { loadChildProfile } from '@/lib/server/child-settings';
 import type { ProgressRecord } from '@/lib/models/progress';
 import { Reader } from './reader';
 
@@ -28,6 +29,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
     .eq('id', id)
     .eq('household_id', ctx.householdId)
     .in('status', KID_VISIBLE_STATUSES)
+    .eq('shelf_enabled', true)
     .maybeSingle();
 
   if (!data?.book) notFound();
@@ -62,7 +64,10 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
 
   // Active buddy so the reader's companion is the child's chosen animal (its
   // emoji + pigment), consistent with Home — not a hardcoded generic blob.
-  const world = await loadWorldState(ctx.childId);
+  const [world, profile] = await Promise.all([
+    loadWorldState(ctx.childId),
+    loadChildProfile(ctx.childId),
+  ]);
   const buddy = activeBuddy(world.activeBuddyId);
 
   const readerBook = toReaderBook(parsed.data);
@@ -72,6 +77,8 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
       initialProgress={initialProgress}
       buddyEmoji={buddy.emoji}
       buddyColor={buddy.pigment}
+      bedtimeWindow={profile.settings.bedtime}
+      checksEnabled={profile.settings.checksEnabled}
     />
   );
 }
