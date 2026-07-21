@@ -33,14 +33,24 @@ export function StateBanner({ state = 'offline', density = 'kid', message }) {
   );
 }
 // "Painting this page…" loading state — the marigold shimmer, never a spinner on kid surfaces.
-export function PaintingWash({ label = 'painting this page…', height = 160, fullBleed = false }) {
-  // fullBleed: a page mid-generation — edge-to-edge, no radius; when art arrives, the incoming image
-  // animates with var(--motion-develop) over this wash (handoff: wash stays until develop completes).
+export function PaintingWash({ label = "this one's still being painted for you…", height = 160, fullBleed = false }) {
+  // Polish 3.0: the wash is a FEATURE, not a missing image — slow shimmer,
+  // soft watercolor blooms, a breathing brush. fullBleed: when art arrives it
+  // develops over this wash (handoff: wash stays until develop completes).
   return (
-    <div data-utterance={label} style={{ height: fullBleed ? '100%' : height, minHeight: fullBleed ? '100%' : undefined, borderRadius: fullBleed ? 0 : 'var(--radius-lg)', display: 'grid', placeItems: 'center', background: 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))', backgroundSize: '200% 100%', animation: 'var(--motion-paint)', color: 'var(--bark)' }}>
-      <div style={{ textAlign: 'center' }}>
+    <div data-utterance={label} style={{
+      height: fullBleed ? '100%' : height, minHeight: fullBleed ? '100%' : undefined,
+      borderRadius: fullBleed ? 0 : 'var(--radius-lg)', display: 'grid', placeItems: 'center', position: 'relative', overflow: 'hidden',
+      background: 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))',
+      backgroundSize: '300% 100%', animation: 'var(--motion-paint)', animationDuration: '5.5s', color: 'var(--bark)',
+    }}>
+      <span aria-hidden="true" style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', opacity: .5,
+        background: 'radial-gradient(45% 60% at 22% 30%, var(--sage-wash), transparent 70%), radial-gradient(50% 55% at 78% 68%, var(--terracotta-wash), transparent 70%), radial-gradient(40% 50% at 55% 15%, var(--river-wash), transparent 70%)',
+      }}></span>
+      <div style={{ textAlign: 'center', position: 'relative', animation: 'lf-breath var(--dur-breath) var(--ease-drift) infinite' }}>
         <Icon name="brush" size={34} />
-        <div style={{ fontFamily: 'var(--font-hand)', fontSize: 22, marginTop: 6 }}>{label}</div>
+        <div style={{ fontFamily: 'var(--font-hand)', fontSize: 20, marginTop: 6, maxWidth: 220 }}>{label}</div>
       </div>
     </div>
   );

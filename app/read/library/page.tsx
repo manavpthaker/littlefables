@@ -52,26 +52,27 @@ export default async function LibraryPage() {
 
   return (
     <main
+      className="lf-frame"
       style={{
         minHeight: '100dvh',
         background: 'var(--surface-page)',
-        padding: 'var(--space-7) var(--page-pad) var(--space-6)',
+        paddingTop: 'var(--space-7)',
+        paddingBottom: 'var(--space-6)',
         display: 'grid',
         alignContent: 'start',
         gap: 'var(--space-5)',
-        maxWidth: 720,
-        marginInline: 'auto',
-        width: '100%',
-        boxSizing: 'border-box',
       }}
     >
       <header style={{ display: 'grid', gap: 'var(--space-1)' }}>
         <p
           style={{
             fontFamily: 'var(--font-hand)',
-            color: 'var(--text-muted)',
+            color: 'var(--marigold)',
+            fontWeight: 700,
+            letterSpacing: '.18em',
+            textTransform: 'uppercase',
             margin: 0,
-            fontSize: 'var(--text-hand)',
+            fontSize: 14,
           }}
         >
           Your library
@@ -87,6 +88,9 @@ export default async function LibraryPage() {
         >
           Pick a story
         </h1>
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 'var(--text-body)' }}>
+          Only the stories a grown-up turned on show up here.
+        </p>
       </header>
 
       <ShelfGrid books={books} variant="grid" />

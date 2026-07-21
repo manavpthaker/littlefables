@@ -1,29 +1,48 @@
 import React from 'react';
-import { Icon } from '../core/Icon.jsx';
-import { Button } from '../core/Button.jsx';
-// Continue-where-you-left-off card (Home's most-used surface). Kid density only. Works identically offline.
+// Continue hero (mockup-fidelity, Redesign 2026-07-21): big rounded card —
+// art on top (cover or night-sky wash), white panel below with the caps
+// eyebrow, serif title, and the screen's ONE primary ("📖 Keep reading",
+// action gradient). Kid density only.
 export function ContinueCard({ title, chapter, cover, progress = 0, utterance, onContinue }) {
   return (
-    <div data-utterance={utterance || `Keep reading ${title}!`} style={{
-      display: 'flex', gap: 'var(--space-4)', alignItems: 'center', background: 'var(--paper-bright)',
-      borderRadius: 'var(--radius-lg)', boxShadow: 'var(--elev-card)', padding: 'var(--space-4)',
+    <article style={{
+      background: 'var(--paper-bright)', borderRadius: 34, overflow: 'hidden',
+      boxShadow: 'var(--elev-raised)', display: 'grid',
     }}>
-      <div style={{ width: 76, flex: 'none' }}>
-        <div style={{
-          aspectRatio: '3/4', borderRadius: 'var(--radius-sm)', overflow: 'hidden', position: 'relative', boxShadow: 'var(--elev-rest)',
-          background: cover ? `url(${cover}) center/cover` : 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
-        }}>
-          {progress > 0 && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 7, background: 'rgba(70,54,42,.25)' }}>
-            <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)', borderRadius: '0 4px 4px 0' }}></div>
-          </div>}
-        </div>
+      <div aria-hidden="true" style={{
+        height: 172, position: 'relative',
+        background: cover
+          ? `url(${cover}) center 30%/cover no-repeat`
+          : 'linear-gradient(160deg,#3D4E7C 0%,#2E3A61 100%)',
+      }}>
+        {!cover && (
+          <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 44, opacity: .9 }}>✨</span>
+        )}
+        {progress > 0 && (
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 6, background: 'rgba(70,54,42,.3)' }}>
+            <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)' }}></div>
+          </div>
+        )}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, lineHeight: 1.2, color: 'var(--ink)' }}>{title}</div>
-        {chapter && <div style={{ fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink-soft)', marginTop: 4 }}>{chapter}</div>}
-        <Button variant="primary" icon="book-open" utterance={utterance || `Keep reading ${title}!`} onClick={onContinue}
-          style={{ marginTop: 'var(--space-3)' }}>Keep reading</Button>
+      <div style={{ padding: 'var(--space-5)', display: 'grid', gap: 'var(--space-2)', justifyItems: 'start' }}>
+        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--marigold-deep)', fontWeight: 700 }}>
+          Continue{chapter ? ` · ${chapter}` : ''}
+        </span>
+        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 21, lineHeight: 1.2, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{title}</h3>
+        <button
+          data-utterance={utterance || `Keep reading ${title}!`}
+          onClick={onContinue}
+          style={{
+            marginTop: 6, border: 'none', cursor: 'pointer',
+            background: 'var(--marigold-deep)', color: 'var(--action-ink)',
+            borderRadius: 'var(--radius-pill)', padding: '14px 26px',
+            minHeight: 'var(--tap-standard)', fontFamily: 'var(--font-hand)', fontSize: 16, fontWeight: 700,
+            boxShadow: 'var(--elev-card)',
+          }}
+        >
+          📖 Keep reading
+        </button>
       </div>
-    </div>
+    </article>
   );
 }

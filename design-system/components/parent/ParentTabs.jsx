@@ -1,12 +1,17 @@
 import React from 'react';
-// Parent surface tabs (Redesign 2026-07-21): Insights · Stories · Settings.
-// Adult density: plain links, numerals allowed, no voice slots. Active tab =
-// ink text + terracotta underline (navigation is an action here).
+// Parent surface tabs (mockup-fidelity): a segmented pill control — deep-paper
+// track, the active segment lifts as a bright pill. Adult density, no voice slots.
 export function ParentTabs({ items, activeKey }) {
   return (
     <nav
       aria-label="Parent sections"
-      style={{ display: 'flex', gap: 'var(--space-5)', borderBottom: '1px solid rgba(70,54,42,.12)' }}
+      style={{
+        display: 'flex',
+        background: 'var(--paper-deep)',
+        borderRadius: 'var(--radius-pill)',
+        padding: 4,
+        gap: 4,
+      }}
     >
       {items.map((item) => {
         const active = item.key === activeKey;
@@ -16,14 +21,18 @@ export function ParentTabs({ items, activeKey }) {
             href={item.href}
             aria-current={active ? 'page' : undefined}
             style={{
-              padding: '10px 2px 12px',
+              flex: 1,
+              textAlign: 'center',
+              padding: '10px 8px',
+              borderRadius: 'var(--radius-pill)',
               textDecoration: 'none',
               fontFamily: 'var(--font-ui)',
               fontSize: 'var(--text-body)',
-              fontWeight: active ? 600 : 400,
+              fontWeight: 600,
               color: active ? 'var(--text-strong)' : 'var(--text-muted)',
-              borderBottom: active ? '3px solid var(--action)' : '3px solid transparent',
-              marginBottom: -1,
+              background: active ? 'var(--paper-bright)' : 'transparent',
+              boxShadow: active ? 'var(--elev-rest)' : 'none',
+              transition: 'background 160ms ease, color 160ms ease',
             }}
           >
             {item.label}

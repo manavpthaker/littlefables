@@ -1,12 +1,15 @@
 import React from 'react';
 import { Icon } from '../core/Icon.jsx';
-// Book cover card for the shelf. Cover = art (or painting shimmer); progress ribbon; status corner.
+// Book cover card for the shelf (mockup-fidelity): big rounded-square cover
+// (art, or the book's own bg wash), layer chip top-left, serif title BELOW,
+// thin sage progress line under the title.
 // tag = developmental layer chip (Redesign 2026-07-21): capsule top-left, calm pigment dot — never terracotta.
-export function BookCard({ title, cover, progress = 0, status, chapters, tag, utterance, onOpen, width = 150 }) {
+export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag, artRatio = '1/1', utterance, onOpen, width = '100%' }) {
   const painting = status === 'painting';
   return (
     <button data-utterance={utterance || title} onClick={onOpen} style={{
-      width, border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left',
+      width, flex: 'none', scrollSnapAlign: 'start',
+      border: 'none', padding: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left',
       fontFamily: 'var(--font-body)', color: 'var(--ink)',
       transition: 'transform var(--dur-tap) var(--ease-settle)',
     }}
@@ -14,35 +17,44 @@ export function BookCard({ title, cover, progress = 0, status, chapters, tag, ut
     onPointerUp={e => e.currentTarget.style.transform = ''}
     onPointerLeave={e => e.currentTarget.style.transform = ''}>
       <div style={{
-        aspectRatio: '3/4', borderRadius: 'var(--radius-md)', overflow: 'hidden', position: 'relative',
+        aspectRatio: artRatio, borderRadius: 20, overflow: 'hidden', position: 'relative',
         boxShadow: 'var(--elev-card)',
         background: painting
           ? 'linear-gradient(90deg,var(--marigold-wash),var(--butter-wash),var(--marigold-wash))'
-          : cover ? `url(${cover}) center/cover` : 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
+          : cover ? `url(${cover}) center 30%/cover`
+          : bg || 'radial-gradient(90% 80% at 30% 25%,#9db6cc,transparent 70%),radial-gradient(70% 90% at 75% 75%,#c9a06a,transparent 70%),#a8b89a',
         backgroundSize: painting ? '200% 100%' : undefined,
         animation: painting ? 'var(--motion-paint)' : undefined,
       }}>
-        {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)' }}><Icon name="brush" size={30} /></div>}
-        {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 15, boxShadow: 'var(--elev-rest)' }}>
+        {/* cover craft (Polish II.3): inner vignette + 1px warm inner border + faint grain */}
+        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 20, boxShadow: 'inset 0 0 0 1px rgba(255,246,234,.35), inset 0 -26px 40px rgba(70,54,42,.18), inset 0 14px 30px rgba(255,252,245,.12)' }}></span>
+        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: .05, background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")` }}></span>
+        {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)', animation: 'lf-breath var(--dur-breath) var(--ease-drift) infinite' }}><Icon name="brush" size={30} /></div>}
+        {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 9.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', boxShadow: 'var(--elev-rest)' }}>
           {tag.emoji ? <span aria-hidden="true">{tag.emoji}</span> : <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', background: `var(${tag.pigment || '--teal'})` }}></span>}
           {tag.label}
         </span>}
         {status === 'new' && <span style={{ position: 'absolute', top: 8, right: 8, background: 'var(--marigold)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 17, boxShadow: 'var(--elev-rest)' }}>new!</span>}
-        {progress > 0 && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 8, background: 'rgba(70,54,42,.25)' }}>
-          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)', borderRadius: '0 4px 4px 0' }}></div>
-        </div>}
       </div>
-      <div style={{ marginTop: 'var(--space-2)', fontFamily: 'var(--font-display)', fontSize: 17, lineHeight: 1.25 }}>{title}</div>
+      <div style={{ marginTop: 'var(--space-2)', fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, lineHeight: 1.25 }}>{title}</div>
       {chapters && <div style={{ fontSize: 14, color: 'var(--ink-soft)' }}>{chapters}</div>}
+      {progress > 0 && (
+        <div style={{ marginTop: 6, height: 4, borderRadius: 2, background: 'var(--paper-deep)' }}>
+          <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--sage)', borderRadius: 2 }}></div>
+        </div>
+      )}
     </button>
   );
 }
 // Horizontal shelf with a wooden-well rail.
+// contain:inline-size — the rail's content must never dictate ancestor width
+// (an intrinsically-sized grid track would grow to fit every card, leaving the
+// rail nothing to scroll and the tail cards unreachable on a clipped page).
 export function Shelf({ label, children }) {
   return (
-    <section>
+    <section style={{ minWidth: 0 }}>
       {label && <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-title)', color: 'var(--ink)', margin: '0 0 var(--space-3)' }}>{label}</h2>}
-      <div style={{ display: 'flex', gap: 'var(--card-gap)', overflowX: 'auto', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
+      <div style={{ display: 'flex', gap: 13, overflowX: 'auto', contain: 'inline-size', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x proximity', padding: '4px 4px var(--space-4)', borderBottom: '6px solid var(--paper-deep)', borderRadius: '0 0 6px 6px' }}>{children}</div>
     </section>
   );
 }

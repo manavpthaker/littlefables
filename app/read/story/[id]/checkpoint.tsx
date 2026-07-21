@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Checkpoint as DsCheckpoint } from '@ds/components/reader/Checkpoint.jsx';
+import { MicOrb } from '@ds/components/kid/MicOrb.jsx';
+import { ChoiceBlocks } from '@ds/components/reader/ChoiceBlocks.jsx';
 import type { ClientCheckpointQuestion, GeneratedCheckpointRecord, JudgeSignal } from '@/lib/models/checkpoint';
 import { useCheckpointMic } from '@/lib/reader/use-checkpoint-mic';
 import { speakUtterance } from '@/lib/voice/ui-voice';
+import { SheetShell, SheetEyebrow } from './sheet-shell';
 
 type MercyStage = 'none' | 'hint' | 'given';
 
@@ -18,6 +20,7 @@ export interface CheckpointResult {
 interface Props {
   bookId: string;
   chapterIdx: number;
+  chapterCount?: number;
   chapterTitle: string;
   buddyName?: string;
   buddyColor?: string;
@@ -25,9 +28,16 @@ interface Props {
   onDone: (result: CheckpointResult | null) => void;
 }
 
+const TYPE_EYEBROW: Record<ClientCheckpointQuestion['type'], string> = {
+  recall: 'What happened?',
+  inference: 'Why do you think…',
+  prediction: 'What comes next?',
+  connection: 'What about you?',
+};
+
 /** Chapter-end checkpoint (PRD A10/A11, brief §IV): rises as a bottom sheet
- *  over the page (story context stays visible), asks aloud, listens; two soft
- *  retries with a hint, then tap choices. Mic-denied goes straight to taps. */
+ *  (mockup layout — progress segments, buddy circle, caps eyebrow, centered
+ *  question, mic orb, tap fallback, quiet skip). Never quiz-styled. */
 export function Checkpoint(props: Props) {
   const [question, setQuestion] = useState<ClientCheckpointQuestion | null>(null);
   const [recordId, setRecordId] = useState<string | null>(null);
@@ -117,7 +127,6 @@ export function Checkpoint(props: Props) {
         }
         setQuestion(data.question);
         setRecordId(data.recordId);
-        // Speak the question in the buddy voice when it arrives.
         void speakUtterance(data.question.question, { voice: 'buddy', priority: 'checkpoint' });
       } catch (err) {
         if (cancelled.current) return;
@@ -143,83 +152,74 @@ export function Checkpoint(props: Props) {
     }
   }, [mercy, question]);
 
-  const mercyProp = mercy === 'hint' ? ('hint' as const) : mercy === 'given' ? ('given' as const) : false;
-
   // Tap fallback appears when the mic can't (denied) or after both mercy
   // stages have passed (brief §IV.2 — two soft retries first).
   const showChoices = Boolean(question?.fallbackChoices.length) && (mic.micDenied || mercy === 'given');
 
-  const body = error && !question ? (
-    <div style={{ display: 'grid', gap: 'var(--space-3)', textAlign: 'center', padding: 'var(--space-4)' }}>
-      <p style={{ color: 'var(--ink-soft)', margin: 0 }}>Story moves on — no question this time.</p>
-      <button
-        onClick={() => props.onDone(null)}
-        style={{ background: 'var(--action)', color: 'var(--action-ink)', border: 'none', borderRadius: 'var(--radius-pill)', padding: 'var(--space-3) var(--space-5)', minHeight: 'var(--tap-standard)', fontSize: 'var(--text-label)' }}
-      >
-        Next
-      </button>
-    </div>
-  ) : !question ? (
-    <p style={{ color: 'var(--ink-soft)', textAlign: 'center', padding: 'var(--space-4)', margin: 0 }}>
-      {props.buddyName ?? 'Bramble'} is thinking…
-    </p>
-  ) : (
-    <>
-      <DsCheckpoint
-        buddyName={props.buddyName}
-        buddyColor={props.buddyColor}
-        buddyEmoji={props.buddyEmoji}
-        type={question.type}
-        question={question.question}
-        micState={mic.micState}
-        mercy={mercyProp}
-        hint={question.hint ?? undefined}
-        given={question.given ?? undefined}
-        options={showChoices ? question.fallbackChoices.map((c) => ({ label: c.label })) : undefined}
-        onMic={mic.onMic}
-        onPick={(i: number) => void submitChoice(i)}
-        onMoveOn={() => props.onDone(null)}
-      />
-      {transcript && (
-        <p style={{ fontStyle: 'italic', color: 'var(--ink-faint)', textAlign: 'center', fontSize: 14, margin: 'var(--space-2) 0 0' }}>
-          &ldquo;{transcript}&rdquo;
-        </p>
-      )}
-      {echo && !transcript && (
-        <p style={{ fontFamily: 'var(--font-hand)', color: 'var(--ink-soft)', textAlign: 'center', margin: 'var(--space-2) 0 0' }}>{echo}</p>
-      )}
-      {mic.nudge && (
-        <p style={{ color: 'var(--ink-soft)', textAlign: 'center', fontSize: 14, margin: 'var(--space-2) 0 0' }}>{mic.nudge}</p>
-      )}
-    </>
-  );
-
-  // Bottom sheet over the page (brief §V.3): the story stays visible behind a
-  // soft scrim; the question rises from the reach zone.
   return (
-    <section
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 45,
-        display: 'grid',
-        alignItems: 'end',
-        justifyItems: 'center',
-        background: 'var(--scrim-bottom)',
-      }}
+    <SheetShell
+      segments={props.chapterCount ? { current: props.chapterIdx, total: props.chapterCount } : undefined}
+      buddyColor={props.buddyColor}
+      buddyEmoji={props.buddyEmoji}
+      listening={mic.micState === 'listening'}
+      onSkip={() => props.onDone(null)}
     >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 560,
-          padding: '0 var(--space-3) var(--space-4)',
-          display: 'grid',
-          justifyItems: 'center',
-          animation: 'lf-page-in var(--dur-settle) var(--ease-settle) 1',
-        }}
-      >
-        {body}
-      </div>
-    </section>
+      {error && !question ? (
+        <p style={{ color: 'var(--ink-soft)', textAlign: 'center', margin: 0 }}>
+          Story moves on — no question this time.
+        </p>
+      ) : !question ? (
+        <p style={{ color: 'var(--ink-soft)', textAlign: 'center', margin: 0 }}>
+          {props.buddyName ?? 'Your buddy'} is thinking…
+        </p>
+      ) : (
+        <>
+          <SheetEyebrow>{TYPE_EYEBROW[question.type]}</SheetEyebrow>
+          <h2
+            data-utterance={question.question}
+            style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 25, lineHeight: 1.3, textAlign: 'center', color: 'var(--ink)' }}
+          >
+            {question.question}
+          </h2>
+          {mercy === 'hint' && question.hint && (
+            <p style={{ margin: 0, textAlign: 'center', fontFamily: 'var(--font-hand)', fontSize: 18, color: 'var(--ink-soft)' }}>
+              {question.hint}
+            </p>
+          )}
+          {mercy === 'given' && question.given && (
+            <p style={{ margin: 0, textAlign: 'center', fontSize: 18, color: 'var(--ink-soft)', background: 'var(--butter-wash)', borderRadius: 'var(--radius-md)', padding: 'var(--space-3)' }}>
+              {question.given}
+            </p>
+          )}
+
+          <div style={{ display: 'grid', justifyItems: 'center', gap: 4 }}>
+            <MicOrb state={mic.micState} size={88} onTap={mic.onMic} utterance="Tell me what you think!" />
+            {mic.micState === 'idle' && !mic.nudge && (
+              <span style={{ fontFamily: 'var(--font-hand)', fontSize: 18, color: 'var(--ink-soft)' }}>Tap to talk</span>
+            )}
+            {mic.nudge && (
+              <span style={{ fontFamily: 'var(--font-hand)', fontSize: 16, color: 'var(--ink-soft)', textAlign: 'center' }}>{mic.nudge}</span>
+            )}
+          </div>
+
+          {transcript && (
+            <p style={{ margin: 0, textAlign: 'center', fontStyle: 'italic', color: 'var(--ink-faint)', fontSize: 15 }}>
+              &ldquo;{transcript}&rdquo;
+            </p>
+          )}
+          {echo && (
+            <p style={{ margin: 0, textAlign: 'center', fontFamily: 'var(--font-hand)', fontSize: 18, color: 'var(--ink-soft)' }}>{echo}</p>
+          )}
+
+          {showChoices && (
+            <ChoiceBlocks
+              compact
+              options={question.fallbackChoices.map((c) => ({ label: c.label }))}
+              onPick={(i: number) => void submitChoice(i)}
+            />
+          )}
+        </>
+      )}
+    </SheetShell>
   );
 }

@@ -92,19 +92,39 @@ export default async function ParentInsightsPage() {
   return (
     <main style={{ display: 'grid', gap: 'var(--space-7)' }}>
       <header style={{ display: 'grid', gap: 'var(--space-3)' }}>
-        <h1
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-display)',
-            margin: 0,
-            color: 'var(--text-strong)',
-          }}
-        >
-          Insights
-        </h1>
-        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
-          The real question: understanding, not just listening.
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <span
+            aria-hidden="true"
+            style={{
+              width: 60,
+              height: 60,
+              flex: 'none',
+              borderRadius: 18,
+              background: 'linear-gradient(150deg, color-mix(in oklch, var(--plum) 60%, white), var(--plum))',
+              display: 'grid',
+              placeItems: 'center',
+              fontSize: 28,
+              boxShadow: 'var(--elev-rest)',
+            }}
+          >
+            🔒
+          </span>
+          <div style={{ display: 'grid', gap: 2, minWidth: 0 }}>
+            <h1
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-display)',
+                margin: 0,
+                color: 'var(--text-strong)',
+              }}
+            >
+              Parent space
+            </h1>
+            <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+              Manage stories, see how understanding is growing.
+            </p>
+          </div>
+        </div>
         <StatTiles
           tiles={[
             { label: 'min this week', value: minutesThisWeek },
@@ -118,13 +138,16 @@ export default async function ParentInsightsPage() {
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-title)', margin: 0, color: 'var(--text-strong)' }}>
           Comprehension
         </h2>
+        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+          The real question: is he <em>understanding</em>, not just listening?
+        </p>
+        <RungRow label="Literal — what happened" value={meters.literal} grad="linear-gradient(90deg,#8FB07A,var(--sage))" />
+        <RungRow label="Inferential — why & how" value={meters.inferential} grad="linear-gradient(90deg,var(--teal),var(--plum))" />
+        <RungRow label="Retell — tells it back" value={meters.retell} grad="linear-gradient(90deg,var(--marigold),var(--ember))" />
         <ComprehensionProfile
           summary={meters.summary ?? 'Not enough checkpoints yet to see a pattern.'}
           levels={meters.levels}
         />
-        <RungRow label="Literal — what happened" value={meters.literal} />
-        <RungRow label="Inferential — why & how" value={meters.inferential} />
-        <RungRow label="Retell — tells it back" value={meters.retell} />
       </section>
 
       <InsightsCards bridgeLine={weekly.bridgeLine} layers={weekly.layers} />
@@ -136,30 +159,31 @@ export default async function ParentInsightsPage() {
   );
 }
 
-function RungRow({ label, value }: { label: string; value: number | null }) {
+function RungRow({ label, value, grad }: { label: string; value: number | null; grad: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-      <span style={{ flex: 1, fontSize: 'var(--text-body)', color: 'var(--text-body)' }}>{label}</span>
-      {value === null ? (
-        <span style={{ color: 'var(--text-hint)', fontSize: 'var(--text-caption)' }}>not enough yet</span>
-      ) : (
-        <>
-          <span style={{ width: 140, height: 8, background: 'var(--paper-deep)', borderRadius: 4 }}>
-            <span
-              style={{
-                display: 'block',
-                width: `${Math.round(value * 100)}%`,
-                height: '100%',
-                background: 'var(--teal)',
-                borderRadius: 4,
-              }}
-            />
-          </span>
-          <span style={{ width: 44, textAlign: 'right', fontWeight: 600, color: 'var(--text-strong)', fontSize: 'var(--text-body)' }}>
+    <div style={{ display: 'grid', gap: 6 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 'var(--text-body)', fontWeight: 600, color: 'var(--text-strong)' }}>{label}</span>
+        {value === null ? (
+          <span style={{ color: 'var(--text-hint)', fontSize: 'var(--text-caption)' }}>not enough yet</span>
+        ) : (
+          <span style={{ fontWeight: 700, color: 'var(--plum)', fontSize: 'var(--text-body)' }}>
             {Math.round(value * 100)}%
           </span>
-        </>
-      )}
+        )}
+      </div>
+      <div style={{ height: 10, background: 'var(--paper-deep)', borderRadius: 5 }}>
+        {value !== null && (
+          <div
+            style={{
+              width: `${Math.round(value * 100)}%`,
+              height: '100%',
+              background: grad,
+              borderRadius: 5,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

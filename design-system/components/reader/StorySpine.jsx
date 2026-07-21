@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon } from '../core/Icon.jsx';
 // Story spine (Redesign 2026-07-21): the retell checklist — story beats fill
 // in as the child recounts the arc. Hit beats develop like watercolor (sage,
 // filled drawn star); unhit beats wait as quiet silhouettes. Never numbered,
-// never scored — it reads as the story remembering itself, not a test.
+// never scored — numbered beat circles per the mockup (changelog'd exception
+// to the numerals rule: list ordering, not a score).
 export function StorySpine({ beats }) {
   if (!beats || beats.length === 0) return null;
   return (
@@ -19,19 +19,22 @@ export function StorySpine({ beats }) {
             fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.35,
             color: b.hit ? 'var(--ink)' : 'var(--ink-faint)',
             animation: b.hit ? 'var(--motion-develop)' : 'none',
+            animationDelay: b.hit ? `${i * 140}ms` : '0ms',
+            animationFillMode: 'backwards',
             transition: 'background var(--dur-settle) var(--ease-settle), color var(--dur-settle) var(--ease-settle)',
           }}
         >
           <span
             aria-hidden="true"
             style={{
-              width: 26, height: 26, flex: 'none', borderRadius: '50%', display: 'grid', placeItems: 'center',
+              width: 28, height: 28, flex: 'none', borderRadius: '50%', display: 'grid', placeItems: 'center',
               background: b.hit ? 'var(--sage)' : 'transparent',
               border: b.hit ? 'none' : '2px solid var(--ink-faint)',
-              color: 'var(--paper-bright)',
+              color: b.hit ? 'var(--paper-bright)' : 'var(--ink-faint)',
+              fontFamily: 'var(--font-hand)', fontSize: 15, fontWeight: 700,
             }}
           >
-            {b.hit ? <Icon name="check" size={15} strokeWidth={3} /> : null}
+            {i + 1}
           </span>
           {b.label}
         </li>

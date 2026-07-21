@@ -47,3 +47,135 @@ button {
     transform: translateY(0);
   }
 }
+
+/* Polish 3.0: bottom sheets spring up and settle — never appear instantly. */
+@keyframes lf-sheet-up {
+  0% {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mic orb listening ripple: warm rings breathing outward. */
+@keyframes lf-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Clock-lighting shifts cross-fade instead of snapping (Polish IV.1). */
+html,
+body,
+[data-density='kid'] {
+  transition: background-color 400ms ease;
+}
+
+/* Paper you can feel (Polish V.1): fiber grain + a faint edge vignette on kid
+   surfaces, both under 4% so they read as warmth, not noise. */
+[data-density='kid']::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-density='kid']::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(120% 100% at 50% 45%, transparent 62%, rgba(70, 54, 42, 0.05) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  [data-density='kid'] {
+    transition: none;
+  }
+}
+
+/* Hard overflow guard: the kid app can never scroll sideways — a single
+   wide element clips instead of dragging the whole page out of the viewport. */
+[data-density='kid'] {
+  overflow-x: clip;
+}
+/* Grid/flex children default to min-width:auto (their content width), which
+   lets one long line inflate every sibling. Kill that class of bug at the frame. */
+.lf-frame > * {
+  min-width: 0;
+  max-width: 100%;
+}
+/* Percentage caps are ignored during intrinsic track sizing, so a wide child
+   (e.g. the shelf rail) can still inflate an auto grid track past the frame —
+   the page is overflow-clipped, so whatever hangs past the edge becomes
+   unreachable. Pin the track to the frame's width instead. */
+.lf-frame {
+  grid-template-columns: minmax(0, 100%);
+}
+
+/* ── Responsive frames (optimization pass) ──────────────────────────────
+   Phones get a comfortable single column; desktop widens instead of showing
+   a skinny strip on a huge canvas. Inline styles can't media-query, so the
+   frame lives here. */
+.lf-frame {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+  box-sizing: border-box;
+}
+@media (min-width: 760px) {
+  .lf-frame {
+    max-width: 680px;
+  }
+}
+@media (min-width: 1100px) {
+  .lf-frame {
+    max-width: 760px;
+  }
+}
+
+/* Cover grid: 2-up on phones, fluid on anything wider. */
+.lf-covers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+@media (min-width: 600px) {
+  .lf-covers {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+/* Reader fit: the art card never eats the viewport — prose + transport stay
+   on screen on a phone. aspect-ratio yields to the max-height cap. */
+.lf-art-card {
+  position: relative;
+  aspect-ratio: 1 / 0.76;
+  max-height: 42dvh;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--elev-raised);
+}
+@media (max-height: 720px) {
+  .lf-art-card {
+    max-height: 36dvh;
+  }
+}

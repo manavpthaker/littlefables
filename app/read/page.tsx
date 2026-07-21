@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
 import { requireChildDevice } from '@/lib/server/require-auth';
-import { isoToWeekIdx, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
+import { isoToWeekIdx, streakLength, todayIsoUtc, weekWindowUtc } from '@/lib/world/dates';
 import { loadWorldState } from '@/lib/world/state';
 import { loadEarnedBadges } from '@/lib/world/badges';
 import { activeBuddy } from '@/lib/world/buddy-roster';
@@ -11,9 +11,9 @@ import type { WorldBundle } from '@/lib/world/types';
 import { deriveLayerTag, type LayerTag } from '@/lib/models/layer-tags';
 import { pickGreetingWord } from '@/lib/world/word-scheduler';
 import { HomeWordJar } from './word-jar';
+import { StreakCard } from './streak-card';
 import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
-import { SunsRow } from './suns-row';
 import { HomeBuddy } from './home-buddy';
 import { BadgeStrip } from './badge-strip';
 
@@ -28,6 +28,7 @@ export default async function ReadHome() {
 
   const week = weekWindowUtc();
   const [
+    { data: childRow },
     { data: bookRows },
     { data: progressRows },
     { data: readingDayRows },
@@ -36,6 +37,7 @@ export default async function ReadHome() {
     world,
     badges,
   ] = await Promise.all([
+    admin().from('children').select('display_name').eq('id', ctx.childId).maybeSingle(),
     admin()
       .from('books')
       .select('id, title, kind, source, status, cover_emoji, cover_bg, book, origin_note')
@@ -153,30 +155,21 @@ export default async function ReadHome() {
       style={{
         minHeight: '100dvh',
         background: 'var(--surface-page)',
-        display: 'grid',
-        gridTemplateRows: 'auto auto 1fr',
       }}
     >
-      <HomeBuddy buddy={buddy} utterance={greeting.utterance} />
-
-      <section
+      <div
+        className="lf-frame"
         style={{
-          padding: '0 var(--page-pad)',
+          paddingTop: 'var(--space-6)',
+          paddingBottom: 'var(--space-4)',
           display: 'grid',
-          gap: 'var(--space-3)',
-          justifyItems: 'center',
+          gap: 'var(--space-5)',
         }}
       >
-        <SunsRow earned={earnedIdx} today={todayIdx} />
-        <HomeWordJar
-          words={(recentWordsRows ?? []).slice(0, 5).map((r) => ({ word: r.word, owned: Boolean(r.owned_at) }))}
-          count={wordCount ?? 0}
-        />
-      </section>
+        <HomeBuddy buddy={buddy} utterance={greeting.utterance} childName={childRow?.display_name} />
 
-      <BadgeStrip earned={badges} />
+        <StreakCard earned={earnedIdx} today={todayIdx} streak={streakLength(readingDays)} />
 
-      <div style={{ padding: 'var(--space-6) var(--page-pad) var(--space-8)', display: 'grid', gap: 'var(--space-5)' }}>
         {continueTarget && <ContinueBanner target={continueTarget} />}
 
         <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
@@ -190,14 +183,15 @@ export default async function ReadHome() {
                 color: 'var(--text-strong)',
               }}
             >
-              Your shelf
+              {childRow?.display_name ? `${childRow.display_name}'s shelf` : 'Your shelf'}
             </h2>
             <a
               href="/read/library"
               style={{
                 fontFamily: 'var(--font-hand)',
                 fontSize: 'var(--text-hand)',
-                color: 'var(--ink-soft)',
+                color: 'var(--marigold)',
+                fontWeight: 700,
                 textDecoration: 'none',
               }}
             >
@@ -206,6 +200,13 @@ export default async function ReadHome() {
           </div>
           <ShelfGrid books={restBooks} variant="row" />
         </section>
+
+        <HomeWordJar
+          words={(recentWordsRows ?? []).slice(0, 5).map((r) => ({ word: r.word, owned: Boolean(r.owned_at) }))}
+          count={wordCount ?? 0}
+        />
+
+        <BadgeStrip earned={badges} />
       </div>
     </main>
   );

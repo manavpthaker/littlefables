@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { ParentTabs } from '@ds/components/parent/ParentTabs.jsx';
+import { KidTabBar } from '@/app/read/tab-bar';
 
 const TAB_ITEMS = [
   { key: 'insights', label: 'Insights', href: '/parent' },
@@ -43,11 +44,12 @@ export default async function ParentLayout({ children }: { children: React.React
             zIndex: 5,
             background: 'var(--surface-card)',
             borderBottom: 'var(--border-soft)',
-            padding: 'var(--space-4) var(--space-6)',
+            padding: 'var(--space-3) clamp(14px, 3.5vw, 24px)',
             display: 'flex',
+            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 'var(--space-4)',
+            gap: 'var(--space-2) var(--space-4)',
           }}
         >
           <Link
@@ -82,11 +84,12 @@ export default async function ParentLayout({ children }: { children: React.React
             </Link>
           </div>
       </nav>
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: 'var(--space-6)' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: 'clamp(14px, 3.5vw, 24px)' }}>
         <div style={{ marginBottom: 'var(--space-6)' }}>
           <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
         </div>
         {children}
+        <KidTabBar />
       </div>
     </div>
   );

@@ -38,6 +38,8 @@ export interface ReaderBook {
   chapters: ReaderChapter[];
   /** book vocab keyed by stem — syllables + kid-definition for tap/save speech */
   vocab: Record<string, VocabEntry>;
+  /** approved cover art URL — the reader's art fallback when a page has no scene art */
+  coverImage?: string;
 }
 
 /** Reader's dominant page-navigation state. */

@@ -1,17 +1,17 @@
 :root{
 /* ── Paper (surfaces — a storybook, not a screen) ── */
---paper:#F4EBD8;--paper-bright:#F9F2E3;--paper-deep:#EADCC0;
+--paper:#F4ECDA;--paper-bright:#FFFCF5;--paper-deep:#EADCC0;--sand-line:#E0CFAD;
 /* ── Ink (warm browns, never black) ── */
---ink:#46362A;--ink-soft:#6C5847;--ink-faint:#98836E;
+--ink:#2B2016;--ink-soft:#7A6A55;--ink-faint:#9C8B75;
 /* contrast-checked: ink/paper 8.9:1 · ink-soft/paper 5.0:1 (AA body) · ink-faint = decorative only */
 /* ── Pigments (watercolor accents) ── */
---marigold:#E39A32;--butter:#EFCE71;--terracotta:#BE5F38;--sage:#7E9770;--river:#5D7FA8;--teal:#4A8C85;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#74567C;--honey:#D9A653;--lilac:#9B7FAE;
+--marigold:#F2A03D;--marigold-deep:#D9822B;--butter:#EFCE71;--glow:#FBD98A;--terracotta:#BE5F38;--sage:#6E9A57;--sage-deep:#4F7A3E;--river:#5D7FA8;--teal:#4E9A9E;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#8367A6;--honey:#D9A653;--lilac:#9B7FAE;--ember:#E06A45;
 /* deepened vs heritage where a pigment carries text/AA: terracotta #C96F4A→#BE5F38 (4.5:1 w/ paper-bright text), teal −L, berry −L. marigold/butter never carry text. */
 /* honey (Bramble) + lilac (Dory) were consumed by the buddy roster but undefined until Redesign 2026-07-21 — like marigold/butter, they never carry text. */
 /* washes: pigment at watercolor strength on paper, for fills behind ink text */
 --marigold-wash:#F3E0BC;--butter-wash:#F6EBC4;--terracotta-wash:#EFD6C4;--sage-wash:#E2E4CC;--river-wash:#DDE1D2;--teal-wash:#DAE4D0;--berry-wash:#EDD8D2;--dusk-wash:#E0DFD2;--bark-wash:#E9DfC9;--plum-wash:#E7DAD3;--honey-wash:#F2E4C2;--lilac-wash:#E8DEE9;
 /* ── Semantic aliases ── */
---action:var(--terracotta);--action-ink:#FFF6EA;--action-press:#A84F2C;
+--action:var(--terracotta);--action-ink:#FFF6EA;--action-press:#A84F2C;--action-grad:linear-gradient(135deg,var(--marigold),var(--ember));/* @kind other — mockup-fidelity primary (brief marigold→ember) */
 --surface-page:var(--paper);--surface-card:var(--paper-bright);--surface-well:var(--paper-deep);
 --text-strong:var(--ink);--text-body:var(--ink);--text-muted:var(--ink-soft);--text-hint:var(--ink-faint);
 --focus-ring:var(--river);

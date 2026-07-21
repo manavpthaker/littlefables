@@ -82,6 +82,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
       initialProgress={initialProgress}
       buddyEmoji={buddy.emoji}
       buddyColor={buddy.pigment}
+      buddyVoiceId={buddy.voiceId}
       bedtimeWindow={profile.settings.bedtime}
       checksEnabled={profile.settings.checksEnabled}
       dailyLimitMin={profile.settings.dailyLimitMin}

@@ -1,5 +1,22 @@
-import { SectionHeader } from '@ds/components/parent/ParentPrimitives.jsx';
 import type { StoryLayer } from '@/lib/parent/insights';
+
+function CardHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <h3
+      style={{
+        margin: 0,
+        fontFamily: 'var(--font-ui)',
+        fontSize: 13,
+        textTransform: 'uppercase',
+        letterSpacing: '.08em',
+        fontWeight: 700,
+        color: 'var(--plum)',
+      }}
+    >
+      {children}
+    </h3>
+  );
+}
 
 // "This week's story layers" + "Say this tomorrow" (brief §III.5) — the
 // multiplier surface: what the stories were quietly working on, and the exact
@@ -26,7 +43,7 @@ export function InsightsCards({
             gap: 'var(--space-2)',
           }}
         >
-          <SectionHeader>This week&rsquo;s story layers</SectionHeader>
+          <CardHeader>This week&rsquo;s story layers</CardHeader>
           {layers.map((l) => (
             <p key={l.title} style={{ margin: 0, fontSize: 'var(--text-body)', color: 'var(--text-body)' }}>
               <strong>{l.title}</strong> quietly worked on <strong>{l.teaches}</strong>. {l.note}
@@ -44,7 +61,7 @@ export function InsightsCards({
             gap: 'var(--space-1)',
           }}
         >
-          <SectionHeader>Say this tomorrow</SectionHeader>
+          <CardHeader>Say this tomorrow</CardHeader>
           <p style={{ margin: 0, fontSize: 'var(--text-body)', color: 'var(--text-strong)', fontStyle: 'italic' }}>
             &ldquo;{bridgeLine}&rdquo;
           </p>

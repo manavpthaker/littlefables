@@ -62,7 +62,10 @@ export function ShelfGrid({
       utterance={book.title}
       progress={book.progress}
       cover={book.coverImage ?? undefined}
+      bg={!book.coverImage && book.coverBg && !book.coverBg.startsWith('http') ? book.coverBg : undefined}
       tag={tagFor(book)}
+      width={variant === 'row' ? 126 : undefined}
+      artRatio={variant === 'row' ? '126/158' : undefined}
       onOpen={() => {
         window.location.href = `/read/story/${book.id}`;
       }}
@@ -73,15 +76,5 @@ export function ShelfGrid({
     return <Shelf>{cards}</Shelf>;
   }
 
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        gap: 'var(--space-5)',
-      }}
-    >
-      {cards}
-    </div>
-  );
+  return <div className="lf-covers">{cards}</div>;
 }

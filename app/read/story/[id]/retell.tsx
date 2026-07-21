@@ -2,16 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { MicOrb } from '@ds/components/kid/MicOrb.jsx';
-import { Buddy } from '@ds/components/kid/Buddy.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
 import { StorySpine } from '@ds/components/reader/StorySpine.jsx';
 import { useCheckpointMic } from '@/lib/reader/use-checkpoint-mic';
 import { speakUtterance } from '@/lib/voice/ui-voice';
+import { SheetShell, SheetEyebrow } from './sheet-shell';
 
-// Tell-it-back (brief §IV — the gold-standard rung). Rises as a bottom sheet
-// at book completion: the buddy asks for the whole story, the child speaks
-// (multiple turns welcome), the story spine fills beat by beat. Skipping is
-// always one tap — retell gates nothing.
+// Tell-it-back (brief §IV — the gold-standard rung, mockup layout). Rises at
+// book completion: eyebrow, serif prompt, mic orb, then the story-spine card
+// filling beat by beat. Skipping is always one tap — retell gates nothing.
 
 interface RetellState {
   recordId: string;
@@ -21,6 +20,7 @@ interface RetellState {
 
 export function Retell(props: {
   bookId: string;
+  bookTitle?: string;
   buddyName?: string;
   buddyColor?: string;
   buddyEmoji?: string;
@@ -42,11 +42,7 @@ export function Retell(props: {
       try {
         const res = await fetch('/api/child/retell/answer', { method: 'POST', body: form });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = (await res.json()) as {
-          beatsHit: number[];
-          outcome: string;
-          done: boolean;
-        };
+        const data = (await res.json()) as { beatsHit: number[]; outcome: string; done: boolean };
         if (cancelled.current) return;
         setHits(data.beatsHit);
         setEcho(data.outcome);
@@ -92,75 +88,70 @@ export function Retell(props: {
   if (!session) return null;
 
   return (
-    <section
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 45,
-        display: 'grid',
-        alignItems: 'end',
-        justifyItems: 'center',
-        background: 'var(--scrim-bottom)',
-      }}
+    <SheetShell
+      buddyColor={props.buddyColor}
+      buddyEmoji={props.buddyEmoji}
+      listening={mic.micState === 'listening'}
+      onSkip={done ? undefined : () => props.onDone(false)}
     >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 560,
-          background: 'var(--paper-bright)',
-          borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
-          boxShadow: 'var(--elev-float)',
-          padding: 'var(--space-5) var(--space-5) var(--space-6)',
-          boxSizing: 'border-box',
-          display: 'grid',
-          gap: 'var(--space-4)',
-          animation: 'lf-page-in var(--dur-settle) var(--ease-settle) 1',
-        }}
+      <SheetEyebrow>Tell it back to me</SheetEyebrow>
+      <h2
+        data-utterance={session.prompt}
+        style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 25, lineHeight: 1.3, textAlign: 'center', color: 'var(--ink)' }}
       >
-        <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'flex-start' }}>
-          <Buddy
-            compact
-            size={56}
-            color={props.buddyColor}
-            emoji={props.buddyEmoji}
-            state={mic.micState === 'listening' ? 'listening' : 'speaking'}
-          />
-          <p
-            data-utterance={session.prompt}
-            style={{ fontFamily: 'var(--font-body)', fontSize: 21, lineHeight: 1.4, color: 'var(--ink)', margin: 0, paddingTop: 6 }}
-          >
-            {session.prompt}
-          </p>
-        </div>
+        {session.prompt}
+      </h2>
 
-        <div style={{ display: 'grid', justifyItems: 'center', gap: 'var(--space-2)' }}>
-          <MicOrb state={mic.micState} onTap={mic.onMic} utterance="Tell me the whole story!" />
-          {echo && (
-            <p style={{ fontFamily: 'var(--font-hand)', color: 'var(--ink-soft)', textAlign: 'center', margin: 0 }}>{echo}</p>
-          )}
-          {mic.nudge && (
-            <p style={{ color: 'var(--ink-soft)', textAlign: 'center', fontSize: 14, margin: 0 }}>{mic.nudge}</p>
-          )}
-        </div>
-
-        <StorySpine beats={session.beats.map((label, i) => ({ label, hit: hits.includes(i) }))} />
-
-        {done ? (
-          <Button
-            variant="primary"
-            size="primary"
-            icon="star"
-            utterance="You told the WHOLE story!"
-            onClick={() => props.onDone(true)}
-          >
-            The whole story!
-          </Button>
-        ) : (
-          <Button variant="soft" icon="arrow-right" utterance="We can tell it another time." onClick={() => props.onDone(false)}>
-            All done for now
-          </Button>
+      <div style={{ display: 'grid', justifyItems: 'center', gap: 4 }}>
+        <MicOrb state={mic.micState} size={88} onTap={mic.onMic} utterance="Tell me the whole story!" />
+        {mic.micState === 'idle' && !mic.nudge && (
+          <span style={{ fontFamily: 'var(--font-hand)', fontSize: 18, color: 'var(--ink-soft)' }}>Tap to talk</span>
+        )}
+        {mic.nudge && (
+          <span style={{ fontFamily: 'var(--font-hand)', fontSize: 16, color: 'var(--ink-soft)', textAlign: 'center' }}>{mic.nudge}</span>
+        )}
+        {echo && (
+          <p style={{ margin: 0, fontFamily: 'var(--font-hand)', color: 'var(--ink-soft)', textAlign: 'center' }}>{echo}</p>
         )}
       </div>
-    </section>
+
+      {session.beats.length > 0 && (
+        <div
+          style={{
+            background: 'var(--paper)',
+            borderRadius: 20,
+            padding: 'var(--space-4)',
+            display: 'grid',
+            gap: 'var(--space-3)',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-hand)',
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: '.14em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-soft)',
+            }}
+          >
+            {props.bookTitle ? `${props.bookTitle} — did you tell all of it?` : 'Did you tell all of it?'}
+          </span>
+          <StorySpine beats={session.beats.map((label, i) => ({ label, hit: hits.includes(i) }))} />
+        </div>
+      )}
+
+      {done && (
+        <Button
+          variant="primary"
+          size="primary"
+          icon="star"
+          utterance="You told the WHOLE story!"
+          onClick={() => props.onDone(true)}
+        >
+          The whole story!
+        </Button>
+      )}
+    </SheetShell>
   );
 }

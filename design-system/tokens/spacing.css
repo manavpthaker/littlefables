@@ -4,7 +4,7 @@
 --tap-primary:64px;/* the one main action per screen */
 --tap-standard:56px;--tap-min:44px;--tap-gap:12px;/* min space between adjacent targets */
 /* radius — soft storybook corners */
---radius-sm:10px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px;--radius-pill:999px;
+--radius-sm:12px;--radius-md:18px;--radius-lg:26px;--radius-xl:34px;--radius-pill:999px;
 --line-weight:2px;/* borders + icon strokes share this */
 --border-soft:2px solid rgba(70,54,42,.14);/* @kind other */
 /* layout */

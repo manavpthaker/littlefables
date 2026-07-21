@@ -17,8 +17,10 @@ import { Celebrations } from '@/app/read/celebrations';
 import { StateBannerBoot } from '@/app/read/state-banner';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 import { useBedtime } from '@/lib/reader/use-bedtime';
+import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { Checkpoint } from './checkpoint';
+import { WordPopover } from './word-popover';
 import { Retell } from './retell';
 import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
@@ -46,6 +48,7 @@ export function Reader({
   initialProgress,
   buddyEmoji,
   buddyColor = 'var(--teal)',
+  buddyVoiceId = null,
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
   checksEnabled = true,
   dailyLimitMin = null,
@@ -55,6 +58,7 @@ export function Reader({
   initialProgress: ProgressRecord | null;
   buddyEmoji?: string;
   buddyColor?: string;
+  buddyVoiceId?: string | null;
   bedtimeWindow?: BedtimeWindow;
   checksEnabled?: boolean;
   dailyLimitMin?: number | null;
@@ -240,17 +244,30 @@ export function Reader({
   const onPrev = useCallback(() => dispatch({ type: 'prevPage' }), []);
   const onNext = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
-  // Word interactions (PRD A9).
+  // Word interactions (PRD A9 + parity II.4): hearing seeks/speaks; a tap
+  // while paused also opens the word popover (syllables, definition, keep).
+  const [popWord, setPopWord] = useState<string | null>(null);
   const onHearWord = useCallback(
     (word: string, wordIdx: number) => {
+      const stem = word.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
       if (transport.playing) {
         transport.seekToWord(wordIdx);
       } else {
         transport.speakOne(word);
+        setPopWord(stem || null);
       }
     },
     [transport],
   );
+
+  // Swipe-to-turn (UX pass): the natural picture-book gesture, mapped to the
+  // exact same prev/next the Transport dispatches (never auto-plays). Off
+  // whenever anything interactive owns the screen.
+  const swipe = useSwipeTurn({
+    enabled: !showMap && !isInteractive && !inCheckpoint && !inRetell && !popWord,
+    onPrev,
+    onNext,
+  });
 
   // Word save (PRD A9) — extracted to lib/reader/use-word-save.ts.
   const [pendingBadges, setPendingBadges] = useState<string[]>([]);
@@ -259,21 +276,26 @@ export function Reader({
     pageText: page?.text,
     chapterIdx: state.chapterIdx,
     pageIdx: state.pageIdx,
+    buddyVoiceId,
     onBadges: (slugs) => setPendingBadges((prev) => [...prev, ...slugs]),
   });
 
   return (
-    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}>
+    <div
+      style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}
+      onTouchStart={swipe.onTouchStart}
+      onTouchEnd={swipe.onTouchEnd}
+    >
       <ReaderTopBar
         onBack={onBack}
+        title={`${book.title}${book.kind === 'chapter' && state.chapterIdx !== null ? ` · Ch. ${state.chapterIdx + 1}` : ''}`}
+        segments={ch ? { current: state.pageIdx, total: ch.pages.length } : undefined}
         buddyColor={buddyColor}
         buddyEmoji={buddyEmoji}
         buddyState={transport.playing ? 'speaking' : 'idle'}
         savedWord={savedWord ?? undefined}
         justSaved={justSaved}
         onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
-        bedtime={bedtime}
-        onBedtime={toggleBedtime}
       />
       <Celebrations newlyEarned={pendingBadges} />
       <StateBannerBoot />
@@ -282,6 +304,7 @@ export function Reader({
         <Checkpoint
           bookId={book.id}
           chapterIdx={state.chapterIdx}
+          chapterCount={book.chapters.length}
           chapterTitle={ch.title}
           buddyColor={buddyColor}
           buddyEmoji={buddyEmoji}
@@ -305,6 +328,7 @@ export function Reader({
       {inRetell && (
         <Retell
           bookId={book.id}
+          bookTitle={book.title}
           buddyColor={buddyColor}
           buddyEmoji={buddyEmoji}
           onDone={() => {
@@ -342,31 +366,66 @@ export function Reader({
             chapterTitle={book.kind === 'chapter' ? ch.title : null}
             useWashFallback={Boolean(useWashFallback)}
             currentIndex={transport.wordIdx}
-            starredWords={[
-              ...(page.star ? [page.star] : []),
-              ...(savedWord ? [savedWord] : []),
-            ]}
+            narrating={transport.playing}
+            coverImage={book.coverImage}
+            starredWords={page.star ? [page.star] : []}
+            keptWords={savedWord ? [savedWord] : []}
             onHearWord={onHearWord}
             onStarWord={onStarWord}
           />
+          {popWord && (
+            <WordPopover
+              word={popWord}
+              entry={book.vocab[popWord]}
+              onAgain={() => transport.speakOne(popWord)}
+              onKeep={() => {
+                onStarWord(popWord);
+                setPopWord(null);
+              }}
+              onClose={() => setPopWord(null)}
+            />
+          )}
 
           <footer
             style={{
-              padding: 'var(--space-4) var(--page-pad) var(--space-6)',
+              marginTop: 'auto',
+              padding: 'var(--space-3) var(--page-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
               display: 'grid',
               placeItems: 'center',
               gap: 'var(--space-3)',
-              minHeight: 'var(--reach-zone)',
             }}
           >
-            <Transport
-              playing={transport.playing}
-              onPlay={transport.toggle}
-              onPrev={onPrev}
-              onNext={onNext}
-              canPrev={!isFirstPage(state)}
-              canNext={!lastPage}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+              <Transport
+                playing={transport.playing}
+                onPlay={transport.toggle}
+                onPrev={onPrev}
+                onNext={onNext}
+                canPrev={!isFirstPage(state)}
+                canNext={!lastPage}
+              />
+              <button
+                type="button"
+                data-utterance={bedtime ? 'Bright and awake!' : 'Getting cozy for bedtime.'}
+                aria-pressed={bedtime}
+                onClick={toggleBedtime}
+                style={{
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: 'var(--wash-capsule)',
+                  backdropFilter: 'blur(14px)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '10px 16px',
+                  minHeight: 'var(--tap-min)',
+                  boxShadow: bedtime ? '0 0 0 3px var(--marigold), var(--elev-rest)' : 'var(--elev-rest)',
+                  fontFamily: 'var(--font-hand)',
+                  fontSize: 16,
+                  color: 'var(--ink)',
+                }}
+              >
+                🌙 Bedtime
+              </button>
+            </div>
             {/* Silent-reader completion: the checkpoint auto-fires only when
                 narration ends (transport.onEnd on the last page). Kids who
                 read the page themselves without ever pressing play never

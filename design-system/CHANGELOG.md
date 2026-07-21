@@ -65,3 +65,64 @@ a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
 | 9 | WordCapsule `owned` prop | Sage ring + "yours now" voice when a kept word was re-encountered and understood at a checkpoint (PRD B5 ownership). Default appearance unchanged. |
 | 10 | ParentTabs (new parent component) | `components/parent/ParentTabs.jsx` (+ d.ts, prompt.md): Insights · Stories · Settings section tabs, terracotta underline on active (navigation is an action on parent surfaces). |
 | 11 | ComprehensionProfile adopted | First app import of the accepted-but-unused meters component (Insights tab); ambient declaration added in the app's design-system.d.ts (also fixed its Field declaration to carry `hint`, matching FieldProps). |
+
+# CHANGELOG — Mockup-fidelity pass (2026-07-21, same day)
+
+The redesign shipped functionally but read as the old visual language; this pass matches the brief's
+spec mockups (see `docs/REDESIGN-BRIEF.md` figures). Every change below is mockup-driven.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Brighter cards + action gradient | `--paper-bright` #F9F2E3→#FCF7EA (mockup card white); new `--ember #E06A45` pigment + `--action-grad` (marigold→ember) for hero CTAs/mic — terracotta stays the flat action token elsewhere. |
+| 2 | TabBar emoji restyle | Emoji faces (🏠 📚 🔒) over hand labels, marigold active label, inner row constrained to the 520px phone frame; now rendered on the parent surface too (mockup shows it app-wide). |
+| 3 | ContinueCard hero rewrite | Art block on top (cover or night wash), white panel with caps eyebrow + serif title + "📖 Keep reading" gradient pill. |
+| 4 | BookCard square covers | 1:1 rounded-24 cover (art or the book's own `bg` wash), serif title BELOW, thin sage progress line under the title (ribbon overlay removed). `width` accepts strings. |
+| 5 | ReaderTopBar in-flow | X close · caps book/chapter label · page segments (marigold current / sage read) · buddy — normal flow, no top scrim (art is a card now); moon toggle moved to a Bedtime capsule beside the Transport. |
+| 6 | Reader portrait layout | Art = rounded card above the prose; text never renders over art; collectable (starred) words show as bold butter pills in StoryText. |
+| 7 | Sheet chrome (checkpoint/retell) | Shared bottom-sheet: chapter segments, gradient buddy circle, caps eyebrow, centered serif question, 88px MicOrb + "Tap to talk", quiet "Skip for now". |
+| 8 | StorySpine numbered beats | Mockup-driven exception to the kid numerals rule: beat circles show 1·2·3 (list order, not a score); sage fill when told. |
+| 9 | ParentTabs segmented control | Deep-paper pill track, active segment lifts as a bright pill (replaces underline tabs). |
+
+# CHANGELOG — Polish 3.0 pass (2026-07-21, same day)
+
+Craft pass per the "3.0 Polish Spec": motion, texture, and spell-breaker removal. Art coverage and
+voice casting remain parent-run steps (scripts/roster wiring are ready).
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Sheet spring + spine cascade | New `lf-sheet-up` keyframe (rise, overshoot, settle) on the checkpoint/retell sheet; StorySpine beats develop with a 140ms stagger so a correct retell cascades. |
+| 2 | MicOrb listening ripple | Two warm river rings breathe outward while listening (`lf-ripple`); idle/state colors unchanged. |
+| 3 | PaintingWash as a feature | Slower shimmer, soft watercolor blooms behind, breathing brush, default copy "this one's still being painted for you…". |
+| 4 | Cover craft | BookCard covers get a 1px warm inner border + inner vignette + ~5% paper grain so art meets the rounded edge cleanly. |
+| 5 | Paper you can feel | Kid surfaces get a fixed ~3.5% fiber-grain overlay + faint edge vignette; clock-lighting background shifts cross-fade over 400ms (reduced-motion: off). |
+| 6 | Locked badges say what they want | BadgeShelf locked items show a progression hint ("Read 3 days in a row") instead of the bare "?" (badge item `hint` prop). |
+
+# CHANGELOG — Pixel-parity pass (2026-07-21, same day)
+
+The prototype's exact values became the source of truth ("Match-the-Prototype Build Spec"). Where a
+number is given there, that number ships — no reinterpretation. Token values snapped; `tokens.json`
+re-synced to the CSS package.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Token value snap | `--paper #F4ECDA`, `--paper-bright #FFFCF5`, new `--sand-line #E0CFAD`; ink ramp deepened `#2B2016/#7A6A55/#9C8B75`; `--marigold #F2A03D` + new `--marigold-deep #D9822B`, new `--glow #FBD98A`; `--sage #6E9A57` + new `--sage-deep #4F7A3E`; `--teal #4E9A9E`; `--plum #8367A6`. Contrast note updated (ink/paper 8.9:1). |
+| 2 | Warm shadow scale | All elevations recast on `rgba(43,32,22,…)` at .09/.13/.17/.22 — one shadow hue, four strengths; `--inset-well` kept for the jar. |
+| 3 | Kid radius scale | 12/18/26/34 (was 10/16/24/32) — cards 26, hero 34, matching the prototype's corner language. |
+| 4 | Reading text = display serif | `--text-reading 21px/1.6` rendered in `--font-display` (StoryText); word-current highlight moves to the `--glow` pill. |
+| 5 | StoryText treatments | Collectable words: 600-weight + glow underline (gradient 62%→bottom); kept words: fern wash `rgba(110,154,87,.32)` (`keptWords` prop, d.ts updated). Butter-pill treatment retired. |
+| 6 | Transport exact-size | Prev/next 44px `--paper-deep` circles; play 58px marigold→marigold-deep gradient with warm `rgba(217,130,43,.45)` shadow. |
+| 7 | ReaderTopBar spec | Kicker hand 10.5px uppercase `--marigold-deep`; dots 6px, active 18px marigold pill, read = sage; buddy 42px. |
+| 8 | BookCard `artRatio` prop | Cover aspect override (Home rail passes `126/158`); chip 9.5px uppercase; progress line 4px sage; shelf rail gap 13. |
+| 9 | ContinueCard spec | Radius 34, art 172px `center 30%`, kicker 11px, title 21px, `--marigold-deep` white-text pill. |
+| 10 | TabBar hand labels | 12.5px, 700 active, `.06em` tracking (was 16px) — matches the prototype's small hand labels under the emoji faces. |
+
+# CHANGELOG — UX repair pass (2026-07-21, same day)
+
+Phone-testing feedback: the Home rail wouldn't scroll, idle reader pages looked disabled, the sync
+banner never left. Mechanical fixes, no visual-language changes.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Shelf rail actually scrolls | `Shelf` rail gains `contain: inline-size` — its cards can no longer inflate an ancestor's intrinsically-sized grid track (which left the rail wider than the screen with nothing to scroll and the tail cards unreachable behind the page's overflow clip). Plus momentum scrolling + `scroll-snap-type: x proximity`; `BookCard` gains `flex: none` + `scroll-snap-align: start` so cards neither squash nor land half-cut. |
+| 2 | StoryText `dimUpcoming` prop | The upcoming-word dim (50% ink) now only applies while narration is moving. Idle/paused pages render full ink — a plain book page, not a disabled screen. Default `true` keeps prototype behavior. |
+| 3 | BookCard crop bias | Covers crop `center 30%` (was `center`) — square crops favor the subject like ContinueCard, instead of fur/midsections. |
