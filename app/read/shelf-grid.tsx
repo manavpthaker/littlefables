@@ -75,15 +75,5 @@ export function ShelfGrid({
     return <Shelf>{cards}</Shelf>;
   }
 
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        gap: 'var(--space-5)',
-      }}
-    >
-      {cards}
-    </div>
-  );
+  return <div className="lf-covers">{cards}</div>;
 }

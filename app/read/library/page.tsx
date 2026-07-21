@@ -52,17 +52,15 @@ export default async function LibraryPage() {
 
   return (
     <main
+      className="lf-frame"
       style={{
         minHeight: '100dvh',
         background: 'var(--surface-page)',
-        padding: 'var(--space-7) var(--page-pad) var(--space-6)',
+        paddingTop: 'var(--space-7)',
+        paddingBottom: 'var(--space-6)',
         display: 'grid',
         alignContent: 'start',
         gap: 'var(--space-5)',
-        maxWidth: 520,
-        marginInline: 'auto',
-        width: '100%',
-        boxSizing: 'border-box',
       }}
     >
       <header style={{ display: 'grid', gap: 'var(--space-1)' }}>

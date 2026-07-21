@@ -28,7 +28,7 @@ export function WordList({
         // clustering it at the top over a large empty void on wide/tall screens.
         alignContent: 'center',
         gap: 'var(--space-5)',
-        maxWidth: 720,
+        maxWidth: 560,
         marginInline: 'auto',
       }}
     >

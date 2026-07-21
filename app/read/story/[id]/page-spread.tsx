@@ -146,15 +146,7 @@ export function PageSpread({
       }}
     >
       {(page.img || useWashFallback) && (
-        <div
-          style={{
-            position: 'relative',
-            aspectRatio: '4/3',
-            borderRadius: 24,
-            overflow: 'hidden',
-            boxShadow: 'var(--elev-raised)',
-          }}
-        >
+        <div className="lf-art-card">
           {page.img ? (
             <div
               key={page.img}

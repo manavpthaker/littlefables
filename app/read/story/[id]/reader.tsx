@@ -357,11 +357,11 @@ export function Reader({
 
           <footer
             style={{
-              padding: 'var(--space-4) var(--page-pad) var(--space-6)',
+              marginTop: 'auto',
+              padding: 'var(--space-3) var(--page-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
               display: 'grid',
               placeItems: 'center',
               gap: 'var(--space-3)',
-              minHeight: 'var(--reach-zone)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>

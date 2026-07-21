@@ -16,7 +16,7 @@ export function TabBar({ items, activeKey, onSelect }) {
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
-      <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'stretch' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'stretch' }}>
         {items.map((item) => {
           const active = item.key === activeKey;
           return (

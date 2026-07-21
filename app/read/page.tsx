@@ -158,10 +158,10 @@ export default async function ReadHome() {
       }}
     >
       <div
+        className="lf-frame"
         style={{
-          maxWidth: 520,
-          marginInline: 'auto',
-          padding: 'var(--space-6) var(--page-pad) var(--space-4)',
+          paddingTop: 'var(--space-6)',
+          paddingBottom: 'var(--space-4)',
           display: 'grid',
           gap: 'var(--space-5)',
         }}

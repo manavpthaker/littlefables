@@ -10,7 +10,7 @@ export function ContinueCard({ title, chapter, cover, progress = 0, utterance, o
       boxShadow: 'var(--elev-raised)', display: 'grid',
     }}>
       <div aria-hidden="true" style={{
-        height: 190, position: 'relative',
+        height: 'clamp(150px, 24dvh, 230px)', position: 'relative',
         background: cover
           ? `url(${cover}) center/cover no-repeat`
           : 'linear-gradient(160deg,#3D4E7C 0%,#2E3A61 100%)',
