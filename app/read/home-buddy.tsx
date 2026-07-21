@@ -35,11 +35,11 @@ export function HomeBuddy(props: { buddy: BuddyMeta; utterance: string; childNam
       >
         {props.buddy.emoji}
       </span>
-      <div style={{ display: 'grid', gap: 2 }}>
+      <div style={{ display: 'grid', gap: 2, minWidth: 0 }}>
         <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'var(--text-display)', lineHeight: 1.1, color: 'var(--text-strong)' }}>
           Hi{props.childName ? `, ${props.childName}` : ''}!
         </h1>
-        <p data-utterance={props.utterance} style={{ margin: 0, fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink-soft)' }}>
+        <p data-utterance={props.utterance} style={{ margin: 0, fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink-soft)', overflowWrap: 'anywhere' }}>
           {props.utterance}
         </p>
       </div>

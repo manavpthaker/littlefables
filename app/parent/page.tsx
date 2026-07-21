@@ -109,7 +109,7 @@ export default async function ParentInsightsPage() {
           >
             🔒
           </span>
-          <div style={{ display: 'grid', gap: 2 }}>
+          <div style={{ display: 'grid', gap: 2, minWidth: 0 }}>
             <h1
               style={{
                 fontFamily: 'var(--font-display)',

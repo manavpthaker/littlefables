@@ -110,6 +110,18 @@ body,
   }
 }
 
+/* Hard overflow guard: the kid app can never scroll sideways — a single
+   wide element clips instead of dragging the whole page out of the viewport. */
+[data-density='kid'] {
+  overflow-x: clip;
+}
+/* Grid/flex children default to min-width:auto (their content width), which
+   lets one long line inflate every sibling. Kill that class of bug at the frame. */
+.lf-frame > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* ── Responsive frames (optimization pass) ──────────────────────────────
    Phones get a comfortable single column; desktop widens instead of showing
    a skinny strip on a huge canvas. Inline styles can't media-query, so the

@@ -12,7 +12,7 @@ export function ContinueCard({ title, chapter, cover, progress = 0, utterance, o
       <div aria-hidden="true" style={{
         height: 'clamp(150px, 24dvh, 230px)', position: 'relative',
         background: cover
-          ? `url(${cover}) center/cover no-repeat`
+          ? `url(${cover}) center 30%/cover no-repeat`
           : 'linear-gradient(160deg,#3D4E7C 0%,#2E3A61 100%)',
       }}>
         {!cover && (
@@ -28,7 +28,7 @@ export function ContinueCard({ title, chapter, cover, progress = 0, utterance, o
         <span style={{ fontFamily: 'var(--font-hand)', fontSize: 15, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--marigold)', fontWeight: 700 }}>
           Continue{chapter ? ` · ${chapter}` : ''}
         </span>
-        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 26, lineHeight: 1.2, color: 'var(--ink)' }}>{title}</h3>
+        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(21px, 5.6vw, 26px)', lineHeight: 1.2, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{title}</h3>
         <button
           data-utterance={utterance || `Keep reading ${title}!`}
           onClick={onContinue}
