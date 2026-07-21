@@ -11,5 +11,9 @@ export interface ReaderTopBarProps {
   /** buddy's animal face, e.g. "🐱" */
   buddyEmoji?: string;
   buddyState?: 'idle' | 'speaking' | 'listening' | 'thinking';
+  /** bedtime mode active — the moon capsule shows a marigold ring */
+  bedtime?: boolean;
+  /** toggle bedtime; omit = no moon capsule rendered */
+  onBedtime?: () => void;
 }
 // The reader's persistent chrome, always inside the top scrim. Offline shows NOTHING here (default posture).

@@ -31,7 +31,7 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
   {
     id: 'char_bramble',
     name: 'Bramble',
-    emoji: '🧸',
+    emoji: '🐻',
     pigment: 'var(--honey)',
     species: 'plush',
     catchphrase: "We're brave together.",
@@ -42,7 +42,7 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
   {
     id: 'char_jujy',
     name: 'Jujy',
-    emoji: '🐱',
+    emoji: '🐈',
     pigment: 'var(--marigold)',
     species: 'plush',
     catchphrase: 'Whisker-wiggle roll call!',
@@ -53,7 +53,7 @@ export const BUDDY_ROSTER: readonly Buddy[] = Object.freeze([
   {
     id: 'char_dory',
     name: 'Dory',
-    emoji: '😺',
+    emoji: '🐱',
     pigment: 'var(--lilac)',
     species: 'plush',
     catchphrase: 'Um… what were we doing?',

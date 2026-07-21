@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**All 5 PRD phases + all 4 EXPERIENCE-PLAN sprints shipped (2026-07-18).**
+**All 5 PRD phases + all 4 EXPERIENCE-PLAN sprints shipped (2026-07-18), then the Reading & Comprehension redesign (2026-07-21).**
+
+The redesign (brief: [`docs/REDESIGN-BRIEF.md`](./docs/REDESIGN-BRIEF.md), spec deltas: PRD §3-R) rebuilt the experience around **comprehension over consumption** in four phases:
+- **P0 foundations** — migration `20260721000012` (shelf_enabled, children.settings, encounter fields, comprehension payload + `retell` type, reading_sessions, parent_insights), night/bedtime tokens, kid TabBar (Home · Library · Grown-ups), 4-tier voice priority (`lib/voice/priority.ts`), roster↔canon buddy identity fix.
+- **P1 active reader** — `/read/library`, Home word jar + layer-tagged shelf rail, teaching word-saves (syllables + kid definitions, meanings populated from vocab), illustration hotspots (Gemini-vision authored at art approval), bedtime mode (`use-bedtime` + `[data-bedtime]`, slower/lower narration, resolving chapter ends).
+- **P2 comprehension engine** — ladder policy (`lib/comprehension/ladder.ts`), checkpoint as bottom sheet with expectedConcepts-grounded PEER judging + deterministic tap fallback, retell story-spine at book completion (`lib/comprehension/spine.ts` ∪ `retell-judge`, audio → retells bucket), B5 word-ownership loop (`word-scheduler` 2d/7d/21d, `owned_at` from understood answers, due-word greeting).
+- **P3 parent + adaptivity** — Parent space tabs (Insights meters via `lib/comprehension/meters.ts` + weekly cached bridge line, Stories with per-book shelf toggles, Settings with Ease/Auto/Stretch · checks · bedtime · soft daily limit · narrator voice), minutes heartbeat → reading_sessions, adaptivity (`lib/comprehension/adaptivity.ts`) wired into checkpoint + story generation, `pnpm content:backfill`.
+
+**Post-redesign runbook:** apply migration `20260721000012` to the hosted project, re-run `pnpm db:types` (the checked-in types were hand-synced), run `pnpm content:backfill -- --check` then for real (~1 Anthropic call/book vs the 40/day respond limit), and walk the phone acceptance script in the plan.
 
 Phase timeline:
 - **P0** scaffold + schema + prompt package + pack-000
@@ -91,7 +99,7 @@ A signed-in child device renders a synced shelf; zero red CI. Prerequisites: rep
 - Edits to `PRD.md` are spec changes — treat them like breaking API changes and mention downstream impact (which pillar/phase moves).
 - Edits to `design-system/` require a `CHANGELOG.md` entry; the system was accepted 2026-07-17 after two Saturday Drive acceptance runs — don't silently mutate accepted specs. Do not modify the JSX components; add ambient types in the root `design-system.d.ts` instead.
 - Content in `content/originals/` and `reference/azi-verse/source-rtf/` is irreplaceable source material. Never overwrite; convert into derived files under `lib/prompts/canon/`.
-- Every route handler in `app/api/*` MUST call `requireChildDevice()` from `lib/server/require-auth.ts` — no route is guarded by middleware alone (audit C3 fix). Parent auth was removed (single-user mode); add a `PARENT_PASSWORD` gate before deploying to Vercel.
+- Every CHILD route handler in `app/api/child/*` MUST call `requireChildDevice()` from `lib/server/require-auth.ts` — no route is guarded by middleware alone (audit C3 fix). The parent surface + `/api/parent/*` run UNGATED by explicit household decision (2026-07-21): `requireParentPassword()` is an always-allow stub — keep calling it in new parent routes so the gate can be restored from git history as a one-file change. Do not expose this deployment beyond the family.
 - Schema changes are additive migrations under `supabase/migrations/YYYYMMDDHHMMSS_*.sql`. Update the enum lists in `lib/models/book.ts` in the same commit — `tests/models/schema-sync.spec.ts` will fail if they drift (audit C2 fix).
 - Reader modules under `lib/reader/` must stay under ~400 lines each (PRD §4.1 vs archive's 2,094-line reader page — audit S1). State + selectors live in `state.ts` (pure, testable); the client orchestrator (`app/read/story/[id]/reader.tsx`) is composition only.
 - Do not add another design-system component without extending `design-system.d.ts` in the same commit.

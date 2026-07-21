@@ -25,7 +25,6 @@ export default function PrivacyPage() {
       <section>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20 }}>What we collect</h2>
         <ul>
-          <li>The household&apos;s parent password (SHA-256 hashed into an HttpOnly cookie — the plain text never leaves the parent&apos;s device).</li>
           <li>Your child&apos;s reading history: which books they open, which page they&apos;re on, which words they star, which choices they pick on interactive pages.</li>
           <li>Comprehension checkpoints: the question, the transcript of the child&apos;s spoken answer, and how the buddy judged it.</li>
           <li>Buddy choice, badges earned, reading-day set.</li>

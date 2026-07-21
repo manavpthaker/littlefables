@@ -24,6 +24,10 @@ export interface ParentBook {
   updatedAt: string;
   /** Most recent art-approval timestamp for this book (any kind). Optional. */
   artApprovedAt?: string | null;
+  /** on the child's shelf (books.shelf_enabled) — the Stories-tab toggle */
+  shelfEnabled?: boolean;
+  /** what this story teaches (teachingGoals joined) — brief §III.5 */
+  teaches?: string | null;
 }
 
 const STATUS_COLOR: Record<ParentBookStatus, { bg: string; text: string }> = {
@@ -49,6 +53,67 @@ export function BooksSection({ books }: { books: ParentBook[] }) {
         books.map((b) => <BookRow key={b.id} book={b} />)
       )}
     </section>
+  );
+}
+
+function ShelfToggle({ bookId, initial }: { bookId: string; initial: boolean }) {
+  const router = useRouter();
+  const [enabled, setEnabled] = useState(initial);
+  const [busy, setBusy] = useState(false);
+
+  async function toggle() {
+    const next = !enabled;
+    setEnabled(next); // optimistic
+    setBusy(true);
+    try {
+      const res = await fetch('/api/parent/story/visibility', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ bookId, enabled: next }),
+      });
+      if (!res.ok) setEnabled(!next);
+      else router.refresh();
+    } catch {
+      setEnabled(!next);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 14, color: 'var(--ink-soft)', cursor: 'pointer' }}>
+      <button
+        role="switch"
+        aria-checked={enabled}
+        onClick={toggle}
+        disabled={busy}
+        style={{
+          width: 42,
+          height: 24,
+          borderRadius: 12,
+          border: 'none',
+          cursor: busy ? 'wait' : 'pointer',
+          background: enabled ? 'var(--sage)' : 'var(--ink-faint)',
+          position: 'relative',
+          transition: 'background 160ms ease',
+          padding: 0,
+        }}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            top: 3,
+            left: enabled ? 21 : 3,
+            width: 18,
+            height: 18,
+            borderRadius: '50%',
+            background: 'var(--paper-bright)',
+            transition: 'left 160ms ease',
+          }}
+        />
+      </button>
+      {enabled ? "on the child's shelf" : 'hidden from the shelf'}
+    </label>
   );
 }
 
@@ -98,6 +163,10 @@ function BookRow({ book }: { book: ParentBook }) {
         {book.hardGatesPassed != null && <span>hard-gates: {book.hardGatesPassed ? 'passed' : 'failed'}</span>}
         {book.softScoreTotal != null && <span>score: {Math.round(book.softScoreTotal)}</span>}
       </div>
+      {book.teaches && (
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 14 }}>teaches: {book.teaches}</p>
+      )}
+      {book.shelfEnabled !== undefined && <ShelfToggle bookId={book.id} initial={book.shelfEnabled} />}
       {/* Provenance line — reads left-to-right as a warm sentence about
           exactly what happened to this book. */}
       <p style={{ margin: 0, fontFamily: 'var(--font-hand)', color: 'var(--text-muted)', fontSize: 14 }}>

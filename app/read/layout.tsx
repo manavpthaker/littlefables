@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { requireChildDevice } from '@/lib/server/require-auth';
 import { NextResponse } from 'next/server';
 import { ClockLighting } from './clock-lighting';
+import { KidTabBar } from './tab-bar';
 
 // Kid subtree only: viewport locked (PRD F2 exception — never on parent).
 export const viewport: Viewport = {
@@ -31,7 +32,10 @@ export default async function ReadLayout({ children }: { children: React.ReactNo
           zIndex: 0,
         }}
       />
-      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {children}
+        <KidTabBar />
+      </div>
     </div>
   );
 }

@@ -164,6 +164,7 @@ export type Database = {
           kind: string
           origin_note: string | null
           parent_guide: string | null
+          shelf_enabled: boolean
           source: string
           status: string
           title: string
@@ -181,6 +182,7 @@ export type Database = {
           kind: string
           origin_note?: string | null
           parent_guide?: string | null
+          shelf_enabled?: boolean
           source: string
           status: string
           title: string
@@ -198,6 +200,7 @@ export type Database = {
           kind?: string
           origin_note?: string | null
           parent_guide?: string | null
+          shelf_enabled?: boolean
           source?: string
           status?: string
           title?: string
@@ -280,6 +283,7 @@ export type Database = {
           household_id: string
           id: string
           pronouns: string | null
+          settings: Json
           updated_at: string
         }
         Insert: {
@@ -290,6 +294,7 @@ export type Database = {
           household_id: string
           id?: string
           pronouns?: string | null
+          settings?: Json
           updated_at?: string
         }
         Update: {
@@ -300,6 +305,7 @@ export type Database = {
           household_id?: string
           id?: string
           pronouns?: string | null
+          settings?: Json
           updated_at?: string
         }
         Relationships: [
@@ -320,6 +326,7 @@ export type Database = {
           child_id: string
           id: string
           judged_signal: string | null
+          payload: Json | null
           question: string
           question_type: string
           transcript: string | null
@@ -331,6 +338,7 @@ export type Database = {
           child_id: string
           id?: string
           judged_signal?: string | null
+          payload?: Json | null
           question: string
           question_type: string
           transcript?: string | null
@@ -342,6 +350,7 @@ export type Database = {
           child_id?: string
           id?: string
           judged_signal?: string | null
+          payload?: Json | null
           question?: string
           question_type?: string
           transcript?: string | null
@@ -383,6 +392,48 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      parent_insights: {
+        Row: {
+          bridge_line: string | null
+          child_id: string
+          created_at: string
+          household_id: string
+          layers: Json | null
+          week_start: string
+        }
+        Insert: {
+          bridge_line?: string | null
+          child_id: string
+          created_at?: string
+          household_id: string
+          layers?: Json | null
+          week_start: string
+        }
+        Update: {
+          bridge_line?: string | null
+          child_id?: string
+          created_at?: string
+          household_id?: string
+          layers?: Json | null
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parent_insights_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parent_insights_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       parents: {
         Row: {
@@ -502,6 +553,38 @@ export type Database = {
           },
         ]
       }
+      reading_sessions: {
+        Row: {
+          child_id: string
+          day: string
+          seconds: number
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          child_id: string
+          day: string
+          seconds?: number
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          child_id?: string
+          day?: string
+          seconds?: number
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_sessions_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       retells: {
         Row: {
           audio_path: string
@@ -589,7 +672,9 @@ export type Database = {
         Row: {
           book_id: string | null
           child_id: string
+          encounter_count: number
           id: string
+          last_encounter_at: string | null
           meaning: string | null
           owned_at: string | null
           saved_at: string
@@ -599,7 +684,9 @@ export type Database = {
         Insert: {
           book_id?: string | null
           child_id: string
+          encounter_count?: number
           id?: string
+          last_encounter_at?: string | null
           meaning?: string | null
           owned_at?: string | null
           saved_at?: string
@@ -609,6 +696,8 @@ export type Database = {
         Update: {
           book_id?: string | null
           child_id?: string
+          encounter_count?: number
+          last_encounter_at?: string | null
           id?: string
           meaning?: string | null
           owned_at?: string | null

@@ -15,14 +15,16 @@ export default async function WordsPage() {
 
   const { data } = await admin()
     .from('wordbook_entries')
-    .select('id, word, sentence, saved_at')
+    .select('id, word, meaning, sentence, saved_at, owned_at')
     .eq('child_id', ctx.childId)
     .order('saved_at', { ascending: false });
 
   const words = (data ?? []).map((w) => ({
     id: w.id,
     word: w.word,
+    meaning: w.meaning,
     sentence: w.sentence,
+    owned: Boolean(w.owned_at),
   }));
 
   return <WordList words={words} />;

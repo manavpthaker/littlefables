@@ -12,3 +12,9 @@ import { enqueueAndSend } from '@/lib/sync/outbox';
 export async function saveWord(input: SaveWordInput): Promise<SaveWordResponse | null> {
   return enqueueAndSend<SaveWordResponse>('/api/child/wordbook', JSON.stringify(input));
 }
+
+/** Record a re-encounter with a kept word (PRD B5) — replay taps, re-hears.
+ *  Fire-and-forget through the outbox; feeds the spaced scheduler. */
+export function trackEncounter(word: string, kind: 'tap' | 'heard' = 'tap'): void {
+  void enqueueAndSend('/api/child/wordbook/encounter', JSON.stringify({ word, kind }));
+}

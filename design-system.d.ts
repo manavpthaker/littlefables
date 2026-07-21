@@ -17,8 +17,9 @@ declare module '@ds/components/core/Icon.jsx' {
 }
 
 declare module '@ds/components/kid/BookCard.jsx' {
-  import type { BookCardProps } from '@ds/components/kid/BookCard';
+  import type { BookCardProps, ShelfProps } from '@ds/components/kid/BookCard';
   export function BookCard(props: BookCardProps): JSX.Element;
+  export function Shelf(props: ShelfProps): JSX.Element;
 }
 
 declare module '@ds/components/kid/Buddy.jsx' {
@@ -34,6 +35,31 @@ declare module '@ds/components/kid/Transport.jsx' {
 declare module '@ds/components/kid/WordCapsule.jsx' {
   import type { WordCapsuleProps } from '@ds/components/kid/WordCapsule';
   export function WordCapsule(props: WordCapsuleProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/ParentTabs.jsx' {
+  import type { ParentTabsProps } from '@ds/components/parent/ParentTabs';
+  export function ParentTabs(props: ParentTabsProps): JSX.Element;
+}
+
+declare module '@ds/components/parent/ComprehensionProfile.jsx' {
+  import type { ComprehensionProfileProps } from '@ds/components/parent/ComprehensionProfile';
+  export function ComprehensionProfile(props: ComprehensionProfileProps): JSX.Element;
+}
+
+declare module '@ds/components/reader/StorySpine.jsx' {
+  import type { StorySpineProps } from '@ds/components/reader/StorySpine';
+  export function StorySpine(props: StorySpineProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/WordJar.jsx' {
+  import type { WordJarProps } from '@ds/components/kid/WordJar';
+  export function WordJar(props: WordJarProps): JSX.Element;
+}
+
+declare module '@ds/components/kid/TabBar.jsx' {
+  import type { TabBarProps } from '@ds/components/kid/TabBar';
+  export function TabBar(props: TabBarProps): JSX.Element;
 }
 
 declare module '@ds/components/kid/ContinueCard.jsx' {
@@ -120,10 +146,10 @@ declare module '@ds/components/parent/ArtApproval.jsx' {
 }
 
 declare module '@ds/components/parent/ParentPrimitives.jsx' {
-  import type { SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
+  import type { FieldProps, SectionHeaderProps } from '@ds/components/parent/ParentPrimitives';
   export function SectionHeader(props: SectionHeaderProps): JSX.Element;
   export function ListRow(props: { children: React.ReactNode }): JSX.Element;
-  export function Field(props: { label: string; children: React.ReactNode }): JSX.Element;
+  export function Field(props: FieldProps): JSX.Element;
   export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>): JSX.Element;
   export function RetellingPlayer(props: { src: string; transcript?: string }): JSX.Element;
 }

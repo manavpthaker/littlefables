@@ -4,14 +4,19 @@ import { admin } from '@/lib/supabase/admin';
 import { bookSchema } from '@/lib/models/book';
 import {
   checkpointQuestionSchema,
+  clientCheckpointQuestionSchema,
   generateCheckpointBodySchema,
   FALLBACK_QUESTION,
   type CheckpointQuestion,
   type GeneratedCheckpointRecord,
 } from '@/lib/models/checkpoint';
 import { assembleCheckpointPrompt, type QuestionType } from '@/lib/prompts/templates/checkpoint';
+import { pickRung } from '@/lib/comprehension/ladder';
+import { computeAdaptivity } from '@/lib/comprehension/adaptivity';
 import { BudgetExceededError, callAnthropic, extractJson } from '@/lib/anthropic';
 import { loadWorldState, bumpGrowth } from '@/lib/world/state';
+import { loadChildProfile } from '@/lib/server/child-settings';
+import type { Json } from '@/types/database';
 
 // Generate ONE checkpoint question for the given book + chapter. Records a
 // placeholder comprehension_records row so the answer endpoint can update it.
@@ -39,13 +44,13 @@ export async function POST(request: NextRequest) {
   const chapter = book.chapters[chapterIdx];
   if (!chapter) return NextResponse.json({ error: 'chapter_not_found' }, { status: 404 });
 
-  const [{ data: recentRecords }, { data: savedWordsRows }, world] = await Promise.all([
+  const [{ data: recentRecords }, { data: savedWordsRows }, world, profile] = await Promise.all([
     admin()
       .from('comprehension_records')
-      .select('question_type')
+      .select('question_type, judged_signal')
       .eq('child_id', ctx.childId)
       .order('asked_at', { ascending: false })
-      .limit(4),
+      .limit(12),
     admin()
       .from('wordbook_entries')
       .select('word')
@@ -53,19 +58,48 @@ export async function POST(request: NextRequest) {
       .order('saved_at', { ascending: false })
       .limit(6),
     loadWorldState(ctx.childId),
+    loadChildProfile(ctx.childId),
   ]);
+
+  // Parent setting: checkpoints off → the story just moves on. The client
+  // also skips; this is the server-side guarantee.
+  if (!profile.settings.checksEnabled) {
+    return NextResponse.json({ skipped: true });
+  }
 
   const recentTypes: QuestionType[] = ((recentRecords ?? [])
     .map((r) => r.question_type)
-    .filter(Boolean) as QuestionType[]);
+    .filter((t): t is QuestionType => t !== 'retell' && Boolean(t))
+    .slice(0, 4));
+  const recentSignals = (recentRecords ?? [])
+    .map((r) => r.judged_signal)
+    .filter((s): s is string => Boolean(s));
+
+  // Ladder (redesign brief §IV.1): rung from chapter position + recent signals.
+  const requestedType = pickRung({
+    chapterIdx,
+    chapterCount: book.chapters.length,
+    recentSignals: recentSignals.slice(0, 4),
+    recentTypes,
+  });
+
+  // Adaptivity (brief §IV.3): question band follows the child's actual
+  // signal, pinned by the parent's Ease/Auto/Stretch setting.
+  const { effectiveBand } = computeAdaptivity({
+    baseBand: profile.band,
+    readingLevel: profile.settings.readingLevel,
+    recentSignals,
+    recentKeeps: (savedWordsRows ?? []).length,
+  });
 
   const assembled = assembleCheckpointPrompt({
     book: { title: book.title, kind: book.kind },
     chapterTitle: chapter.title,
     chapterIdx,
     pagesText: chapter.pages.map((p) => p.text).join('\n\n'),
-    band: '4-8',
+    band: effectiveBand,
     recentTypes,
+    requestedType,
     savedWords: (savedWordsRows ?? []).map((r) => r.word),
     worldSummary: `${world.growth.booksOpened} books opened, ${world.growth.wordsSaved} words saved.`,
   });
@@ -78,7 +112,7 @@ export async function POST(request: NextRequest) {
       system: assembled.system,
       user: assembled.user,
       cacheKey: assembled.cacheKey,
-      maxTokens: 300,
+      maxTokens: 500,
       temperature: 0.7,
     });
     const parsedJson = extractJson<CheckpointQuestion>(raw);
@@ -94,6 +128,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Persist a placeholder record. answer route updates transcript + signal.
+  // payload holds the judge material (expectedConcepts) + tap fallback — the
+  // client only ever receives fallbackChoices.
   const { data: record, error: insertErr } = await admin()
     .from('comprehension_records')
     .insert({
@@ -102,6 +138,12 @@ export async function POST(request: NextRequest) {
       chapter_idx: chapterIdx,
       question: question.question,
       question_type: question.type,
+      payload: {
+        expectedConcepts: question.expectedConcepts,
+        fallbackChoices: question.fallbackChoices,
+        hint: question.hint ?? null,
+        given: question.given ?? null,
+      } as unknown as Json,
     })
     .select('id')
     .single();
@@ -111,9 +153,10 @@ export async function POST(request: NextRequest) {
 
   await bumpGrowth(ctx.childId, 'checkpointsAsked', 1);
 
+  // Strip judge material (expectedConcepts) before it reaches the client.
   const response: GeneratedCheckpointRecord = {
     recordId: record.id,
-    question,
+    question: clientCheckpointQuestionSchema.parse(question),
   };
   return NextResponse.json(response);
 }

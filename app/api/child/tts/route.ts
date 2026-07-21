@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { requireChildDevice } from '@/lib/server/require-auth';
 import { admin } from '@/lib/supabase/admin';
 import { BudgetExceededError } from '@/lib/anthropic';
+import { loadChildProfile } from '@/lib/server/child-settings';
 
 // Live text-to-speech (buddy utterances, checkpoint questions, meanings).
 // Routes to ElevenLabs with the buddy's voice_id when supplied — falls back
@@ -38,11 +39,17 @@ export async function POST(request: NextRequest) {
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
 
+  // Narrator voice resolution: explicit voiceId > parent-set narratorVoiceId
+  // (children.settings) > env default.
+  let settingsNarrator: string | null = null;
+  if (!body.data.voiceId && body.data.voice !== 'buddy') {
+    settingsNarrator = (await loadChildProfile(ctx.childId)).settings.narratorVoiceId;
+  }
   const voiceId =
     body.data.voiceId ??
     (body.data.voice === 'buddy'
       ? process.env.BUDDY_VOICE_ID
-      : process.env.NARRATOR_VOICE_ID);
+      : settingsNarrator ?? process.env.NARRATOR_VOICE_ID);
   if (!voiceId) return NextResponse.json({ error: 'no_voice' }, { status: 500 });
 
   const apiKey = process.env.ELEVENLABS_API_KEY;

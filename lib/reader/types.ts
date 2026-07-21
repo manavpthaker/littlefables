@@ -1,4 +1,4 @@
-import type { AskBlock, Book, ChoiceBlock } from '@/lib/models/book';
+import type { AskBlock, Book, ChoiceBlock, Hotspot, VocabEntry } from '@/lib/models/book';
 
 // View types for the reader. They shadow the Book model but strip fields
 // that aren't needed on the client (parentGuide etc.) and add lightweight
@@ -21,6 +21,8 @@ export interface ReaderPage {
   ask?: AskBlock;
   choice?: ChoiceBlock;
   breathe?: boolean;
+  /** tappable spoken points over approved art (redesign brief §VI) */
+  hotspots?: Hotspot[];
 }
 
 export interface ReaderChapter {
@@ -34,6 +36,8 @@ export interface ReaderBook {
   title: string;
   kind: Book['kind'];
   chapters: ReaderChapter[];
+  /** book vocab keyed by stem — syllables + kid-definition for tap/save speech */
+  vocab: Record<string, VocabEntry>;
 }
 
 /** Reader's dominant page-navigation state. */

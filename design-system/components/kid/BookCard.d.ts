@@ -9,6 +9,8 @@ export interface BookCardProps {
   status?: 'painting' | 'new';
   /** e.g. "3 chapters" */
   chapters?: string;
+  /** developmental layer chip (top-left capsule). pigment = CSS var name, e.g. "--dusk"; calm pigments only, never terracotta */
+  tag?: { label: string; emoji?: string; pigment?: string };
   /** voice slot — spoken on tap; defaults to the title */
   utterance?: string;
   onOpen?: () => void;

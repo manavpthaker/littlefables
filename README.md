@@ -12,7 +12,7 @@ A reading companion for young children — built for Azad first, engineered as a
 - **Art (Phase 4 + S2):** Gemini Nano Banana Pro generates covers + scenes into `art-candidates` (private). Batch approval via the DS `ArtApproval` grid moves candidates to `art-live` and stitches URLs into the book jsonb. **Every book has an approved cover; Bramble's Hello is fully painted end-to-end (21 pages).** PaintingWash fallback for pages still developing.
 - **The app speaks (S1):** `lib/voice/ui-voice.ts` funnels every buddy greeting, checkpoint question, mercy line, celebration, and word-save confirmation through the live `/api/child/tts` route with per-buddy voice_id + narration-priority guard. Narration always wins.
 - **It feels alive (S3):** page-turn animation, watercolor-develop reveal on scene art, clock-driven paper temperature (morning/day/dusk/night), authored breathe + choice pages inside `moose-bigness` and `coocoo`.
-- **Product spine (S4):** `PARENT_PASSWORD` env-gated cookie protects every `/api/parent/*` route and the parent surface. `SEED_HOUSEHOLD_ID` / `SEED_CHILD_ID` removed from all `app/` code — routes resolve household via `currentHouseholdId()`. CI runs the integration tests against a local Supabase container. `qa_records.canonVersion` stamped from `lib/prompts/version`.
+- **Product spine (S4):** `SEED_HOUSEHOLD_ID` / `SEED_CHILD_ID` removed from all `app/` code — routes resolve household via `currentHouseholdId()`. CI runs the integration tests against a local Supabase container. `qa_records.canonVersion` stamped from `lib/prompts/version`. (The S4 `PARENT_PASSWORD` gate was later removed by household decision, 2026-07-21 — the parent surface runs open; see `lib/server/parent-gate.ts`.)
 - **Cost guardrails throughout:** every Anthropic / OpenAI / Gemini / ElevenLabs call bumps `usage_counters` BEFORE the external call. Rough per-transaction cost: $0.02 checkpoint, $0.05 story attempt, $0.05 per art image, ~$1 per narrated book.
 
 **Honest remaining gaps** (nothing here is a blocker for you and Azad; all are follow-ups toward V2):
@@ -37,7 +37,7 @@ pnpm dev
 
 Walkthrough after `pnpm dev`:
 1. Open `http://localhost:3000` — redirects to `/parent`.
-2. `/parent` opens unauthenticated (single-household mode; add PARENT_PASSWORD before deploying) → click **Send Azad to this device** → cookie set → redirect to `/read`.
+2. `/parent` opens unauthenticated (ungated by household decision — see `lib/server/parent-gate.ts`) → click **Send Azad to this device** → cookie set → redirect to `/read`.
 3. Kid shelf renders 9 family originals. If you've read something before, a ContinueCard shows at the top.
 4. Click **Bramble's Hello** → tap play → narration streams with word-level highlighting from real ElevenLabs timestamps.
 5. Tap a word mid-narration → narration seeks to that word. Tap a word while paused → hear the word alone. A star appears; tap again to save (blooms into the top-bar WordCapsule).

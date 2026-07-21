@@ -4,6 +4,7 @@ import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
 import { StoryText } from '@ds/components/reader/StoryText.jsx';
 import type { ReaderPage } from '@/lib/reader/types';
 import { useLandscapeSpread } from '@/lib/reader/use-landscape';
+import { Hotspots } from './hotspots';
 
 // The narrative page's visual layout, in both orientations (PRD F2).
 //
@@ -92,6 +93,9 @@ export function PageSpread({
               <PaintingWash fullBleed label="painting this page…" />
             </div>
           )}
+          {page.img && page.hotspots && page.hotspots.length > 0 && (
+            <Hotspots hotspots={page.hotspots} />
+          )}
           {/* Gutter: the fold where the art page meets the text page. */}
           <div
             aria-hidden
@@ -162,6 +166,11 @@ export function PageSpread({
             pointerEvents: 'none',
           }}
         />
+      )}
+      {page.img && page.hotspots && page.hotspots.length > 0 && (
+        <div aria-hidden={false} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
+          <Hotspots hotspots={page.hotspots} />
+        </div>
       )}
       <article
         style={{

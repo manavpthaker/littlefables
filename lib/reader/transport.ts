@@ -40,6 +40,9 @@ interface Options {
   onAutoNext: () => void;
   /** True if this page is the last page of the chapter — auto-turn just stops. */
   isLastPage: boolean;
+  /** Prosody override (bedtime: {rate:0.9, volume:0.85}). Applies to page
+   *  narration and single-word speech alike. */
+  voiceMod?: { rate?: number; volume?: number };
 }
 
 export interface ReaderTransport {
@@ -60,7 +63,7 @@ export interface ReaderTransport {
 /** 1.5s breath between pages in play mode (§A3). */
 const AUTO_TURN_DELAY_MS = 1500;
 
-export function useReaderTransport({ page, gated, onAutoNext, isLastPage }: Options): ReaderTransport {
+export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceMod }: Options): ReaderTransport {
   const [playing, setPlaying] = useState(false);
   const [wordIdx, setWordIdx] = useState(-1);
 
@@ -100,6 +103,8 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage }: Opti
         allowSpeechSynthFallback: true,
         continuous: true,
         startOffset: startOffsetSec,
+        rate: voiceMod?.rate,
+        volume: voiceMod?.volume,
         onWord: (i) => setWordIdx(i),
         onBlocked: () => {
           // iOS refused to start playback outside a user gesture (auto-turn
@@ -122,7 +127,7 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage }: Opti
         },
       });
     },
-    [page, clearAutoTurn, isLastPage, onAutoNext],
+    [page, clearAutoTurn, isLastPage, onAutoNext, voiceMod],
   );
 
   const play = useCallback(() => {
@@ -162,9 +167,13 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage }: Opti
       pause();
       speakOneRef.current?.cancel();
       const utterance = meaning ? `${word}. ${word} means ${meaning}.` : word;
-      speakOneRef.current = speak(utterance, { allowSpeechSynthFallback: true });
+      speakOneRef.current = speak(utterance, {
+        allowSpeechSynthFallback: true,
+        rate: voiceMod?.rate,
+        volume: voiceMod?.volume,
+      });
     },
-    [pause],
+    [pause, voiceMod],
   );
 
   // Whenever the active page changes, reset transport.

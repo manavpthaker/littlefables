@@ -29,6 +29,11 @@ export interface SpeakOptions {
   allowSpeechSynthFallback?: boolean;
   continuous?: boolean;
   startOffset?: number;
+  /** Playback rate multiplier (bedtime ≈ 0.9). Word timestamps stay aligned —
+   *  the highlight tick reads audio.currentTime, which is media time. */
+  rate?: number;
+  /** 0..1 output volume (bedtime ≈ 0.85). */
+  volume?: number;
   onWord?: (wordIdx: number) => void;
   onEnd?: () => void;
   onBlocked?: () => void;
@@ -84,6 +89,8 @@ function playAudio(
     const url = URL.createObjectURL(result.audio);
     const audio = new Audio(url);
     activeAudioEl = audio;
+    if (opts.rate && opts.rate > 0) audio.playbackRate = opts.rate;
+    if (typeof opts.volume === 'number') audio.volume = Math.min(1, Math.max(0, opts.volume));
     if (opts.startOffset && opts.startOffset > 0) audio.currentTime = opts.startOffset;
 
     const ts = result.timestamps;
@@ -142,8 +149,9 @@ function speakViaSpeechSynth(text: string, opts: SpeakOptions, isCancelled: () =
     return;
   }
   const utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.95;
+  utt.rate = 0.95 * (opts.rate ?? 1);
   utt.pitch = 1.0;
+  if (typeof opts.volume === 'number') utt.volume = Math.min(1, Math.max(0, opts.volume));
 
   // Word-boundary approximation via charIndex. Not as precise as real
   // timestamps but enough to move the highlight during fallback.

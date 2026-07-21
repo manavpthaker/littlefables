@@ -20,6 +20,8 @@ export interface CheckpointAssemblyInput {
   recentTypes: QuestionType[]; // last N types asked, most-recent first
   savedWords: string[];
   worldSummary?: string;
+  /** ladder-chosen rung (lib/comprehension/ladder.ts); falls back to pickType */
+  requestedType?: QuestionType;
 }
 
 export interface AssembledCheckpoint {
@@ -41,7 +43,7 @@ export function pickType(recent: QuestionType[]): QuestionType {
 }
 
 export function assembleCheckpointPrompt(input: CheckpointAssemblyInput): AssembledCheckpoint {
-  const requestedType = pickType(input.recentTypes);
+  const requestedType = input.requestedType ?? pickType(input.recentTypes);
 
   const system = [
     '# 1. Role',
@@ -71,8 +73,12 @@ export function assembleCheckpointPrompt(input: CheckpointAssemblyInput): Assemb
     '  "question": "the spoken question, ≤ 25 words",',
     '  "type": "recall|inference|prediction|connection",',
     '  "hint": "if the child struggles, a warm nudge ≤ 18 words",',
-    '  "given": "if the child asks for the answer, the accepted phrasing ≤ 20 words — spoken as their idea"',
+    '  "given": "if the child asks for the answer, the accepted phrasing ≤ 20 words — spoken as their idea",',
+    '  "expectedConcepts": ["3-6 short phrases a good answer might contain — used only to judge generously, never shown"],',
+    '  "fallbackChoices": [{"label": "≤6 words, kid-tappable", "best": true}, {"label": "..."}, {"label": "..."}]',
     '}',
+    'fallbackChoices: exactly 3, all warm and plausible, exactly one with best:true.',
+    'For connection questions there is no best answer — mark the first choice best:true anyway; every choice is accepted.',
     '',
     '# 7. Canon version',
     `Canon: ${CANON_VERSION}.`,

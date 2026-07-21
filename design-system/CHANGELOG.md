@@ -46,3 +46,22 @@ Three token-hygiene nitpicks left for Phase 0 implementation:
 1. `#FBF4E6` (icon-on-pigment) hardcoded in 6 components — promote to a token (e.g. `--ink-on-pigment`).
 2. `ParentPrimitives.jsx` uses raw `#FFF6EA` where `--action-ink` exists.
 3. `Icon.jsx` unknown-name fallback renders a `●` glyph — against the system's own no-glyph rule; draw a dot instead.
+
+# CHANGELOG — Redesign 2026-07-21 (Reading & Comprehension brief)
+
+Additive evolution of accepted v3 — no accepted spec mutated; every change below is a new token,
+a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Missing pigments defined | `tokens/colors.css` + `tokens.json`: `--honey #D9A653` (Bramble) and `--lilac #9B7FAE` (Dory) + washes — both were consumed by the buddy roster but undefined (resolved to nothing). Like marigold/butter they never carry text. |
+| 2 | `--danger` defined | Alias to `--berry`, parent surfaces only — kid surfaces never show failure colors. Was referenced with a raw fallback in parent components. |
+| 3 | Bedtime night palette | New `tokens/bedtime.css`: `[data-bedtime]` block — night surfaces `#1E1930/#2A2440/#171226`, flipped warm-light ink ramp (contrast ≥8:1 body), night word-highlight treatment, night over-art washes/scrims, plum lamplight glow, deep shadows. Imported after `lighting.css` so bedtime overrides any `data-lighting` stage while active. Kid-only; Parent Corner never renders under it. |
+| 4 | TabBar (new kid component) | `components/kid/TabBar.jsx` (+ d.ts, prompt.md): persistent bottom bar — Home · Library · quiet Grown-ups door. ≥64px targets, no numerals, active = marigold ring + breath (terracotta stays action-only), per-tab utterance ('tap' class), bedtime-aware, hidden inside the reader. |
+| 5 | WordJar (new kid component) | `components/kid/WordJar.jsx` (+ d.ts, prompt.md): Home face of the wordbook — glass-wash jar of recent kept words (owned = filled star), one tap target → Word Book, count spoken never shown. Replaces the WordsDoor pill in the app. |
+| 6 | BookCard `tag` prop | Optional developmental-layer chip (top-left wash capsule, emoji or calm pigment dot — never terracotta). `status="new"` badge moves to top-right when both render. |
+| 7 | ReaderTopBar bedtime slot | Optional `bedtime`/`onBedtime` moon capsule in the right slot; marigold ring while active (a state, not an action). |
+| 8 | StorySpine (new reader component) | `components/reader/StorySpine.jsx` (+ d.ts, prompt.md): the retell checklist — authored beats fill in (sage wash + drawn check, watercolor develop) as the child recounts the arc. No numerals, no score, no red. |
+| 9 | WordCapsule `owned` prop | Sage ring + "yours now" voice when a kept word was re-encountered and understood at a checkpoint (PRD B5 ownership). Default appearance unchanged. |
+| 10 | ParentTabs (new parent component) | `components/parent/ParentTabs.jsx` (+ d.ts, prompt.md): Insights · Stories · Settings section tabs, terracotta underline on active (navigation is an action on parent surfaces). |
+| 11 | ComprehensionProfile adopted | First app import of the accepted-but-unused meters component (Insights tab); ambient declaration added in the app's design-system.d.ts (also fixed its Field declaration to carry `hint`, matching FieldProps). |

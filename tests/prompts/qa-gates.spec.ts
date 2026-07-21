@@ -12,6 +12,7 @@ function bookWith(text: string): Book {
     teachingGoals: [],
     vocab: [],
     retellPrompts: [],
+    beats: [],
     parentGuide: null,
     originNote: null,
     chapters: [{ title: 'c1', pages: [{ text }] }],

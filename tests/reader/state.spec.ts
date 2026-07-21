@@ -15,6 +15,7 @@ const quick: ReaderBook = {
   id: 'q',
   title: 'q',
   kind: 'quick',
+  vocab: {},
   chapters: [
     { title: 'q', pages: [{ text: 'a b c', words: wordsOf('a b c') }, { text: 'd e', words: wordsOf('d e') }] },
   ],
@@ -24,6 +25,7 @@ const chapter: ReaderBook = {
   id: 'c',
   title: 'c',
   kind: 'chapter',
+  vocab: {},
   chapters: [
     { title: 'ch1', pages: [{ text: 'a b', words: wordsOf('a b') }, { text: 'c d', words: wordsOf('c d') }] },
     { title: 'ch2', pages: [{ text: 'e f', words: wordsOf('e f') }] },

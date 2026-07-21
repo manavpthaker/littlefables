@@ -5,7 +5,9 @@ import { WordCapsule } from '../kid/WordCapsule.jsx';
 import { StateBanner } from '../system/SystemStates.jsx';
 // Reader chrome: the persistent top bar inside the sanctioned top scrim.
 // Layout: capsule back · WordCapsule landing slot (center) · quiet sync capsule + compact Buddy (right).
-export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing = false, buddyColor = 'var(--teal)', buddyEmoji, buddyState = 'idle' }) {
+// bedtime + onBedtime (Redesign 2026-07-21): optional moon capsule in the right
+// slot — warms/dims the whole reader; marigold ring while active (a state, not an action).
+export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing = false, buddyColor = 'var(--teal)', buddyEmoji, buddyState = 'idle', bedtime, onBedtime }) {
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: '14px 0 40px', background: 'var(--scrim-top)' }}>
       {/* Constrain to the reading column so on wide screens the back button and
@@ -16,6 +18,11 @@ export function ReaderTopBar({ onBack, savedWord, justSaved, onWordTap, syncing 
           {savedWord && <WordCapsule word={savedWord} justSaved={justSaved} onTap={onWordTap} />}
         </div>
         {syncing && <StateBanner state="syncing" density="kid" />}
+        {onBedtime && (
+          <span style={{ display: 'inline-flex', borderRadius: 'var(--radius-pill)', boxShadow: bedtime ? '0 0 0 3px var(--marigold)' : 'none', transition: 'box-shadow var(--dur-settle) var(--ease-settle)' }}>
+            <IconButton name="moon" label={bedtime ? 'Bedtime is on' : 'Bedtime'} utterance={bedtime ? 'Bright and awake!' : 'Getting cozy for bedtime.'} variant="capsule" size="small" onClick={onBedtime} />
+          </span>
+        )}
         <Buddy compact size={48} color={buddyColor} emoji={buddyEmoji} state={buddyState} />
       </div>
     </div>

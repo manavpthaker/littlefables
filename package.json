@@ -19,6 +19,7 @@
     "db:migrate": "supabase migration up",
     "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
     "content:import-pack-000": "tsx scripts/import-pack-000.ts",
+    "content:backfill": "tsx scripts/backfill-books.ts",
     "canon:reconvert": "tsx scripts/reconvert-canon.ts",
     "audio:generate": "tsx scripts/generate-audio.ts",
     "art:covers": "tsx scripts/art-covers.ts",

@@ -39,9 +39,12 @@ export function toReaderBook(book: Book): ReaderBook {
       ask: p.ask,
       choice: p.choice,
       breathe: p.breathe,
+      hotspots: p.hotspots,
     })),
   }));
-  return { id: book.id, title: book.title, kind: book.kind, chapters };
+  const vocab: ReaderBook['vocab'] = {};
+  for (const entry of book.vocab) vocab[stemOf(entry.word)] = entry;
+  return { id: book.id, title: book.title, kind: book.kind, chapters, vocab };
 }
 
 /** Initial state per book kind: quick books enter straight into chapter 0. */

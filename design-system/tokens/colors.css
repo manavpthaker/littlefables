@@ -5,10 +5,11 @@
 --ink:#46362A;--ink-soft:#6C5847;--ink-faint:#98836E;
 /* contrast-checked: ink/paper 8.9:1 · ink-soft/paper 5.0:1 (AA body) · ink-faint = decorative only */
 /* ── Pigments (watercolor accents) ── */
---marigold:#E39A32;--butter:#EFCE71;--terracotta:#BE5F38;--sage:#7E9770;--river:#5D7FA8;--teal:#4A8C85;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#74567C;
+--marigold:#E39A32;--butter:#EFCE71;--terracotta:#BE5F38;--sage:#7E9770;--river:#5D7FA8;--teal:#4A8C85;--berry:#A34E66;--dusk:#5D6A8A;--bark:#8A6F55;--plum:#74567C;--honey:#D9A653;--lilac:#9B7FAE;
 /* deepened vs heritage where a pigment carries text/AA: terracotta #C96F4A→#BE5F38 (4.5:1 w/ paper-bright text), teal −L, berry −L. marigold/butter never carry text. */
+/* honey (Bramble) + lilac (Dory) were consumed by the buddy roster but undefined until Redesign 2026-07-21 — like marigold/butter, they never carry text. */
 /* washes: pigment at watercolor strength on paper, for fills behind ink text */
---marigold-wash:#F3E0BC;--butter-wash:#F6EBC4;--terracotta-wash:#EFD6C4;--sage-wash:#E2E4CC;--river-wash:#DDE1D2;--teal-wash:#DAE4D0;--berry-wash:#EDD8D2;--dusk-wash:#E0DFD2;--bark-wash:#E9DfC9;--plum-wash:#E7DAD3;
+--marigold-wash:#F3E0BC;--butter-wash:#F6EBC4;--terracotta-wash:#EFD6C4;--sage-wash:#E2E4CC;--river-wash:#DDE1D2;--teal-wash:#DAE4D0;--berry-wash:#EDD8D2;--dusk-wash:#E0DFD2;--bark-wash:#E9DfC9;--plum-wash:#E7DAD3;--honey-wash:#F2E4C2;--lilac-wash:#E8DEE9;
 /* ── Semantic aliases ── */
 --action:var(--terracotta);--action-ink:#FFF6EA;--action-press:#A84F2C;
 --surface-page:var(--paper);--surface-card:var(--paper-bright);--surface-well:var(--paper-deep);
@@ -18,6 +19,7 @@
 --state-listening:var(--river);--state-thinking:var(--dusk);--state-speaking:var(--teal);--state-painting:var(--marigold);--state-offline:var(--bark);--state-syncing:var(--sage);--state-mercy:var(--butter);
 /* ── Parent lifecycle ── */
 --life-draft:var(--bark);--life-checking:var(--dusk);--life-published:var(--sage);--life-review:var(--marigold);--life-blocked:var(--berry);
+--danger:var(--berry);/* parent surfaces only — kid surfaces never show failure colors */
 /* ── Over-art overlay system ── */
 --scrim-bottom:linear-gradient(180deg,rgba(70,54,42,0) 0%,rgba(70,54,42,.38) 55%,rgba(70,54,42,.62) 100%);/* @kind other */
 --scrim-top:linear-gradient(180deg,rgba(70,54,42,.42) 0%,rgba(70,54,42,0) 100%);/* @kind other */

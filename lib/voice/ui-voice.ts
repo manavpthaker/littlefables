@@ -4,10 +4,12 @@
 // utterance, checkpoint question, celebration line, and word-save confirmation
 // funnels through speakUtterance() here.
 //
-// Priority rule (hard, PRD F1 rules-of-use): narration > UI speech.
-// transport.ts calls setNarrationActive(bool) when playing/stopping; UI
-// utterances issued during narration are dropped (a queued-one-deep pattern
-// would be fine too — we start with strict drop and can upgrade later).
+// Priority (hard, PRD F1 rules-of-use): narration > checkpoint question >
+// tap feedback > ambient. transport.ts calls setNarrationActive(bool) when
+// playing/stopping. A checkpoint question issued during narration queues
+// one-deep and speaks the moment narration ends; tap/ambient speech during
+// narration is dropped (late feedback is worse than none). Policy lives in
+// ./priority.ts (pure, tested); audio caching in ./utterance-cache.ts.
 //
 // Fallback chain per utterance:
 //   1. In-memory + IndexedDB cache lookup (sha-256 of voiceId|text)
@@ -15,23 +17,33 @@
 //   3. window.speechSynthesis
 //   4. Silent
 
+import { decide, type UtterTier } from './priority';
+import { getUtteranceBlob } from './utterance-cache';
+
+export type SpeakPriority = UtterTier;
+
 interface SpeakOpts {
   voiceId?: string | null;
   voice?: 'narrator' | 'buddy';
-}
-
-interface CachedUtterance {
-  key: string;
-  mimeType: string;
-  audio: Blob;
+  /** 'checkpoint' | 'tap' | 'ambient' (default). See module header. */
+  priority?: SpeakPriority;
 }
 
 let narrationActive = false;
 let activeAudio: HTMLAudioElement | null = null;
+let activeTier: UtterTier | null = null;
+let queuedCheckpoint: { text: string; opts: SpeakOpts } | null = null;
 
 export function setNarrationActive(active: boolean): void {
   narrationActive = active;
-  if (active) cancelActive();
+  if (active) {
+    cancelActive();
+    return;
+  }
+  // Narration just ended — a parked checkpoint question speaks now.
+  const queued = queuedCheckpoint;
+  queuedCheckpoint = null;
+  if (queued) void speakUtterance(queued.text, queued.opts);
 }
 
 function cancelActive(): void {
@@ -50,88 +62,36 @@ function cancelActive(): void {
       /* ignore */
     }
   }
+  activeTier = null;
 }
 
-// --- Hash helper (SubtleCrypto) ---
-async function sha256(input: string): Promise<string> {
-  if (typeof crypto === 'undefined' || !crypto.subtle) return input;
-  const buf = new TextEncoder().encode(input);
-  const digest = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-}
-
-// --- In-memory cache ---
-const memCache = new Map<string, CachedUtterance>();
-
-// --- IndexedDB (isolated DB — no version dance with azad-read) ---
-const DB_NAME = 'azad-utterances';
-const DB_VERSION = 1;
-const STORE = 'ui-utterances';
-
-function openDb(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    if (typeof indexedDB === 'undefined') return reject(new Error('no indexedDB'));
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: 'key' });
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error ?? new Error('idb open failed'));
-  });
-}
-
-async function idbGet(key: string): Promise<CachedUtterance | null> {
-  try {
-    const db = await openDb();
-    return await new Promise<CachedUtterance | null>((resolve) => {
-      const tx = db.transaction(STORE, 'readonly');
-      const req = tx.objectStore(STORE).get(key);
-      req.onsuccess = () => resolve((req.result as CachedUtterance | undefined) ?? null);
-      req.onerror = () => resolve(null);
-    });
-  } catch {
-    return null;
-  }
-}
-
-async function idbPut(entry: CachedUtterance): Promise<void> {
-  try {
-    const db = await openDb();
-    await new Promise<void>((resolve) => {
-      const tx = db.transaction(STORE, 'readwrite');
-      const req = tx.objectStore(STORE).put(entry);
-      req.onsuccess = () => resolve();
-      req.onerror = () => resolve();
-    });
-  } catch {
-    /* ignore — utterance cache is best-effort */
-  }
-}
-
-// --- Speech synth fallback ---
-function speakViaSynth(text: string): void {
+function speakViaSynth(text: string, tier: UtterTier): void {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   try {
     const utt = new SpeechSynthesisUtterance(text);
     utt.rate = 1.0;
+    activeTier = tier;
+    utt.onend = () => {
+      if (activeTier === tier) activeTier = null;
+    };
     window.speechSynthesis.speak(utt);
   } catch {
     /* silent — better than crashing */
   }
 }
 
-// --- Play blob ---
-function playBlob(blob: Blob): Promise<void> {
+function playBlob(blob: Blob, tier: UtterTier): Promise<void> {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(blob);
     const audio = new Audio(url);
     activeAudio = audio;
+    activeTier = tier;
     const cleanup = () => {
       URL.revokeObjectURL(url);
-      if (activeAudio === audio) activeAudio = null;
+      if (activeAudio === audio) {
+        activeAudio = null;
+        activeTier = null;
+      }
     };
     audio.onended = () => {
       cleanup();
@@ -148,62 +108,39 @@ function playBlob(blob: Blob): Promise<void> {
   });
 }
 
-// --- Fetch from /api/child/tts ---
-async function fetchFromApi(text: string, voiceId?: string | null): Promise<Blob | null> {
-  try {
-    const body: { text: string; voiceId?: string; voice?: 'narrator' | 'buddy' } = { text };
-    if (voiceId) body.voiceId = voiceId;
-    else body.voice = 'buddy';
-    const res = await fetch('/api/child/tts', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as { audioBase64: string; mimeType?: string };
-    if (!data.audioBase64) return null;
-    const bytes = Uint8Array.from(atob(data.audioBase64), (c) => c.charCodeAt(0));
-    return new Blob([bytes], { type: data.mimeType ?? 'audio/mpeg' });
-  } catch {
-    return null;
-  }
-}
-
 // --- Public entry ---
 export async function speakUtterance(text: string, opts: SpeakOpts = {}): Promise<void> {
   if (!text.trim()) return;
-  // UI speech never rides over narration.
-  if (narrationActive) return;
+  const tier: UtterTier = opts.priority ?? 'ambient';
 
-  // Cancel any prior UI utterance; one audio at a time.
+  const decision = decide({ narrationActive, activeTier, incoming: tier });
+  if (decision === 'drop') return;
+  if (decision === 'queue') {
+    // One-deep: the latest question is the one that matters.
+    queuedCheckpoint = { text, opts };
+    return;
+  }
+
+  // 'play' — take the slot from whatever lesser speech held it.
   cancelActive();
 
   const voiceLabel = opts.voiceId ?? opts.voice ?? 'buddy';
-  const key = await sha256(`${voiceLabel}|${text}`);
+  const blob = await getUtteranceBlob(text, voiceLabel, opts.voiceId);
 
-  // Cache lookup.
-  const fromMem = memCache.get(key);
-  if (fromMem) {
-    await playBlob(fromMem.audio);
+  // The world may have moved while we fetched: narration may have started
+  // (park a checkpoint / drop the rest) or higher-rank speech may hold the slot.
+  const recheck = decide({ narrationActive, activeTier, incoming: tier });
+  if (recheck === 'queue') {
+    queuedCheckpoint = { text, opts };
     return;
   }
-  const fromIdb = await idbGet(key);
-  if (fromIdb) {
-    memCache.set(key, fromIdb);
-    await playBlob(fromIdb.audio);
-    return;
-  }
+  if (recheck === 'drop') return;
 
-  // Fresh fetch.
-  const blob = await fetchFromApi(text, opts.voiceId);
   if (blob) {
-    const entry: CachedUtterance = { key, mimeType: blob.type, audio: blob };
-    memCache.set(key, entry);
-    void idbPut(entry);
-    await playBlob(blob);
+    await playBlob(blob, tier);
     return;
   }
 
   // Final fallback: browser TTS. Better than silence.
-  speakViaSynth(text);
+  speakViaSynth(text, tier);
 }
