@@ -47,3 +47,65 @@ button {
     transform: translateY(0);
   }
 }
+
+/* Polish 3.0: bottom sheets spring up and settle — never appear instantly. */
+@keyframes lf-sheet-up {
+  0% {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mic orb listening ripple: warm rings breathing outward. */
+@keyframes lf-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Clock-lighting shifts cross-fade instead of snapping (Polish IV.1). */
+html,
+body,
+[data-density='kid'] {
+  transition: background-color 400ms ease;
+}
+
+/* Paper you can feel (Polish V.1): fiber grain + a faint edge vignette on kid
+   surfaces, both under 4% so they read as warmth, not noise. */
+[data-density='kid']::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-density='kid']::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(120% 100% at 50% 45%, transparent 62%, rgba(70, 54, 42, 0.05) 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  [data-density='kid'] {
+    transition: none;
+  }
+}

@@ -82,3 +82,17 @@ spec mockups (see `docs/REDESIGN-BRIEF.md` figures). Every change below is mocku
 | 7 | Sheet chrome (checkpoint/retell) | Shared bottom-sheet: chapter segments, gradient buddy circle, caps eyebrow, centered serif question, 88px MicOrb + "Tap to talk", quiet "Skip for now". |
 | 8 | StorySpine numbered beats | Mockup-driven exception to the kid numerals rule: beat circles show 1·2·3 (list order, not a score); sage fill when told. |
 | 9 | ParentTabs segmented control | Deep-paper pill track, active segment lifts as a bright pill (replaces underline tabs). |
+
+# CHANGELOG — Polish 3.0 pass (2026-07-21, same day)
+
+Craft pass per the "3.0 Polish Spec": motion, texture, and spell-breaker removal. Art coverage and
+voice casting remain parent-run steps (scripts/roster wiring are ready).
+
+| # | Change | Detail |
+|---|--------|--------|
+| 1 | Sheet spring + spine cascade | New `lf-sheet-up` keyframe (rise, overshoot, settle) on the checkpoint/retell sheet; StorySpine beats develop with a 140ms stagger so a correct retell cascades. |
+| 2 | MicOrb listening ripple | Two warm river rings breathe outward while listening (`lf-ripple`); idle/state colors unchanged. |
+| 3 | PaintingWash as a feature | Slower shimmer, soft watercolor blooms behind, breathing brush, default copy "this one's still being painted for you…". |
+| 4 | Cover craft | BookCard covers get a 1px warm inner border + inner vignette + ~5% paper grain so art meets the rounded edge cleanly. |
+| 5 | Paper you can feel | Kid surfaces get a fixed ~3.5% fiber-grain overlay + faint edge vignette; clock-lighting background shifts cross-fade over 400ms (reduced-motion: off). |
+| 6 | Locked badges say what they want | BadgeShelf locked items show a progression hint ("Read 3 days in a row") instead of the bare "?" (badge item `hint` prop). |

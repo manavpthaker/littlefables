@@ -48,7 +48,7 @@ export function SheetShell({
           display: 'grid',
           gap: 'var(--space-4)',
           justifyItems: 'stretch',
-          animation: 'lf-page-in var(--dur-settle) var(--ease-settle) 1',
+          animation: 'lf-sheet-up 420ms var(--ease-settle) 1',
         }}
       >
         {segments && segments.total > 1 && (

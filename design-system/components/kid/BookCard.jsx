@@ -25,7 +25,10 @@ export function BookCard({ title, cover, bg, progress = 0, status, chapters, tag
         backgroundSize: painting ? '200% 100%' : undefined,
         animation: painting ? 'var(--motion-paint)' : undefined,
       }}>
-        {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)' }}><Icon name="brush" size={30} /></div>}
+        {/* cover craft (Polish II.3): inner vignette + 1px warm inner border + faint grain */}
+        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 24, boxShadow: 'inset 0 0 0 1px rgba(255,246,234,.35), inset 0 -26px 40px rgba(70,54,42,.18), inset 0 14px 30px rgba(255,252,245,.12)' }}></span>
+        <span aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: .05, background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")` }}></span>
+        {painting && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: 'var(--bark)', animation: 'lf-breath var(--dur-breath) var(--ease-drift) infinite' }}><Icon name="brush" size={30} /></div>}
         {tag && <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', color: 'var(--ink)', borderRadius: 'var(--radius-pill)', padding: '4px 10px', fontFamily: 'var(--font-hand)', fontSize: 15, boxShadow: 'var(--elev-rest)' }}>
           {tag.emoji ? <span aria-hidden="true">{tag.emoji}</span> : <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', background: `var(${tag.pigment || '--teal'})` }}></span>}
           {tag.label}

@@ -19,6 +19,8 @@ export function StorySpine({ beats }) {
             fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.35,
             color: b.hit ? 'var(--ink)' : 'var(--ink-faint)',
             animation: b.hit ? 'var(--motion-develop)' : 'none',
+            animationDelay: b.hit ? `${i * 140}ms` : '0ms',
+            animationFillMode: 'backwards',
             transition: 'background var(--dur-settle) var(--ease-settle), color var(--dur-settle) var(--ease-settle)',
           }}
         >

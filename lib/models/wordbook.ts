@@ -4,7 +4,11 @@ import { z } from 'zod';
 // The word field accepts the STEM (lowercase, edge-punct stripped); the reader
 // computes stems client-side via stemOf() in lib/reader/state.
 export const saveWordSchema = z.object({
-  word: z.string().min(1).max(60),
+  word: z
+    .string()
+    .min(2)
+    .max(18)
+    .regex(/^[\p{L}]+(?:['\u2019-][\p{L}]+)*$/u, 'stem must be a clean word'),
   sentence: z.string().max(500).optional(),
   bookId: z.string().max(120).optional(),
   chapterIdx: z.number().int().min(0).optional(),

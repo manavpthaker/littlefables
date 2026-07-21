@@ -18,6 +18,14 @@ export function stemOf(word: string): string {
   return word.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
 }
 
+/** A stem clean enough to keep in the wordbook (Polish VI.1): letters (any
+ *  script) with at most an inner apostrophe/hyphen, 2–18 chars. Guards the
+ *  jar against partial-word captures and tokenizer junk. */
+export function isKeepableWord(stem: string): boolean {
+  if (stem.length < 2 || stem.length > 18) return false;
+  return /^[\p{L}]+(?:['\u2019-][\p{L}]+)*$/u.test(stem);
+}
+
 /** Split page text into display words + stems. Ports the archive's split rule. */
 export function wordsOf(text: string): ReaderWord[] {
   return text

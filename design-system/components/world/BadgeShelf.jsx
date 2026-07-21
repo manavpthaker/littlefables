@@ -17,7 +17,7 @@ export function BadgeShelf({ badges, onTap }) {
           }}>
             <Icon name={b.icon} size={30} color={b.earned ? '#FBF4E6' : 'rgba(70,54,42,.28)'} />
           </div>
-          <span style={{ fontFamily: 'var(--font-hand)', fontSize: 16, color: b.earned ? 'var(--ink)' : 'var(--ink-faint)' }}>{b.earned ? b.name : '?'}</span>
+          <span style={{ fontFamily: 'var(--font-hand)', fontSize: b.earned ? 16 : 13, color: b.earned ? 'var(--ink)' : 'var(--ink-faint)', textAlign: 'center', maxWidth: 96, lineHeight: 1.25 }}>{b.earned ? b.name : (b.hint || 'soon…')}</span>
         </button>
       ))}
     </div>

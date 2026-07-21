@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { saveWord } from './wordbook';
+import { isKeepableWord } from './state';
 import { composeSaveUtterance } from './word-speech';
 import { speakUtterance } from '@/lib/voice/ui-voice';
 import type { ReaderBook } from './types';
@@ -22,9 +23,11 @@ export function useWordSave(args: {
   pageText: string | undefined;
   chapterIdx: number | null;
   pageIdx: number;
+  /** active buddy's cast voice — the confirmation speaks as the buddy, not the fallback */
+  buddyVoiceId?: string | null;
   onBadges: (slugs: string[]) => void;
 }): WordSave {
-  const { book, pageText, chapterIdx, pageIdx } = args;
+  const { book, pageText, chapterIdx, pageIdx, buddyVoiceId } = args;
 
   const [savedWord, setSavedWord] = useState<string | null>(null);
   const [justSaved, setJustSaved] = useState(false);
@@ -42,6 +45,9 @@ export function useWordSave(args: {
 
   const onStarWord = useCallback(
     (stem: string) => {
+      // Spell-breaker guard (Polish VI.1): never let a malformed token into
+      // the jar — clean stems only.
+      if (!isKeepableWord(stem)) return;
       setSavedWord(stem);
       setJustSaved(true);
       if (bloomTimer.current) clearTimeout(bloomTimer.current);
@@ -49,6 +55,7 @@ export function useWordSave(args: {
       // Confirm aloud in the buddy voice — teaching when vocab is authored.
       void speakUtterance(composeSaveUtterance(stem, book.vocab[stem]), {
         voice: 'buddy',
+        voiceId: buddyVoiceId,
         priority: 'tap',
       });
 
@@ -70,7 +77,7 @@ export function useWordSave(args: {
           setSavedWord(null);
         });
     },
-    [book.id, book.vocab, pageText, chapterIdx, pageIdx],
+    [book.id, book.vocab, pageText, chapterIdx, pageIdx, buddyVoiceId],
   );
 
   return { savedWord, justSaved, onStarWord };

@@ -46,6 +46,7 @@ export function Reader({
   initialProgress,
   buddyEmoji,
   buddyColor = 'var(--teal)',
+  buddyVoiceId = null,
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
   checksEnabled = true,
   dailyLimitMin = null,
@@ -55,6 +56,7 @@ export function Reader({
   initialProgress: ProgressRecord | null;
   buddyEmoji?: string;
   buddyColor?: string;
+  buddyVoiceId?: string | null;
   bedtimeWindow?: BedtimeWindow;
   checksEnabled?: boolean;
   dailyLimitMin?: number | null;
@@ -259,6 +261,7 @@ export function Reader({
     pageText: page?.text,
     chapterIdx: state.chapterIdx,
     pageIdx: state.pageIdx,
+    buddyVoiceId,
     onBadges: (slugs) => setPendingBadges((prev) => [...prev, ...slugs]),
   });
 
