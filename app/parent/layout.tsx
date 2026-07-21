@@ -10,11 +10,15 @@ const TAB_ITEMS = [
   { key: 'settings', label: 'Settings', href: '/parent/settings' },
 ];
 
-function activeTab(pathname: string): string | null {
-  if (pathname.startsWith('/parent/stories')) return 'stories';
-  if (pathname.startsWith('/parent/settings')) return 'settings';
-  if (pathname === '/parent' || pathname === '/parent/') return 'insights';
-  return null; // make / privacy — no tab highlighted
+function activeTab(pathname: string): string {
+  // Every parent surface belongs to one of the three tabs — none should
+  // render with all-dimmed tabs (which reads as broken). `/parent/make` is
+  // a Stories action; `/parent/privacy` is a Settings surface.
+  if (pathname.startsWith('/parent/stories') || pathname.startsWith('/parent/make'))
+    return 'stories';
+  if (pathname.startsWith('/parent/settings') || pathname.startsWith('/parent/privacy'))
+    return 'settings';
+  return 'insights';
 }
 
 export const metadata: Metadata = { title: 'Parent Corner · Little Fables' };
@@ -37,6 +41,12 @@ export default async function ParentLayout({ children }: { children: React.React
         color: 'var(--text-body)',
       }}
     >
+      {/* Nav collapse: the previous layout ran two rows with 'Home' and
+          'Insights' pointing at the same URL, and 'Privacy' as a peer of the
+          wordmark — orientation-101 confusion on every parent visit. The
+          wordmark now covers Home; only "+ Make a story" stays in the header
+          as the primary action. Privacy is reached via Settings (see
+          activeTab mapping above). */}
       <nav
           style={{
             position: 'sticky',
@@ -46,10 +56,9 @@ export default async function ParentLayout({ children }: { children: React.React
             borderBottom: 'var(--border-soft)',
             padding: 'var(--space-3) clamp(14px, 3.5vw, 24px)',
             display: 'flex',
-            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 'var(--space-2) var(--space-4)',
+            gap: 'var(--space-4)',
           }}
         >
           <Link
@@ -63,30 +72,21 @@ export default async function ParentLayout({ children }: { children: React.React
           >
             Little Fables
           </Link>
-          <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
-            <Link
-              href="/parent"
-              style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 'var(--text-body)' }}
-            >
-              Home
-            </Link>
-            <Link
-              href="/parent/make"
-              style={{ color: 'var(--action)', textDecoration: 'none', fontSize: 'var(--text-body)', fontWeight: 600 }}
-            >
-              + Make a story
-            </Link>
-            <Link
-              href="/parent/privacy"
-              style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 'var(--text-body)' }}
-            >
-              Privacy
-            </Link>
-          </div>
+          <Link
+            href="/parent/make"
+            style={{
+              color: 'var(--action)',
+              textDecoration: 'none',
+              fontSize: 'var(--text-body)',
+              fontWeight: 600,
+            }}
+          >
+            + Make a story
+          </Link>
       </nav>
       <div style={{ maxWidth: 960, margin: '0 auto', padding: 'clamp(14px, 3.5vw, 24px)' }}>
         <div style={{ marginBottom: 'var(--space-6)' }}>
-          <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
+          <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname)} />
         </div>
         {children}
         <KidTabBar />

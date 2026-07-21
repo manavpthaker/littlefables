@@ -52,7 +52,7 @@ export function WordbookSection({ entries }: { entries: ParentWordbookEntry[] })
           >
             <WordbookEntry
               word={w.word}
-              meaning={w.meaning ?? 'a word Azad chose to keep'}
+              meaning={w.meaning ?? 'a word your child chose to keep'}
               sentence={w.sentence ?? undefined}
               owned={w.owned}
             />

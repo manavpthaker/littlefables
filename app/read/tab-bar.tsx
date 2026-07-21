@@ -16,7 +16,7 @@ const TAB_ROUTES: Record<string, string> = {
 const TAB_ITEMS = [
   { key: 'home', emoji: '🏠', label: 'Home', utterance: 'Home!' },
   { key: 'library', emoji: '📚', label: 'Library', utterance: 'Pick a story!' },
-  { key: 'parent', emoji: '🔒', label: 'Parent', utterance: 'The grown-up door.', quiet: true },
+  { key: 'parent', emoji: '🔒', label: 'Grown-ups', utterance: 'The grown-up door.', quiet: true },
 ];
 
 export function KidTabBar() {

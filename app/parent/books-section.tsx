@@ -168,18 +168,28 @@ function BookRow({ book }: { book: ParentBook }) {
       )}
       {book.shelfEnabled !== undefined && <ShelfToggle bookId={book.id} initial={book.shelfEnabled} />}
       {/* Provenance line — reads left-to-right as a warm sentence about
-          exactly what happened to this book. */}
+          exactly what happened to this book. Honesty rule: never soften
+          failures for parents. `blocked` and `unverified` don't collapse
+          into the generic QA "passed/failed" phrase — they're their own
+          truths and are named as such. */}
       <p style={{ margin: 0, fontFamily: 'var(--font-hand)', color: 'var(--text-muted)', fontSize: 14 }}>
         {book.source === 'generated'
           ? 'written with your family universe'
           : book.source === 'family' || book.source === 'family-original'
           ? 'family original — carried over from before the app'
           : 'starter — pack seed'}
-        {book.hardGatesPassed != null && ` · QA ${book.hardGatesPassed ? 'passed' : 'failed'}`}
-        {book.softScoreTotal != null && ` (score ${Math.round(book.softScoreTotal)})`}
+        {status === 'blocked'
+          ? ' · blocked from the shelf'
+          : status === 'unverified'
+          ? ' · awaiting your review'
+          : book.hardGatesPassed != null && ` · QA ${book.hardGatesPassed ? 'passed' : 'failed'}`}
+        {status !== 'blocked' && status !== 'unverified' && book.softScoreTotal != null && ` (score ${Math.round(book.softScoreTotal)})`}
         {book.artApprovedAt && ` · art approved ${new Date(book.artApprovedAt).toLocaleDateString()}`}
       </p>
-      {(status === 'needs-review' || status === 'unverified') && (
+      {/* Publish/Block actions must remain reachable when the book is
+          `blocked` — otherwise a blocked book is a dead end with no unblock
+          path. `needs-review` and `unverified` continue to show both. */}
+      {(status === 'needs-review' || status === 'unverified' || status === 'blocked') && (
         <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
           <button
             onClick={() => act('publish')}
@@ -194,23 +204,25 @@ function BookRow({ book }: { book: ParentBook }) {
               cursor: busy ? 'wait' : 'pointer',
             }}
           >
-            {busy === 'publish' ? 'Publishing…' : 'Publish to Azad'}
+            {busy === 'publish' ? 'Publishing…' : status === 'blocked' ? 'Unblock' : 'Publish'}
           </button>
-          <button
-            onClick={() => act('block')}
-            disabled={Boolean(busy)}
-            style={{
-              flex: 1,
-              padding: 'var(--space-2) var(--space-3)',
-              background: 'transparent',
-              color: 'var(--ink)',
-              border: '1px solid var(--ink-faint)',
-              borderRadius: 'var(--radius-pill)',
-              cursor: busy ? 'wait' : 'pointer',
-            }}
-          >
-            {busy === 'block' ? 'Blocking…' : 'Block'}
-          </button>
+          {status !== 'blocked' && (
+            <button
+              onClick={() => act('block')}
+              disabled={Boolean(busy)}
+              style={{
+                flex: 1,
+                padding: 'var(--space-2) var(--space-3)',
+                background: 'transparent',
+                color: 'var(--ink)',
+                border: '1px solid var(--ink-faint)',
+                borderRadius: 'var(--radius-pill)',
+                cursor: busy ? 'wait' : 'pointer',
+              }}
+            >
+              {busy === 'block' ? 'Blocking…' : 'Block'}
+            </button>
+          )}
         </div>
       )}
     </article>

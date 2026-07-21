@@ -128,7 +128,15 @@ export default async function ParentStoriesPage() {
       />
       <ArtSection
         pending={[]}
-        books={books.map((b) => ({ id: b.id, title: b.title, hasCover: false }))}
+        // hasCover reflects reality (Approve-vs-Regenerate label): a book has
+        // an approved cover if it appears in artApprovedByBook. Previously
+        // hardcoded false, so every book advertised "Generate" even when a
+        // cover was already approved and live in the reader.
+        books={books.map((b) => ({
+          id: b.id,
+          title: b.title,
+          hasCover: artApprovedByBook.has(b.id),
+        }))}
       />
     </main>
   );

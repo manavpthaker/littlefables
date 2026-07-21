@@ -45,7 +45,7 @@ export function MakerForm() {
         <textarea
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
-          placeholder='e.g. "Azad was scared of the car wash today."'
+          placeholder='e.g. "She was scared of the car wash today."'
           rows={4}
           required
           style={{
@@ -112,7 +112,7 @@ export function MakerForm() {
             Book ID: {result.bookId}
           </p>
           <button
-            onClick={() => router.push('/parent')}
+            onClick={() => router.push('/parent/stories')}
             style={{
               marginTop: 'var(--space-3)',
               background: 'var(--action)',
@@ -123,7 +123,7 @@ export function MakerForm() {
               cursor: 'pointer',
             }}
           >
-            Back to Parent Corner
+            See it in Stories
           </button>
         </div>
       )}

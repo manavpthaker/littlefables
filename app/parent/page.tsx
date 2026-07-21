@@ -17,7 +17,59 @@ import { InsightsCards } from './insights-cards';
 
 export default async function ParentInsightsPage() {
   const householdId = await currentHouseholdId();
-  const childId = (await firstChildIdInHousehold()) ?? '';
+  const childId = await firstChildIdInHousehold();
+
+  // Fresh-install empty state: without a child, every Insights query filters
+  // by child_id='' and returns zeros — the dashboard looks broken and there
+  // is no CTA to fix it. Short-circuit into a warm empty-state hero that
+  // points at Settings (where AddChildForm lives).
+  if (!childId) {
+    return (
+      <main style={{ display: 'grid', gap: 'var(--space-5)', maxWidth: 640 }}>
+        <div
+          style={{
+            padding: 'var(--space-6)',
+            borderRadius: 'var(--radius-lg)',
+            background: 'var(--wash-panel)',
+            display: 'grid',
+            gap: 'var(--space-3)',
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              margin: 0,
+              fontSize: 'var(--text-display)',
+              color: 'var(--text-strong)',
+            }}
+          >
+            Add your first child to begin
+          </h1>
+          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+            Insights show up here once a child is reading — words they keep,
+            comprehension meters, minutes, the weekly bridge line. Add a
+            child and send them to a device to start.
+          </p>
+          <a
+            href="/parent/settings"
+            style={{
+              justifySelf: 'start',
+              marginTop: 'var(--space-2)',
+              padding: 'var(--space-2) var(--space-4)',
+              background: 'var(--action)',
+              color: 'var(--paper)',
+              borderRadius: 'var(--radius-pill)',
+              textDecoration: 'none',
+              fontWeight: 600,
+            }}
+          >
+            Add a child →
+          </a>
+        </div>
+      </main>
+    );
+  }
+
   const week = weekWindowUtc();
 
   const [
@@ -107,7 +159,10 @@ export default async function ParentInsightsPage() {
               boxShadow: 'var(--elev-rest)',
             }}
           >
-            🔒
+            {/* Insights sigil (kept honest regardless of gate state — the
+                padlock emoji misrepresented what this surface actually is;
+                the gate restoration lives in a separate slice). */}
+            📊
           </span>
           <div style={{ display: 'grid', gap: 2, minWidth: 0 }}>
             <h1

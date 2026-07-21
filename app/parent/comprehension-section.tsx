@@ -14,10 +14,15 @@ export interface ComprehensionRecordView {
 
 function mapAttempts(record: ComprehensionRecordView) {
   if (!record.transcript) return [];
+  // Honesty rule (CLAUDE.md: parent surfaces show the true QA record, never
+  // soften failures): mercy_hint / mercy_given are misses that the buddy
+  // softened for the child. Displaying them as "accepted" hides the miss from
+  // the parent and desyncs the transcript row from the Insights meters
+  // (which correctly score mercy as 0). Map to 'miss' so both surfaces agree.
   const judged =
     record.judgedSignal === 'correct'
       ? 'correct'
-      : record.judgedSignal === 'partial' || record.judgedSignal === 'mercy_hint' || record.judgedSignal === 'mercy_given'
+      : record.judgedSignal === 'partial'
       ? 'accepted'
       : 'miss';
   return [{ transcript: record.transcript, judged: judged as 'correct' | 'accepted' | 'miss' }];
