@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { ParentTabs } from '@ds/components/parent/ParentTabs.jsx';
-import { isParentAuthed } from '@/lib/server/parent-gate';
 
 const TAB_ITEMS = [
   { key: 'insights', label: 'Insights', href: '/parent' },
@@ -15,23 +13,19 @@ function activeTab(pathname: string): string | null {
   if (pathname.startsWith('/parent/stories')) return 'stories';
   if (pathname.startsWith('/parent/settings')) return 'settings';
   if (pathname === '/parent' || pathname === '/parent/') return 'insights';
-  return null; // make / privacy / gate — no tab highlighted
+  return null; // make / privacy — no tab highlighted
 }
 
 export const metadata: Metadata = { title: 'Parent Corner · Little Fables' };
 
 // Parent Corner: adult-density surfaces (WCAG-scalable, no viewport lock).
-// Password-gated (S4.1). /parent/gate is exempt so the form itself can render.
+// UNGATED by household decision 2026-07-21 — see lib/server/parent-gate.ts
+// for what that means and how to restore the password gate.
 export default async function ParentLayout({ children }: { children: React.ReactNode }) {
   const hdrs = await headers();
   // `x-pathname` is set by middleware.ts and is the reliable source; the
-  // `x-invoke-path` fallback is a legacy Next internal that isn't always present
-  // (its absence caused the /parent/gate redirect loop).
+  // `x-invoke-path` fallback is a legacy Next internal that isn't always present.
   const pathname = hdrs.get('x-pathname') ?? hdrs.get('x-invoke-path') ?? '';
-  const isGate = pathname.startsWith('/parent/gate');
-  if (!isGate && !(await isParentAuthed())) {
-    redirect('/parent/gate');
-  }
   return (
     <div
       data-density="parent"
@@ -42,8 +36,7 @@ export default async function ParentLayout({ children }: { children: React.React
         color: 'var(--text-body)',
       }}
     >
-      {!isGate && (
-        <nav
+      <nav
           style={{
             position: 'sticky',
             top: 0,
@@ -88,14 +81,11 @@ export default async function ParentLayout({ children }: { children: React.React
               Privacy
             </Link>
           </div>
-        </nav>
-      )}
+      </nav>
       <div style={{ maxWidth: 960, margin: '0 auto', padding: 'var(--space-6)' }}>
-        {!isGate && (
-          <div style={{ marginBottom: 'var(--space-6)' }}>
-            <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
-          </div>
-        )}
+        <div style={{ marginBottom: 'var(--space-6)' }}>
+          <ParentTabs items={TAB_ITEMS} activeKey={activeTab(pathname) ?? ''} />
+        </div>
         {children}
       </div>
     </div>

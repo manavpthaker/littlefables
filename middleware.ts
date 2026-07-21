@@ -2,14 +2,13 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 // Surface the request pathname to Server Components. The App Router does not
 // hand a layout/page its own path, so app/parent/layout.tsx reads `x-pathname`
-// to exempt /parent/gate from its own auth gate. Nothing set that header (there
-// was no middleware), so on the gate route the layout could not tell it WAS the
-// gate, failed the auth check, and redirected /parent/gate → /parent/gate
-// forever — ERR_TOO_MANY_REDIRECTS for any unauthenticated visitor. Set it here.
+// to highlight the active Insights/Stories/Settings tab. (Historically this
+// also let the layout exempt /parent/gate from the auth gate; the gate was
+// removed 2026-07-21 — see lib/server/parent-gate.ts.)
 //
-// Header-only pass-through: this does not gate anything. Auth still lives at the
-// route/layout boundary (S4.1) and requireChildDevice() (D3); nothing rides on
-// middleware for access control.
+// Header-only pass-through: this does not gate anything. Child-route auth
+// lives in requireChildDevice() (D3); nothing rides on middleware for access
+// control.
 export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-pathname', request.nextUrl.pathname);

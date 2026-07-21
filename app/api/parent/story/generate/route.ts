@@ -12,8 +12,8 @@ import { persistQA } from '@/lib/qa/persist';
 import type { Book } from '@/lib/models/book';
 import type { Json } from '@/types/database';
 
-// Parent-side story generator. Single-user mode: no parent auth gate yet
-// (add PARENT_PASSWORD before deploying).
+// Parent-side story generator. Parent surface runs ungated by household
+// decision (2026-07-21) — requireParentPassword() is an always-allow stub.
 // Full C3 flow: generate → runQA (stage 0/1/2) → decideStatus → persist QA →
 // insert book row with the returned status. C3a contract enforced in
 // decideStatus (hard-gate fail on final attempt = blocked).

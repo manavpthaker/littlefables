@@ -6,7 +6,7 @@ import { mintChildToken, CHILD_TOKEN_COOKIE, CHILD_TOKEN_TTL_DAYS } from '@/lib/
 
 // Mint a child-device token. Single-household mode: no parent auth. The child
 // must exist in the DB (a mint request for a random UUID returns 404). Add a
-// PARENT_PASSWORD gate here before deploying to the internet.
+// NOTE: parent surface runs ungated by household decision (see parent-gate.ts).
 const bodySchema = z.object({
   childId: z.string().uuid(),
   deviceLabel: z.string().max(60).optional(),
