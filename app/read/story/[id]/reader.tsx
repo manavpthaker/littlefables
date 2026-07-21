@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ReaderTopBar } from '@ds/components/reader/ReaderTopBar.jsx';
-import { ChapterMap } from '@ds/components/reader/ChapterMap.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
@@ -19,6 +18,8 @@ import { speakUtterance } from '@/lib/voice/ui-voice';
 import { useBedtime } from '@/lib/reader/use-bedtime';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { Checkpoint } from './checkpoint';
+import { Retell } from './retell';
+import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
 import { InteractivePage } from './interactive-page';
 import {
@@ -104,8 +105,10 @@ export function Reader({
   // Comprehension gate. Set when narration ends on the last page of a chapter.
   // Cleared when the child moves on (either mercy or accept).
   const [inCheckpoint, setInCheckpoint] = useState(false);
+  const [inRetell, setInRetell] = useState(false);
   const chapterKey = `${book.id}:${state.chapterIdx ?? 'none'}`;
   const seenCheckpoint = useRef(new Set<string>());
+  const seenRetell = useRef(false);
 
   // Word timestamps for the current page — threaded into transportPage so
   // `transport.seekToWord()` finds a real audio offset (via `page.timestamps`)
@@ -281,52 +284,36 @@ export function Reader({
             if (result?.newlyEarned?.length) {
               setPendingBadges((prev) => [...prev, ...(result.newlyEarned ?? [])]);
             }
+            // Book complete → tell-it-back (the ladder's top rung) before moving on.
+            const isLastChapter = state.chapterIdx !== null && state.chapterIdx >= book.chapters.length - 1;
+            if (isLastChapter && checksActive && !seenRetell.current) {
+              seenRetell.current = true;
+              setInRetell(true);
+              return;
+            }
             advanceAfterChapter();
           }}
         />
       ) : null}
 
-      {showMap && book.kind === 'chapter' ? (
-        <section
-          style={{
-            padding: 'var(--space-7) var(--page-pad) var(--space-6)',
-            display: 'grid',
-            gap: 'var(--space-5)',
-            maxWidth: 720,
-            width: '100%',
-            marginInline: 'auto',
+      {inRetell && (
+        <Retell
+          bookId={book.id}
+          buddyColor={buddyColor}
+          buddyEmoji={buddyEmoji}
+          onDone={() => {
+            setInRetell(false);
+            advanceAfterChapter();
           }}
-        >
-          <header style={{ display: 'grid', gap: 'var(--space-2)', justifyItems: 'center', textAlign: 'center' }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-hand)',
-                color: 'var(--text-muted)',
-                margin: 0,
-                fontSize: 'var(--text-hand)',
-              }}
-            >
-              Pick a chapter to start
-            </p>
-            <h1
-              style={{
-                fontFamily: 'var(--font-display)',
-                margin: 0,
-                fontSize: 'var(--text-display)',
-                lineHeight: 'var(--lh-display)',
-                color: 'var(--text-strong)',
-              }}
-            >
-              {book.title}
-            </h1>
-          </header>
-          <ChapterMap
-            size="large"
-            chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
-            current={0}
-            onPick={onPickChapter}
-          />
-        </section>
+        />
+      )}
+
+      {showMap && book.kind === 'chapter' ? (
+        <MapSection
+          title={book.title}
+          chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
+          onPick={onPickChapter}
+        />
       ) : ch && page && isInteractive && state.chapterIdx !== null ? (
         <main style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 'var(--space-6) var(--page-pad)' }}>
           <InteractivePage

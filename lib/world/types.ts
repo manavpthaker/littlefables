@@ -35,5 +35,7 @@ export interface WorldBundle {
   todayIdx: number; // 0 = Mon .. 6 = Sun (PRD B3 week convention)
   badges: string[]; // earned slugs
   recentWords: Array<{ word: string; savedAt: string }>;
+  /** stalest due word from the spaced scheduler (PRD B5), or null */
+  dueWord?: string | null;
   recentBooks: Array<{ id: string; title: string }>; // most recently opened
 }

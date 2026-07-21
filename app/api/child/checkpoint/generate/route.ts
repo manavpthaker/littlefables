@@ -11,9 +11,11 @@ import {
   type GeneratedCheckpointRecord,
 } from '@/lib/models/checkpoint';
 import { assembleCheckpointPrompt, type QuestionType } from '@/lib/prompts/templates/checkpoint';
+import { pickRung } from '@/lib/comprehension/ladder';
 import { BudgetExceededError, callAnthropic, extractJson } from '@/lib/anthropic';
 import { loadWorldState, bumpGrowth } from '@/lib/world/state';
 import { loadChildProfile } from '@/lib/server/child-settings';
+import type { Json } from '@/types/database';
 
 // Generate ONE checkpoint question for the given book + chapter. Records a
 // placeholder comprehension_records row so the answer endpoint can update it.
@@ -44,7 +46,7 @@ export async function POST(request: NextRequest) {
   const [{ data: recentRecords }, { data: savedWordsRows }, world, profile] = await Promise.all([
     admin()
       .from('comprehension_records')
-      .select('question_type')
+      .select('question_type, judged_signal')
       .eq('child_id', ctx.childId)
       .order('asked_at', { ascending: false })
       .limit(4),
@@ -58,9 +60,23 @@ export async function POST(request: NextRequest) {
     loadChildProfile(ctx.childId),
   ]);
 
+  // Parent setting: checkpoints off → the story just moves on. The client
+  // also skips; this is the server-side guarantee.
+  if (!profile.settings.checksEnabled) {
+    return NextResponse.json({ skipped: true });
+  }
+
   const recentTypes: QuestionType[] = ((recentRecords ?? [])
     .map((r) => r.question_type)
-    .filter(Boolean) as QuestionType[]);
+    .filter((t): t is QuestionType => t !== 'retell' && Boolean(t)));
+
+  // Ladder (redesign brief §IV.1): rung from chapter position + recent signals.
+  const requestedType = pickRung({
+    chapterIdx,
+    chapterCount: book.chapters.length,
+    recentSignals: (recentRecords ?? []).map((r) => r.judged_signal).filter((s): s is string => Boolean(s)),
+    recentTypes,
+  });
 
   const assembled = assembleCheckpointPrompt({
     book: { title: book.title, kind: book.kind },
@@ -69,6 +85,7 @@ export async function POST(request: NextRequest) {
     pagesText: chapter.pages.map((p) => p.text).join('\n\n'),
     band: profile.band,
     recentTypes,
+    requestedType,
     savedWords: (savedWordsRows ?? []).map((r) => r.word),
     worldSummary: `${world.growth.booksOpened} books opened, ${world.growth.wordsSaved} words saved.`,
   });
@@ -81,7 +98,7 @@ export async function POST(request: NextRequest) {
       system: assembled.system,
       user: assembled.user,
       cacheKey: assembled.cacheKey,
-      maxTokens: 300,
+      maxTokens: 500,
       temperature: 0.7,
     });
     const parsedJson = extractJson<CheckpointQuestion>(raw);
@@ -97,6 +114,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Persist a placeholder record. answer route updates transcript + signal.
+  // payload holds the judge material (expectedConcepts) + tap fallback — the
+  // client only ever receives fallbackChoices.
   const { data: record, error: insertErr } = await admin()
     .from('comprehension_records')
     .insert({
@@ -105,6 +124,12 @@ export async function POST(request: NextRequest) {
       chapter_idx: chapterIdx,
       question: question.question,
       question_type: question.type,
+      payload: {
+        expectedConcepts: question.expectedConcepts,
+        fallbackChoices: question.fallbackChoices,
+        hint: question.hint ?? null,
+        given: question.given ?? null,
+      } as unknown as Json,
     })
     .select('id')
     .single();

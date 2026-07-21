@@ -8,6 +8,8 @@ export interface JudgeAssemblyInput {
   transcript: string;
   chapterContext: string;
   attemptNumber: number;
+  /** authored-at-generation grounding — judge by intent-match against these, never exact words */
+  expectedConcepts?: string[];
 }
 
 export interface AssembledJudgePrompt {
@@ -27,27 +29,37 @@ export function assembleJudgePrompt(input: JudgeAssemblyInput): AssembledJudgePr
     "- 'skipped': no meaningful speech was captured.",
     '',
     "Never mark 'wrong'. Never suggest the child failed. 4-year-old brains connect ideas at their level — accept generously.",
+    'Judge by INTENT-MATCH, not exact words: a transcribed 4-year-old is messy — map what they meant onto the expected ideas. Partial credit is real credit.',
     '',
     "This is attempt #" + input.attemptNumber + '. If this is attempt 2+ and the answer is not correct, prefer mercy_given over mercy_hint.',
     '',
-    '# 3. Output',
+    '# 3. The PEER move (dialogic reading)',
+    'The outcome sentence AFFIRMS what the child actually said (echo a specific word of theirs), then EXPANDS it with exactly one new idea from the story. Never just "well done".',
+    '',
+    '# 4. Output',
     'Return JSON only: {',
     '  "signal": "correct|partial|mercy_hint|mercy_given|skipped",',
-    '  "outcome": "one warm sentence back to the child, ≤ 18 words. Never sounds like a grade."',
+    '  "outcome": "affirm-then-expand, one warm sentence back to the child, ≤ 18 words. Never sounds like a grade."',
     '}',
   ].join('\n');
 
-  const user = [
+  const userParts = [
     'Question you asked:',
     input.question,
     `(type: ${input.questionType})`,
+  ];
+  if (input.expectedConcepts?.length) {
+    userParts.push('', 'Ideas a good answer might contain (any one is enough; synonyms count):', ...input.expectedConcepts.map((c) => `- ${c}`));
+  }
+  userParts.push(
     '',
     'Chapter context (for grounding):',
     input.chapterContext.slice(0, 2000),
     '',
     'Child said (transcribed):',
     input.transcript || '(silence)',
-  ].join('\n');
+  );
+  const user = userParts.join('\n');
 
   return { system, user };
 }

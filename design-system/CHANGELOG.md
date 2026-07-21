@@ -61,3 +61,5 @@ a new component, or an opt-in prop. Source brief: `docs/REDESIGN-BRIEF.md`.
 | 5 | WordJar (new kid component) | `components/kid/WordJar.jsx` (+ d.ts, prompt.md): Home face of the wordbook — glass-wash jar of recent kept words (owned = filled star), one tap target → Word Book, count spoken never shown. Replaces the WordsDoor pill in the app. |
 | 6 | BookCard `tag` prop | Optional developmental-layer chip (top-left wash capsule, emoji or calm pigment dot — never terracotta). `status="new"` badge moves to top-right when both render. |
 | 7 | ReaderTopBar bedtime slot | Optional `bedtime`/`onBedtime` moon capsule in the right slot; marigold ring while active (a state, not an action). |
+| 8 | StorySpine (new reader component) | `components/reader/StorySpine.jsx` (+ d.ts, prompt.md): the retell checklist — authored beats fill in (sage wash + drawn check, watercolor develop) as the child recounts the arc. No numerals, no score, no red. |
+| 9 | WordCapsule `owned` prop | Sage ring + "yours now" voice when a kept word was re-encountered and understood at a checkpoint (PRD B5 ownership). Default appearance unchanged. |

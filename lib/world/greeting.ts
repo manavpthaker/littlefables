@@ -3,9 +3,10 @@ import { activeBuddy, type Buddy } from './buddy-roster';
 
 // Deterministic buddy greeting composer. Given world + buddy + recent context,
 // returns the utterance the Buddy speaks on Home mount + a coarse tone.
-// Priority: welcome > callback (recent book) > word (saved yesterday) > streak > default.
+// Priority: welcome > callback (recent book) > due word (B5 re-encounter) >
+// word (saved yesterday) > streak > default.
 
-export type GreetingTone = 'welcome' | 'callback' | 'word' | 'streak' | 'default';
+export type GreetingTone = 'welcome' | 'callback' | 'due-word' | 'word' | 'streak' | 'default';
 
 export interface Greeting {
   utterance: string;
@@ -39,6 +40,14 @@ export function composeGreeting(bundle: WorldBundle, buddy: Buddy = activeBuddy(
     return {
       utterance: `You were reading ${lastBook.title}. Want to keep going?`,
       tone: 'callback',
+    };
+  }
+
+  // Due word (PRD B5): a kept word the scheduler says it's time to meet again.
+  if (bundle.dueWord) {
+    return {
+      utterance: `Do you remember the word ${bundle.dueWord}? Listen for it today!`,
+      tone: 'due-word',
     };
   }
 

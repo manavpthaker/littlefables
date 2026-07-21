@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { WordCapsule } from '@ds/components/kid/WordCapsule.jsx';
 import { Button } from '@ds/components/core/Button.jsx';
 import { speakUtterance } from '@/lib/voice/ui-voice';
+import { trackEncounter } from '@/lib/reader/wordbook';
 
 // Client half of the kid Word Book. Tap a capsule → hear the word (and the
 // sentence it came from, when we have it) in the buddy voice. Voice-slot
@@ -12,7 +13,7 @@ import { speakUtterance } from '@/lib/voice/ui-voice';
 export function WordList({
   words,
 }: {
-  words: Array<{ id: string; word: string; sentence: string | null; meaning: string | null }>;
+  words: Array<{ id: string; word: string; sentence: string | null; meaning: string | null; owned: boolean }>;
 }) {
   const router = useRouter();
 
@@ -68,7 +69,9 @@ export function WordList({
             <WordCapsule
               key={w.id}
               word={w.word}
-              onTap={() =>
+              owned={w.owned}
+              onTap={() => {
+                trackEncounter(w.word, 'heard');
                 void speakUtterance(
                   [
                     `${w.word}.`,
@@ -78,8 +81,8 @@ export function WordList({
                     .filter(Boolean)
                     .join(' '),
                   { voice: 'buddy', priority: 'tap' },
-                )
-              }
+                );
+              }}
             />
           ))}
         </div>

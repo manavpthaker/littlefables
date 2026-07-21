@@ -37,6 +37,11 @@ declare module '@ds/components/kid/WordCapsule.jsx' {
   export function WordCapsule(props: WordCapsuleProps): JSX.Element;
 }
 
+declare module '@ds/components/reader/StorySpine.jsx' {
+  import type { StorySpineProps } from '@ds/components/reader/StorySpine';
+  export function StorySpine(props: StorySpineProps): JSX.Element;
+}
+
 declare module '@ds/components/kid/WordJar.jsx' {
   import type { WordJarProps } from '@ds/components/kid/WordJar';
   export function WordJar(props: WordJarProps): JSX.Element;

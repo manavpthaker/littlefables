@@ -9,6 +9,7 @@ import { activeBuddy } from '@/lib/world/buddy-roster';
 import { composeGreeting } from '@/lib/world/greeting';
 import type { WorldBundle } from '@/lib/world/types';
 import { deriveLayerTag, type LayerTag } from '@/lib/models/layer-tags';
+import { pickGreetingWord } from '@/lib/world/word-scheduler';
 import { HomeWordJar } from './word-jar';
 import { ShelfGrid, type ShelfBook } from './shelf-grid';
 import { ContinueBanner, type ContinueTarget } from './continue-banner';
@@ -54,10 +55,10 @@ export default async function ReadHome() {
       .in('day', week),
     admin()
       .from('wordbook_entries')
-      .select('word, saved_at, owned_at', { count: 'exact' })
+      .select('word, saved_at, owned_at, last_encounter_at, encounter_count', { count: 'exact' })
       .eq('child_id', ctx.childId)
       .order('saved_at', { ascending: false })
-      .limit(5),
+      .limit(30),
     admin()
       .from('book_progress')
       .select('book_id, books!inner(id, title)')
@@ -82,7 +83,17 @@ export default async function ReadHome() {
     todayEarned: readingDays.includes(today),
     todayIdx,
     badges,
-    recentWords: (recentWordsRows ?? []).map((r) => ({ word: r.word, savedAt: r.saved_at })),
+    recentWords: (recentWordsRows ?? []).slice(0, 5).map((r) => ({ word: r.word, savedAt: r.saved_at })),
+    dueWord: pickGreetingWord(
+      (recentWordsRows ?? []).map((r) => ({
+        word: r.word,
+        savedAt: r.saved_at,
+        ownedAt: r.owned_at,
+        lastEncounterAt: r.last_encounter_at,
+        encounterCount: r.encounter_count ?? 0,
+      })),
+      new Date(),
+    ),
     recentBooks: ((recentProgressRows ?? []) as Array<{
       book_id: string;
       books: { id: string; title: string } | { id: string; title: string }[] | null;
@@ -158,7 +169,7 @@ export default async function ReadHome() {
       >
         <SunsRow earned={earnedIdx} today={todayIdx} />
         <HomeWordJar
-          words={(recentWordsRows ?? []).map((r) => ({ word: r.word, owned: Boolean(r.owned_at) }))}
+          words={(recentWordsRows ?? []).slice(0, 5).map((r) => ({ word: r.word, owned: Boolean(r.owned_at) }))}
           count={wordCount ?? 0}
         />
       </section>
