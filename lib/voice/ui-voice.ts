@@ -33,6 +33,17 @@ let narrationActive = false;
 let activeAudio: HTMLAudioElement | null = null;
 let activeTier: UtterTier | null = null;
 let queuedCheckpoint: { text: string; opts: SpeakOpts } | null = null;
+// Bound at the kid subtree root by <BuddyVoiceBinder/> once the active buddy
+// is known. When a caller does `speakUtterance(text, { voice: 'buddy' })`
+// without a voiceId, we fall through to this binding so checkpoint / retell /
+// tab-tap / word-save utterances actually speak in the child's picked buddy
+// instead of the default narrator (audit finding: voice-first shipped only
+// on Home; every other buddy-tier surface fell back to narrator).
+let boundBuddyVoiceId: string | null = null;
+
+export function bindBuddyVoiceId(voiceId: string | null): void {
+  boundBuddyVoiceId = voiceId;
+}
 
 export function setNarrationActive(active: boolean): void {
   narrationActive = active;
@@ -124,8 +135,13 @@ export async function speakUtterance(text: string, opts: SpeakOpts = {}): Promis
   // 'play' — take the slot from whatever lesser speech held it.
   cancelActive();
 
-  const voiceLabel = opts.voiceId ?? opts.voice ?? 'buddy';
-  const blob = await getUtteranceBlob(text, voiceLabel, opts.voiceId);
+  // Buddy fallback: a caller asking for the buddy voice without a specific
+  // voiceId picks up the currently-bound buddy voice, if any. Narrator
+  // callers are unaffected.
+  const effectiveVoiceId =
+    opts.voiceId ?? (opts.voice === 'buddy' ? boundBuddyVoiceId : null);
+  const voiceLabel = effectiveVoiceId ?? opts.voice ?? 'buddy';
+  const blob = await getUtteranceBlob(text, voiceLabel, effectiveVoiceId);
 
   // The world may have moved while we fetched: narration may have started
   // (park a checkpoint / drop the rest) or higher-rank speech may hold the slot.

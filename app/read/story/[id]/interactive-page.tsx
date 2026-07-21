@@ -4,9 +4,15 @@ import { useCallback } from 'react';
 import { ChoiceBlocks } from '@ds/components/reader/ChoiceBlocks.jsx';
 import type { ReaderPage } from '@/lib/reader/types';
 
-// Interactive page renderer (PRD A4). Handles choice + breathe. Ask blocks
-// currently degrade to a lightweight "your idea" prompt — full voice-answer
-// wiring lives with the Checkpoint flow and can be reused in a follow-up.
+// Interactive page renderer (PRD A4). Handles choice + breathe + ask.
+//
+// Mic honesty: the ChoiceBlocks "tell me YOUR idea!" dashed-terracotta mic
+// was silently dispatching nextPage (no recording, no prompt, no state) —
+// exactly the "fail soft on joy" anti-pattern the PRD forbids. We hide the
+// mic (by not passing onIdea) until the voice-answer flow is composed from
+// the checkpoint MicOrb. The ask-page "Continue" is likewise softened from a
+// terracotta action to a quiet keep-going affordance with a caption that
+// tells the truth about what the app is (and isn't) listening for.
 
 interface Props {
   page: ReaderPage;
@@ -40,7 +46,6 @@ export function InteractivePage(props: Props) {
         <ChoiceBlocks
           options={page.choice.options.map((o) => ({ label: o.label }))}
           onPick={onPick}
-          onIdea={props.onAsk}
         />
       </div>
     );
@@ -73,23 +78,35 @@ export function InteractivePage(props: Props) {
 
   if (page.ask) {
     return (
-      <div style={{ padding: 'var(--space-4)', textAlign: 'center', display: 'grid', gap: 'var(--space-3)' }}>
-        <p style={{ fontFamily: 'var(--font-body)' }}>{page.ask.prompt}</p>
+      <div style={{ padding: 'var(--space-4)', textAlign: 'center', display: 'grid', gap: 'var(--space-2)' }}>
+        <p style={{ fontFamily: 'var(--font-body)' }} data-utterance={page.ask.prompt}>
+          {page.ask.prompt}
+        </p>
+        <p
+          style={{
+            margin: 0,
+            fontFamily: 'var(--font-hand)',
+            color: 'var(--ink-soft)',
+            fontSize: 14,
+          }}
+        >
+          (you can say your idea out loud — a grown-up can hear you)
+        </p>
         <button
           onClick={props.onAsk}
           style={{
-            padding: 'var(--space-3)',
-            background: 'var(--action)',
-            color: 'var(--paper)',
-            border: 'none',
+            marginTop: 'var(--space-2)',
+            padding: 'var(--space-2) var(--space-4)',
+            background: 'transparent',
+            color: 'var(--ink-soft)',
+            border: '1px solid var(--paper-deep)',
             borderRadius: 'var(--radius-pill)',
             fontFamily: 'inherit',
             cursor: 'pointer',
             justifySelf: 'center',
-            paddingInline: 'var(--space-5)',
           }}
         >
-          Continue
+          Keep going
         </button>
       </div>
     );
