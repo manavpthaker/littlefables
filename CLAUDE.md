@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository state
 
-**All 5 PRD phases + all 4 EXPERIENCE-PLAN sprints shipped (2026-07-18).**
+**All 5 PRD phases + all 4 EXPERIENCE-PLAN sprints shipped (2026-07-18), then the Reading & Comprehension redesign (2026-07-21).**
+
+The redesign (brief: [`docs/REDESIGN-BRIEF.md`](./docs/REDESIGN-BRIEF.md), spec deltas: PRD §3-R) rebuilt the experience around **comprehension over consumption** in four phases:
+- **P0 foundations** — migration `20260721000012` (shelf_enabled, children.settings, encounter fields, comprehension payload + `retell` type, reading_sessions, parent_insights), night/bedtime tokens, kid TabBar (Home · Library · Grown-ups), 4-tier voice priority (`lib/voice/priority.ts`), roster↔canon buddy identity fix.
+- **P1 active reader** — `/read/library`, Home word jar + layer-tagged shelf rail, teaching word-saves (syllables + kid definitions, meanings populated from vocab), illustration hotspots (Gemini-vision authored at art approval), bedtime mode (`use-bedtime` + `[data-bedtime]`, slower/lower narration, resolving chapter ends).
+- **P2 comprehension engine** — ladder policy (`lib/comprehension/ladder.ts`), checkpoint as bottom sheet with expectedConcepts-grounded PEER judging + deterministic tap fallback, retell story-spine at book completion (`lib/comprehension/spine.ts` ∪ `retell-judge`, audio → retells bucket), B5 word-ownership loop (`word-scheduler` 2d/7d/21d, `owned_at` from understood answers, due-word greeting).
+- **P3 parent + adaptivity** — Parent space tabs (Insights meters via `lib/comprehension/meters.ts` + weekly cached bridge line, Stories with per-book shelf toggles, Settings with Ease/Auto/Stretch · checks · bedtime · soft daily limit · narrator voice), minutes heartbeat → reading_sessions, adaptivity (`lib/comprehension/adaptivity.ts`) wired into checkpoint + story generation, `pnpm content:backfill`.
+
+**Post-redesign runbook:** apply migration `20260721000012` to the hosted project, re-run `pnpm db:types` (the checked-in types were hand-synced), run `pnpm content:backfill -- --check` then for real (~1 Anthropic call/book vs the 40/day respond limit), and walk the phone acceptance script in the plan.
 
 Phase timeline:
 - **P0** scaffold + schema + prompt package + pack-000
