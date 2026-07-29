@@ -2,16 +2,12 @@
 
 import { useState } from 'react';
 import { SectionHeader, Field } from '@ds/components/parent/ParentPrimitives.jsx';
-import type { ChildSettings, ReadingLevel } from '@/lib/models/settings';
+import type { ChildSettings } from '@/lib/models/settings';
 
-// Per-child settings editor (brief §III.5). Saves as a partial merge via
-// PUT /api/parent/settings; the server re-validates the merged object.
-
-const LEVEL_HELP: Record<ReadingLevel, string> = {
-  ease: 'a gentler step below the band',
-  auto: 'follows the checkpoint signal',
-  stretch: 'a reach above the band',
-};
+// Per-child settings editor. Bedtime window auto-triggers night mode in the
+// reader (sleepy voice, text-only pages). Voice overrides fall back to
+// DAY_VOICE_ID / NIGHT_VOICE_ID env vars when blank. Saves as a partial
+// merge via PUT /api/parent/settings.
 
 export function SettingsForm({
   childId,
@@ -70,19 +66,7 @@ export function SettingsForm({
     >
       <SectionHeader>{displayName}&rsquo;s reading</SectionHeader>
 
-      <Field label="Reading level" hint={LEVEL_HELP[settings.readingLevel]}>
-        <select
-          value={settings.readingLevel}
-          onChange={(e) => patch({ readingLevel: e.target.value as ReadingLevel })}
-          style={input}
-        >
-          <option value="ease">Ease</option>
-          <option value="auto">Auto</option>
-          <option value="stretch">Stretch</option>
-        </select>
-      </Field>
-
-      <Field label="Reading band" hint="the base level stories and questions are written to">
+      <Field label="Reading band" hint="the age band stories are pitched at">
         <select value={bandValue} onChange={(e) => { setBandValue(e.target.value); setState('idle'); }} style={input}>
           <option value="3-4">3–4</option>
           <option value="4-6">4–6</option>
@@ -91,18 +75,7 @@ export function SettingsForm({
         </select>
       </Field>
 
-      <Field label="Comprehension checks" hint="chapter questions + tell-it-back; off = stories just flow">
-        <label style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center', fontSize: 'var(--text-body)' }}>
-          <input
-            type="checkbox"
-            checked={settings.checksEnabled}
-            onChange={(e) => patch({ checksEnabled: e.target.checked })}
-          />
-          {settings.checksEnabled ? 'on' : 'off'}
-        </label>
-      </Field>
-
-      <Field label="Bedtime mode" hint="dims the palette, slows the voice, resolves chapters without questions">
+      <Field label="Bedtime mode" hint="auto-switches the reader to night mode (sleepy voice, no illustrations) inside this window">
         <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' }}>
           <label style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center', fontSize: 'var(--text-body)' }}>
             <input
@@ -136,26 +109,22 @@ export function SettingsForm({
         </div>
       </Field>
 
-      <Field label="Daily limit" hint="soft — the buddy suggests stopping, never locks">
-        <select
-          value={settings.dailyLimitMin ?? ''}
-          onChange={(e) => patch({ dailyLimitMin: e.target.value === '' ? null : Number(e.target.value) })}
-          style={input}
-        >
-          <option value="">no limit</option>
-          <option value="15">15 minutes</option>
-          <option value="30">30 minutes</option>
-          <option value="45">45 minutes</option>
-          <option value="60">1 hour</option>
-        </select>
-      </Field>
-
-      <Field label="Narrator voice" hint="ElevenLabs voice id for live speech; blank = the default narrator">
+      <Field label="Day voice" hint="ElevenLabs voice id used in day mode; blank = DAY_VOICE_ID env default">
         <input
           type="text"
           value={settings.narratorVoiceId ?? ''}
           placeholder="voice id"
           onChange={(e) => patch({ narratorVoiceId: e.target.value.trim() || null })}
+          style={{ ...input, width: 260 }}
+        />
+      </Field>
+
+      <Field label="Night voice" hint="ElevenLabs voice id used in bedtime / night mode; blank = NIGHT_VOICE_ID env default">
+        <input
+          type="text"
+          value={settings.nightVoiceId ?? ''}
+          placeholder="voice id"
+          onChange={(e) => patch({ nightVoiceId: e.target.value.trim() || null })}
           style={{ ...input, width: 260 }}
         />
       </Field>

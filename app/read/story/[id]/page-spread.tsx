@@ -4,17 +4,15 @@ import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
 import { StoryText } from '@ds/components/reader/StoryText.jsx';
 import type { ReaderPage } from '@/lib/reader/types';
 import { useLandscapeSpread } from '@/lib/reader/use-landscape';
-import { Hotspots } from './hotspots';
 
-// The narrative page's visual layout, in both orientations (PRD F2).
+// The narrative page's visual layout.
 //
-// PORTRAIT (phones — the primary device): mockup layout — rounded art card
-// above, prose on plain paper below (text is never over art anymore).
+// Day (illustrated): portrait shows a rounded art card above the prose;
+// landscape shows a book spread (art left, words right). Text is never over
+// art in either orientation.
 //
-// LANDSCAPE ≥640px (phone sideways, iPad, laptop): a book spread — the art
-// becomes the left page (edge to edge in its half), the words sit on plain
-// paper as the right page. Text is never over art here, so no over-art
-// treatment applies; a soft gutter shadow sells the fold between the pages.
+// Night (hideArt=true): text-only rendering, no art card, no wash. Warm
+// paper, generous line height. The reader becomes a bedtime page-turner.
 
 export function PageSpread({
   page,
@@ -24,40 +22,35 @@ export function PageSpread({
   useWashFallback,
   currentIndex,
   narrating,
-  starredWords,
-  keptWords,
+  hideArt = false,
   onHearWord,
-  onStarWord,
 }: {
   page: ReaderPage;
   pageKey: string;
   chapterTitle: string | null;
-  /** book cover — the art fallback when the page has no scene art (parity II.2) */
   coverImage?: string;
   useWashFallback: boolean;
   currentIndex: number;
-  /** narration in flight — enables the upcoming-word dim; idle pages are full ink */
   narrating: boolean;
-  starredWords: string[];
-  /** words already kept — fern-wash treatment (parity II.3) */
-  keptWords?: string[];
+  /** Night mode: skip the art pane entirely; text-only page. */
+  hideArt?: boolean;
   onHearWord: (word: string, wordIdx: number) => void;
-  onStarWord: (stem: string) => void;
 }) {
   const landscape = useLandscapeSpread();
-  // Parity spec II: every page reads as a picture-book spread — scene art,
-  // else the book's cover, else the painting wash.
-  const artUrl = page.img ?? coverImage;
-  const hasArtPane = Boolean(artUrl) || useWashFallback;
+  const artUrl = hideArt ? undefined : (page.img ?? coverImage);
+  const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
 
   const chapterLabel = chapterTitle ? (
     <p
       style={{
-        fontFamily: 'var(--font-hand)',
+        fontFamily: 'var(--font-body)',
         color: 'var(--text-muted)',
         margin: '0 0 var(--space-4)',
         textAlign: 'center',
-        fontSize: 'var(--text-hand)',
+        fontSize: 13,
+        letterSpacing: '.08em',
+        textTransform: 'uppercase',
+        fontWeight: 600,
       }}
     >
       {chapterTitle}
@@ -69,13 +62,35 @@ export function PageSpread({
       words={page.words.map((w) => ({ w: w.w }))}
       currentIndex={currentIndex}
       dimUpcoming={narrating}
-      starredWords={starredWords}
-      keptWords={keptWords}
       onHearWord={onHearWord}
-      onStarWord={onStarWord}
       overArt={false}
     />
   );
+
+  // Night mode: single-column text-only. Same shape in portrait and landscape.
+  if (hideArt) {
+    return (
+      <main
+        key={pageKey}
+        style={{
+          flex: 1,
+          display: 'grid',
+          placeItems: 'center',
+          padding: 'var(--space-6) var(--page-pad)',
+          maxWidth: 'var(--reader-measure, 640px)',
+          width: '100%',
+          marginInline: 'auto',
+          boxSizing: 'border-box',
+          animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
+        }}
+      >
+        <article style={{ maxWidth: 560, width: '100%' }}>
+          {chapterLabel}
+          {storyText}
+        </article>
+      </main>
+    );
+  }
 
   if (landscape && hasArtPane) {
     return (
@@ -89,7 +104,6 @@ export function PageSpread({
           animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
         }}
       >
-        {/* Left page: the art, edge to edge in its half. */}
         <div style={{ position: 'relative', minHeight: 0, overflow: 'hidden' }}>
           {artUrl ? (
             <div
@@ -106,10 +120,6 @@ export function PageSpread({
               <PaintingWash fullBleed label="this one's still being painted for you…" />
             </div>
           )}
-          {page.img && page.hotspots && page.hotspots.length > 0 && (
-            <Hotspots hotspots={page.hotspots} />
-          )}
-          {/* Gutter: the fold where the art page meets the text page. */}
           <div
             aria-hidden
             style={{
@@ -121,7 +131,6 @@ export function PageSpread({
             }}
           />
         </div>
-        {/* Right page: words on paper — no over-art treatment needed. */}
         <div
           style={{
             minHeight: 0,
@@ -140,9 +149,6 @@ export function PageSpread({
     );
   }
 
-  // Portrait (and landscape with no art at all): mockup layout — the art is a
-  // rounded card ABOVE the prose (hotspots live inside it); the words sit on
-  // plain paper below, never over art.
   return (
     <main
       key={pageKey}
@@ -175,7 +181,6 @@ export function PageSpread({
             <PaintingWash fullBleed label="this one's still being painted for you…" />
           </div>
         )}
-        {page.img && page.hotspots && page.hotspots.length > 0 && <Hotspots hotspots={page.hotspots} />}
       </div>
       <article>
         {chapterLabel}

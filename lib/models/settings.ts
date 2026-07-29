@@ -1,13 +1,8 @@
 import { z } from 'zod';
 import { CHILD_BANDS } from './child';
 
-// Child settings (redesign brief §III.5 Settings tab), stored in
-// children.settings jsonb (migration 20260721000012). Parent-set only; the
-// child never sees any of these. Partial-merge on PUT: absent keys keep their
-// stored value; parse always yields a complete object via defaults.
-
-export const READING_LEVELS = ['ease', 'auto', 'stretch'] as const;
-export type ReadingLevel = (typeof READING_LEVELS)[number];
+// Child settings — stored on children.settings jsonb. Pared-back to just
+// the bedtime window + voice preferences. Parent-set only.
 
 export const bedtimeWindowSchema = z.object({
   enabled: z.boolean().default(false),
@@ -18,15 +13,12 @@ export const bedtimeWindowSchema = z.object({
 export type BedtimeWindow = z.infer<typeof bedtimeWindowSchema>;
 
 export const childSettingsSchema = z.object({
-  readingLevel: z.enum(READING_LEVELS).default('auto'),
-  checksEnabled: z.boolean().default(true),
   bedtime: bedtimeWindowSchema.default({ enabled: false, startHour: 19, endHour: 6 }),
-  // Minutes per day; null = no limit. Soft: the buddy suggests stopping,
-  // never a lock (DS rules — no gates, no red).
-  dailyLimitMin: z.number().int().min(5).max(240).nullable().default(null),
-  // Overrides NARRATOR_VOICE_ID for live TTS when set. Pre-generated page
-  // narration keeps its recorded voice until regenerated.
+  // Optional per-child voice overrides. When null, the env DAY_VOICE_ID /
+  // NIGHT_VOICE_ID applies. `narratorVoiceId` is the legacy key — the API
+  // route still reads it as the day-mode override so existing rows work.
   narratorVoiceId: z.string().max(64).nullable().default(null),
+  nightVoiceId: z.string().max(64).nullable().default(null),
 });
 export type ChildSettings = z.infer<typeof childSettingsSchema>;
 
@@ -40,8 +32,6 @@ export type UpdateSettingsInput = z.infer<typeof updateSettingsBodySchema>;
 export function parseChildSettings(raw: unknown): ChildSettings {
   const parsed = childSettingsSchema.safeParse(raw ?? {});
   if (parsed.success) return parsed.data;
-  // Fail soft: a malformed blob (hand-edited row, older shape) degrades to
-  // defaults instead of breaking the reader or Parent Corner.
   return childSettingsSchema.parse({});
 }
 
@@ -50,5 +40,5 @@ export function isInBedtimeWindow(bedtime: BedtimeWindow, hour: number): boolean
   const { startHour, endHour } = bedtime;
   if (startHour === endHour) return true;
   if (startHour < endHour) return hour >= startHour && hour < endHour;
-  return hour >= startHour || hour < endHour; // crosses midnight
+  return hour >= startHour || hour < endHour;
 }

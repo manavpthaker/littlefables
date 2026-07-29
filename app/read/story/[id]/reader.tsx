@@ -1,31 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ReaderTopBar } from '@ds/components/reader/ReaderTopBar.jsx';
 import { Transport } from '@ds/components/kid/Transport.jsx';
-import { Button } from '@ds/components/core/Button.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
-import { useWordSave } from '@/lib/reader/use-word-save';
-import { useReadingHeartbeat } from '@/lib/reader/use-reading-heartbeat';
 import { pushProgress } from '@/lib/reader/progress';
-import { useRecapOnResume } from '@/lib/reader/use-recap';
-import { useArtPrefetch } from '@/lib/reader/use-art-prefetch';
 import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-source';
 import type { WordTimestamp } from '@/lib/reader/speech';
-import { Celebrations } from '@/app/read/celebrations';
-import { StateBannerBoot } from '@/app/read/state-banner';
-import { speakUtterance } from '@/lib/voice/ui-voice';
-import { enqueueAndSend } from '@/lib/sync/outbox';
 import { useBedtime } from '@/lib/reader/use-bedtime';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
-import { Checkpoint } from './checkpoint';
-import { WordPopover } from './word-popover';
-import { Retell } from './retell';
 import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
-import { InteractivePage } from './interactive-page';
 import {
   currentChapter,
   currentPage,
@@ -37,33 +24,22 @@ import {
 import type { ReaderBook, ReaderAction, ReaderState } from '@/lib/reader/types';
 import type { ProgressRecord } from '@/lib/models/progress';
 
-// Reader orchestrator (client). Owns page navigation + transport wiring.
-// Word-tap save (Slice 3), progress sync (Slice 4), and pre-generated audio
-// (Slice 5) layer on top without touching this file's core structure.
+// Reader orchestrator (client). One job: play the story.
+//   Day mode  — illustrated PageSpread, day-voice narration, tap-a-word to hear it
+//   Night mode — text-only pages, sleepy voice, calmer palette, no interruptions
+// No comprehension gates, no word saving, no interactive branches — the whole
+// experience is: story, page turn, story, page turn.
 
 const BEDTIME_VOICE = { rate: 0.9, volume: 0.85 };
-const BEDTIME_RESOLVE_LINE = 'Safe and cozy. The end for tonight.';
 
 export function Reader({
   book,
   initialProgress,
-  buddyEmoji,
-  buddyColor = 'var(--teal)',
-  buddyVoiceId = null,
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
-  checksEnabled = true,
-  dailyLimitMin = null,
-  todaySeconds = 0,
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
-  buddyEmoji?: string;
-  buddyColor?: string;
-  buddyVoiceId?: string | null;
   bedtimeWindow?: BedtimeWindow;
-  checksEnabled?: boolean;
-  dailyLimitMin?: number | null;
-  todaySeconds?: number;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -73,8 +49,7 @@ export function Reader({
       : initialState(book),
   );
 
-  // Push progress on every state change (debounced 500ms in progress.ts).
-  // Skip when we're on the ChapterMap (chapterIdx === null) — nothing meaningful to resume.
+  // Debounced progress write on every state change (skip on the chapter map).
   useEffect(() => {
     if (state.chapterIdx === null) return;
     pushProgress({
@@ -84,12 +59,6 @@ export function Reader({
     });
   }, [book.id, state.chapterIdx, state.pageIdx]);
 
-  // Coming back after ≥24h: spoken orientation. Next pages' approved art:
-  // warmed while this one is read, so page turns never flash the wash.
-  useRecapOnResume(book, initialProgress);
-  useArtPrefetch(book, state);
-  useReadingHeartbeat(true, { dailyLimitMin, todaySeconds });
-
   const ch = currentChapter(book, state);
   const page = currentPage(book, state);
   const showMap = state.chapterIdx === null;
@@ -97,34 +66,21 @@ export function Reader({
 
   // Painted-book policy: if ANY page in this book has approved scene art, a
   // page without one shows PaintingWash instead of plain paper — partially
-  // arted books look intentional (art still developing), never broken.
+  // arted books look intentional, never broken.
   const bookHasAnyArt = useMemo(
     () => book.chapters.some((c) => c.pages.some((p) => Boolean(p.img))),
     [book],
   );
   const useWashFallback = bookHasAnyArt && page && !page.img;
 
-  // Interactive page detection — PRD A4. Gates the transport (transport won't
-  // auto-turn while the child is choosing / breathing / answering).
-  const isInteractive = Boolean(page && (page.choice || page.ask || page.breathe));
-
-  // Bedtime (redesign brief §III.3): night tokens + slower/lower narration +
-  // resolving chapter ends instead of questions.
+  // Day / Night mode. useBedtime() honors the settings window + a per-session
+  // override toggle. In night mode: art is hidden (text-only rendering),
+  // narration uses the sleepy voice cast, and the whole surface leans darker.
   const { bedtime, toggleBedtime } = useBedtime(bedtimeWindow);
-  const checksActive = checksEnabled && !bedtime;
+  const isNight = bedtime;
 
-  // Comprehension gate. Set when narration ends on the last page of a chapter.
-  // Cleared when the child moves on (either mercy or accept).
-  const [inCheckpoint, setInCheckpoint] = useState(false);
-  const [inRetell, setInRetell] = useState(false);
-  const chapterKey = `${book.id}:${state.chapterIdx ?? 'none'}`;
-  const seenCheckpoint = useRef(new Set<string>());
-  const seenRetell = useRef(false);
-
-  // Word timestamps for the current page — threaded into transportPage so
-  // `transport.seekToWord()` finds a real audio offset (via `page.timestamps`)
-  // and jumps within playback instead of restarting at word 0. Null while
-  // fetching, or when audio isn't available (speechSynth fallback path).
+  // Word timestamps for the current page — threaded into the transport so
+  // `transport.speakOne(word)` finds a real offset instead of restarting.
   const [pageTimestamps, setPageTimestamps] = useState<WordTimestamp[] | null>(null);
   useEffect(() => {
     if (!page || state.chapterIdx === null) {
@@ -140,9 +96,6 @@ export function Reader({
     };
   }, [book.id, page, state.chapterIdx, state.pageIdx]);
 
-  // Feed the current page's text + layered TtsSource + timestamps into the
-  // transport. Any layer failure falls through to speechSynth; missing
-  // timestamps mean seek restarts the page (acceptable fallback).
   const transportPage = useMemo(() => {
     if (!page || state.chapterIdx === null) return null;
     return {
@@ -156,8 +109,9 @@ export function Reader({
     };
   }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps]);
 
-  // Post-chapter advancement, shared by the checkpoint's onDone and the
-  // no-checkpoint paths (bedtime / checks off).
+  // Post-chapter advancement. Chapter books return to their map; quick books
+  // exit to Home. In night mode on the final page we hold instead of pushing
+  // — the story ends where it ends, no navigation while a kid drifts.
   const advanceAfterChapter = useCallback(() => {
     if (state.chapterIdx === null) return;
     const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
@@ -165,87 +119,30 @@ export function Reader({
       dispatch({ type: 'enterChapter', chapterIdx: state.chapterIdx + 1 });
       return;
     }
-    // Chapter books return to their map; quick books go back to Home.
+    if (isNight) return; // rest, don't push
     if (book.kind === 'chapter') {
       dispatch({ type: 'exitChapter' });
     } else {
-      transportRef.current?.stop();
       router.push('/read');
     }
-  }, [book.chapters.length, book.kind, router, state.chapterIdx]);
-
-  // Bedtime resolve-and-settle: one settling line, then either drift to the
-  // next chapter (a calm turn, ~1500ms later so the line has room) or, on
-  // the final chapter, quietly exit back to Home. Prior behavior was
-  // asymmetric — audio auto-turn spoke the line then FROZE on the last page;
-  // silent Done skipped the line and pushed abruptly. Same helper now runs
-  // from both entry points.
-  const resolveBedtimeAndMaybeAdvance = useCallback(() => {
-    if (state.chapterIdx === null) return;
-    transportRef.current?.stop();
-    void speakUtterance(BEDTIME_RESOLVE_LINE, { voice: 'narrator', priority: 'checkpoint' });
-    const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
-    if (isLastChapter) return; // hold — the moose settles at rest
-    window.setTimeout(() => {
-      advanceAfterChapter();
-    }, 1500);
-  }, [advanceAfterChapter, book.chapters.length, state.chapterIdx]);
+  }, [book.chapters.length, book.kind, isNight, router, state.chapterIdx]);
 
   const onAutoNext = useCallback(() => {
-    // Auto-turn only advances within a chapter. Chapter end transitions into
-    // the checkpoint — or, in bedtime / checks-off, resolves and moves on.
     if (lastPage) {
-      if (seenCheckpoint.current.has(chapterKey)) return;
-      seenCheckpoint.current.add(chapterKey);
-      if (checksActive) {
-        setInCheckpoint(true);
-        return;
-      }
-      if (bedtime) {
-        resolveBedtimeAndMaybeAdvance();
-        return;
-      }
       advanceAfterChapter();
       return;
     }
     dispatch({ type: 'nextPage' });
-  }, [lastPage, chapterKey, checksActive, bedtime, advanceAfterChapter, resolveBedtimeAndMaybeAdvance]);
+  }, [advanceAfterChapter, lastPage]);
 
   const transport = useReaderTransport({
     page: transportPage,
-    gated: inCheckpoint || isInteractive, // pauses narration during interactivity
+    gated: false,
     onAutoNext,
     isLastPage: lastPage,
-    voiceMod: bedtime ? BEDTIME_VOICE : undefined,
+    voiceMod: isNight ? BEDTIME_VOICE : undefined,
+    voice: isNight ? 'night' : 'day',
   });
-  // advanceAfterChapter needs stop() but is declared before the transport —
-  // a ref breaks the cycle without re-ordering the hooks.
-  const transportRef = useRef<typeof transport | null>(null);
-  transportRef.current = transport;
-
-  // Interactive-page callbacks. Choices write to the buddy's choice_log via
-  // the world API; breathe just advances; ask advances (voice-answer flow can
-  // reuse the Checkpoint pipeline later — deferred).
-  const onChoice = useCallback(
-    (label: string, summary: string) => {
-      if (state.chapterIdx === null) return;
-      // Choice logging goes through the sync outbox (audit C1 fix: raw
-      // fetch here would silently drop the choice offline). Idempotency
-      // key lets the server ignore retried sends without double-appending.
-      const choiceId = crypto.randomUUID();
-      void enqueueAndSend('/api/child/choice', JSON.stringify({
-        choiceId,
-        bookId: book.id,
-        chapterIdx: state.chapterIdx,
-        label,
-        summary,
-      }));
-      dispatch({ type: 'nextPage' });
-    },
-    [book.id, state.chapterIdx],
-  );
-  const onBreatheDone = useCallback(() => dispatch({ type: 'nextPage' }), []);
-  const onAskContinue = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
   const onBack = useCallback(() => {
     transport.stop();
@@ -260,236 +157,139 @@ export function Reader({
   const onPrev = useCallback(() => dispatch({ type: 'prevPage' }), []);
   const onNext = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
-  // Word interactions (PRD A9 + parity II.4): hearing seeks/speaks; a tap
-  // while paused also opens the word popover (syllables, definition, keep).
-  const [popWord, setPopWord] = useState<string | null>(null);
+  // Word interactions: tap = hear the word in the current mode's voice. That's
+  // the only word-level affordance now — no popover, no save, no definition.
   const onHearWord = useCallback(
-    (word: string, wordIdx: number) => {
-      const stem = word.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
-      if (transport.playing) {
-        transport.seekToWord(wordIdx);
-      } else {
-        transport.speakOne(word);
-        setPopWord(stem || null);
-      }
+    (stem: string) => {
+      transport.speakOne(stem);
     },
     [transport],
   );
 
-  // Swipe-to-turn (UX pass): the natural picture-book gesture, mapped to the
-  // exact same prev/next the Transport dispatches (never auto-plays). Off
-  // whenever anything interactive owns the screen.
   const swipe = useSwipeTurn({
-    enabled: !showMap && !isInteractive && !inCheckpoint && !inRetell && !popWord,
+    enabled: !showMap,
     onPrev,
     onNext,
   });
 
-  // Word save (PRD A9) — extracted to lib/reader/use-word-save.ts.
-  const [pendingBadges, setPendingBadges] = useState<string[]>([]);
-  const { savedWord, justSaved, onStarWord } = useWordSave({
-    book,
-    pageText: page?.text,
-    chapterIdx: state.chapterIdx,
-    pageIdx: state.pageIdx,
-    buddyVoiceId,
-    onBadges: (slugs) => setPendingBadges((prev) => [...prev, ...slugs]),
-  });
-
   return (
     <div
-      style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)' }}
+      style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)', overflow: 'hidden' }}
       onTouchStart={swipe.onTouchStart}
       onTouchEnd={swipe.onTouchEnd}
     >
       <ReaderTopBar
         onBack={onBack}
-        title={`${book.title}${book.kind === 'chapter' && state.chapterIdx !== null ? ` · Ch. ${state.chapterIdx + 1}` : ''}`}
+        title={book.title}
         segments={ch ? { current: state.pageIdx, total: ch.pages.length } : undefined}
-        buddyColor={buddyColor}
-        buddyEmoji={buddyEmoji}
         buddyState={transport.playing ? 'speaking' : 'idle'}
-        savedWord={savedWord ?? undefined}
-        justSaved={justSaved}
-        onWordTap={savedWord ? () => transport.speakOne(savedWord) : undefined}
       />
-      <Celebrations newlyEarned={pendingBadges} />
-      <StateBannerBoot />
 
-      {inCheckpoint && state.chapterIdx !== null && ch ? (
-        <Checkpoint
-          bookId={book.id}
-          chapterIdx={state.chapterIdx}
-          chapterCount={book.chapters.length}
-          chapterTitle={ch.title}
-          buddyColor={buddyColor}
-          buddyEmoji={buddyEmoji}
-          onDone={(result) => {
-            setInCheckpoint(false);
-            if (result?.newlyEarned?.length) {
-              setPendingBadges((prev) => [...prev, ...(result.newlyEarned ?? [])]);
-            }
-            // Book complete → tell-it-back (the ladder's top rung) before moving on.
-            const isLastChapter = state.chapterIdx !== null && state.chapterIdx >= book.chapters.length - 1;
-            if (isLastChapter && checksActive && !seenRetell.current) {
-              seenRetell.current = true;
-              setInRetell(true);
-              return;
-            }
-            advanceAfterChapter();
+      {/* Secondary chrome: chapter jump chip (chapter books, mid-chapter)
+          on the left; Day/Night toggle always on the right. */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '2px var(--page-pad) 6px',
+          flex: 'none',
+          gap: 'var(--space-2)',
+        }}
+      >
+        {book.kind === 'chapter' && state.chapterIdx !== null ? (
+          <button
+            type="button"
+            aria-label="Back to the chapter map"
+            onClick={() => {
+              transport.stop();
+              dispatch({ type: 'exitChapter' });
+            }}
+            style={{
+              border: 'none',
+              cursor: 'pointer',
+              background: 'var(--wash-capsule)',
+              backdropFilter: 'blur(14px)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '6px 14px',
+              fontFamily: 'var(--font-body)',
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'var(--ink-soft)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <span aria-hidden>📖</span> All chapters
+          </button>
+        ) : (
+          <span />
+        )}
+        <button
+          type="button"
+          aria-label={isNight ? 'Switch to daytime reading' : 'Switch to bedtime reading'}
+          aria-pressed={isNight}
+          onClick={toggleBedtime}
+          style={{
+            border: 'none',
+            cursor: 'pointer',
+            background: 'var(--wash-capsule)',
+            backdropFilter: 'blur(14px)',
+            borderRadius: 'var(--radius-pill)',
+            padding: '6px 12px',
+            fontFamily: 'var(--font-body)',
+            fontSize: 14,
+            color: 'var(--ink)',
+            boxShadow: isNight ? '0 0 0 2px var(--marigold)' : 'none',
           }}
-        />
-      ) : null}
-
-      {inRetell && (
-        <Retell
-          bookId={book.id}
-          bookTitle={book.title}
-          buddyColor={buddyColor}
-          buddyEmoji={buddyEmoji}
-          onDone={() => {
-            setInRetell(false);
-            advanceAfterChapter();
-          }}
-        />
-      )}
+        >
+          {isNight ? '🌙' : '☀️'}
+        </button>
+      </div>
 
       {showMap && book.kind === 'chapter' ? (
-        <MapSection
-          title={book.title}
-          chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
-          onPick={onPickChapter}
-        />
-      ) : ch && page && isInteractive && state.chapterIdx !== null ? (
-        <main style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 'var(--space-6) var(--page-pad)' }}>
-          <InteractivePage
-            page={page}
-            bookId={book.id}
-            chapterIdx={state.chapterIdx}
-            pageIdx={state.pageIdx}
-            onChoice={onChoice}
-            onBreatheDone={onBreatheDone}
-            onAsk={onAskContinue}
+        <main style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+          <MapSection
+            title={book.title}
+            chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
+            onPick={onPickChapter}
           />
         </main>
       ) : ch && page ? (
         <>
-          {/* Orientation-aware page layout (PRD F2): portrait = art behind +
-              panel; landscape ≥640px = side-by-side book spread. */}
-          <PageSpread
-            page={page}
-            pageKey={`${state.chapterIdx}-${state.pageIdx}`}
-            chapterTitle={book.kind === 'chapter' ? ch.title : null}
-            useWashFallback={Boolean(useWashFallback)}
-            currentIndex={transport.wordIdx}
-            narrating={transport.playing}
-            coverImage={book.coverImage}
-            starredWords={page.star ? [page.star] : []}
-            keptWords={savedWord ? [savedWord] : []}
-            onHearWord={onHearWord}
-            onStarWord={onStarWord}
-          />
-          {popWord && (
-            <WordPopover
-              word={popWord}
-              entry={book.vocab[popWord]}
-              onAgain={() => transport.speakOne(popWord)}
-              onKeep={() => {
-                onStarWord(popWord);
-                setPopWord(null);
-              }}
-              onClose={() => setPopWord(null)}
+          <main style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <PageSpread
+              page={page}
+              pageKey={`${state.chapterIdx}-${state.pageIdx}`}
+              chapterTitle={book.kind === 'chapter' ? ch.title : null}
+              useWashFallback={Boolean(useWashFallback)}
+              currentIndex={transport.wordIdx}
+              narrating={transport.playing}
+              coverImage={book.coverImage}
+              hideArt={isNight}
+              onHearWord={onHearWord}
             />
-          )}
+          </main>
 
           <footer
             style={{
-              marginTop: 'auto',
+              flex: 'none',
               padding: 'var(--space-3) var(--page-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
               display: 'grid',
               placeItems: 'center',
               gap: 'var(--space-3)',
+              background: 'linear-gradient(to top, var(--surface-page) 60%, transparent)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-              <Transport
-                playing={transport.playing}
-                onPlay={transport.toggle}
-                onPrev={onPrev}
-                onNext={onNext}
-                canPrev={!isFirstPage(state)}
-                canNext={!lastPage}
-              />
-              <button
-                type="button"
-                data-utterance={bedtime ? 'Bright and awake!' : 'Getting cozy for bedtime.'}
-                aria-pressed={bedtime}
-                onClick={toggleBedtime}
-                style={{
-                  border: 'none',
-                  cursor: 'pointer',
-                  background: 'var(--wash-capsule)',
-                  backdropFilter: 'blur(14px)',
-                  borderRadius: 'var(--radius-pill)',
-                  padding: '10px 16px',
-                  minHeight: 'var(--tap-min)',
-                  boxShadow: bedtime ? '0 0 0 3px var(--marigold), var(--elev-rest)' : 'var(--elev-rest)',
-                  fontFamily: 'var(--font-hand)',
-                  fontSize: 16,
-                  color: 'var(--ink)',
-                }}
-              >
-                🌙 Bedtime
-              </button>
-            </div>
-            {/* Silent-reader completion: the checkpoint auto-fires only when
-                narration ends (transport.onEnd on the last page). Kids who
-                read the page themselves without ever pressing play never
-                triggered onEnd → could never finish a chapter. This affordance
-                lets them signal they're done. */}
-            {lastPage && !transport.playing && !inCheckpoint &&
-              (checksActive ? !seenCheckpoint.current.has(chapterKey) : true) && (
-              // Bedtime: quieter treatment (no terracotta) + runs the same
-              // resolve-and-settle helper the auto-turn uses. Non-bedtime:
-              // primary terracotta as before.
-              bedtime ? (
-                <button
-                  onClick={() => {
-                    seenCheckpoint.current.add(chapterKey);
-                    resolveBedtimeAndMaybeAdvance();
-                  }}
-                  data-utterance="I'm ready to rest"
-                  style={{
-                    padding: 'var(--space-2) var(--space-4)',
-                    background: 'transparent',
-                    color: 'var(--ink-soft)',
-                    border: '1px solid var(--paper-deep)',
-                    borderRadius: 'var(--radius-pill)',
-                    fontFamily: 'var(--font-hand)',
-                    fontSize: 16,
-                    cursor: 'pointer',
-                    justifySelf: 'center',
-                  }}
-                >
-                  I&apos;m ready to rest
-                </button>
-              ) : (
-                <Button
-                  variant="primary"
-                  size="primary"
-                  icon="check"
-                  utterance="Done with this chapter"
-                  onClick={() => {
-                    transport.stop();
-                    seenCheckpoint.current.add(chapterKey);
-                    if (checksActive) setInCheckpoint(true);
-                    else advanceAfterChapter();
-                  }}
-                >
-                  Done with this chapter
-                </Button>
-              )
-            )}
+            <Transport
+              playing={transport.playing}
+              onPlay={transport.toggle}
+              onPrev={onPrev}
+              onNext={onNext}
+              canPrev={!isFirstPage(state)}
+              canNext={!lastPage}
+            />
           </footer>
         </>
       ) : null}

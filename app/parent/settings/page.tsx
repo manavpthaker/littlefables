@@ -1,14 +1,11 @@
 import { admin } from '@/lib/supabase/admin';
 import { currentHouseholdId } from '@/lib/server/current-household';
 import { parseChildSettings } from '@/lib/models/settings';
-import { loadWorldState } from '@/lib/world/state';
 import { ChildrenSection, type ChildRow } from '../children-section';
-import { BuddyPicker } from '../buddy-picker';
 import { SettingsForm } from './settings-form';
 
-// Parent · Settings (brief §III.5): reading level (Ease/Auto/Stretch),
-// comprehension checks on/off, bedtime window, daily limit, narrator voice,
-// band — per child. Plus device/child management and the buddy picker.
+// Parent Settings — the only surface a grown-up sees. Per-child bedtime
+// window + optional voice overrides, plus device/child management.
 
 export default async function ParentSettingsPage() {
   const householdId = await currentHouseholdId();
@@ -21,9 +18,6 @@ export default async function ParentSettingsPage() {
       .eq('household_id', householdId)
       .order('created_at', { ascending: true }),
   ]);
-
-  const firstChildId = children?.[0]?.id ?? '';
-  const world = firstChildId ? await loadWorldState(firstChildId) : null;
 
   const childRows: ChildRow[] = (children ?? []).map((c) => ({
     id: c.id,
@@ -45,7 +39,7 @@ export default async function ParentSettingsPage() {
           Settings
         </h1>
         <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
-          Reading level, checks, bedtime, limits — the child never sees any of this.
+          Bedtime window and voices, per child. The kid never sees any of this.
         </p>
       </header>
 
@@ -60,7 +54,6 @@ export default async function ParentSettingsPage() {
       ))}
 
       <ChildrenSection rows={childRows} householdName={household?.name ?? 'Household'} />
-      {world && <BuddyPicker currentBuddyId={world.activeBuddyId} />}
     </main>
   );
 }

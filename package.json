@@ -18,20 +18,13 @@
     "db:reset": "supabase db reset",
     "db:migrate": "supabase migration up",
     "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
-    "content:import-pack-000": "tsx scripts/import-pack-000.ts",
-    "content:backfill": "tsx scripts/backfill-books.ts",
-    "canon:reconvert": "tsx scripts/reconvert-canon.ts",
-    "audio:generate": "tsx scripts/generate-audio.ts",
-    "art:covers": "tsx scripts/art-covers.ts",
-    "art:scenes": "tsx scripts/art-scenes.ts"
+    "content:add": "tsx scripts/import-book.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.112.3",
     "@supabase/server": "^1.4.0",
     "@supabase/supabase-js": "^2.53.0",
     "lucide-react": "^1.25.0",
     "next": "^15.5.20",
-    "openai": "^6.48.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "zod": "^4.0.14"

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { LAYER_TAGS } from './layer-tags';
 
 // AUDIT C2 fix: the enum values below are the single source of truth for
 // Book.kind / .source / .status. The migration file's CHECK constraints must
@@ -85,15 +84,7 @@ export const bookSchema = z
     coverEmoji: z.string().nullable().optional(),
     coverImage: z.string().optional(),
     coverBg: z.string().optional(),
-    teachingGoals: z.array(z.string()).default([]),
     vocab: z.array(vocabEntrySchema).default([]),
-    retellPrompts: z.array(z.string()).default([]),
-    // Redesign brief additions (backfilled for pack-000, authored by the Maker
-    // for new books). layerTag drives shelf grouping + cover chips; beats are
-    // the retell story-spine (3–5 short story facts in order).
-    layerTag: z.enum(LAYER_TAGS).optional(),
-    beats: z.array(z.string().min(1).max(120)).max(6).default([]),
-    parentGuide: z.string().nullable().optional(),
     originNote: z.string().nullable().optional(),
     chapters: z.array(chapterSchema).min(1),
   })
@@ -103,26 +94,6 @@ export type Book = z.infer<typeof bookSchema>;
 export type Chapter = z.infer<typeof chapterSchema>;
 export type Page = z.infer<typeof pageSchema>;
 export type VocabEntry = z.infer<typeof vocabEntrySchema>;
-
-// Derived interactivity signal — what kinds of authored moments this book
-// carries (surfaced under card titles so a kid/parent can find "another book
-// where I get to choose"). Cheap enough to compute per shelf render;
-// intentionally NOT stored on the schema.
-export type Interactivity = 'ask' | 'choice' | 'breathe';
-export function deriveInteractivity(bookPayload: unknown): Interactivity[] {
-  const kinds = new Set<Interactivity>();
-  const chapters = (bookPayload as { chapters?: unknown[] } | null)?.chapters ?? [];
-  for (const c of chapters) {
-    const pages = (c as { pages?: unknown[] } | null)?.pages ?? [];
-    for (const p of pages) {
-      const page = p as { ask?: unknown; choice?: unknown; breathe?: unknown };
-      if (page.ask) kinds.add('ask');
-      if (page.choice) kinds.add('choice');
-      if (page.breathe) kinds.add('breathe');
-    }
-  }
-  return Array.from(kinds);
-}
 export type BookKind = (typeof BOOK_KINDS)[number];
 export type BookSource = (typeof BOOK_SOURCES)[number];
 export type BookStatus = (typeof BOOK_STATUSES)[number];

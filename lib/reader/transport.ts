@@ -34,15 +34,21 @@ interface PageAudio {
 interface Options {
   /** Current page's audio + text. */
   page: PageAudio | null;
-  /** Truthy while an interactive block is showing (ask/choice/breathe). Playback pauses. */
+  /** Truthy while playback should be paused (unused in the pared-back reader
+   *  — kept in the interface because nothing gates today). */
   gated: boolean;
   /** Called when auto-turn wants to advance to the next page. */
   onAutoNext: () => void;
   /** True if this page is the last page of the chapter — auto-turn just stops. */
   isLastPage: boolean;
-  /** Prosody override (bedtime: {rate:0.9, volume:0.85}). Applies to page
+  /** Prosody override (night mode: {rate:0.9, volume:0.85}). Applies to page
    *  narration and single-word speech alike. */
   voiceMod?: { rate?: number; volume?: number };
+  /** Day/Night voice selection. Threaded to the TTS route as the
+   *  `voice` field so the sleepy voice cast fires in night mode. Word-tap
+   *  speech honors the same voice — kids hear the current-mode voice
+   *  consistently. */
+  voice?: 'day' | 'night';
 }
 
 export interface ReaderTransport {
@@ -63,7 +69,7 @@ export interface ReaderTransport {
 /** 1.5s breath between pages in play mode (§A3). */
 const AUTO_TURN_DELAY_MS = 1500;
 
-export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceMod }: Options): ReaderTransport {
+export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceMod, voice = 'day' }: Options): ReaderTransport {
   const [playing, setPlaying] = useState(false);
   const [wordIdx, setWordIdx] = useState(-1);
 

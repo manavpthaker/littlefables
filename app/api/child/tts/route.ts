@@ -1,47 +1,20 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { requireChildDevice } from '@/lib/server/require-auth';
-import { admin } from '@/lib/supabase/admin';
-import { BudgetExceededError } from '@/lib/anthropic';
 import { loadChildProfile } from '@/lib/server/child-settings';
 
-// Live text-to-speech (buddy utterances, checkpoint questions, meanings).
-// Routes to ElevenLabs with the buddy's voice_id when supplied — falls back
-// to NARRATOR_VOICE_ID env. Guarded by bump_usage('tts').
-//
-// This route exists to unblock multi-voice per-buddy speech. The client-side
-// voice-slot handler that scans data-utterance and calls this route is a
-// deferred follow-up; the API is ready for it.
+// Live text-to-speech for reader narration and word taps. Routes to
+// ElevenLabs. Voice selection cascade:
+//   explicit voiceId  >  { voice: 'night' } NIGHT_VOICE_ID
+//   > parent-set narratorVoiceId  >  DAY_VOICE_ID env  >  legacy NARRATOR_VOICE_ID
+// Day/Night is a first-class mode; the client passes voice='night' when
+// bedtime is active so the sleepy voice cast takes over.
 
 const bodySchema = z.object({
   text: z.string().min(1).max(1000),
   voiceId: z.string().optional(),
-  voice: z.enum(['narrator', 'buddy']).optional(),
+  voice: z.enum(['day', 'night']).optional(),
 });
-
-async function bumpTts(householdId: string): Promise<void> {
-  const limit = Number(process.env.TTS_DAILY_LIMIT) || 200;
-  // Fail-CLOSED per PRD §4.6: retry once, then throw so the paid ElevenLabs
-  // call is never made on an unmetered path.
-  let lastErr: string | null = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const { data, error } = await admin().rpc('bump_usage', {
-      p_household_id: householdId,
-      p_kind: 'tts',
-    });
-    if (!error) {
-      const count = typeof data === 'number' ? data : Number(data);
-      if (Number.isFinite(count) && count > limit) {
-        throw new BudgetExceededError('respond', count, limit);
-      }
-      return;
-    }
-    lastErr = error.message;
-    if (attempt === 0) await new Promise((r) => setTimeout(r, 200));
-  }
-  console.warn('[tts] bump_usage failed after 2 attempts:', lastErr);
-  throw new BudgetExceededError('respond', -1, limit);
-}
 
 export async function POST(request: NextRequest) {
   const ctx = await requireChildDevice();
@@ -50,34 +23,17 @@ export async function POST(request: NextRequest) {
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
 
-  // Narrator voice resolution: explicit voiceId > parent-set narratorVoiceId
-  // (children.settings) > env default.
-  let settingsNarrator: string | null = null;
-  if (!body.data.voiceId && body.data.voice !== 'buddy') {
-    settingsNarrator = (await loadChildProfile(ctx.childId)).settings.narratorVoiceId;
-  }
+  const settings = body.data.voiceId ? null : (await loadChildProfile(ctx.childId)).settings;
+
   const voiceId =
     body.data.voiceId ??
-    (body.data.voice === 'buddy'
-      ? process.env.BUDDY_VOICE_ID
-      : settingsNarrator ?? process.env.NARRATOR_VOICE_ID);
+    (body.data.voice === 'night'
+      ? process.env.NIGHT_VOICE_ID ?? process.env.NARRATOR_VOICE_ID
+      : settings?.narratorVoiceId ?? process.env.DAY_VOICE_ID ?? process.env.NARRATOR_VOICE_ID);
   if (!voiceId) return NextResponse.json({ error: 'no_voice' }, { status: 500 });
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) return NextResponse.json({ error: 'no_key' }, { status: 500 });
-
-  try {
-    await bumpTts(ctx.householdId);
-  } catch (err) {
-    if (err instanceof BudgetExceededError) {
-      return NextResponse.json({ error: 'budget_exceeded' }, { status: 429 });
-    }
-    // Any other error was a hard fail-closed signal from bumpTts (RPC blip,
-    // network hiccup on the Supabase side). Previously the catch swallowed
-    // it and fell through to the paid ElevenLabs call — a live money leak.
-    // Now we surface it as a 500 so the caller retries or degrades.
-    throw err;
-  }
 
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}/with-timestamps`;
   const res = await fetch(url, {
