@@ -79,8 +79,9 @@ export function Reader({
   const { bedtime, toggleBedtime } = useBedtime(bedtimeWindow);
   const isNight = bedtime;
 
-  // Word timestamps for the current page — threaded into the transport so
-  // `transport.speakOne(word)` finds a real offset instead of restarting.
+  const voiceMode: 'day' | 'night' = isNight ? 'night' : 'day';
+
+  // Word timestamps for the current page (voice-specific).
   const [pageTimestamps, setPageTimestamps] = useState<WordTimestamp[] | null>(null);
   useEffect(() => {
     if (!page || state.chapterIdx === null) {
@@ -88,13 +89,13 @@ export function Reader({
       return;
     }
     let cancelled = false;
-    void fetchPageTimestamps(book.id, state.chapterIdx, state.pageIdx, page.text).then((ts) => {
+    void fetchPageTimestamps(book.id, state.chapterIdx, state.pageIdx, page.text, voiceMode).then((ts) => {
       if (!cancelled) setPageTimestamps(ts);
     });
     return () => {
       cancelled = true;
     };
-  }, [book.id, page, state.chapterIdx, state.pageIdx]);
+  }, [book.id, page, state.chapterIdx, state.pageIdx, voiceMode]);
 
   const transportPage = useMemo(() => {
     if (!page || state.chapterIdx === null) return null;
@@ -104,10 +105,11 @@ export function Reader({
         bookId: book.id,
         chapterIdx: state.chapterIdx,
         pageIdx: state.pageIdx,
+        voice: voiceMode,
       }),
       timestamps: pageTimestamps ?? undefined,
     };
-  }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps]);
+  }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps, voiceMode]);
 
   // Post-chapter advancement. Chapter books return to their map; quick books
   // exit to Home. In night mode on the final page we hold instead of pushing
@@ -141,7 +143,7 @@ export function Reader({
     onAutoNext,
     isLastPage: lastPage,
     voiceMod: isNight ? BEDTIME_VOICE : undefined,
-    voice: isNight ? 'night' : 'day',
+    voice: voiceMode,
   });
 
   const onBack = useCallback(() => {
@@ -174,6 +176,7 @@ export function Reader({
 
   return (
     <div
+      data-mode={isNight ? 'night' : 'day'}
       style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)', overflow: 'hidden' }}
       onTouchStart={swipe.onTouchStart}
       onTouchEnd={swipe.onTouchEnd}

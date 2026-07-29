@@ -298,3 +298,33 @@ body,
     max-height: 36dvh;
   }
 }
+
+/* ── Night mode palette ────────────────────────────────────────────────
+   [data-mode="night"] on the reader root: warm-dark treatment that keeps
+   the paper feel but lowers luminance for a bedtime story. Ink stays warm
+   (never black-on-black), contrast steps down a bit so the story doesn't
+   feel like it's demanding attention, and the background transitions in
+   over 600ms so the day→night toggle settles instead of snapping. */
+[data-mode='night'] {
+  --surface-page: #241812;
+  --paper: #2d1e17;
+  --paper-bright: #38271e;
+  --paper-deep: #1c130e;
+  --ink: #f2e7d3;
+  --ink-soft: #c9b598;
+  --ink-faint: #8a7961;
+  --text-strong: #f7ecd8;
+  --text-body: #ead8b8;
+  --text-muted: #a89478;
+  --sand-line: #5c4432;
+  --wash-panel: #38271e;
+  --wash-capsule: rgba(56, 39, 30, 0.85);
+  transition: background 600ms ease, color 600ms ease;
+}
+[data-mode='night'] main,
+[data-mode='night'] article,
+[data-mode='night'] p,
+[data-mode='night'] h1,
+[data-mode='night'] h2 {
+  transition: color 600ms ease;
+}
