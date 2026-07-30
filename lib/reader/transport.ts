@@ -34,34 +34,32 @@ interface PageAudio {
 interface Options {
   /** Current page's audio + text. */
   page: PageAudio | null;
-  /** Truthy while playback should be paused (unused in the pared-back reader
-   *  — kept in the interface because nothing gates today). */
+  /** Truthy while playback should be paused (nothing gates in the pared-back
+   *  reader; kept so the transport contract is unchanged if a modal is added). */
   gated: boolean;
-  /** Called when auto-turn wants to advance to the next page. */
+  /** Called after each page ends + AUTO_TURN_DELAY_MS. The reader decides
+   *  whether that means next-page, next-chapter, or exit. */
   onAutoNext: () => void;
-  /** True if this page is the last page of the chapter — auto-turn just stops. */
-  isLastPage: boolean;
   /** Prosody override (night mode: {rate:0.9, volume:0.85}). Applies to page
    *  narration and single-word speech alike. */
   voiceMod?: { rate?: number; volume?: number };
-  /** Day/Night voice selection. Threaded to the TTS route as the
-   *  `voice` field so the sleepy voice cast fires in night mode. Word-tap
-   *  speech honors the same voice — kids hear the current-mode voice
-   *  consistently. */
-  voice?: 'day' | 'night';
 }
 
 export interface ReaderTransport {
   playing: boolean;
-  /** -1 when nothing highlighted. */
+  /** Current highlighted word (-1 when nothing highlighted). While paused
+   *  this reflects the last-narrated word OR the last word the child
+   *  tapped, so a play press resumes from there. */
   wordIdx: number;
   play: () => void;
   pause: () => void;
   toggle: () => void;
   /** Seek to `wordIdx` and continue playing from there. */
   seekToWord: (wordIdx: number) => void;
-  /** Speak a single word (+ meaning) — no seek, no state change to main narration. */
-  speakOne: (word: string, meaning?: string) => void;
+  /** Speak a single word — no state change to main narration. Used when
+   *  the child taps a word while paused: they hear it, and the highlight
+   *  moves so the next play starts from there. */
+  speakOne: (word: string, wordIdx?: number) => void;
   /** Force a hard stop (used on page nav / unmount). */
   stop: () => void;
 }
@@ -69,7 +67,7 @@ export interface ReaderTransport {
 /** 1.5s breath between pages in play mode (§A3). */
 const AUTO_TURN_DELAY_MS = 1500;
 
-export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceMod, voice = 'day' }: Options): ReaderTransport {
+export function useReaderTransport({ page, gated, onAutoNext, voiceMod }: Options): ReaderTransport {
   const [playing, setPlaying] = useState(false);
   const [wordIdx, setWordIdx] = useState(-1);
 
@@ -122,10 +120,12 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceM
         },
         onEnd: () => {
           setWordIdx(-1);
-          if (isLastPage) {
-            setPlaying(false);
-            return;
-          }
+          // Always schedule auto-turn — the reader's onAutoNext handler
+          // decides what to do at the chapter boundary (advance to next
+          // chapter, exit to home, or on the last chapter of a night-mode
+          // story, hold silent). Prior behavior short-circuited on the
+          // last page of a chapter and stranded the child at the map;
+          // uniform delegation lets chapters auto-progress.
           autoTurnRef.current = setTimeout(() => {
             autoTurnRef.current = null;
             onAutoNext();
@@ -133,14 +133,23 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceM
         },
       });
     },
-    [page, clearAutoTurn, isLastPage, onAutoNext, voiceMod],
+    [page, clearAutoTurn, onAutoNext, voiceMod],
   );
 
   const play = useCallback(() => {
     if (!page) return;
     if (playing) return;
-    startPlayback();
-  }, [page, playing, startPlayback]);
+    // Resume from the last-highlighted word if we have one (either the
+    // narration paused mid-page, or the child tapped a word while paused).
+    // Otherwise start from the top.
+    if (wordIdx >= 0) {
+      const ts = page.timestamps;
+      const offset = ts && ts[wordIdx] ? ts[wordIdx].start : undefined;
+      startPlayback(offset, wordIdx);
+    } else {
+      startPlayback();
+    }
+  }, [page, playing, wordIdx, startPlayback]);
 
   const pause = useCallback(() => {
     handleRef.current?.cancel();
@@ -165,21 +174,28 @@ export function useReaderTransport({ page, gated, onAutoNext, isLastPage, voiceM
     [page, startPlayback],
   );
 
-  // speakOne — deliberately uses a fresh speak() handle that DOESN'T touch
-  // the main narration state.
+  // speakOne — one-shot single word playback. Doesn't take the main
+  // narration slot; when a wordIdx is supplied it also parks the highlight
+  // there so a subsequent play() resumes from that word.
   const speakOneRef = useRef<SpeakHandle | null>(null);
   const speakOne = useCallback(
-    (word: string, meaning?: string) => {
-      pause();
+    (word: string, targetIdx?: number) => {
+      // Only cancel main narration if it's actively playing. When paused,
+      // we want to keep the paused-at position AND set a new resume point.
+      if (playing) {
+        pause();
+      }
+      if (typeof targetIdx === 'number' && targetIdx >= 0) {
+        setWordIdx(targetIdx);
+      }
       speakOneRef.current?.cancel();
-      const utterance = meaning ? `${word}. ${word} means ${meaning}.` : word;
-      speakOneRef.current = speak(utterance, {
+      speakOneRef.current = speak(word, {
         allowSpeechSynthFallback: true,
         rate: voiceMod?.rate,
         volume: voiceMod?.volume,
       });
     },
-    [pause, voiceMod],
+    [pause, playing, voiceMod],
   );
 
   // Whenever the active page changes, reset transport.

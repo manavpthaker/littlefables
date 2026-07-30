@@ -299,6 +299,34 @@ body,
   }
 }
 
+/* ── Landscape phone polish ─────────────────────────────────────────────
+   A phone held sideways has ~390px of vertical space. The default reader
+   chrome (top bar + secondary strip + footer transport) eats close to
+   half of that. Short-viewport tuning: tighter paddings, thinner sidebar,
+   and the secondary strip collapses so the story gets more room. */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Top bar sits shallower — no need for a big touch target when the
+     child is holding the phone with two thumbs anyway. */
+  [data-density='kid'] header nav,
+  [data-density='kid'] header .lf-topbar {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  /* Reader footer transport: kill vertical padding aggressively and
+     shrink the gradient wash so it doesn't cover the last line of text. */
+  [data-density='kid'] main + footer,
+  [data-density='kid'] footer.lf-reader-footer {
+    padding-top: 4px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+    gap: 4px;
+  }
+  /* The art card in portrait would eat 42dvh — in landscape that's
+     ~165px, cramped. Ceiling it so the text gets breathing room. */
+  .lf-art-card {
+    max-height: 30dvh;
+  }
+}
+
 /* ── Night mode palette ────────────────────────────────────────────────
    [data-mode="night"] on the reader root: warm-dark treatment that keeps
    the paper feel but lowers luminance for a bedtime story. Ink stays warm

@@ -141,9 +141,7 @@ export function Reader({
     page: transportPage,
     gated: false,
     onAutoNext,
-    isLastPage: lastPage,
     voiceMod: isNight ? BEDTIME_VOICE : undefined,
-    voice: voiceMode,
   });
 
   const onBack = useCallback(() => {
@@ -159,11 +157,17 @@ export function Reader({
   const onPrev = useCallback(() => dispatch({ type: 'prevPage' }), []);
   const onNext = useCallback(() => dispatch({ type: 'nextPage' }), []);
 
-  // Word interactions: tap = hear the word in the current mode's voice. That's
-  // the only word-level affordance now — no popover, no save, no definition.
+  // Word interactions:
+  //   playing → seek to the tapped word and continue narrating from there
+  //   paused  → speak the word once AND park the highlight there, so the
+  //             next play press picks up from that word
   const onHearWord = useCallback(
-    (stem: string) => {
-      transport.speakOne(stem);
+    (word: string, wordIdx: number) => {
+      if (transport.playing) {
+        transport.seekToWord(wordIdx);
+      } else {
+        transport.speakOne(word, wordIdx);
+      }
     },
     [transport],
   );
@@ -276,6 +280,7 @@ export function Reader({
           </main>
 
           <footer
+            className="lf-reader-footer"
             style={{
               flex: 'none',
               padding: 'var(--space-3) var(--page-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',

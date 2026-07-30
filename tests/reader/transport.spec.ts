@@ -29,7 +29,6 @@ function setup(overrides: Partial<Parameters<typeof useReaderTransport>[0]> = {}
     page: { text: 'The paper boat sailed on.' },
     gated: false,
     onAutoNext,
-    isLastPage: false,
     ...overrides,
   };
   const hook = renderHook((p: Parameters<typeof useReaderTransport>[0]) => useReaderTransport(p), {
@@ -118,40 +117,36 @@ describe('useReaderTransport §A3 invariants', () => {
     expect(lastOpts?.startOffset).toBeUndefined();
   });
 
-  it('speakOne pauses main narration and speaks the word alone', () => {
+  it('speakOne while playing pauses main narration and speaks the word alone', () => {
     const { hook } = setup();
     act(() => hook.result.current.play());
     expect(hook.result.current.playing).toBe(true);
     act(() => hook.result.current.speakOne('paper'));
-    // Main narration paused
     expect(hook.result.current.playing).toBe(false);
-    // Last speak() call was for the word alone
     expect(lastText).toBe('paper');
   });
 
-  it('onEnd on non-last page schedules auto-next; on last page just stops', () => {
+  it('speakOne with a wordIdx parks the highlight so next play resumes there', () => {
+    const { hook } = setup();
+    // Paused start; tap word index 2.
+    act(() => hook.result.current.speakOne('paper', 2));
+    expect(hook.result.current.playing).toBe(false);
+    expect(hook.result.current.wordIdx).toBe(2);
+    // Now play — startOffset should reflect the parked word (undefined here
+    // because the test page has no timestamps, but the start index is set).
+    act(() => hook.result.current.play());
+    expect(hook.result.current.wordIdx).toBe(2);
+  });
+
+  it('onEnd always schedules auto-next after the breath (reader decides page-vs-chapter)', () => {
     vi.useFakeTimers();
     try {
-      const { hook, onAutoNext } = setup({ isLastPage: false });
+      const { hook, onAutoNext } = setup();
       act(() => hook.result.current.play());
       act(() => lastOpts?.onEnd?.());
       expect(onAutoNext).not.toHaveBeenCalled();
       act(() => vi.advanceTimersByTime(1500));
       expect(onAutoNext).toHaveBeenCalledTimes(1);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('onEnd on the last page stops without auto-next', () => {
-    vi.useFakeTimers();
-    try {
-      const { hook, onAutoNext } = setup({ isLastPage: true });
-      act(() => hook.result.current.play());
-      act(() => lastOpts?.onEnd?.());
-      act(() => vi.advanceTimersByTime(5000));
-      expect(onAutoNext).not.toHaveBeenCalled();
-      expect(hook.result.current.playing).toBe(false);
     } finally {
       vi.useRealTimers();
     }

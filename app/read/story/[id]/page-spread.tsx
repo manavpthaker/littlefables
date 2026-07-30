@@ -1,7 +1,7 @@
 'use client';
 
 import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
-import { StoryText } from '@ds/components/reader/StoryText.jsx';
+import { StoryText } from './story-text';
 import type { ReaderPage } from '@/lib/reader/types';
 import { useLandscapeSpread } from '@/lib/reader/use-landscape';
 
@@ -63,7 +63,6 @@ export function PageSpread({
       currentIndex={currentIndex}
       dimUpcoming={narrating}
       onHearWord={onHearWord}
-      overArt={false}
     />
   );
 
