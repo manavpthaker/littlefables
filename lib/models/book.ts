@@ -63,12 +63,14 @@ export const chapterSchema = z
   })
   .passthrough();
 
-// syllables + kidDefinition are the collectable-word depth from the redesign
-// brief (extends PRD A9): "bur — row", then a definition in kid language.
-// Optional so pre-backfill books still parse.
+// Per-book vocab. `syllables` powers the "bur — row" split; either
+// `kidDefinition` or `meaning` (or both) can carry the definition text.
+// Both are optional so the field can be a bare tap-to-hear entry when the
+// author didn't write a definition. `meaning` stays in the schema for
+// backward compatibility with older seed data.
 export const vocabEntrySchema = z.object({
   word: z.string(),
-  meaning: z.string(),
+  meaning: z.string().optional(),
   syllables: z.array(z.string().min(1)).optional(),
   kidDefinition: z.string().optional(),
 });

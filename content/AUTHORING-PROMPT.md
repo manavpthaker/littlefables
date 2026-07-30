@@ -64,11 +64,12 @@ source story. The model returns a `story.json` you can drop straight into a
 >   - worth teaching a 3–6 year old (mildly unfamiliar, evocative, useful),
 >   - AND actually appear in the story text,
 >   - AND not proper nouns.
->   For each word, add `syllables` (split by sound, like `["hedge","hog"]`)
->   and `kidDefinition` (one warm sentence a young child would understand —
->   NOT dictionary-speak, no "of or relating to", no using the word to define
->   itself). Skip `vocab` entirely if the source has no words worth
->   flagging.
+>   For each word, include `syllables` (split by sound, like
+>   `["hedge","hog"]`) and `kidDefinition` (one warm sentence a young
+>   child would understand — NOT dictionary-speak, no "of or relating
+>   to", no using the word to define itself). Only include these two
+>   fields per entry; do NOT emit `meaning`. Skip the whole `vocab`
+>   array if the source has no words worth flagging.
 >
 > **Text handling:**
 >
