@@ -54,7 +54,7 @@ Brady and Anne's helpful presence next door (where science meets kindness), Flo'
 
 Azi
 
-Thoughtful, stubborn, imaginative. Half Colombian sunshine, half Indian curiosity. Loves guitar (always within reach), puzzles (obsessed with fitting pieces together), and his AKAI keyboard (patient as he learns that some things take time to understand). Lives in a world where "agua" and "lechita" flow naturally through daily life, where Hindi letters dance in bedtime books, and where Gujarati floats through Dada and Dadi's house like warm spices. Courageous when he doesn't realize he's afraid. Feels things deeply and processes them through music, one strum or one note at a time. Sees problems as puzzles waiting to be solved, not obstacles to avoid. He is the anchor around which everything gently orbitsa universe where love speaks many languages but always feels like home.
+Thoughtful, stubborn, imaginative. Growing up inside a Colombian and Indian family, with heritage carried through everyday language, food, music, and family relationships rather than stereotype or costume. Loves guitar (always within reach), puzzles (obsessed with fitting pieces together), and his AKAI keyboard (patient as he learns that some things take time to understand). Lives in a world where "agua" and "lechita" flow naturally through daily life, where Hindi letters dance in bedtime books, and where Gujarati floats through Dada and Dadi's house like warm spices. Courageous when he doesn't realize he's afraid. Feels things deeply and processes them through music, one strum or one note at a time. Sees problems as puzzles waiting to be solved, not obstacles to avoid. He is the anchor around which everything gently orbits - a universe where love speaks many languages but always feels like home.
 
 Jujy  The Loyal Leader
 
@@ -96,11 +96,11 @@ Tends his honey and speaks like dusk. Appears occasionally, always at the right 
 
 Family Near and Far
 
-Mama Songs in her hands and Spanish in her heart. Calls Azi "mi amor" and "mi cielo" and makes the world feel safe in two languages. Sometimes she gets quiet when she misses home, and Azi learns that grown-ups can feel homesick too.
+Indira / Mama Modern Colombian-heritage mother in her 40s. Songs in her hands and Spanish in her heart. Calls Azi "mi amor" and "mi cielo" and makes the world feel safe in two languages. Sometimes she gets quiet when she misses home, and Azi learns that grown-ups can feel homesick too. Her heritage belongs in language, food, music, family ties, and memory, not default ethnic or traditional clothing.
 
-Papa Sometimes forgets where his phone is, but always remembers where Azi is. Learning Gujarati alongside his son, discovering that some things are easier to understand together. His love sounds different than Mama's but feels just as warm.
+Manav / Papa Modern Indian/Gujarati-heritage father in his 40s. Sometimes forgets where his phone is, but always remembers where Azi is. Learning Gujarati alongside his son, discovering that some things are easier to understand together. His love sounds different than Mama's but feels just as warm. His heritage belongs in language, food, music, family ties, and memory, not default ethnic or traditional clothing.
 
-Tia & Chicho Mama's sister carries Colombian sunshine wherever she goes. Chicho brings unexpected Bulgarian stories that taste like adventure and sound like music from places Azi's never been but somehow recognizes.
+Tia & Chicho Mama's sister carries Colombian family warmth wherever she goes. Chicho brings unexpected Bulgarian stories that taste like adventure and sound like music from places Azi's never been but somehow recognizes.
 
 Sebitas (Bitas) Primo who speaks the cousin language of shared mischief and understanding. Adventures taste different when family comes to visit.
 

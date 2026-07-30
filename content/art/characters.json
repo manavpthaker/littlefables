@@ -1,13 +1,15 @@
 {
-  "version": "2.2",
-  "generatedAt": "2026-07-11T00:00:00.000Z",
+  "version": "2.4",
+  "generatedAt": "2026-07-30T00:00:00.000Z",
   "note": "Character bible for the Azi-Verse. Duplicates lib/universe/azad-verse.ts intentionally — this is the art bible per docs/reference/azi-verse/azi-verse-app-architecture.md §3.1. Consumers (Parent Corner display, future art pipeline) prefer this file when present; azad-verse.ts is the runtime fallback.",
   "characters": [
     {
       "id": "char_azi",
       "name": "Azi",
+      "aliases": ["Azad"],
       "emoji": "🎸",
-      "role": "the child at the center — half Colombian sunshine, half Indian curiosity",
+      "species": "human child",
+      "role": "the child at the center - Azad, called Azi in stories; growing inside a Colombian and Indian family identity",
       "personality": "thoughtful, stubborn, imaginative; processes feelings through music",
       "loves": "guitar (three chords C-G-Am), puzzles, the AKAI keyboard, moon-watching, family video calls to Colombia",
       "traits": ["thoughtful", "stubborn", "imaginative", "courageous when he does not realize he is afraid"],
@@ -20,18 +22,224 @@
         { "characterId": "char_jujy", "type": "companion", "note": "daily leader on adventures" },
         { "characterId": "char_slothie", "type": "companion", "note": "holds him in stillness" },
         { "characterId": "char_mama", "type": "family", "note": "mi cielo, mi amor" },
-        { "characterId": "char_papa", "type": "family", "note": "learning Gujarati alongside him" }
+        { "characterId": "char_papa", "type": "family", "note": "learning Gujarati alongside him" },
+        { "characterId": "char_lokijit", "type": "friend", "note": "close child friend, called Loki in story canon" }
       ],
       "canonRules": [
         "never punished for a feeling",
         "never made to shrink to solve a problem",
-        "his heritage words are never translated dictionary-style"
+        "his heritage words are never translated dictionary-style",
+        "always rendered as a real human boy, never as plush, animal, furry, monkey-like, or muzzle-faced"
       ],
-      "visualAnchors": ["soft brown curls", "guitar within reach", "often barefoot on the circular rug"],
+      "visualAnchors": [
+        "dense tousled black curls with loose ringlets falling across his forehead and around his ears",
+        "round preschool cheeks and softly rounded face",
+        "large dark almond eyes with expressive brows",
+        "warm medium-brown skin",
+        "small red thread bracelet on one wrist",
+        "guitar within reach",
+        "often barefoot on the circular rug"
+      ],
       "roleByBand": {
         "0-3": "the small one being sung to",
         "4-8": "the curious explorer who names his feelings",
         "7-10": "the young musician learning that some things take time to understand"
+      },
+      "artReference": {
+        "identity": "Preschool-age human boy with Colombian heritage through Mama/Indira and Indian heritage through Papa/Manav; use Azad for family/source references and Azi for story prompts. Heritage belongs in language, family, food, music, and relationships, not costume-like wardrobe.",
+        "face": "Soft round face, full cheeks, small rounded chin, childlike proportions, warm medium-brown skin. Keep the face open and gentle, never elongated or angular.",
+        "hair": "Very thick dark brown-to-black curls, loose and springy, forming a rounded halo shape with distinct forehead ringlets and side curls near the ears. Do not straighten, crop too short, or turn into fur.",
+        "eyesAndBrows": "Large dark eyes, slightly almond-shaped, with expressive brows that carry curiosity, worry, and delight. Eyes should feel observant and bright, not tiny dots.",
+        "expressionRange": "Thoughtful parted-lip look, shy side glance, delighted open smile, focused downward concentration, and big playful open-mouth expressions.",
+        "buildAndScale": "Small preschool build, soft toddler-to-preschool proportions, shorter than Mama and Papa, often leaning on elbows, sitting close, or tucked between adults.",
+        "wardrobeAndProps": "Recurring anchors can include modern everyday child clothes: bright yellow play shirts, soft blue rocket pajamas, black or simple play shirts, barefoot at home, a small red thread bracelet, guitar or AKAI keyboard nearby when music matters.",
+        "doNotDrift": [
+          "no plush body",
+          "no animal face",
+          "no muzzle",
+          "no monkey-like features",
+          "no generic straight-haired child",
+          "do not remove the curl mass or red thread bracelet when visible",
+          "do not use ethnic, traditional, ceremonial, or costume clothing as shorthand for heritage unless the page text explicitly calls for it"
+        ],
+        "copyPrompt": "Azi/Azad: preschool-age human boy with Colombian and Indian family heritage, warm medium-brown skin, soft round cheeks, large dark expressive eyes, and dense tousled black curls forming a rounded halo with ringlets across his forehead and around his ears. Small red thread bracelet. Curious, thoughtful, playful; often leaning close, sitting on the floor, barefoot, with a guitar, keyboard, puzzle, or family nearby. Modern everyday child clothes only; never plush, animal-like, furry, monkey-like, muzzle-faced, or dressed in ethnic/traditional clothing unless the page text explicitly calls for it."
+      }
+    },
+    {
+      "id": "char_mama",
+      "name": "Mama",
+      "aliases": ["Indira", "Mami"],
+      "emoji": "💛",
+      "species": "human adult",
+      "role": "Indira, Azi's warm, playful, modern Colombian-heritage mother in her 40s",
+      "personality": "gentle, bright, playful, steady; gives Azi room to feel while staying close",
+      "loves": "floor-level play, soft check-ins, singing in Spanish, garden and home rituals, modern family life, keeping closeness light and joyful",
+      "traits": ["playful", "attuned", "warm", "expressive", "steady"],
+      "speechPatterns": [
+        "uses soft Spanish endearments such as mi amor and mi cielo",
+        "asks emotionally precise questions without lecturing",
+        "keeps hard moments warm and grounded"
+      ],
+      "relationships": [
+        { "characterId": "char_azi", "type": "family", "note": "mother; physically and emotionally down at his level" },
+        { "characterId": "char_papa", "type": "family", "note": "co-parent; different warmth, same steadiness" }
+      ],
+      "canonRules": [
+        "always human, never plush-like or animal-like",
+        "Colombian heritage is context for family, language, food, music, and relationship details, not a wardrobe directive",
+        "never default to ethnic, traditional, ceremonial, or costume clothing unless the page text explicitly calls for it",
+        "her softness is active steadiness, not passivity",
+        "when Azi has big feelings, she stays close without becoming the source of the lesson"
+      ],
+      "visualAnchors": [
+        "modern woman in her 40s",
+        "warm medium-brown skin",
+        "dark almond eyes and expressive arched brows",
+        "dark hair either neatly pulled back or worn smooth and shoulder-length",
+        "wide playful smile with bright cheeks",
+        "delicate gold jewelry such as hoops, a thin necklace, bracelet, or layered chains",
+        "round gold glasses in some outings",
+        "contemporary everyday wardrobe, not heritage-costume styling",
+        "often on the floor, leaning on one elbow, or crouched at Azi's eye level"
+      ],
+      "roleByBand": {
+        "0-3": "the warm nearby voice",
+        "4-8": "the steady co-regulator who names love clearly",
+        "7-10": "the parent who gives feelings language without shrinking them"
+      },
+      "artReference": {
+        "identity": "Indira/Mama is a modern human mother in her 40s, Colombian by heritage, with warm medium-brown skin, dark almond eyes, expressive brows, and a playful face that reads as loving before it reads as posed.",
+        "face": "Oval-to-heart face, bright cheeks, defined brows, warm eyes, open smile. Keep her face elegant but approachable and clearly in her 40s, with expressive eyes and a smile that can become mischievous.",
+        "hair": "Dark hair. At home it can be neatly pulled back away from the face; in outings it can be smooth, shoulder-length, softly tucked behind the ears. Preserve the dark hairline and clean silhouette.",
+        "eyesAndBrows": "Dark almond eyes, arched expressive brows, and direct attentive gaze when looking at Azi. When glasses appear, use thin round gold frames.",
+        "expressionRange": "Warm closed-mouth smile, bright open laugh, playful silly face, attentive concerned softness, and gentle eye-level focus.",
+        "buildAndPosture": "Modern adult woman in her 40s, slim-to-average build, usually physically low and close to Azi: lying on the rug, crouching, leaning in, hugging, or sharing his line of sight.",
+        "wardrobeAndProps": "Modern everyday clothes: simple fitted tops, contemporary floral sundress, black coat, casual layers, delicate hoop earrings, thin gold necklace or layered chains, slim bracelet. Wardrobe can change, but jewelry and warm facial language should remain. Do not use ethnic, traditional, folkloric, ceremonial, or costume clothing unless the page text explicitly calls for it.",
+        "doNotDrift": [
+          "no generic mother silhouette",
+          "no animal or plush features",
+          "do not make her younger than her 40s or elderly",
+          "do not lose the expressive brows, warm eyes, or delicate jewelry",
+          "do not make her distant or standing over Azi when the scene asks for closeness",
+          "do not put her in ethnic or traditional clothing as a shortcut for Colombian heritage"
+        ],
+        "copyPrompt": "Indira/Mama: modern human mother in her 40s, Colombian by heritage, with warm medium-brown skin, dark almond eyes, expressive arched brows, dark hair neatly pulled back at home or smooth shoulder-length on outings, warm playful smile, delicate gold jewelry, and sometimes thin round gold glasses. Contemporary everyday clothes, never ethnic/traditional/costume clothing unless the page text explicitly calls for it. She feels gentle, attentive, and physically close to Azi, often crouched, leaning in, or down at his eye level. Never plush, animal-like, or generic."
+      }
+    },
+    {
+      "id": "char_papa",
+      "name": "Papa",
+      "aliases": ["Manav", "Pap"],
+      "emoji": "📚",
+      "species": "human adult",
+      "role": "Manav, Azi's steady, playful, modern Indian-heritage father in his 40s",
+      "personality": "warm, expressive, practical, patient; goofy when play opens the door, steady when feelings get big",
+      "loves": "Gujarati practice, bedtime moon rituals, museums, helping with worksheets, making stories, careful repair after hard moments",
+      "traits": ["steady", "playful", "practical", "curious", "protective"],
+      "speechPatterns": [
+        "uses beta when offering comfort",
+        "turns problems into puzzles or stories",
+        "speaks simply and steadily during regulation moments"
+      ],
+      "relationships": [
+        { "characterId": "char_azi", "type": "family", "note": "father; steady nearby presence and co-learner" },
+        { "characterId": "char_mama", "type": "family", "note": "co-parent; shared warmth with a different rhythm" },
+        { "characterId": "char_peter", "type": "friend", "note": "Peter watches Papa's Gujarati tablet for secret codes" }
+      ],
+      "canonRules": [
+        "always human, never plush-like or animal-like",
+        "Indian/Gujarati heritage is context for family, language, food, music, and relationship details, not a wardrobe directive",
+        "never default to ethnic, traditional, ceremonial, or costume clothing unless the page text explicitly calls for it",
+        "his steadiness can be silly or quiet, but never emotionally absent",
+        "he does not solve Azi's feelings for him; he stays close enough for Azi to try"
+      ],
+      "visualAnchors": [
+        "modern man in his 40s",
+        "warm medium-brown skin",
+        "short dark hair with close faded sides",
+        "neatly trimmed full beard with slight salt-and-pepper variation",
+        "round glasses or clear-framed glasses",
+        "expressive eyebrows and broad grin",
+        "casual layers such as tan jacket, brown overshirt, denim shirt, white tee, watch, and bracelet",
+        "contemporary everyday wardrobe, not heritage-costume styling",
+        "often leaning in beside Azi rather than towering above him"
+      ],
+      "roleByBand": {
+        "0-3": "the steady voice and safe shoulder",
+        "4-8": "the co-learner who makes practice feel like play",
+        "7-10": "the practical guide who models repair and curiosity"
+      },
+      "artReference": {
+        "identity": "Manav/Papa is a modern human father in his 40s, Indian/Gujarati by heritage, with warm medium-brown skin, short dark hair, trimmed beard, glasses, and a steady-playful presence.",
+        "face": "Oval face with strong brow line, warm dark eyes behind glasses, prominent nose, broad grin, and full neatly trimmed beard. The beard often carries subtle salt-and-pepper variation. Keep him clearly in his 40s, not elderly and not a young adult.",
+        "hair": "Short dark hair, close faded sides, slightly longer top combed or swept forward. Keep the haircut neat and adult, not shaggy.",
+        "eyesAndBrows": "Dark kind eyes, expressive brows, and round glasses. Frames may be thin dark wire or clear/translucent round frames depending on scene.",
+        "expressionRange": "Broad goofy open-mouth grin, gentle smile, focused downward concentration, calm concerned attention, and playful silly faces beside Azi.",
+        "buildAndPosture": "Modern adult man in his 40s, average build, usually leaning close, crouching, sitting beside Azi, or bending into the frame. He should feel physically present and reachable.",
+        "wardrobeAndProps": "Modern everyday clothes: tan or brown jacket, brown overshirt, denim overshirt, white tee, watch, simple ring, thread bracelet. Outfit may change, but glasses, beard, short hair, and warm close posture should stay. Do not use kurta, sherwani, Nehru jacket, ceremonial Indian clothing, or other ethnic/traditional costume unless the page text explicitly calls for it.",
+        "doNotDrift": [
+          "no clean-shaven version unless explicitly requested",
+          "no animal or plush features",
+          "do not remove glasses in ordinary scenes",
+          "do not make him younger than his 40s or elderly",
+          "do not make him distant, stern, or looming",
+          "do not put him in ethnic or traditional clothing as a shortcut for Indian/Gujarati heritage"
+        ],
+        "copyPrompt": "Manav/Papa/Pap: modern human father in his 40s, Indian/Gujarati by heritage, with warm medium-brown skin, short dark hair with close faded sides, neatly trimmed full beard with subtle salt-and-pepper, dark kind eyes behind round glasses or clear round frames, expressive brows, and a broad playful grin. Contemporary everyday clothes such as tan jacket, brown overshirt, denim shirt, or white tee; never ethnic/traditional/costume clothing unless the page text explicitly calls for it. He is steady and reachable, often leaning or sitting close to Azi. Never plush, animal-like, or clean-shaven unless specifically requested."
+      }
+    },
+    {
+      "id": "char_lokijit",
+      "name": "Lokijit",
+      "aliases": ["Loki"],
+      "emoji": "🧩",
+      "species": "human child",
+      "role": "Azi's close child friend who brings origami, gentle observations, and puzzle thinking",
+      "personality": "gentle, thoughtful, playful, observant; plans quietly without needing the spotlight",
+      "loves": "origami cranes, shared snacks, aquarium trips, thinking ahead, helping Azi reframe worries as puzzles",
+      "traits": ["observant", "gentle", "clever", "affectionate", "patient"],
+      "speechPatterns": [
+        "speaks in short thoughtful observations",
+        "offers puzzle-language when Azi feels stuck",
+        "lets gestures and folded paper carry some of the feeling"
+      ],
+      "relationships": [
+        { "characterId": "char_azi", "type": "friend", "note": "close child friend; comfortable with arms-around-shoulders closeness" }
+      ],
+      "canonRules": [
+        "called Loki in story prose unless a real-world family note needs Lokijit",
+        "always human, never plush-like or animal-like",
+        "his quietness is wisdom and warmth, not blankness"
+      ],
+      "visualAnchors": [
+        "young human boy close to Azi's age",
+        "smooth warm light-to-medium skin",
+        "straight dark hair, short and neat with a soft side sweep or wispy fringe",
+        "rounded forehead and soft cheeks",
+        "dark eyes and easy smile",
+        "simple light T-shirts and casual shorts or jeans",
+        "often shoulder-to-shoulder with Azi"
+      ],
+      "roleByBand": {
+        "0-3": "the nearby friend with gentle gestures",
+        "4-8": "the puzzle-thinking friend who offers a quiet reframe",
+        "7-10": "the observant peer who models thoughtful friendship"
+      },
+      "artReference": {
+        "identity": "Young human boy, close to Azi's age, used in story canon as Loki and in family/source notes as Lokijit.",
+        "face": "Soft child face with rounded forehead, smooth cheeks, small chin, and an easy warm smile. Keep him distinct from Azi by using straight hair and a smoother, less curly silhouette.",
+        "hair": "Straight dark hair, short and neat, with a soft side sweep or wispy fringe. Do not give him Azi's dense curls.",
+        "eyesAndBrows": "Dark eyes, gentle alert gaze, subtle brows. Expression should feel observant and kind rather than loud.",
+        "expressionRange": "Small grin, shared laugh, quiet concentration while folding paper, affectionate side-lean against Azi, and thoughtful puzzle-solving look.",
+        "buildAndPosture": "Small child build close to Azi's scale. Often shoulder-to-shoulder with Azi, arm around him, leaning in, or standing close in crowded places.",
+        "wardrobeAndProps": "Simple light or off-white graphic T-shirt, casual shorts or jeans, folded paper crane or small snack when story-relevant.",
+        "doNotDrift": [
+          "do not give him curly hair like Azi",
+          "no plush or animal features",
+          "do not make him much older than Azi",
+          "do not make him generic; preserve the straight dark hair, rounded forehead, soft cheeks, and gentle smile"
+        ],
+        "copyPrompt": "Lokijit/Loki: young human boy close to Azi's age with smooth warm light-to-medium skin, straight dark short hair with a soft side sweep or wispy fringe, rounded forehead, soft cheeks, dark eyes, and an easy gentle smile. He is observant, affectionate, and often shoulder-to-shoulder with Azi, sometimes with an arm around him or a folded paper crane nearby. Never plush or animal-like; do not give him Azi's curly hair."
       }
     },
     {

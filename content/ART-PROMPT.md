@@ -7,11 +7,15 @@ the app's warm palette so the shelf and reader feel like one book.
 
 The whole point is **consistency**. If Bramble is a hedgehog on page 1, he's
 the same hedgehog with the same colors and the same posture on page 8.
-Every image tool has its own trick for this — capture your final character
-prompt at the top of the story folder as `character-notes.md` and reuse it
-verbatim in every page prompt. Reference-image / style-reference features
-(Midjourney `--sref` + `--cref`, Flux Redux, Gemini image-to-image) are the
-easiest way to get there.
+Every image tool has its own trick for this — for recurring human characters,
+start from `content/art/recurring-human-character-references.md` and paste those
+blocks verbatim. Then capture the final book-specific character prompt at the
+top of the story folder as `character-notes.md` and reuse it verbatim in every
+page prompt. Reference-image / style-reference features (Midjourney `--sref` +
+`--cref`, Flux Redux, Gemini image-to-image) are the easiest way to get there.
+For family characters, heritage is context for language, food, music, and
+relationships, not a wardrobe cue; keep clothing modern and everyday unless the
+page text explicitly calls for a specific cultural outfit.
 
 ---
 

@@ -21,11 +21,26 @@ next-env.d.ts
 supabase/.temp/
 supabase/.branches/
 
-# Generated assets — PRD §4.4: never enter git
+# Generated assets — never enter git; uploaded via `pnpm content:add`
 public/audio/
 public/art/
 content/art/candidates/
 content/art/live/
+
+# Book art + audio: image/mp3 binaries stay local. story.json,
+# character-notes.md, and prompt files ARE the source of truth for a
+# book and remain tracked; the heavy binary assets do not (they upload
+# via `pnpm content:add` to the Supabase Storage buckets and re-fetch
+# on any fresh clone via the same command).
+content/books/**/*.png
+content/books/**/*.jpg
+content/books/**/*.jpeg
+content/books/**/*.webp
+content/books/**/*.mp3
+content/books/**/*.m4a
+content/books/**/*.wav
+content/books/**/*.docx
+content/books/**/audio/
 
 # OS / editor
 .DS_Store
