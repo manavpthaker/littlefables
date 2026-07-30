@@ -18,7 +18,8 @@
     "db:reset": "supabase db reset",
     "db:migrate": "supabase migration up",
     "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
-    "content:add": "tsx scripts/import-book.ts"
+    "content:add": "tsx scripts/import-book.ts",
+    "content:narrate": "tsx scripts/narrate-book.ts"
   },
   "dependencies": {
     "@supabase/server": "^1.4.0",
