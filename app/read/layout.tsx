@@ -15,7 +15,9 @@ export const viewport: Viewport = {
 
 export default async function ReadLayout({ children }: { children: React.ReactNode }) {
   const ctx = await requireChildDevice();
-  if (ctx instanceof NextResponse) redirect('/parent');
+  // No / stale cookie → auto-enter (mints a fresh cookie, bounces back to /read).
+  // Parent settings only shows up if the household has no children yet.
+  if (ctx instanceof NextResponse) redirect('/api/enter');
   return (
     <div data-density="kid" style={{ minHeight: '100dvh', background: 'var(--surface-page)' }}>
       {children}

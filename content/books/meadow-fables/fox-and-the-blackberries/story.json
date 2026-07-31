@@ -1,0 +1,70 @@
+{
+  "id": "fox-and-the-blackberries",
+  "title": "The Fox and the Blackberries",
+  "kind": "quick",
+  "chapters": [
+    {
+      "title": "The Fox and the Blackberries",
+      "pages": [
+        {
+          "text": "A young Fox trotted to the bramble where the blackberries grew. The first berry was plump and dark. \"Good,\" said Fox, \"but the next one will be better.\" And he trotted on."
+        },
+        {
+          "text": "The next was sweet and shiny. \"Good,\" said Fox, \"but the BEST one is still ahead.\" And he trotted on."
+        },
+        {
+          "text": "Berry after berry, he passed them all, hunting for the one perfect berry — the biggest, sweetest, shiniest berry in the whole wide world."
+        },
+        {
+          "text": "But by the end of the bramble, the birds had eaten breakfast, the mice had eaten lunch, and the branches held nothing but leaves. Fox's tummy rumbled."
+        },
+        {
+          "text": "He walked slowly back... and there, low on a branch he had passed three times, hung one small berry. Not the biggest. Not the shiniest."
+        },
+        {
+          "text": "He ate it in one bite. It was delicious. \"Hm,\" said Fox, licking his whiskers. \"Good was good the whole time.\""
+        },
+        {
+          "text": "Waiting for perfect can mean missing a lot of good."
+        },
+        {
+          "text": "Y colorín colorado, este cuento se ha acabado."
+        }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "bramble",
+      "syllables": [
+        "bram",
+        "ble"
+      ],
+      "kidDefinition": "a tangly bush with berries and prickly bits"
+    },
+    {
+      "word": "plump",
+      "syllables": [
+        "plump"
+      ],
+      "kidDefinition": "nice and round and full, like a squishy pillow"
+    },
+    {
+      "word": "delicious",
+      "syllables": [
+        "de",
+        "li",
+        "cious"
+      ],
+      "kidDefinition": "so yummy you want another bite right away"
+    },
+    {
+      "word": "whiskers",
+      "syllables": [
+        "whis",
+        "kers"
+      ],
+      "kidDefinition": "the thin little hairs on an animal's cheeks that help it feel the world"
+    }
+  ]
+}

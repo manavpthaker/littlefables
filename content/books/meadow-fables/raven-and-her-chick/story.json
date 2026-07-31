@@ -1,0 +1,77 @@
+{
+  "id": "raven-and-her-chick",
+  "title": "The Raven and Her Chick",
+  "kind": "quick",
+  "chapters": [
+    {
+      "title": "The Raven and Her Chick",
+      "pages": [
+        {
+          "text": "In the tall pine at the meadow's edge, a Raven was teaching her chick to fly."
+        },
+        {
+          "text": "\"Fly smooth and straight, little one,\" she said. \"Like this!\" And off she flew — but halfway across the sky, she wobbled left to peek at something shiny."
+        },
+        {
+          "text": "The chick flew smooth and straight... then wobbled left, exactly the same."
+        },
+        {
+          "text": "\"Hm,\" said Raven. \"Fly calm and quiet, little one. Like this!\" And off she flew — but a squirrel startled her, and she let out a great loud SQUAWK."
+        },
+        {
+          "text": "The chick flew calm and quiet... then let out a great loud SQUAWK, exactly the same."
+        },
+        {
+          "text": "Raven landed on the branch and looked at her chick for a long moment. The chick looked back with round, waiting eyes."
+        },
+        {
+          "text": "\"Little one,\" she said slowly, \"you fly the way I fly, don't you?\" \"Of course,\" said the chick. \"You're my mama. Your wings show me how.\""
+        },
+        {
+          "text": "So the next morning, Raven flew the way she hoped her chick would fly — smooth when she could, calm when she could, and honest about her wobbles."
+        },
+        {
+          "text": "And the chick wobbled less too. Funny how that works."
+        },
+        {
+          "text": "Little wings learn from watching, not from listening."
+        },
+        {
+          "text": "Y colorín colorado, este cuento se ha acabado."
+        }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "wobbled",
+      "syllables": [
+        "wob",
+        "bled"
+      ],
+      "kidDefinition": "tipped a little from side to side, like a wiggly jelly"
+    },
+    {
+      "word": "startled",
+      "syllables": [
+        "star",
+        "tled"
+      ],
+      "kidDefinition": "surprised so suddenly you jump a little"
+    },
+    {
+      "word": "peek",
+      "syllables": [
+        "peek"
+      ],
+      "kidDefinition": "a quick, tiny look at something"
+    },
+    {
+      "word": "chick",
+      "syllables": [
+        "chick"
+      ],
+      "kidDefinition": "a baby bird, small and fluffy and still learning"
+    }
+  ]
+}

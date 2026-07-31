@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { SectionHeader } from '@ds/components/parent/ParentPrimitives.jsx';
 
 export function AddChildForm() {
-  const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const [band, setBand] = useState<'3-4' | '4-6' | '4-8' | '6-8'>('4-8');
   const [busy, setBusy] = useState(false);
@@ -26,7 +24,11 @@ export function AddChildForm() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setDisplayName('');
       setOpen(false);
-      router.refresh();
+      // Zero-friction flow: after adding a child, jump the browser to
+      // /api/enter — it will mint a device cookie (fresh install) or
+      // verify the existing one (adding a second child from a signed-in
+      // browser) and land the user directly in /read.
+      window.location.href = '/api/enter';
     } catch (err) {
       setError((err as Error).message);
     } finally {

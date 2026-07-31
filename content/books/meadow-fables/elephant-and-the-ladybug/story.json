@@ -1,0 +1,71 @@
+{
+  "id": "elephant-and-the-ladybug",
+  "title": "The Elephant and the Ladybug",
+  "kind": "quick",
+  "chapters": [
+    {
+      "title": "The Elephant and the Ladybug",
+      "pages": [
+        {
+          "text": "In the meadow beyond the backyard fence lived an Elephant, very big and very strong. When a log fell across the stream, Elephant moved it. \"Being big is for helping,\" he liked to say."
+        },
+        {
+          "text": "One morning, a tiny seed blew into the curl of his trunk — and stuck. Oh, it itched!"
+        },
+        {
+          "text": "Elephant shook his trunk — shake, shake, shake. The seed stayed. He blew his biggest blow — whoooosh! The seed stayed."
+        },
+        {
+          "text": "He stomped his great gray feet — STOMP, STOMP, STOMP! The seed stayed. \"I am big and strong,\" he sighed, \"but I cannot fix one tiny seed.\""
+        },
+        {
+          "text": "\"Excuse me,\" said a small voice. On a blade of grass sat a Ladybug, red as a berry. \"I could get it out. I'm just the right small.\""
+        },
+        {
+          "text": "Elephant almost said, You're too little. Instead, he said, \"Yes, please.\""
+        },
+        {
+          "text": "Ladybug walked up his trunk on tiny, tickly feet — tip, tip, tip — and rolled the seed out like a crumb. \"Ahhh,\" said Elephant. It was the best ahhh of his whole life."
+        },
+        {
+          "text": "No one is too small to help — and no one is too big to ask."
+        },
+        {
+          "text": "Y colorín colorado, este cuento se ha acabado."
+        }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "meadow",
+      "syllables": [
+        "mead",
+        "ow"
+      ],
+      "kidDefinition": "a big open field of soft grass and flowers"
+    },
+    {
+      "word": "trunk",
+      "syllables": [
+        "trunk"
+      ],
+      "kidDefinition": "an elephant's long, bendy nose that can grab and hold things"
+    },
+    {
+      "word": "tickly",
+      "syllables": [
+        "tick",
+        "ly"
+      ],
+      "kidDefinition": "when a soft touch makes you giggle and squirm"
+    },
+    {
+      "word": "sighed",
+      "syllables": [
+        "sighed"
+      ],
+      "kidDefinition": "let out one big slow breath when you feel tired or stuck"
+    }
+  ]
+}
