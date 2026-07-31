@@ -8,6 +8,7 @@ import { useReaderTransport } from '@/lib/reader/transport';
 import { pushProgress } from '@/lib/reader/progress';
 import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-source';
 import type { WordTimestamp } from '@/lib/reader/speech';
+import { bookThemeCss } from '@/lib/reader/theme';
 import { useBedtime } from '@/lib/reader/use-bedtime';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
@@ -178,13 +179,20 @@ export function Reader({
     onNext,
   });
 
+  // Per-book atmosphere: emit scoped CSS overrides via useMemo so the
+  // recompute is cheap and the string is stable across renders. Selector
+  // gates on data-mode!="night" so bedtime always wins.
+  const themeCss = useMemo(() => bookThemeCss(book.id, book.theme), [book.id, book.theme]);
+
   return (
     <div
+      data-book-id={book.id}
       data-mode={isNight ? 'night' : 'day'}
       style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)', overflow: 'hidden' }}
       onTouchStart={swipe.onTouchStart}
       onTouchEnd={swipe.onTouchEnd}
     >
+      {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
       <ReaderTopBar
         onBack={onBack}
         title={book.title}

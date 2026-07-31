@@ -3,6 +3,12 @@
   "title": "The Word Collector",
   "by": "Papa",
   "kind": "chapter",
+  "theme": {
+    "paper": "#f1e6c9",
+    "ink": "#332111",
+    "accent": "#c67b2a",
+    "hush": "#7a6448"
+  },
   "chapters": [
     {
       "title": "The Word That Slipped",

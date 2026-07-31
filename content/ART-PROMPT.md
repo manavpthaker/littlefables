@@ -149,7 +149,46 @@ Also:
 
 ---
 
-## 4 · Cover vs page — one honest tradeoff
+## 4 · Sample a palette while you have the cover open
+
+Once the cover is generated, spend two minutes pulling a 4-color palette
+from it. The reader chrome (page background, story text, eyebrow +
+play button, muted captions) re-tints per book — so the same reader
+feels like a nocturne for The Midnight Train and a sunset for The Moose.
+Skip this step and the reader falls back to the shared cream palette,
+which is fine but generic.
+
+How: use any color picker (macOS Digital Color Meter, Sip, browser
+devtools) on the cover file. Or paste the cover image into any LLM and
+ask "give me 4 hex colors from this image: dominant background, ink
+that contrasts against the background, an accent color that appears in
+the illustration, and a muted mid-tone."
+
+Save into `story.json`:
+
+```json
+"theme": {
+  "paper": "#1c1830",   // dominant background — page paper
+  "ink":   "#f2e6d0",   // reads against paper (≥4.5:1 contrast — the reader will drop the theme if it fails)
+  "accent":"#e9b64c",   // eyebrow + current-word highlight + play button
+  "hush":  "#a89476"    // captions + upcoming-word dim
+}
+```
+
+Guardrails baked into the reader:
+
+- **Night mode always wins.** When bedtime kicks in, the app's night
+  palette overrides any per-book theme. Bedtime pacing is protected.
+- **Contrast is enforced.** ink vs paper must be ≥4.5:1 (WCAG AA large).
+  Fails silently to the shared palette with a console warning naming
+  the ratio.
+- **Applies to reader only.** The shelf stays neutral cream so the
+  covers do the visual talking. Themed chrome shows up only inside the
+  book.
+
+---
+
+## 5 · Cover vs page — one honest tradeoff
 
 If you only have time to make one image per book, **make the cover well and
 skip page art entirely**. The reader falls back to the cover for every
@@ -160,7 +199,7 @@ depends on, an emotional beat).
 
 ---
 
-## 5 · After the images
+## 6 · After the images
 
 For each book folder:
 

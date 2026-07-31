@@ -75,6 +75,27 @@ export const vocabEntrySchema = z.object({
   kidDefinition: z.string().optional(),
 });
 
+// Optional per-book palette. When present, the reader chrome (page paper,
+// story text, eyebrow, current-word highlight, play button, muted captions)
+// re-tints to match the illustration atmosphere — so opening The Midnight
+// Train reads as a nocturne and opening The Moose reads as a warm sunset.
+// Night mode always wins over any book theme (bedtime pacing is protected).
+// All four fields optional so a partial theme still parses; the reader
+// merges what's present onto the base tokens.
+export const bookThemeSchema = z.object({
+  /** Page background — replaces --surface-page. */
+  paper: z.string().regex(/^#[0-9a-fA-F]{3,8}$/).optional(),
+  /** Body text — replaces --ink / --text-strong / --text-body. */
+  ink: z.string().regex(/^#[0-9a-fA-F]{3,8}$/).optional(),
+  /** Eyebrow, current-word highlight, play button — replaces --action /
+   *  --marigold family. Pick a color that actually appears in the art. */
+  accent: z.string().regex(/^#[0-9a-fA-F]{3,8}$/).optional(),
+  /** Upcoming-word dim, captions, muted chrome — replaces --ink-soft /
+   *  --text-muted. Something between ink and paper on the value scale. */
+  hush: z.string().regex(/^#[0-9a-fA-F]{3,8}$/).optional(),
+});
+export type BookTheme = z.infer<typeof bookThemeSchema>;
+
 export const bookSchema = z
   .object({
     id: z.string().min(1),
@@ -88,6 +109,7 @@ export const bookSchema = z
     coverBg: z.string().optional(),
     vocab: z.array(vocabEntrySchema).default([]),
     originNote: z.string().nullable().optional(),
+    theme: bookThemeSchema.optional(),
     chapters: z.array(chapterSchema).min(1),
   })
   .passthrough();

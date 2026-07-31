@@ -3,6 +3,12 @@
   "title": "Papa Gets the Moon",
   "by": "Papa",
   "kind": "chapter",
+  "theme": {
+    "paper": "#2a2438",
+    "ink": "#f5ebd6",
+    "accent": "#efc574",
+    "hush": "#b0a08b"
+  },
   "chapters": [
     {
       "title": "The Ask",

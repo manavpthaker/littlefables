@@ -3,6 +3,12 @@
   "title": "The Moose Who Knew About Bigness",
   "by": "Papa",
   "kind": "chapter",
+  "theme": {
+    "paper": "#f4e9d3",
+    "ink": "#3a220f",
+    "accent": "#d97a2a",
+    "hush": "#8f6e47"
+  },
   "chapters": [
     {
       "title": "The Edge of Everything Wild",

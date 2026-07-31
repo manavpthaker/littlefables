@@ -40,6 +40,9 @@ export interface ReaderBook {
   vocab: Record<string, VocabEntry>;
   /** approved cover art URL — the reader's art fallback when a page has no scene art */
   coverImage?: string;
+  /** optional per-book palette — see lib/reader/theme.ts. Reader injects a
+   *  scoped `<style>` overriding CSS custom properties when present. */
+  theme?: Book['theme'];
 }
 
 /** Reader's dominant page-navigation state. */

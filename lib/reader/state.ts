@@ -65,7 +65,7 @@ export function toReaderBook(book: Book): ReaderBook {
   for (const entry of book.vocab) vocab[stemOf(entry.word)] = entry;
   const coverImage =
     book.coverImage ?? (book.coverBg?.startsWith('http') ? book.coverBg : undefined);
-  return { id: book.id, title: book.title, kind: book.kind, chapters, vocab, coverImage };
+  return { id: book.id, title: book.title, kind: book.kind, chapters, vocab, coverImage, theme: book.theme };
 }
 
 /** Initial state per book kind: quick books enter straight into chapter 0. */

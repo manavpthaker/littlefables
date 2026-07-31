@@ -35,7 +35,13 @@ source story. The model returns a `story.json` you can drop straight into a
 >   ],
 >   "vocab": [
 >     { "word": "burrow", "syllables": ["bur","row"], "kidDefinition": "a cozy hole in the ground" }
->   ]
+>   ],
+>   "theme": {
+>     "paper": "#efe5cf",
+>     "ink": "#3a2617",
+>     "accent": "#c96b2e",
+>     "hush": "#7b6448"
+>   }
 > }
 > ```
 >
@@ -70,6 +76,24 @@ source story. The model returns a `story.json` you can drop straight into a
 >   to", no using the word to define itself). Only include these two
 >   fields per entry; do NOT emit `meaning`. Skip the whole `vocab`
 >   array if the source has no words worth flagging.
+> - `theme` — OPTIONAL palette that re-tints the reader chrome to match
+>   the story's atmosphere. Skip entirely if the story is atmospherically
+>   neutral. Include when the story has a clear mood (bedtime navy,
+>   sunset gold, forest green, storm slate). Four hex values, each
+>   optional:
+>     - `paper` — the page background. Warm cream for daytime stories,
+>       deep navy/plum for nocturnes.
+>     - `ink` — the story text color. Must have ≥4.5:1 contrast against
+>       `paper` (the reader will silently drop the whole theme otherwise
+>       and warn in the console).
+>     - `accent` — the eyebrow, current-word highlight, and play button.
+>       Pick a color that actually appears in the illustration —
+>       a lantern glow, a sunset streak, a leaf.
+>     - `hush` — upcoming-word dim and captions. Something between ink
+>       and paper on the value scale.
+>   Example: `"theme": { "paper": "#1c1830", "ink": "#f2e6d0",
+>   "accent": "#e9b64c", "hush": "#a89476" }` (a nocturnal story like
+>   The Midnight Train).
 >
 > **Text handling:**
 >
