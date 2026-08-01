@@ -17,7 +17,7 @@ export default async function ReadHome() {
   const ctx = await requireChildDevice();
   if (ctx instanceof NextResponse) redirect('/parent');
 
-  const [{ data: bookRows }, { data: progressRows }] = await Promise.all([
+  const [{ data: bookRows }, { data: progressRows }, { data: childRow }] = await Promise.all([
     admin()
       .from('books')
       .select('id, title, kind, cover_emoji, cover_bg, created_at')
@@ -29,7 +29,15 @@ export default async function ReadHome() {
       .select('book_id, chapter_idx, page_idx, updated_at')
       .eq('child_id', ctx.childId)
       .order('updated_at', { ascending: false }),
+    admin()
+      .from('children')
+      .select('display_name')
+      .eq('id', ctx.childId)
+      .maybeSingle(),
   ]);
+
+  const firstName = (childRow?.display_name ?? '').trim().split(/\s+/)[0] ?? '';
+  const headerTitle = firstName ? `${firstName} and Little Fables` : 'Little Fables';
 
   const latest = progressRows?.[0];
   const continueBook = latest ? (bookRows ?? []).find((b) => b.id === latest.book_id) : null;
@@ -70,7 +78,7 @@ export default async function ReadHome() {
             color: 'var(--text-strong)',
           }}
         >
-          Storytime
+          {headerTitle}
         </h1>
         <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 15 }}>
           Pick a story to read together.
