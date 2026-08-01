@@ -76,9 +76,42 @@ export function speak(text: string, opts: SpeakOptions = {}): SpeakHandle {
 }
 
 // ---------- Layer 1: pre-generated audio playback ----------
+//
+// Mobile-Safari trap: iOS only lets an <audio> element auto-play if that
+// SPECIFIC element was directly touched by a user gesture. A fresh
+// `new Audio()` created inside a page-turn timeout is a different element
+// than the one the user tapped — iOS blocks its .play() call, transport
+// sees onBlocked, and playback silently pauses at every chapter/page break.
+//
+// The standard workaround is a persistent audio element: create ONE
+// <audio> lazily, unlock it on the first user-gesture play, then swap
+// its `src` for each subsequent page. iOS remembers the unlock across
+// src changes on the same element.
 
-let activeAudioEl: HTMLAudioElement | null = null;
+let sharedAudioEl: HTMLAudioElement | null = null;
+let activeAudioUrl: string | null = null;
 let activeTickRaf: number | null = null;
+
+function getSharedAudio(): HTMLAudioElement {
+  if (sharedAudioEl) return sharedAudioEl;
+  const el = new Audio();
+  // Playing inline (not fullscreen) matters on iOS Safari.
+  el.setAttribute('playsinline', '');
+  el.preload = 'auto';
+  sharedAudioEl = el;
+  return el;
+}
+
+function releaseAudioUrl(): void {
+  if (activeAudioUrl) {
+    try {
+      URL.revokeObjectURL(activeAudioUrl);
+    } catch {
+      /* ignore */
+    }
+    activeAudioUrl = null;
+  }
+}
 
 function playAudio(
   result: TtsFetchResult,
@@ -86,12 +119,30 @@ function playAudio(
   isCancelled: () => boolean,
 ): Promise<void> {
   return new Promise((resolve) => {
+    const audio = getSharedAudio();
+
+    // Detach any prior listeners so the previous page's callbacks don't
+    // fire again on the shared element after we swap src.
+    audio.onended = null;
+    audio.onerror = null;
+
+    releaseAudioUrl();
     const url = URL.createObjectURL(result.audio);
-    const audio = new Audio(url);
-    activeAudioEl = audio;
+    activeAudioUrl = url;
+    audio.src = url;
+
     if (opts.rate && opts.rate > 0) audio.playbackRate = opts.rate;
+    else audio.playbackRate = 1;
     if (typeof opts.volume === 'number') audio.volume = Math.min(1, Math.max(0, opts.volume));
-    if (opts.startOffset && opts.startOffset > 0) audio.currentTime = opts.startOffset;
+    else audio.volume = 1;
+    // Reset before applying startOffset — otherwise a page turn could
+    // inherit the previous page's currentTime for a frame.
+    try {
+      audio.currentTime = opts.startOffset && opts.startOffset > 0 ? opts.startOffset : 0;
+    } catch {
+      /* Some browsers throw if currentTime is set before the metadata loads;
+         it'll re-apply on canplay. */
+    }
 
     const ts = result.timestamps;
     let idx = -1;
@@ -106,24 +157,22 @@ function playAudio(
       activeTickRaf = requestAnimationFrame(tick);
     };
 
+    const stopTick = () => {
+      if (activeTickRaf) cancelAnimationFrame(activeTickRaf);
+      activeTickRaf = null;
+    };
+
     audio.onended = () => {
-      cleanup();
+      stopTick();
       if (!isCancelled()) opts.onEnd?.();
       resolve();
     };
     audio.onerror = () => {
-      cleanup();
+      stopTick();
       if (!isCancelled() && opts.allowSpeechSynthFallback !== false) {
         speakViaSpeechSynth('', opts, isCancelled); // best-effort — no source text here
       }
       resolve();
-    };
-
-    const cleanup = () => {
-      URL.revokeObjectURL(url);
-      if (activeTickRaf) cancelAnimationFrame(activeTickRaf);
-      activeTickRaf = null;
-      activeAudioEl = null;
     };
 
     audio.play().then(
@@ -131,9 +180,12 @@ function playAudio(
         activeTickRaf = requestAnimationFrame(tick);
       },
       () => {
-        // Autoplay blocked (iOS outside a user gesture). Signal the transport
-        // to pause + keep the play-intent so a subsequent tap resumes.
-        cleanup();
+        // Autoplay blocked. On iOS this happens if the shared element
+        // has never been unlocked (fresh reader, never tapped ▶) OR
+        // rarely if the browser released the unlock (e.g. long silence).
+        // Signal the transport to pause; the next terracotta play tap
+        // will unlock and start fresh.
+        stopTick();
         if (!isCancelled()) opts.onBlocked?.();
         resolve();
       },
@@ -197,14 +249,20 @@ function cancelSpeechSynth(): void {
       /* iOS may throw on cancel — ignore */
     }
   }
-  if (activeAudioEl) {
+  if (sharedAudioEl) {
     try {
-      activeAudioEl.pause();
+      sharedAudioEl.pause();
     } catch {
       /* ignore */
     }
-    activeAudioEl = null;
+    // Do NOT null out sharedAudioEl — we want to KEEP the element around
+    // so its iOS unlock persists across pages/chapters. Just detach
+    // handlers so a lingering onended can't fire the previous page's
+    // callbacks against a new-page play.
+    sharedAudioEl.onended = null;
+    sharedAudioEl.onerror = null;
   }
+  releaseAudioUrl();
   if (activeTickRaf) {
     cancelAnimationFrame(activeTickRaf);
     activeTickRaf = null;

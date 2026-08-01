@@ -3,11 +3,14 @@ import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
 import { requireChildDevice } from '@/lib/server/require-auth';
-import { ShelfGrid, type ShelfBook } from './shelf-grid';
+import { compareTitles } from '@/lib/util/sort-title';
+import { Library, type ShelfBook } from './library';
 
-// Kid Home. One purpose: pick a book. If the child is mid-way through
-// something, a Continue card lands first; then the full library. No streaks,
-// no badges, no vocab surfaces — the whole app is one polished reader.
+// Kid Home. Pick a book, or keep the one in progress. Library controls
+// (sort + view) live in the Library client component; the SSR default is
+// title A-Z with the "The"/"A"/"An" article stripped so shelves read
+// library-style, not literally.
+
 const KID_VISIBLE_STATUSES = ['complete', 'published'];
 
 export default async function ReadHome() {
@@ -17,11 +20,10 @@ export default async function ReadHome() {
   const [{ data: bookRows }, { data: progressRows }] = await Promise.all([
     admin()
       .from('books')
-      .select('id, title, kind, cover_emoji, cover_bg')
+      .select('id, title, kind, cover_emoji, cover_bg, created_at')
       .eq('household_id', ctx.householdId)
       .in('status', KID_VISIBLE_STATUSES)
-      .eq('shelf_enabled', true)
-      .order('title'),
+      .eq('shelf_enabled', true),
     admin()
       .from('book_progress')
       .select('book_id, chapter_idx, page_idx, updated_at')
@@ -29,25 +31,23 @@ export default async function ReadHome() {
       .order('updated_at', { ascending: false }),
   ]);
 
-  const progressByBook = new Map<string, { chapterIdx: number; pageIdx: number }>();
-  for (const p of progressRows ?? []) {
-    if (!progressByBook.has(p.book_id)) {
-      progressByBook.set(p.book_id, { chapterIdx: p.chapter_idx, pageIdx: p.page_idx });
-    }
-  }
-
   const latest = progressRows?.[0];
   const continueBook = latest ? (bookRows ?? []).find((b) => b.id === latest.book_id) : null;
 
-  const books: ShelfBook[] = (bookRows ?? []).map((b) => ({
-    id: b.id,
-    title: b.title,
-    kind: b.kind as 'quick' | 'chapter',
-    coverEmoji: b.cover_emoji,
-    coverBg: b.cover_bg,
-    coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
-    progress: 0,
-  }));
+  const books: ShelfBook[] = (bookRows ?? [])
+    .map((b) => ({
+      id: b.id,
+      title: b.title,
+      kind: b.kind as 'quick' | 'chapter',
+      coverEmoji: b.cover_emoji,
+      coverBg: b.cover_bg,
+      coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
+      createdAt: b.created_at,
+      progress: 0,
+    }))
+    // SSR default sort: title A-Z, article-stripped. The client component
+    // re-sorts on hydration if the persisted user preference differs.
+    .sort((a, b) => compareTitles(a.title, b.title));
 
   return (
     <main
@@ -115,7 +115,7 @@ export default async function ReadHome() {
         </Link>
       )}
 
-      <ShelfGrid books={books} variant="grid" />
+      <Library books={books} />
     </main>
   );
 }
