@@ -96,6 +96,18 @@ export const bookThemeSchema = z.object({
 });
 export type BookTheme = z.infer<typeof bookThemeSchema>;
 
+// Per-character voice cast. Character name (as spelled in the story text)
+// → ElevenLabs voice id. The narrate script parses quoted dialogue and
+// routes each character's lines to their voice; anything unattributed
+// falls back to the household narrator voice.
+export const characterVoiceSchema = z.object({
+  voiceId: z.string().min(1).max(64),
+  /** Optional bedtime-cast voice id — used when the reader is in night
+   *  mode. Falls back to voiceId when absent. */
+  nightVoiceId: z.string().min(1).max(64).optional(),
+});
+export type CharacterVoice = z.infer<typeof characterVoiceSchema>;
+
 export const bookSchema = z
   .object({
     id: z.string().min(1),
@@ -110,6 +122,12 @@ export const bookSchema = z
     vocab: z.array(vocabEntrySchema).default([]),
     originNote: z.string().nullable().optional(),
     theme: bookThemeSchema.optional(),
+    /** Character voice cast for this book. Keys are the character names
+     *  as spelled in the story text ("Bramble", "Mose"). */
+    characters: z.record(z.string(), characterVoiceSchema).optional(),
+    /** Per-book pronunciation overrides. Merges with the global
+     *  content/pronunciations.json; per-book wins on conflicts. */
+    pronunciations: z.record(z.string(), z.string().max(80)).optional(),
     chapters: z.array(chapterSchema).min(1),
   })
   .passthrough();

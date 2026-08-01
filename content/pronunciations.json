@@ -1,0 +1,9 @@
+{
+  "_comment": "Global pronunciation overrides for the narrator. Per-book pronunciations in story.json override these. Substitution is word-boundary + case-preserving; keys are matched case-insensitively. Values are the phonetic respelling ElevenLabs will actually receive — use hyphens for syllables and repeated vowels to lengthen (e.g. 'Daa-daa' > 'Dada' to steer away from short 'a').",
+  "Azi": "Ah-zee",
+  "Jujy": "Joo-jee",
+  "Dada": "Daa-daa",
+  "Dadi": "Daa-dee",
+  "Lito": "Lee-toh",
+  "Lita": "Lee-tah"
+}
