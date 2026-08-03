@@ -132,13 +132,14 @@ button:disabled {
 @keyframes lf-page-turn-next {
   0% {
     opacity: 0;
-    transform: translateX(24px) rotateY(-8deg);
+    transform: translateX(40%) rotateY(-45deg);
     transform-origin: left center;
-    filter: drop-shadow(-4px 0 6px rgba(70, 54, 42, 0.18));
+    filter: drop-shadow(-8px 4px 12px rgba(70, 54, 42, 0.28));
   }
-  60% {
+  50% {
     opacity: 1;
-    filter: drop-shadow(-2px 0 4px rgba(70, 54, 42, 0.1));
+    transform: translateX(10%) rotateY(-14deg);
+    filter: drop-shadow(-6px 4px 10px rgba(70, 54, 42, 0.2));
   }
   100% {
     opacity: 1;
@@ -149,13 +150,14 @@ button:disabled {
 @keyframes lf-page-turn-prev {
   0% {
     opacity: 0;
-    transform: translateX(-24px) rotateY(8deg);
+    transform: translateX(-40%) rotateY(45deg);
     transform-origin: right center;
-    filter: drop-shadow(4px 0 6px rgba(70, 54, 42, 0.18));
+    filter: drop-shadow(8px 4px 12px rgba(70, 54, 42, 0.28));
   }
-  60% {
+  50% {
     opacity: 1;
-    filter: drop-shadow(2px 0 4px rgba(70, 54, 42, 0.1));
+    transform: translateX(-10%) rotateY(14deg);
+    filter: drop-shadow(6px 4px 10px rgba(70, 54, 42, 0.2));
   }
   100% {
     opacity: 1;
@@ -163,12 +165,18 @@ button:disabled {
     filter: none;
   }
 }
-/* Give the reader main a stage that supports the 3D transform above.
- * A perspective on the parent is what turns a plain rotateY into a
- * hinged page swing. */
-[data-density='kid'] .lf-reader-header ~ * main,
-[data-density='kid'] .lf-reader-header + main {
+/* The rotateY in lf-page-turn-* renders as a flat translate unless a
+ * parent has `perspective` set. Apply it high up on the kid subtree so
+ * every reader main (map, spread, night-only) picks up the same depth
+ * cue — regardless of orientation or which layout branch renders. */
+[data-density='kid'] {
   perspective: 1200px;
+  perspective-origin: 50% 40%;
+}
+[data-density='kid'] main {
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* Polish 3.0: bottom sheets spring up and settle — never appear instantly. */
