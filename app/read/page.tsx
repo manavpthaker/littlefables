@@ -37,10 +37,18 @@ export default async function ReadHome() {
   ]);
 
   const firstName = (childRow?.display_name ?? '').trim().split(/\s+/)[0] ?? '';
-  const headerTitle = firstName ? `${firstName} and Little Fables` : 'Little Fables';
+  const headerTitle = firstName ? `${firstName}'s Little Fables` : 'Little Fables';
 
   const latest = progressRows?.[0];
   const continueBook = latest ? (bookRows ?? []).find((b) => b.id === latest.book_id) : null;
+
+  // Order books by most-recently-touched via book_progress.updated_at, so
+  // the Library component can render a "Recently opened" ribbon without a
+  // second fetch. Books never opened get null → sort last.
+  const lastOpenedByBook = new Map<string, string>();
+  for (const p of progressRows ?? []) {
+    if (!lastOpenedByBook.has(p.book_id)) lastOpenedByBook.set(p.book_id, p.updated_at);
+  }
 
   const books: ShelfBook[] = (bookRows ?? [])
     .map((b) => ({
@@ -51,6 +59,7 @@ export default async function ReadHome() {
       coverBg: b.cover_bg,
       coverImage: b.cover_bg?.startsWith('http') ? b.cover_bg : null,
       createdAt: b.created_at,
+      lastOpenedAt: lastOpenedByBook.get(b.id) ?? null,
       progress: 0,
     }))
     // SSR default sort: title A-Z, article-stripped. The client component

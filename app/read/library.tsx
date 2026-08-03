@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { BookCard } from '@ds/components/kid/BookCard.jsx';
 import { compareTitles } from '@/lib/util/sort-title';
+import { GridView, ListView } from './library-views';
 
 export interface ShelfBook {
   id: string;
@@ -14,6 +14,9 @@ export interface ShelfBook {
   coverImage?: string | null;
   /** ISO timestamp — used for "date added" sorting. */
   createdAt: string | null;
+  /** ISO timestamp of the last time this book's progress was updated —
+   *  used to populate the "Recently opened" ribbon. */
+  lastOpenedAt?: string | null;
   progress: number;
 }
 
@@ -44,7 +47,7 @@ function sortBooks(books: ShelfBook[], mode: SortMode): ShelfBook[] {
   }
 }
 
-function timeOf(iso: string | null): number {
+function timeOf(iso: string | null | undefined): number {
   if (!iso) return 0;
   const n = Date.parse(iso);
   return Number.isNaN(n) ? 0 : n;
@@ -69,18 +72,44 @@ function writePref(key: string, value: string): void {
   }
 }
 
+/** Normalize for search: lowercase, strip diacritics, strip punctuation. */
+function normalizeForSearch(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function Library({ books }: { books: ShelfBook[] }) {
-  // SSR pre-sorted A-Z. Client hydrates and reads persisted prefs; if the
-  // preferred sort differs, the memo re-sorts before paint.
   const [sort, setSort] = useState<SortMode>('title-asc');
   const [view, setView] = useState<ViewMode>('grid');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     setSort(readPref<SortMode>(SORT_STORAGE, ['title-asc', 'title-desc', 'added-new', 'added-old'], 'title-asc'));
     setView(readPref<ViewMode>(VIEW_STORAGE, ['grid', 'list'], 'grid'));
   }, []);
 
-  const sorted = useMemo(() => sortBooks(books, sort), [books, sort]);
+  const q = normalizeForSearch(query);
+  const filtered = useMemo(
+    () => (q ? books.filter((b) => normalizeForSearch(b.title).includes(q)) : books),
+    [books, q],
+  );
+  const sorted = useMemo(() => sortBooks(filtered, sort), [filtered, sort]);
+
+  // Recently opened: top 5, most-recently-touched. Only shows when we
+  // have a real search-free view (otherwise the ribbon fights the
+  // filtered results) and when at least 2 books have been opened.
+  const recentlyOpened = useMemo(() => {
+    if (q) return [];
+    return [...books]
+      .filter((b) => Boolean(b.lastOpenedAt))
+      .sort((a, b) => timeOf(b.lastOpenedAt) - timeOf(a.lastOpenedAt))
+      .slice(0, 5);
+  }, [books, q]);
 
   function chooseSort(next: SortMode) {
     setSort(next);
@@ -90,6 +119,11 @@ export function Library({ books }: { books: ShelfBook[] }) {
     setView(next);
     writePref(VIEW_STORAGE, next);
   }
+  function surpriseMe() {
+    if (books.length === 0) return;
+    const pick = books[Math.floor(Math.random() * books.length)]!;
+    window.location.href = `/read/story/${pick.id}`;
+  }
 
   if (books.length === 0) {
     return <p style={{ color: 'var(--text-muted)', margin: 0 }}>Add a story from the terminal to fill the shelf.</p>;
@@ -97,8 +131,152 @@ export function Library({ books }: { books: ShelfBook[] }) {
 
   return (
     <section style={{ display: 'grid', gap: 'var(--space-4)' }}>
-      <Controls sort={sort} view={view} onSort={chooseSort} onView={chooseView} count={sorted.length} />
-      {view === 'grid' ? <GridView books={sorted} /> : <ListView books={sorted} />}
+      <QuickActions onSurprise={surpriseMe} query={query} onQueryChange={setQuery} />
+      {recentlyOpened.length >= 2 && (
+        <RecentlyOpened books={recentlyOpened} />
+      )}
+      <Controls sort={sort} view={view} onSort={chooseSort} onView={chooseView} count={sorted.length} query={q} />
+      {sorted.length === 0 ? (
+        <p style={{ color: 'var(--text-muted)', margin: 0 }}>No stories match “{query}”.</p>
+      ) : view === 'grid' ? (
+        <GridView books={sorted} />
+      ) : (
+        <ListView books={sorted} />
+      )}
+    </section>
+  );
+}
+
+function QuickActions({
+  onSurprise,
+  query,
+  onQueryChange,
+}: {
+  onSurprise: () => void;
+  query: string;
+  onQueryChange: (v: string) => void;
+}) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gap: 'var(--space-2)',
+        gridTemplateColumns: 'minmax(0, 1fr) auto',
+        alignItems: 'stretch',
+      }}
+    >
+      <label style={{ position: 'relative', display: 'block' }}>
+        <span
+          aria-hidden
+          style={{
+            position: 'absolute',
+            left: 12,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'var(--ink-soft)',
+            fontSize: 16,
+            pointerEvents: 'none',
+          }}
+        >
+          🔍
+        </span>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          placeholder="Search stories…"
+          aria-label="Search stories"
+          style={{
+            width: '100%',
+            padding: '10px 14px 10px 36px',
+            fontFamily: 'inherit',
+            fontSize: 15,
+            border: '1px solid var(--paper-deep)',
+            borderRadius: 'var(--radius-pill)',
+            background: 'var(--wash-capsule)',
+            color: 'var(--ink)',
+            boxSizing: 'border-box',
+          }}
+        />
+      </label>
+      <button
+        type="button"
+        onClick={onSurprise}
+        aria-label="Surprise me — pick a random story"
+        style={{
+          padding: '10px 16px',
+          background: 'var(--action)',
+          color: 'var(--paper)',
+          border: 'none',
+          borderRadius: 'var(--radius-pill)',
+          fontFamily: 'inherit',
+          fontSize: 14,
+          fontWeight: 700,
+          cursor: 'pointer',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <span aria-hidden>🎲</span> Surprise
+      </button>
+    </div>
+  );
+}
+
+function RecentlyOpened({ books }: { books: ShelfBook[] }) {
+  return (
+    <section
+      aria-label="Recently opened stories"
+      style={{ display: 'grid', gap: 'var(--space-2)' }}
+    >
+      <h2
+        style={{
+          margin: 0,
+          fontFamily: 'var(--font-body)',
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: '.18em',
+          textTransform: 'uppercase',
+          color: 'var(--marigold-deep)',
+        }}
+      >
+        Recently opened
+      </h2>
+      <ul
+        style={{
+          listStyle: 'none',
+          padding: 0,
+          margin: 0,
+          display: 'flex',
+          gap: 'var(--space-3)',
+          overflowX: 'auto',
+          scrollSnapType: 'x proximity',
+          paddingBottom: 4,
+          WebkitOverflowScrolling: 'touch',
+        }}
+      >
+        {books.map((b) => (
+          <li
+            key={b.id}
+            style={{ scrollSnapAlign: 'start', flex: '0 0 auto', width: 120 }}
+          >
+            <BookCard
+              title={b.title}
+              utterance={b.title}
+              progress={b.progress}
+              cover={b.coverImage ?? undefined}
+              bg={!b.coverImage && b.coverBg && !b.coverBg.startsWith('http') ? b.coverBg : undefined}
+              width={120}
+              artRatio="120/150"
+              onOpen={() => {
+                window.location.href = `/read/story/${b.id}`;
+              }}
+            />
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
@@ -109,12 +287,14 @@ function Controls({
   onSort,
   onView,
   count,
+  query,
 }: {
   sort: SortMode;
   view: ViewMode;
   onSort: (s: SortMode) => void;
   onView: (v: ViewMode) => void;
   count: number;
+  query: string;
 }) {
   return (
     <div
@@ -128,6 +308,7 @@ function Controls({
     >
       <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
         {count} {count === 1 ? 'story' : 'stories'}
+        {query ? ` matching “${query}”` : ''}
       </span>
       <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
         <SortDropdown value={sort} onChange={onSort} />
@@ -206,90 +387,3 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
   );
 }
 
-function GridView({ books }: { books: ShelfBook[] }) {
-  return (
-    <div className="lf-covers">
-      {books.map((book) => (
-        <BookCard
-          key={book.id}
-          title={book.title}
-          utterance={book.title}
-          progress={book.progress}
-          cover={book.coverImage ?? undefined}
-          bg={!book.coverImage && book.coverBg && !book.coverBg.startsWith('http') ? book.coverBg : undefined}
-          width="100%"
-          onOpen={() => {
-            window.location.href = `/read/story/${book.id}`;
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function ListView({ books }: { books: ShelfBook[] }) {
-  return (
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 'var(--space-1)' }}>
-      {books.map((book) => {
-        const thumb = book.coverImage ?? undefined;
-        return (
-          <li key={book.id}>
-            <Link
-              href={`/read/story/${book.id}`}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '56px 1fr auto',
-                gap: 'var(--space-3)',
-                alignItems: 'center',
-                padding: 'var(--space-2) var(--space-3)',
-                borderRadius: 'var(--radius-md)',
-                textDecoration: 'none',
-                color: 'inherit',
-                background: 'transparent',
-                transition: 'background 140ms ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--wash-panel)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-            >
-              <span
-                aria-hidden
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 'var(--radius-md)',
-                  background: thumb
-                    ? `url(${thumb}) center/cover no-repeat`
-                    : book.coverBg && !book.coverBg.startsWith('http')
-                      ? book.coverBg
-                      : 'linear-gradient(135deg, var(--paper-deep), var(--wash-panel))',
-                  boxShadow: 'var(--elev-rest)',
-                }}
-              />
-              <span style={{ display: 'grid', gap: 2, minWidth: 0 }}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 17,
-                    lineHeight: 1.2,
-                    color: 'var(--text-strong)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {book.title}
-                </span>
-                <span style={{ fontSize: 12, color: 'var(--ink-soft)', textTransform: 'capitalize' }}>
-                  {book.kind}
-                </span>
-              </span>
-              <span aria-hidden style={{ color: 'var(--ink-soft)', fontSize: 18 }}>
-                ›
-              </span>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}

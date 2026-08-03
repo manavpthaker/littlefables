@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ReaderTopBar } from '@ds/components/reader/ReaderTopBar.jsx';
-import { Transport } from '@ds/components/kid/Transport.jsx';
 import { useReaderTransport } from '@/lib/reader/transport';
 import { pushProgress } from '@/lib/reader/progress';
 import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-source';
 import type { WordTimestamp } from '@/lib/reader/speech';
 import { bookThemeCss } from '@/lib/reader/theme';
 import { useBedtime } from '@/lib/reader/use-bedtime';
+import { ReaderHeader } from './reader-header';
+import { ReaderFooter, type PlaybackRate } from './reader-footer';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { MapSection } from './map-section';
@@ -82,6 +82,30 @@ export function Reader({
 
   const voiceMode: 'day' | 'night' = isNight ? 'night' : 'day';
 
+  // User-picked playback rate — persisted per browser. Night mode's own
+  // slowdown (0.9) is multiplied by the user pick so both signals apply:
+  //   day + 1×    = 1×
+  //   night + 1×  = 0.9× (default bedtime cadence)
+  //   night + 1.15× = 1.035× (kid wants faster even at bedtime)
+  const [rate, setRate] = useState<PlaybackRate>(1);
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem('lf-reader-rate');
+      const parsed = raw ? Number(raw) : NaN;
+      if (parsed === 0.85 || parsed === 1 || parsed === 1.15) setRate(parsed);
+    } catch {
+      /* private mode */
+    }
+  }, []);
+  const chooseRate = useCallback((next: PlaybackRate) => {
+    setRate(next);
+    try {
+      window.localStorage.setItem('lf-reader-rate', String(next));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   // Word timestamps for the current page (voice-specific).
   const [pageTimestamps, setPageTimestamps] = useState<WordTimestamp[] | null>(null);
   useEffect(() => {
@@ -138,11 +162,17 @@ export function Reader({
     dispatch({ type: 'nextPage' });
   }, [advanceAfterChapter, lastPage]);
 
+  // Combine baseline (night's 0.9 slowdown) with the user's rate pick.
+  const effectiveRate = isNight ? BEDTIME_VOICE.rate * rate : rate;
+  const effectiveVolume = isNight ? BEDTIME_VOICE.volume : undefined;
   const transport = useReaderTransport({
     page: transportPage,
     gated: false,
     onAutoNext,
-    voiceMod: isNight ? BEDTIME_VOICE : undefined,
+    voiceMod:
+      effectiveRate !== 1 || effectiveVolume !== undefined
+        ? { rate: effectiveRate, volume: effectiveVolume }
+        : undefined,
   });
 
   const onBack = useCallback(() => {
@@ -193,75 +223,22 @@ export function Reader({
       onTouchEnd={swipe.onTouchEnd}
     >
       {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
-      <ReaderTopBar
-        onBack={onBack}
-        title={book.title}
+      <ReaderHeader
+        bookTitle={book.title}
+        chapterTitle={book.kind === 'chapter' && ch ? ch.title : null}
         segments={ch ? { current: state.pageIdx, total: ch.pages.length } : undefined}
-        buddyState={transport.playing ? 'speaking' : 'idle'}
+        isNight={isNight}
+        onBack={onBack}
+        onToggleMode={toggleBedtime}
+        onBackToMap={
+          book.kind === 'chapter' && state.chapterIdx !== null
+            ? () => {
+                transport.stop();
+                dispatch({ type: 'exitChapter' });
+              }
+            : null
+        }
       />
-
-      {/* Secondary chrome: chapter jump chip (chapter books, mid-chapter)
-          on the left; Day/Night toggle always on the right. */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '2px var(--page-pad) 6px',
-          flex: 'none',
-          gap: 'var(--space-2)',
-        }}
-      >
-        {book.kind === 'chapter' && state.chapterIdx !== null ? (
-          <button
-            type="button"
-            aria-label="Back to the chapter map"
-            onClick={() => {
-              transport.stop();
-              dispatch({ type: 'exitChapter' });
-            }}
-            style={{
-              border: 'none',
-              cursor: 'pointer',
-              background: 'var(--wash-capsule)',
-              backdropFilter: 'blur(14px)',
-              borderRadius: 'var(--radius-pill)',
-              padding: '6px 14px',
-              fontFamily: 'var(--font-body)',
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--ink-soft)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-            }}
-          >
-            <span aria-hidden>📖</span> All chapters
-          </button>
-        ) : (
-          <span />
-        )}
-        <button
-          type="button"
-          aria-label={isNight ? 'Switch to daytime reading' : 'Switch to bedtime reading'}
-          aria-pressed={isNight}
-          onClick={toggleBedtime}
-          style={{
-            border: 'none',
-            cursor: 'pointer',
-            background: 'var(--wash-capsule)',
-            backdropFilter: 'blur(14px)',
-            borderRadius: 'var(--radius-pill)',
-            padding: '6px 12px',
-            fontFamily: 'var(--font-body)',
-            fontSize: 14,
-            color: 'var(--ink)',
-            boxShadow: isNight ? '0 0 0 2px var(--marigold)' : 'none',
-          }}
-        >
-          {isNight ? '🌙' : '☀️'}
-        </button>
-      </div>
 
       {showMap && book.kind === 'chapter' ? (
         <main style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -287,26 +264,17 @@ export function Reader({
             />
           </main>
 
-          <footer
-            className="lf-reader-footer"
-            style={{
-              flex: 'none',
-              padding: 'var(--space-3) var(--page-pad) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
-              display: 'grid',
-              placeItems: 'center',
-              gap: 'var(--space-3)',
-              background: 'linear-gradient(to top, var(--surface-page) 60%, transparent)',
-            }}
-          >
-            <Transport
-              playing={transport.playing}
-              onPlay={transport.toggle}
-              onPrev={onPrev}
-              onNext={onNext}
-              canPrev={!isFirstPage(state)}
-              canNext={!lastPage}
-            />
-          </footer>
+          <ReaderFooter
+            playing={transport.playing}
+            canPrev={!isFirstPage(state)}
+            canNext={!lastPage}
+            onPlay={transport.toggle}
+            onPrev={onPrev}
+            onNext={onNext}
+            onRestartPage={() => transport.seekToWord(0)}
+            rate={rate}
+            onCycleRate={chooseRate}
+          />
         </>
       ) : null}
     </div>
