@@ -36,11 +36,19 @@ content/books/**/*.png
 content/books/**/*.jpg
 content/books/**/*.jpeg
 content/books/**/*.webp
+content/books/**/*.heic
+content/books/**/*.HEIC
+content/books/**/*.gif
 content/books/**/*.mp3
 content/books/**/*.m4a
 content/books/**/*.wav
+content/books/**/*.mp4
+content/books/**/*.MP4
+content/books/**/*.mov
 content/books/**/*.docx
 content/books/**/audio/
+content/books/**/reference*/
+content/books/**/references*/
 
 # OS / editor
 .DS_Store

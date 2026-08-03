@@ -110,10 +110,15 @@ button:disabled {
   .lf-wordmark-mark { width: 30px; height: 30px; }
 }
 
-/* Page-turn motion (S3.1). Reader main container animates on each
- * (chapterIdx, pageIdx) change via React key. Slides up + fades in over
- * --dur-page with --ease-page. Reduced-motion collapses --dur-page to 200ms
- * (crossfade only) via the motion.css @media block. */
+/* Page-turn motion. The reader's main container re-mounts on each
+ * (chapterIdx, pageIdx) change via React key. Three variants:
+ *   lf-page-in       — first mount / chapter-map return; slide up + fade
+ *   lf-page-turn-next — advancing: page slides in from the right with a
+ *                       subtle rotateY, as if the previous page was
+ *                       flipped over from the right edge of the spread
+ *   lf-page-turn-prev — going back: mirror of next, from the left
+ * Reduced-motion collapses --dur-page to 200ms (crossfade only) via
+ * the motion.css @media block; no 3D rotation is applied then. */
 @keyframes lf-page-in {
   0% {
     opacity: 0;
@@ -123,6 +128,47 @@ button:disabled {
     opacity: 1;
     transform: translateY(0);
   }
+}
+@keyframes lf-page-turn-next {
+  0% {
+    opacity: 0;
+    transform: translateX(24px) rotateY(-8deg);
+    transform-origin: left center;
+    filter: drop-shadow(-4px 0 6px rgba(70, 54, 42, 0.18));
+  }
+  60% {
+    opacity: 1;
+    filter: drop-shadow(-2px 0 4px rgba(70, 54, 42, 0.1));
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotateY(0);
+    filter: none;
+  }
+}
+@keyframes lf-page-turn-prev {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px) rotateY(8deg);
+    transform-origin: right center;
+    filter: drop-shadow(4px 0 6px rgba(70, 54, 42, 0.18));
+  }
+  60% {
+    opacity: 1;
+    filter: drop-shadow(2px 0 4px rgba(70, 54, 42, 0.1));
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotateY(0);
+    filter: none;
+  }
+}
+/* Give the reader main a stage that supports the 3D transform above.
+ * A perspective on the parent is what turns a plain rotateY into a
+ * hinged page swing. */
+[data-density='kid'] .lf-reader-header ~ * main,
+[data-density='kid'] .lf-reader-header + main {
+  perspective: 1200px;
 }
 
 /* Polish 3.0: bottom sheets spring up and settle — never appear instantly. */

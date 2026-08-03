@@ -154,11 +154,17 @@ export function Reader({
     }
   }, [book.chapters.length, book.kind, isNight, router, state.chapterIdx]);
 
+  // Page-turn direction, drives the flip animation in PageSpread.
+  // Kept as a ref-like state that resets on chapter enter/exit so a fresh
+  // chapter doesn't inherit a stale turn.
+  const [turnDirection, setTurnDirection] = useState<'next' | 'prev' | null>(null);
+
   const onAutoNext = useCallback(() => {
     if (lastPage) {
       advanceAfterChapter();
       return;
     }
+    setTurnDirection('next');
     dispatch({ type: 'nextPage' });
   }, [advanceAfterChapter, lastPage]);
 
@@ -184,9 +190,18 @@ export function Reader({
     router.push('/read');
   }, [book.kind, showMap, router, transport]);
 
-  const onPickChapter = useCallback((i: number) => dispatch({ type: 'enterChapter', chapterIdx: i }), []);
-  const onPrev = useCallback(() => dispatch({ type: 'prevPage' }), []);
-  const onNext = useCallback(() => dispatch({ type: 'nextPage' }), []);
+  const onPickChapter = useCallback((i: number) => {
+    setTurnDirection(null); // fresh chapter → no residual turn animation
+    dispatch({ type: 'enterChapter', chapterIdx: i });
+  }, []);
+  const onPrev = useCallback(() => {
+    setTurnDirection('prev');
+    dispatch({ type: 'prevPage' });
+  }, []);
+  const onNext = useCallback(() => {
+    setTurnDirection('next');
+    dispatch({ type: 'nextPage' });
+  }, []);
 
   // Word interactions:
   //   playing → seek to the tapped word and continue narrating from there
@@ -260,6 +275,7 @@ export function Reader({
               narrating={transport.playing}
               coverImage={book.coverImage}
               hideArt={isNight}
+              turnDirection={turnDirection}
               onHearWord={onHearWord}
             />
           </main>

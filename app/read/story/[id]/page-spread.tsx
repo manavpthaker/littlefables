@@ -23,6 +23,7 @@ export function PageSpread({
   currentIndex,
   narrating,
   hideArt = false,
+  turnDirection = null,
   onHearWord,
 }: {
   page: ReaderPage;
@@ -34,8 +35,20 @@ export function PageSpread({
   narrating: boolean;
   /** Night mode: skip the art pane entirely; text-only page. */
   hideArt?: boolean;
+  /** Last page-turn direction — drives the flip animation. */
+  turnDirection?: 'next' | 'prev' | null;
   onHearWord: (word: string, wordIdx: number) => void;
 }) {
+  // Pick the animation shorthand based on direction. Both directions use
+  // 3D rotation around the correct edge of the page so it reads as a
+  // physical page turn. Reduced-motion falls to a crossfade via
+  // motion.css @media block that already collapses --dur-page.
+  const pageAnim =
+    turnDirection === 'next'
+      ? 'lf-page-turn-next var(--dur-page) var(--ease-page) 1'
+      : turnDirection === 'prev'
+        ? 'lf-page-turn-prev var(--dur-page) var(--ease-page) 1'
+        : 'lf-page-in var(--dur-page) var(--ease-page) 1';
   const landscape = useLandscapeSpread();
   const artUrl = hideArt ? undefined : (page.img ?? coverImage);
   const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
@@ -80,7 +93,7 @@ export function PageSpread({
           width: '100%',
           marginInline: 'auto',
           boxSizing: 'border-box',
-          animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
+          animation: pageAnim,
         }}
       >
         <article style={{ maxWidth: 560, width: '100%' }}>
@@ -100,7 +113,7 @@ export function PageSpread({
           minHeight: 0,
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 45%) minmax(0, 55%)',
-          animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
+          animation: pageAnim,
         }}
       >
         <div style={{ position: 'relative', minHeight: 0, overflow: 'hidden' }}>
@@ -161,7 +174,7 @@ export function PageSpread({
         width: '100%',
         marginInline: 'auto',
         boxSizing: 'border-box',
-        animation: 'lf-page-in var(--dur-page) var(--ease-page) 1',
+        animation: pageAnim,
       }}
     >
       <div className="lf-art-card">
