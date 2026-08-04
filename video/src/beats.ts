@@ -76,6 +76,17 @@ export const RECORDINGS = {
  */
 export const AUDIO = {
   bed: 'audio/bed.mp3',
+  /**
+   * The book's own narration, pulled from Storage. Page one, day voice —
+   * "Rosa was not a patient girl, and she knew it."
+   *
+   * This is the only voice in the film, and it belongs to the product rather
+   * than to an announcer. That is the whole reason the bed ducks here.
+   */
+  narration: 'audio/narration.mp3',
+  narrationVolume: 0.92,
+  /** Seconds into the payoff beat before she starts speaking. */
+  narrationDelay: 1.5,
   /** Base level for the bed everywhere else. */
   volume: 0.34,
   /** Level during the reading beat, so narration reads over it. */

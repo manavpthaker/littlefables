@@ -54,18 +54,28 @@ Tune in `AUDIO` in `src/beats.ts` if the track sits differently than expected.
 
 ## Narration in the reading beat
 
-The captured footage has **no audio** — `capture.mjs` strips it with `-an`,
-because headless Chrome's speech synthesis is not what you want on camera.
+Beat 6 carries the book's real narration — page one in the day voice, "Rosa was
+not a patient girl, and she knew it."
 
-For real narration under beat 6, generate it properly first:
+It is **not** taken from the screen recording. Playwright does not capture audio
+at all, so the track is pulled straight from Supabase Storage:
 
-```bash
-pnpm content:narrate content/books/custom/lantern-round-pond
+```
+page-audio/lantern-round-pond/day/0-0.mp3
 ```
 
-Needs `ELEVENLABS_API_KEY`, `DAY_VOICE_ID` and `NIGHT_VOICE_ID` in `.env.local`.
-Then re-run `node capture.mjs transport` with the `-an` flag removed from the
-ffmpeg call, and the page audio comes through in the clip.
+Cleaner that way — no browser artifacts, and the level is ours to set. It sits
+about 13 dB above the ducked bed, which makes it unambiguously the focus.
+
+To refresh it after re-narrating:
+
+```bash
+curl -o public/audio/narration.mp3 \
+  "https://fzcjwsxyaweqtvroycjm.supabase.co/storage/v1/object/public/page-audio/lantern-round-pond/day/0-0.mp3"
+```
+
+The book is already narrated. `pnpm content:narrate` skips everything unless you
+pass `--force`.
 
 ## Loudness
 

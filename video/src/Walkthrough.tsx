@@ -149,6 +149,11 @@ const Payoff: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: paper.base }}>
+      {/* The product reading itself aloud — the one voice in the film. */}
+      <Sequence from={Math.round(AUDIO.narrationDelay * FPS)}>
+        <Audio src={staticFile(AUDIO.narration)} volume={AUDIO.narrationVolume} />
+      </Sequence>
+
       {shots.map((shot, i) => (
         <Sequence key={i} from={quarter * i} durationInFrames={quarter}>
           <DeviceFrame src={shot.src} device="ipad" />
