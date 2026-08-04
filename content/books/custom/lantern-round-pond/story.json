@@ -1,0 +1,60 @@
+{
+  "id": "lantern-round-pond",
+  "title": "The Lantern of Round Pond",
+  "by": "Little Fables, for Rosa",
+  "kind": "quick",
+  "theme": {
+    "paper": "#EDE3CE",
+    "ink": "#2A1D12",
+    "accent": "#A67C3A",
+    "hush": "#8A7156"
+  },
+  "vocab": [
+    {
+      "word": "lantern",
+      "syllables": ["lan", "tern"],
+      "kidDefinition": "a little box that keeps a light safe from the wind"
+    },
+    {
+      "word": "patient",
+      "syllables": ["pa", "tient"],
+      "kidDefinition": "waiting without getting cross about it"
+    },
+    {
+      "word": "ripple",
+      "syllables": ["rip", "ple"],
+      "kidDefinition": "the small rings water makes when something touches it"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "The Lantern of Round Pond",
+      "pages": [
+        {
+          "text": "Rosa was not a patient girl, and she knew it. Grandma June said patience was something you grew, like a bean. Rosa had planted hers. It was taking ages."
+        },
+        {
+          "text": "At the end of the lane was Round Pond, and at the edge of Round Pond was a lantern on a post. Nobody knew who lit it. It was simply lit, every evening, before the dark arrived."
+        },
+        {
+          "text": "\"I want to see who does it,\" said Rosa.\n\"Then you'll have to wait,\" said Grandma June. \"That's the whole of it.\""
+        },
+        {
+          "text": "So Rosa waited. She waited through the geese going over. She waited through the light going the colour of honey, and then the colour of tea."
+        },
+        {
+          "text": "A frog considered her from a stone. A dragonfly stitched the air. The pond went quiet in the way water does when it is thinking."
+        },
+        {
+          "text": "And then, without any fuss at all, the lantern lit.\n\nRosa had been looking right at it. She had not seen a hand, or a match, or a single ripple on the water."
+        },
+        {
+          "text": "She sat with that for a while. Some things, she decided, are not for catching. Some things are only for being there when they happen."
+        },
+        {
+          "text": "Grandma June was on the step when Rosa came up the lane in the blue dark.\n\n\"Well?\" she said.\n\n\"I waited,\" said Rosa. And that, it turned out, was the answer."
+        }
+      ]
+    }
+  ]
+}
