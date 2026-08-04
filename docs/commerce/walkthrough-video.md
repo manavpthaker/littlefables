@@ -1,216 +1,233 @@
 # Walkthrough Video — "How it works"
 
-A 90-second film for the landing page hero and the Etsy listing's first video
-slot. Screen recordings of the real app, composited with Heritage motion
-graphics.
+A 75-second film for the landing page hero and the Etsy listing's video slot.
+Mostly the finished product; just enough of the beginning to explain where it
+came from.
 
-**The job:** a parent who has never heard of this understands, in ninety
-seconds, what they get and why it is not the usual AI slop. The proof is
-watching a real book open on a real iPad.
+**The job:** a parent who has never heard of this understands, in about a
+minute, what they get and why it is not the usual AI slop. The proof is
+watching a real book come together and then open on a real iPad.
 
 ---
 
 ## Principles
 
-**Show the product, narrate the promise.** Every claim in the copy gets a
-matching frame of real software. "Delivered in days" is a sentence; a finished
-book opening on a home screen is evidence.
+**Weight goes to the output.** Nobody wants to watch a form being filled in.
+Show a few words about a child, then spend the film on what those words became.
+The intake gets ten seconds and no screen recording — the transformation is the
+interesting part, not the input.
 
 **The motion is mechanical, not bouncy.** Heritage moves like a music-box gear —
-`--motion-tick` 200ms for cuts, `--motion-wind` 600ms for panels, `--ease-pendulum`
-for anything that travels. No springs. No bounce. Nothing "pops."
+`--motion-tick` 200ms for cuts, `--motion-wind` 600ms for panels,
+`--ease-pendulum` for anything that travels. No springs. No bounce. Nothing
+"pops."
 
-**Silence is a feature.** The product's whole pitch is that it does not shout.
-A video that shouts contradicts it. Soft piano or solo strings, low. No
-voiceover on the first cut — let the type carry it. Add VO later only if the
-silent version tests poorly.
+**Silence is a feature.** The product's whole pitch is that it does not shout. A
+video that shouts contradicts it. Soft piano or solo strings, low. No voiceover
+on the first cut — let the type carry it, and let the product's own narration be
+the only voice in the film.
 
-**Nothing fake.** Every frame is the real app. No mockup that shows a feature we
-do not have. If a shot needs a book that does not exist yet, we make the book.
+**Nothing fake.** Every frame is the real book and the real app. No mockup of a
+feature we do not have.
 
 ---
 
 ## Structure
 
-Nine beats, 90 seconds. Timings are targets, not law.
+Nine beats, 75 seconds.
 
-| # | Beat | Time | On screen |
+| # | Beat | Time | Source |
 |---|---|---|---|
-| 1 | Cold open | 0:00–0:06 | Mark draws in, title card |
-| 2 | The promise | 0:06–0:14 | Headline over a real cover |
-| 3 | Step one — tell us | 0:14–0:30 | Intake form, real typing |
-| 4 | Step two — approve | 0:30–0:44 | Three style previews, one chosen |
-| 5 | Step three — it arrives | 0:44–0:56 | Email → link → Add to Home Screen |
-| 6 | The payoff | 0:56–1:12 | Reading: page turn, word tap, narration |
-| 7 | Night | 1:12–1:20 | Day-to-night switch |
-| 8 | The quiet part | 1:20–1:28 | No ads / no algorithm / intake deleted |
-| 9 | Close | 1:28–1:34 | Price, turnaround, CTA |
+| 1 | Cold open | 0:00–0:05 | Motion graphics |
+| 2 | The promise | 0:05–0:12 | Real cover, slow push |
+| 3 | A few words about a child | 0:12–0:22 | Type only |
+| 4 | **It comes together** | 0:22–0:42 | Motion graphics, real art |
+| 5 | It arrives | 0:42–0:52 | Screen recording |
+| 6 | The payoff | 0:52–1:08 | Screen recording |
+| 7 | Night | 1:08–1:15 | Screen recording |
+| 8 | The quiet part | 1:15–1:23 | Type only |
+| 9 | Close | 1:23–1:30 | Motion graphics |
+
+Only beats 5, 6 and 7 need a camera or a screen recorder. Everything else the
+pipeline builds from the book's own nine images.
 
 ---
 
 ## Shot list
 
-Each beat lists the **recording** you capture and the **overlay** the pipeline
-composites on top.
+### 1 · Cold open — 0:00–0:05
 
-### 1 · Cold open — 0:00–0:06
+- **Source:** motion graphics.
+- **What happens:** aged-ivory field. The tree mark draws itself in —
+  stroke-dashoffset cascade, tree first, then rays radiating out, then roots.
+  Mark motion **mode 2** from `design-system/tokens/motion.css`. Settles into
+  **mode 1**, the slow halo breath. Wordmark fades in beneath.
+- **Type:** `Little Fables` · then smaller, `custom storybooks, made one at a time`
+- **Audio:** first piano note as the roots finish.
 
-- **Recording:** none.
-- **Overlay:** aged-ivory field. The tree mark draws itself in — stroke-dashoffset
-  cascade, tree first, then rays radiating out, then roots. This is mark motion
-  **mode 2** from `design-system/tokens/motion.css`. Settles into **mode 1**, the
-  slow halo breath. Wordmark fades under it in IM Fell English.
-- **Type:** `Little Fables` then, smaller, `custom storybooks, made one at a time`.
-- **Audio:** first piano note lands as the roots finish.
+### 2 · The promise — 0:05–0:12
 
-### 2 · The promise — 0:06–0:14
-
-- **Recording:** a real finished cover, held on screen. Slow push in, 4% over
-  8 seconds — barely perceptible, just enough that it is not a still.
-- **Overlay:** headline slides up on `--ease-pendulum`.
+- **Source:** `cover.png` from the real book, held.
+- **What happens:** slow push in, 4% over seven seconds. Barely perceptible —
+  just enough that it is not a still.
 - **Type:** `Your kid, in their own storybook.`
 
-### 3 · Step one — tell us about your child — 0:14–0:30
+### 3 · A few words about a child — 0:12–0:22
 
-- **Recording:** the intake form. Real cursor, real typing — do not speed-ramp
-  the typing itself, it reads as fake. Capture: the name field being filled, two
-  or three interest chips being tapped, the art-inspiration field being typed
-  into.
-- **Overlay:** step label top-left in small caps — `STEP ONE`. A gilt underline
-  grows beneath the field currently in focus, tracking down the form.
-- **Type:** `Tell us about your child` · sub: `about five minutes`
-- **Cut on:** the art-inspiration field, because that is the differentiator —
-  linger a beat longer there than on the name.
+No form. No cursor. Just the words a parent gave us, appearing as type on aged
+ivory, one line at a time on `--motion-tick`.
 
-### 4 · Step two — approve the look — 0:30–0:44
+- **Source:** type only.
+- **Type, in sequence:**
+  `Rosa.`
+  `Five.`
+  `Loves ponds, geese, and waiting for things.`
+  then, smaller, after a beat: `That was all we asked for.`
+- **Why it works:** it takes ten seconds to establish the entire input, and the
+  last line does the job the whole intake sequence was going to do — it tells
+  you this is easy.
 
-- **Recording:** the preview email or preview screen, showing three style
-  options side by side. Then the moment of choosing one.
-- **Overlay:** as the choice lands, the two unchosen previews desaturate and
-  recede 6%; the chosen one gets a thin gilt border drawn around it on
-  `--motion-wind`.
-- **Type:** `You approve the art before we build the book` · sub: `unlimited
-  revisions, or your money back`
-- **Why this beat matters most:** it is the entire anti-slop argument in one
-  gesture. Do not rush it. If a beat has to grow, grow this one.
+### 4 · It comes together — 0:22–0:42
 
-### 5 · Step three — it arrives — 0:44–0:56
+**The centrepiece.** Twenty seconds. Built entirely from the book's nine images
+plus motion — no recording required.
 
-- **Recording:** three quick cuts. (a) The delivery email on a phone. (b) Tapping
-  the link, the reader opening. (c) The iOS share sheet → **Add to Home Screen**
-  → the icon landing on the home screen among other apps.
-- **Overlay:** none over (a) and (b) — let them read. Over (c), a single small
-  callout arrow at the moment the icon appears.
-- **Type:** `Delivered in days` · sub: `saved to their iPad like a favorite app`
+Four movements, roughly five seconds each:
+
+**a. Ink.** Rosa's character block appears as type, then dissolves into the
+first line drawing of her. The words become the girl.
+
+**b. Colour.** A page image arrives desaturated and slightly blurred, then
+resolves — edges first, colour blooming inward, like wet paper drying. Two or
+three pages in sequence, each on `--motion-settle`.
+
+**c. Order.** The eight page images fan into place in reading order, small,
+arranging themselves into a spread grid. They settle. This is the "eight pages,
+one evening" moment — you can see the light change across them.
+
+**d. Bound.** The grid collapses inward and the cover forms over it. A thin gilt
+rule draws around the edge. The book exists.
+
+- **Type:** one line, arriving late, under the finished cover:
+  `Written, illustrated, and read aloud — in three days.`
+- **Audio:** the piano builds very slightly here and only here.
+- **Note:** movement (b) is the anti-slop argument made visually. It looks
+  *painted*, not generated. Do not speed it up.
+
+### 5 · It arrives — 0:42–0:52
+
+- **Source:** screen recording, three quick cuts.
+  - (a) the delivery email on a phone
+  - (b) tapping the link, the reader opening
+  - (c) the iOS share sheet → **Add to Home Screen** → the icon landing among
+    other apps
+- **Overlay:** nothing over (a) and (b). One small callout arrow as the icon
+  appears in (c).
+- **Type:** `Delivered in days` · sub: `saved to their iPad like a favourite app`
 - **This is the shot that sells grandparents.** It answers "but is it
-  complicated" without saying a word.
+  complicated" without a word.
 
-### 6 · The payoff — 0:56–1:12
+### 6 · The payoff — 0:52–1:08
 
-The longest beat. Real reading, minimal overlay. Let the software speak.
+The longest live beat. Real reading, minimal overlay.
 
-- **Recording:** (a) a page turn, full directional flip animation. (b) a word
-  being tapped and lighting up as it is spoken. (c) the transport controls,
-  a thumb hitting play. (d) a slow pan across an illustrated spread.
+- **Source:** screen recording on iPad.
+  - (a) a page turn, full directional flip
+  - (b) a word tapped, lighting up as it is spoken
+  - (c) the transport controls, a thumb hitting play
+  - (d) a slow pan across an illustrated spread
 - **Overlay:** almost none. One small caption per sub-shot, low, in EB Garamond,
   fading in and out. Never covering the art.
-- **Type:** `Read aloud, warmly` → `Tap any word to hear it` → `Their book, their
-  pace`
-- **Audio:** bring the real narration up here. This is the one place the
-  product's own voice should be audible.
+- **Type:** `Read aloud, warmly` → `Tap any word to hear it` → `Their book, their pace`
+- **Audio:** bring the real narration up. The only voice in the film.
 
-### 7 · Night — 1:12–1:20
+### 7 · Night — 1:08–1:15
 
-- **Recording:** the same book, day mode, then the mode switch, then night —
+- **Source:** screen recording, one continuous take.
+- **What happens:** the same book in day mode, the mode switch, then night —
   text-only, warm-dark, sleepy voice.
 - **Overlay:** none. The transition is the point.
 - **Type:** `And a quieter one for bedtime`
 
-### 8 · The quiet part — 1:20–1:28
+### 8 · The quiet part — 1:15–1:23
 
-- **Recording:** none. Full-frame type on aged ivory.
-- **Overlay:** three lines arriving in sequence, each on `--motion-tick`, with a
-  small fleuron ornament between them.
+- **Source:** type only, full frame on aged ivory.
+- **What happens:** three lines in sequence on `--motion-tick`, a small fleuron
+  between each.
 - **Type:**
   `No ads. No algorithm. No autoplay.`
   `It ends when the story ends.`
   `We delete what you told us once the book is delivered.`
 - **This is the beat that converts the screen-time-guilty parent.** It is the
-  only place in the video where we say what we *don't* do.
+  only place we say what we *don't* do, and it earns that because everything
+  before it was product.
 
-### 9 · Close — 1:28–1:34
+### 9 · Close — 1:23–1:30
 
-- **Recording:** none.
-- **Overlay:** mark returns, breathing. Details settle beneath it.
-- **Type:** `$29 · previews in 24 hours · book in 3–4 days` then `littlefables.ai`
+- **Source:** motion graphics.
+- **What happens:** mark returns, breathing. Details settle beneath.
+- **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.ai`
 - **Audio:** piano resolves.
 
 ---
 
 ## Recording checklist
 
-Capture these before any compositing. Record at **the highest resolution the
-device allows** — downscaling is free, upscaling is not.
+Only seven shots. Everything else is built from the book's images.
 
 | # | Shot | Device | Notes |
 |---|---|---|---|
-| 1 | Cover, held | — | Still export, not a recording |
-| 2 | Intake: name field | Desktop | Real typing speed |
-| 3 | Intake: interest chips | Desktop | Tap two or three |
-| 4 | Intake: art inspirations | Desktop | Linger here |
-| 5 | Three previews | Desktop | Side by side |
-| 6 | Choosing one | Desktop | The click, clearly |
-| 7 | Delivery email | Phone | |
-| 8 | Tapping link → reader opens | Phone | |
-| 9 | Add to Home Screen | iPad | Full share-sheet flow |
-| 10 | Page turn | iPad | Landscape, full flip |
-| 11 | Word tap + highlight | iPad | Close enough to read |
-| 12 | Transport, thumb on play | iPad | |
-| 13 | Illustrated spread | iPad | Slow, steady |
-| 14 | Day → night switch | iPad | One continuous take |
+| 1 | Delivery email | Phone | |
+| 2 | Tap link → reader opens | Phone | One continuous take |
+| 3 | Add to Home Screen | iPad | Full share-sheet flow, icon landing |
+| 4 | Page turn | iPad | Landscape, full directional flip |
+| 5 | Word tap + highlight | iPad | Close enough to read the word |
+| 6 | Transport, thumb on play | iPad | |
+| 7 | Day → night switch | iPad | One continuous take, do not cut |
 
 **iOS:** Settings → Control Center → Screen Recording. Turn on Do Not Disturb
 first — a notification banner mid-take ruins it.
-**macOS:** `Cmd+Shift+5`, record a selection, not the whole screen.
+**macOS:** `Cmd+Shift+5`, record a selection rather than the whole screen.
 
-Drop everything in `video/recordings/` named to match the numbers above:
-`01-cover.png`, `02-intake-name.mov`, and so on. The pipeline reads that folder.
+Record at the highest resolution the device allows. Downscaling is free;
+upscaling is not.
+
+Drop them in `video/recordings/` as `01-email.mov`, `02-open.mov`, and so on.
 
 ---
 
-## Hard blocker
+## Dependency
 
-**Beats 2 and 6 need a finished book in the Heritage art style.** Recording the
-reader against a v3-palette book would put cream-and-terracotta illustrations
-inside walnut-and-oxblood chrome, and the mismatch is exactly the kind of thing
-that reads as unfinished.
+Beats 2, 4, 6 and 7 need the finished art for **The Lantern of Round Pond**
+(`content/books/custom/lantern-round-pond/`). Beat 4 uses all nine images
+directly; beats 6 and 7 need the book imported so it can be read on a device.
 
-One book unblocks: this video, the landing-page image slots, the Etsy hero
-photograph, and the sample spreads. It is the single highest-leverage thing
-left before launch.
+Nothing else is blocking.
 
 ---
 
 ## Pipeline
 
 Remotion, in `video/` as its own package so the app's dependency tree stays
-small. See `video/README.md` once scaffolded.
+small.
 
-Compositions are JSON-driven: one file per beat describing recording path,
-in/out points, overlay type, and copy. Changing a headline means editing JSON,
-not TSX.
+Compositions are JSON-driven — one file per beat with source paths, in/out
+points, overlay type and copy. Changing a headline means editing JSON, not TSX.
 
-Motion-graphic components to build — none of operator-economy's transfer, since
-those are built for talking-head footage:
+Components to build. None of operator-economy's transfer; those are built for
+talking-head footage, and this film has none.
 
-- `DeviceFrame` — iPad or phone bezel around a recording, correct corner radius
-- `ZoomPan` — Ken Burns into a UI region, `--ease-pendulum`
-- `Callout` — small arrow plus label, timestamp-synced
-- `TitleCard` — Heritage type on aged ivory, mark optional
-- `MarkDraw` — the cold-open draw-in, ported from `assets/mark-motion.js`
-- `StepLabel` — small-caps step marker with the gilt tracking underline
-- `QuietLines` — beat 8's sequenced lines with fleurons
+| Component | Used by | What it does |
+|---|---|---|
+| `MarkDraw` | 1, 9 | Cold-open draw-in, ported from `design-system/assets/mark-motion.js` |
+| `TitleCard` | 1, 3, 8, 9 | Heritage type on aged ivory, sequenced lines, optional mark |
+| `SlowPush` | 2 | Imperceptible Ken Burns on a still |
+| `Develop` | 4b | Desaturated and blurred resolving to sharp — the wet-paper-drying reveal |
+| `PageFan` | 4c | Images arranging into a reading-order grid |
+| `Bind` | 4d | Grid collapsing under a cover, gilt rule drawing around |
+| `DeviceFrame` | 5, 6, 7 | iPad or phone bezel around a recording, correct corner radius |
+| `Callout` | 5 | Small arrow plus label, timestamp-synced |
 
-Render at 1920×1080 for the landing page. A 1080×1920 vertical cut for Etsy and
-social comes from the same source, reframed — Etsy's video slot is square-ish
-and short, so plan a 30-second cut of beats 3, 4, 5 and 6 only.
+Render 1920×1080 for the landing page. A 30-second cut of beats 3, 4 and 6 —
+the words, the assembly, the reading — reframes to square for Etsy's video slot
+from the same source.
