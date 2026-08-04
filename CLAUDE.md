@@ -95,6 +95,13 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
   is documented in the file's header.
 - **Migrations** → `supabase/migrations/YYYYMMDDHHMMSS_*.sql`. Types
   regenerate via `pnpm db:types` after applying.
+- **Selling custom books (Etsy)** → `docs/commerce/`. Positioning, listing
+  copy, buyer intake, fulfillment runbook, email templates, market
+  research. Start at `docs/commerce/README.md`.
+- **Custom-order books** → `content/books/custom/<slug>/`, provisioned via
+  `scripts/new-household.ts` (prints a magic URL), delivered through
+  `app/f/[token]/route.ts`. Art prompts come from the `fable-art-custom`
+  skill at `~/.codex/skills/fable-art-custom/`.
 
 ## What's gone (don't ask to restore without checking with the user)
 
