@@ -65,3 +65,5 @@ video/out/
 video/public/book/
 video/public/recordings/
 video/public/audio/
+# 49MB of PNG sequences — regenerate with `npm run mark`.
+video/public/mark/

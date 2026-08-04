@@ -13,7 +13,7 @@ import { existsSync } from './hasAudio';
 import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
 import { font, ink, paper, pigment, motion, FPS } from './theme';
 
-import { MarkDraw } from './components/MarkDraw';
+import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
 import { SlowPush } from './components/SlowPush';
 import { Develop } from './components/Develop';
@@ -28,7 +28,9 @@ const sec = (s: number) => Math.round(s * FPS);
 /** Beat 1 — the mark draws itself in, wordmark beneath. */
 const ColdOpen: React.FC = () => {
   const frame = useCurrentFrame();
-  const wordmark = interpolate(frame, [motion.settle, motion.settle + motion.wind], [0, 1], {
+  // The mark finishes drawing around frame 60 — its rays are the last thing in.
+  // The name arrives after that, so the two don't compete.
+  const wordmark = interpolate(frame, [58, 58 + motion.wind], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -43,7 +45,7 @@ const ColdOpen: React.FC = () => {
         gap: 24,
       }}
     >
-      <MarkDraw size={260} />
+      <MarkAnim size={300} mode="grow" />
       <div style={{ opacity: wordmark, textAlign: 'center' }}>
         <div style={{ fontFamily: font.display, fontSize: 66, color: ink.base }}>{COPY.brand}</div>
         <div
@@ -190,7 +192,7 @@ const Close: React.FC = () => {
         gap: 28,
       }}
     >
-      <MarkDraw size={180} mode="breathe" />
+      <MarkAnim size={190} mode="breathe" />
       <div style={{ opacity: details, textAlign: 'center' }}>
         <div style={{ fontFamily: font.body, fontSize: 34, color: ink.soft }}>{COPY.close}</div>
         <div style={{ fontFamily: font.display, fontSize: 52, color: ink.base, marginTop: 20 }}>

@@ -4,6 +4,8 @@
   "private": true,
   "description": "Walkthrough film. Separate package so the app's dependency tree stays small.",
   "scripts": {
+    "fonts": "node fetch-fonts.mjs",
+    "mark": "node capture-mark.mjs",
     "studio": "remotion studio",
     "render": "remotion render Walkthrough out/walkthrough.mp4",
     "render:square": "remotion render WalkthroughSquare out/walkthrough-square.mp4",

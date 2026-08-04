@@ -49,6 +49,22 @@ headline or a duration means editing that file, not a component.
 
 ## Assets
 
+**Logomark animation** — the open and close play PNG sequences from
+`public/mark/`, photographed from the design team's CSS harness rather than
+reimplemented as Remotion interpolations. Two sources of truth for one
+animation drift apart on every edit.
+
+```bash
+node capture-mark.mjs   # → public/mark/grow (78f), public/mark/breathe (225f)
+```
+
+It reads `~/Downloads/littlefables-mark-animations.html` by default; set
+`MARK_HARNESS` if the file moves. CSS animations are wall-clock based and
+cannot simply be "played" by a frame-by-frame renderer, so the script pauses
+every animation and sets `currentTime` per frame through the Web Animations
+API — same input, same pixels, every run. Frame counts are declared in
+`MarkAnim.tsx`, so changing a shot's length here means updating `LENGTH` there.
+
 **Book art** — already staged in `public/book/` from
 `content/books/custom/lantern-round-pond/`. Re-copy if the art changes:
 
