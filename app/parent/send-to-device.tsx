@@ -30,20 +30,20 @@ export function SendToDeviceButton({ childId, childName }: { childId: string; ch
         disabled={pending}
         style={{
           padding: 'var(--space-3) var(--space-4)',
-          background: 'var(--action)',
-          color: 'var(--action-ink)',
+          background: 'var(--oxblood)',
+          color: 'var(--paper-warm)',
           border: 'none',
           borderRadius: 'var(--radius-pill)',
           fontFamily: 'inherit',
-          fontSize: 'var(--text-body)',
+          fontSize: 'var(--text-body-size)',
           fontWeight: 600,
           cursor: pending ? 'wait' : 'pointer',
-          boxShadow: 'var(--elev-rest)',
+          boxShadow: 'var(--shadow-rest)',
         }}
       >
         {pending ? 'Sending…' : `Send ${childName} to this device →`}
       </button>
-      {error && <span style={{ color: 'var(--life-blocked)', fontSize: 'var(--text-caption)' }}>{error}</span>}
+      {error && <span style={{ color: 'var(--burgundy)', fontSize: 'var(--text-caption-size)' }}>{error}</span>}
     </div>
   );
 }

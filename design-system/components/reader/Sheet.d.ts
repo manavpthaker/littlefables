@@ -1,9 +1,7 @@
 export interface SheetProps {
-  buddyColor?: string;
-  buddyState?: 'idle' | 'speaking' | 'listening' | 'thinking';
-  /** buddy speech line — visible text and utterance are IDENTICAL (text is a caption to the voice, verbatim) */
-  speech?: string;
-  /** content: ChoiceBlocks, mic moment, etc */
+  title?: string;
+  /** Ornamental double-rule header mark @default true */
+  doubleRule?: boolean;
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 }
-// Placement: rises over the bottom two-thirds of an art page (reach zone). Never mid-screen, never over the top scrim.

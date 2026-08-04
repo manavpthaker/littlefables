@@ -28,10 +28,10 @@ export function MapSection({
       <header style={{ display: 'grid', gap: 'var(--space-2)', justifyItems: 'center', textAlign: 'center' }}>
         <p
           style={{
-            fontFamily: 'var(--font-hand)',
-            color: 'var(--text-muted)',
+            fontFamily: 'var(--font-display)',
+            color: 'var(--ink-soft)',
             margin: 0,
-            fontSize: 'var(--text-hand)',
+            fontSize: 'var(--text-label-size)',
           }}
         >
           Pick a chapter to start
@@ -40,15 +40,19 @@ export function MapSection({
           style={{
             fontFamily: 'var(--font-display)',
             margin: 0,
-            fontSize: 'var(--text-display)',
-            lineHeight: 'var(--lh-display)',
-            color: 'var(--text-strong)',
+            fontSize: 'var(--text-display-size)',
+            lineHeight: 'var(--text-display-lh)',
+            color: 'var(--ink)',
           }}
         >
           {title}
         </h1>
       </header>
-      <ChapterMap size="large" chapters={chapters} current={0} onPick={onPick} />
+      <ChapterMap
+        chapters={chapters.map((c, i) => ({ id: String(i), label: c.title }))}
+        currentId="0"
+        onSelect={(id) => onPick(Number(id))}
+      />
     </section>
   );
 }

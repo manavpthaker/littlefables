@@ -1,5 +1,4 @@
-Wordbook entry — the child's kept word in his "own handwriting" (Gochi Hand) with meaning + original sentence; the star fills once the word is owned.
+One-line: a saved word's page — display word, brass syllables, kid-plain definition, the line it came from.
 ```jsx
-<WordbookEntry word="lantern" meaning="A little light you can carry." owned
-  sentence="Rosa held the lantern high above the river." onPlay={speak} />
+<WordbookEntry word="beneath" syllables="be·neath" definition="Under something, like a boat under a bridge." example="The fox tucked the letter beneath his coat."/>
 ```

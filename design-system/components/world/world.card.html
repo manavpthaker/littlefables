@@ -1,25 +1,26 @@
-<!-- @dsCard group="Components" viewport="700x540" name="World: Suns, Badges, Wordbook, Celebration" subtitle="Reading days, badge silhouettes, kept words, petal confetti" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<!-- @dsCard group="Components" viewport="700x460" name="World" subtitle="Suns, badges, the wordbook, celebrations" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:18px}
+.demo{display:flex;flex-direction:column;gap:16px}
+.demo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.demo-cap{font-family:var(--font-sc);font-size:12px;letter-spacing:0.09em;color:var(--brass);margin-bottom:-6px}
+</style></head><body>
+<div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/lucide@0.462.0"></script>
 <script src="../../_ds_bundle.js"></script>
-</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
 <script type="text/babel">
-const { SunsRow, BadgeShelf, WordbookEntry, Celebration } = window.LittleFablesDesignSystem_30c7a2;
-ReactDOM.createRoot(document.getElementById('root')).render(
-<div style={{padding:16,display:'flex',gap:20}}>
-  <div style={{display:'flex',flexDirection:'column',gap:18,flex:1}}>
-    <SunsRow earned={[0,1,3]} today={4} />
-    <BadgeShelf badges={[
-      {name:'First book!',icon:'book-open',earned:true,color:'var(--teal)'},
-      {name:'Word collector',icon:'star',earned:true,color:'var(--marigold)'},
-      {name:'?',icon:'moon',earned:false},{name:'?',icon:'map',earned:false}]} />
-    <WordbookEntry word="lantern" meaning="A little light you can carry." owned sentence="Rosa held the lantern high above the river." />
-    <WordbookEntry word="shimmer" meaning="To shine with a soft, dancing light." />
-    <div data-density="parent"><WordbookEntry word="lantern" meaning="A little light you can carry." owned sentence="Rosa held the lantern high above the river." /></div>
+const { SunsRow, BadgeShelf, WordbookEntry, Celebration, CelebrationQueue, Button } = window.LittleFablesHeritageDS_bdeb10;
+function Demo(){ return (<div className="demo">
+  <div className="demo-row" style={{gap:30}}><SunsRow total={5} earned={4} label="four suns"/><BadgeShelf badges={[{id:'b1',label:'first story',icon:'motif-book',earned:true},{id:'b2',label:'word keeper',icon:'motif-key',earned:true},{id:'b3',label:'brave choice',icon:'motif-compass',earned:false}]}/></div>
+  <div className="demo-row" style={{alignItems:'flex-start'}}>
+    <WordbookEntry word="beneath" syllables="be·neath" definition="Under something, like a boat under a bridge." example="The fox tucked the letter beneath his coat."/>
+    <CelebrationQueue items={[{title:'A sun for your sky',message:'You finished chapter three.',ceremonial:true},{title:'A new word kept'}]} activeIndex={0} nextLabel="one more surprise">
+      <Button size="compact">Keep reading</Button>
+    </CelebrationQueue>
   </div>
-  <Celebration title="First book finished!" subtitle="Rosa and the River Star" icon="book-open" color="var(--teal)" />
-</div>);
-</script></body></html>
+</div>); }
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

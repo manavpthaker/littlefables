@@ -63,7 +63,7 @@ export function ReaderHeader({
             placeItems: 'center',
             fontSize: 18,
             fontFamily: 'inherit',
-            boxShadow: 'var(--elev-rest)',
+            boxShadow: 'var(--shadow-rest)',
           }}
         >
           ×
@@ -76,7 +76,7 @@ export function ReaderHeader({
               fontFamily: 'var(--font-display)',
               fontSize: 15,
               lineHeight: 1.15,
-              color: 'var(--text-strong)',
+              color: 'var(--ink)',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -122,9 +122,9 @@ export function ReaderHeader({
                     borderRadius: 3,
                     background:
                       i === segments.current
-                        ? 'var(--marigold, var(--action))'
+                        ? 'var(--brass)'
                         : i < segments.current
-                          ? 'var(--sage, var(--ink-soft))'
+                          ? 'var(--forest)'
                           : 'var(--paper-deep)',
                     transition: 'width 200ms ease',
                   }}
@@ -152,7 +152,7 @@ export function ReaderHeader({
             placeItems: 'center',
             fontSize: 18,
             fontFamily: 'inherit',
-            boxShadow: isNight ? '0 0 0 2px var(--marigold, var(--action))' : 'var(--elev-rest)',
+            boxShadow: isNight ? '0 0 0 2px var(--brass)' : 'var(--shadow-rest)',
           }}
         >
           {isNight ? '🌙' : '☀️'}

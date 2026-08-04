@@ -17,9 +17,8 @@ export function GridView({ books }: { books: ShelfBook[] }) {
           title={book.title}
           utterance={book.title}
           progress={book.progress}
-          cover={book.coverImage ?? undefined}
-          bg={!book.coverImage && book.coverBg && !book.coverBg.startsWith('http') ? book.coverBg : undefined}
-          width="100%"
+          coverSrc={book.coverImage ?? undefined}
+          coverAlt={book.title}
           onOpen={() => {
             window.location.href = `/read/story/${book.id}`;
           }}
@@ -64,7 +63,7 @@ export function ListView({ books }: { books: ShelfBook[] }) {
                     : book.coverBg && !book.coverBg.startsWith('http')
                       ? book.coverBg
                       : 'linear-gradient(135deg, var(--paper-deep), var(--wash-panel))',
-                  boxShadow: 'var(--elev-rest)',
+                  boxShadow: 'var(--shadow-rest)',
                 }}
               />
               <span style={{ display: 'grid', gap: 2, minWidth: 0 }}>
@@ -73,7 +72,7 @@ export function ListView({ books }: { books: ShelfBook[] }) {
                     fontFamily: 'var(--font-display)',
                     fontSize: 17,
                     lineHeight: 1.2,
-                    color: 'var(--text-strong)',
+                    color: 'var(--ink)',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',

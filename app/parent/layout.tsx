@@ -13,8 +13,8 @@ export default async function ParentLayout({ children }: { children: React.React
       style={{
         minHeight: '100dvh',
         background: 'var(--surface-page)',
-        fontFamily: 'var(--font-ui)',
-        color: 'var(--text-body)',
+        fontFamily: 'var(--font-body)',
+        color: 'var(--ink)',
       }}
     >
       <nav
@@ -22,7 +22,7 @@ export default async function ParentLayout({ children }: { children: React.React
           position: 'sticky',
           top: 0,
           zIndex: 5,
-          background: 'var(--surface-card)',
+          background: 'var(--paper-warm)',
           borderBottom: 'var(--border-soft)',
           padding: 'var(--space-3) clamp(14px, 3.5vw, 24px)',
           display: 'flex',
@@ -35,8 +35,8 @@ export default async function ParentLayout({ children }: { children: React.React
           href="/parent"
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-title)',
-            color: 'var(--text-strong)',
+            fontSize: 'var(--text-title-size)',
+            color: 'var(--ink)',
             textDecoration: 'none',
           }}
         >
@@ -45,9 +45,9 @@ export default async function ParentLayout({ children }: { children: React.React
         <Link
           href="/read"
           style={{
-            color: 'var(--action)',
+            color: 'var(--oxblood)',
             textDecoration: 'none',
-            fontSize: 'var(--text-body)',
+            fontSize: 'var(--text-body-size)',
             fontWeight: 600,
           }}
         >

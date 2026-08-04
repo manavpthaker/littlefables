@@ -1,10 +1,12 @@
-<!-- @dsCard group="Colors" viewport="700x170" name="State Vocabulary" subtitle="One color + motion per system state — recognized anywhere" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>body{display:flex;gap:10px;padding:14px;background:var(--paper)}.s{flex:1;text-align:center;font-family:var(--font-ui);font-size:11px;color:var(--ink)}.orb{width:52px;height:52px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}</style></head><body>
-<div class="s"><div class="orb" style="background:var(--river);animation:lf-listening var(--dur-breath) var(--ease-drift) infinite"></div><b>listening</b><br>breathing ring</div>
-<div class="s"><div class="orb" style="background:var(--dusk);color:#FBF4E6;font-size:16px;letter-spacing:2px"><span style="animation:lf-pulse 1.4s infinite">···</span></div><b>thinking</b><br>drifting dots</div>
-<div class="s"><div class="orb" style="background:var(--teal);color:#FBF4E6">▮▯▮</div><b>speaking</b><br>gentle bars</div>
-<div class="s"><div class="orb" style="background:linear-gradient(90deg,#E39A32,#EFCE71,#E39A32);background-size:200% 100%;animation:lf-paint 2s linear infinite"></div><b>painting</b><br>shimmer wash</div>
-<div class="s"><div class="orb" style="background:var(--bark)"></div><b>offline</b><br>still & calm</div>
-<div class="s"><div class="orb" style="background:var(--sage);animation:lf-pulse 2.6s infinite"></div><b>syncing</b><br>slow pulse</div>
-<div class="s"><div class="orb" style="background:var(--butter);box-shadow:0 0 18px var(--butter)"></div><b>mercy</b><br>butter glow</div>
-</body></html>
+<!-- @dsCard group="Colors" viewport="700x170" name="State palette" subtitle="No state relies on color alone — each pairs motion + earcon" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css"><style>body{padding:16px}.g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 14px}.st{display:flex;align-items:center;gap:10px;background:var(--paper-warm);border:1px solid var(--border-card);border-radius:var(--radius-sm);padding:8px 12px}.dot{width:14px;height:14px;border-radius:50%;flex:none}.st b{font-family:var(--font-sc);font-weight:400;font-size:13px;letter-spacing:.06em}.st span{font-size:11.5px;color:var(--ink-faint);font-family:var(--font-body);display:block;line-height:1.2}</style></head><body>
+<div class="g">
+<div class="st"><div class="dot" style="background:var(--state-listening)"></div><div><b>listening</b><span>navy · still, patient</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-thinking)"></div><div><b>thinking</b><span>sepia · deliberate</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-speaking)"></div><div><b>speaking</b><span>forest · steady</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-painting)"></div><div><b>painting</b><span>brass · warm activity</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-offline);border:1px solid var(--border-ornament)"></div><div><b>offline</b><span>a rest, not an error</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-syncing)"></div><div><b>syncing</b><span>forest 60% · quiet</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-mercy)"></div><div><b>mercy</b><span>brass 40% · never red</span></div></div>
+<div class="st"><div class="dot" style="background:var(--state-success)"></div><div><b>success</b><span>forest</span></div></div>
+</div></body></html>

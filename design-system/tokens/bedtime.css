@@ -1,26 +1,8 @@
-/* Bedtime mode ("storybook dusk" night palette, Redesign 2026-07-21).
-   The reader sets data-bedtime on <html> — manually via the moon toggle, or
-   automatically inside the parent-set bedtime window. Import AFTER lighting.css:
-   equal specificity, later source order, so bedtime overrides any data-lighting
-   stage while active. Ink flips to a warm light ramp; pigments stay put
-   (terracotta action reads fine on night paper). Kid-only — Parent Corner
-   never renders under data-bedtime. */
+/* Bedtime: kid-only night surface. Dark walnut, not black. Pigments unchanged; oxblood remains the CTA. */
 [data-bedtime]{
-  /* night surfaces (semantic aliases --surface-* follow automatically) */
-  --paper:#1E1930;--paper-bright:#2A2440;--paper-deep:#171226;
-  /* flipped ink ramp — warm candlelight cream, never pure white */
-  --ink:#EFE7DA;--ink-soft:#C9BFAE;--ink-faint:#8F8578;
-  /* contrast-checked: ink/paper ≈13:1 · ink-soft/paper ≈8:1 (AA body) */
-  /* word-highlight treatment on night paper */
-  --word-current-bg:rgba(227,154,50,.30);--word-current-ink:#F9F2E3;
-  --word-spoken-ink:#EFE7DA;
-  --word-upcoming-ink:rgba(239,231,218,.45);
-  /* over-art system — night glass instead of paper glass */
-  --wash-capsule:rgba(23,18,38,.82);--wash-panel:rgba(23,18,38,.92);
-  --scrim-bottom:linear-gradient(180deg,rgba(14,10,24,0) 0%,rgba(14,10,24,.44) 55%,rgba(14,10,24,.68) 100%);/* @kind other */
-  --scrim-top:linear-gradient(180deg,rgba(14,10,24,.48) 0%,rgba(14,10,24,0) 100%);/* @kind other */
-  /* ambience — plum lamplight, deep shadows, quieter wells */
-  --light-glow:rgba(116,86,124,.22);/* @kind color */
-  --shadow-color:rgba(8,5,16,.55);/* @kind color */
-  --inset-well:inset 0 2px 6px rgba(8,5,16,.4);/* @kind other */
+--paper:#1F1A14;--paper-warm:#2A2318;--paper-deep:#161209;
+--ink:#F0E5CD;--ink-soft:#C9B394;--ink-faint:#8A7156;
+--wash-panel:rgba(31,26,20,0.96);--wash-capsule:rgba(31,26,20,0.82);
+--border-soft:rgba(240,229,205,0.12);--border-ornament:rgba(240,229,205,0.22);--border-card:rgba(240,229,205,0.10);
+--shadow-card:inset 0 1px 0 rgba(240,229,205,0.06),0 2px 4px rgba(0,0,0,0.3);--shadow-raised:0 4px 8px rgba(0,0,0,0.35);--shadow-float:0 8px 16px rgba(0,0,0,0.4);--shadow-press:inset 0 1px 2px rgba(0,0,0,0.3);
 }

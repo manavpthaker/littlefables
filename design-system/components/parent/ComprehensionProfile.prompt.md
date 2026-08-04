@@ -1,6 +1,4 @@
-Comprehension profile view — one plain-language summary, four type bars in the question-type pigments, expandable real transcripts.
+One-line: comprehension signals as forest bars with plain words — evidence, not scores.
 ```jsx
-<ComprehensionProfile summary="Strong on prediction, working on inference."
-  levels={{recall:.8, inference:.4, prediction:.9, connection:.6}}
-  transcripts={[{type:'inference', q:'How did Rosa feel when the lantern went out?', a:'sad… and a little brave', when:'Tue'}]} />
+<ComprehensionProfile skills={[{label:'Sequence',level:0.8,word:'steady'},{label:'Why & because',level:0.55,word:'growing'}]}/>
 ```

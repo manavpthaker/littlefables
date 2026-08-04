@@ -1,11 +1,7 @@
-<!-- @dsCard group="Type" viewport="700x210" name="Density Scales" subtitle="Same tokens, two scales — kid default vs [data-density=parent]" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>body{display:flex;gap:14px;padding:14px;background:var(--paper)}.col{flex:1;background:var(--paper-bright);border-radius:14px;padding:14px;color:var(--ink)}.tag{font-family:var(--font-ui);font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em}</style></head><body>
-<div class="col"><span class="tag">kid (default)</span>
-<div style="font-family:var(--font-display);font-size:24px;margin-top:6px">Story time!</div>
-<div style="font-family:var(--font-body);font-size:21px">Body 21px, targets 56–64px</div>
-<div style="margin-top:10px;display:inline-flex;align-items:center;justify-content:center;height:56px;padding:0 28px;background:var(--terracotta);color:#FFF6EA;border-radius:999px;font-family:var(--font-display);font-size:19px">Read to me</div></div>
-<div class="col" data-density="parent"><span class="tag">parent density</span>
-<div style="font-family:var(--font-display);font-size:20px;margin-top:6px">Story detail</div>
-<div style="font-family:var(--font-ui);font-size:15px">Body 15px Inter, targets 36–44px</div>
-<div style="margin-top:10px;display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;background:var(--terracotta);color:#FFF6EA;border-radius:8px;font-family:var(--font-ui);font-size:13px;font-weight:600">Approve art</div></div>
-</body></html>
+<!-- @dsCard group="Type" viewport="700x270" name="Density scales" subtitle="Same tokens, three scales — kid 21px, parent 16px, outward 17px body" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css"><style>body{padding:16px}.g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.col{background:var(--paper-warm);border:1px solid var(--border-card);border-radius:var(--radius-md);padding:14px}.tag{font-family:var(--font-sc);font-size:12px;letter-spacing:.1em;color:var(--brass);margin-bottom:8px}.col h3{font-family:var(--font-display);font-size:var(--text-title-size);line-height:var(--text-title-lh);margin:0 0 6px}.col p{font-family:var(--font-body);font-size:var(--text-body-size);line-height:var(--text-body-lh);margin:0 0 8px}.col .lab{font-family:var(--font-sc);font-size:var(--text-label-size);letter-spacing:var(--track-label);color:var(--ink-soft)}</style></head><body>
+<div class="g">
+<div class="col" data-density="kid"><div class="tag">kid · default</div><h3>The Paper Boat</h3><p>You fold the map one more time.</p><span class="lab">chapter three</span></div>
+<div class="col" data-density="parent"><div class="tag">parent</div><h3>The Paper Boat</h3><p>Comprehension signals from tonight's reading, in plain terms.</p><span class="lab">order · lf-2041</span></div>
+<div class="col" data-density="outward"><div class="tag">outward</div><h3 style="font-size:26px">The Paper Boat</h3><p>Your kid, in their own storybook.</p><span class="lab">gift certificate</span></div>
+</div></body></html>

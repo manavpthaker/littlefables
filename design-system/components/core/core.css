@@ -1,0 +1,35 @@
+/* Core: Button, IconButton, Icon, Ornament, Rule, Wordmark */
+.lf-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-body);font-weight:500;font-size:var(--text-body-size);border:none;cursor:pointer;height:var(--tap-standard);padding:0 22px;border-radius:var(--radius-md);transition:transform var(--motion-tick) var(--ease-mechanical),background var(--motion-tick) var(--ease-mechanical),box-shadow var(--motion-tick) var(--ease-mechanical);text-decoration:none}
+.lf-btn--primary{background:var(--oxblood);color:var(--paper-warm);box-shadow:var(--shadow-card)}
+.lf-btn--primary:hover{background:var(--burgundy)}
+.lf-btn--secondary{background:transparent;color:var(--ink);border:var(--line-weight) solid var(--ink)}
+.lf-btn--secondary:hover{background:var(--brass-wash)}
+.lf-btn--quiet{background:transparent;color:var(--ink-soft)}
+.lf-btn--quiet:hover{background:var(--brass-wash);color:var(--ink)}
+.lf-btn:active{box-shadow:var(--shadow-press);transform:translateY(1px)}
+.lf-btn--hero{height:var(--tap-primary);border-radius:var(--radius-lg);padding:0 30px;font-size:calc(var(--text-body-size)*1.08)}
+.lf-btn--compact{height:var(--tap-min);border-radius:var(--radius-sm);padding:0 14px;font-size:calc(var(--text-body-size)*0.92)}
+.lf-btn[disabled]{opacity:0.45;pointer-events:none}
+.lf-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:var(--tap-standard);height:var(--tap-standard);border-radius:var(--radius-md);border:none;background:transparent;color:var(--ink);cursor:pointer;transition:background var(--motion-tick) var(--ease-mechanical),transform var(--motion-tick) var(--ease-mechanical)}
+.lf-iconbtn:hover{background:var(--brass-wash)}
+.lf-iconbtn:active{box-shadow:var(--shadow-press);transform:translateY(1px)}
+.lf-iconbtn--outline{border:var(--line-weight) solid var(--ink)}
+.lf-iconbtn--filled{background:var(--brass-wash)}
+.lf-iconbtn--primary{background:var(--oxblood);color:var(--paper-warm);box-shadow:var(--shadow-card)}
+.lf-iconbtn--primary:hover{background:var(--burgundy)}
+.lf-iconbtn--hero{width:var(--tap-primary);height:var(--tap-primary);border-radius:var(--radius-lg)}
+.lf-iconbtn--compact{width:var(--tap-min);height:var(--tap-min);border-radius:var(--radius-sm)}
+.lf-icon{flex:none;vertical-align:middle}
+.lf-rule{border:none;height:1px;background:var(--border-soft);margin:0}
+.lf-rule--faint{background:var(--ink-faint);opacity:0.5}
+.lf-rule-double{display:flex;flex-direction:column;gap:4px}
+.lf-rule-double i{display:block;height:1px;background:var(--ink-faint)}
+.lf-rule-double i+i{height:2px}
+.lf-rule-dot{display:flex;align-items:center;gap:8px}
+.lf-rule-dot i{display:block;flex:1;height:1px;background:var(--ink-faint)}
+.lf-rule-dot b{display:block;width:5px;height:5px;border-radius:50%;background:var(--ink-faint)}
+.lf-wordmark{display:inline-flex;align-items:center;gap:0.42em;color:var(--ink);text-decoration:none}
+.lf-wordmark--stacked{flex-direction:column;gap:0.18em;text-align:center}
+.lf-wordmark svg{display:block}
+.lf-wordmark .lf-wordmark-text{font-family:var(--font-display);line-height:1;letter-spacing:0.01em;white-space:nowrap}
+.lf-dropcap-frame{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink-faint);outline:1px solid var(--ink-faint);outline-offset:2px;background:var(--paper);font-family:var(--font-display);color:var(--ink);float:left;margin:4px 14px 2px 3px}

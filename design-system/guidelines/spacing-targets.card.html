@@ -1,8 +1,7 @@
-<!-- @dsCard group="Spacing" viewport="700x160" name="Touch Targets" subtitle="Kid: primary 64 · standard 56 · min 44 · gap 12 — phone-derived" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>body{display:flex;align-items:flex-end;gap:20px;padding:18px 24px;background:var(--paper);font-family:var(--font-ui);font-size:11px;color:var(--ink-soft)}.t{display:flex;flex-direction:column;align-items:center;gap:6px}.box{background:var(--terracotta-wash);border:2px dashed var(--terracotta);border-radius:16px}</style></head><body>
-<div class="t"><div class="box" style="width:64px;height:64px"></div>64 primary</div>
-<div class="t"><div class="box" style="width:56px;height:56px"></div>56 standard</div>
-<div class="t"><div class="box" style="width:44px;height:44px"></div>44 min</div>
-<div class="t"><div style="display:flex;gap:12px"><div class="box" style="width:44px;height:44px"></div><div class="box" style="width:44px;height:44px"></div></div>12px gap min</div>
-<div class="t" data-density="parent"><div class="box" style="width:36px;height:36px;border-radius:8px"></div>36 parent</div>
-</body></html>
+<!-- @dsCard group="Spacing" viewport="700x200" name="Tap targets" subtitle="Primary / standard / minimum per density" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css"><style>body{padding:16px}.g{display:flex;gap:28px}.den{display:flex;flex-direction:column;gap:8px}.den .cap{font-family:var(--font-sc);font-size:12px;letter-spacing:.1em;color:var(--brass)}.tr{display:flex;gap:10px;align-items:flex-end}.t{background:var(--oxblood-wash);border:1.5px solid var(--oxblood);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-size:11px;color:var(--oxblood)}</style></head><body>
+<div class="g">
+<div class="den" data-density="kid"><span class="cap">kid</span><div class="tr"><div class="t" style="width:var(--tap-primary);height:var(--tap-primary)">64</div><div class="t" style="width:var(--tap-standard);height:var(--tap-standard)">56</div><div class="t" style="width:var(--tap-min);height:var(--tap-min)">44</div></div></div>
+<div class="den" data-density="parent"><span class="cap">parent</span><div class="tr"><div class="t" style="width:var(--tap-primary);height:var(--tap-primary)">44</div><div class="t" style="width:var(--tap-standard);height:var(--tap-standard)">36</div><div class="t" style="width:var(--tap-min);height:var(--tap-min)">32</div></div></div>
+<div class="den" data-density="outward"><span class="cap">outward</span><div class="tr"><div class="t" style="width:var(--tap-primary);height:var(--tap-primary)">48</div><div class="t" style="width:var(--tap-standard);height:var(--tap-standard)">40</div><div class="t" style="width:var(--tap-min);height:var(--tap-min)">36</div></div></div>
+</div></body></html>

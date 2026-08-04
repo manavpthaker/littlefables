@@ -1,6 +1,4 @@
-Home's continue-where-you-left-off card: cover thumb + marigold progress ribbon, display-font title, hand-font chapter caption, and the screen's single terracotta primary.
+One-line: "pick up where you left off" — thumb, chapter eyebrow, brass progress, chevron.
 ```jsx
-<ContinueCard title="Rosa and the River Star" chapter="Chapter 2 · The Little Round Door"
-  progress={0.4} onContinue={openReader} />
+<ContinueCard title="The Paper Boat" chapterLabel="chapter three" progress={0.62} utterance="Shall we keep going?"/>
 ```
-Kid density only. Works identically offline. Its Button is the screen's one primary — don't place a second.

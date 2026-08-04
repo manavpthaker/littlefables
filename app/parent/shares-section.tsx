@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { SectionHeader } from '@ds/components/parent/ParentPrimitives.jsx';
+import { SectionHeader } from '@ds/components/parent/SectionHeader.jsx';
 
 export interface ShareableBook {
   id: string;
@@ -23,8 +23,8 @@ interface ShareRow {
 export function SharesSection({ books }: { books: ShareableBook[] }) {
   return (
     <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
-      <SectionHeader>Share a story</SectionHeader>
-      <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+      <SectionHeader label="Share a story" />
+      <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 'var(--text-body-size)' }}>
         Each share is a link to one story. Anyone with the link opens it directly
         — no household password. Add a password if the link will travel.
       </p>
@@ -133,7 +133,7 @@ function BookShareRow({ book }: { book: ShareableBook }) {
             disabled={minting || (showPassword && password.trim().length === 0)}
             style={{
               padding: 'var(--space-2) var(--space-3)',
-              background: 'var(--action)',
+              background: 'var(--oxblood)',
               color: 'var(--paper)',
               border: 'none',
               borderRadius: 'var(--radius-pill)',
@@ -158,12 +158,12 @@ function BookShareRow({ book }: { book: ShareableBook }) {
             border: '1px solid var(--ink-faint)',
             borderRadius: 'var(--radius-md)',
             fontFamily: 'inherit',
-            background: 'var(--surface-card)',
+            background: 'var(--paper-warm)',
           }}
         />
       )}
       {justCopied && (
-        <p style={{ margin: 0, color: 'var(--sage)', fontSize: 13 }}>
+        <p style={{ margin: 0, color: 'var(--forest)', fontSize: 13 }}>
           ✓ Copied to clipboard: <code style={{ fontSize: 12 }}>{justCopied}</code>
         </p>
       )}

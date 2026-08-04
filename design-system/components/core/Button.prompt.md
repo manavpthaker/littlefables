@@ -1,6 +1,7 @@
-Kid-first pill button (and square IconButton) — terracotta = action, press settles down, every instance carries an utterance.
+One-line: the only action element; primary is always oxblood, one per screen.
 ```jsx
-<Button variant="primary" size="primary" icon="book-open" utterance="Let's read!">Read to me</Button>
-<IconButton name="pause" label="Pause" variant="capsule" />
+<Button icon="play" utterance="Let's read your story.">Read tonight's chapter</Button>
+<Button variant="secondary">Browse the shelf</Button>
+<Button variant="quiet" size="compact">Not now</Button>
 ```
-Variants: primary (the one main action), soft (secondary), ghost, capsule (over art). Never render a disabled/gray state on kid surfaces.
+Variants: primary (oxblood, paper text), secondary (2px ink border), quiet. Sizes hero/standard/compact map to tap-target tokens, so they rescale with data-density. Press settles (inset shadow + 1px drop), never disappears.

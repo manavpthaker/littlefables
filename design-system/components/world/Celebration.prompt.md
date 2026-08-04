@@ -1,8 +1,5 @@
-Celebration card — blooming medallion + falling watercolor petals (pigments, never foil confetti). Reduced-motion drops the petals and keeps a single glow.
+One-line: a ceremony card — sunburst blooms once (chime timing), gilt filigree only on the big ones.
 ```jsx
-<Celebration title="First book finished!" subtitle="Rosa and the River Star" icon="book-open" color="var(--teal)">
-  <Button variant="primary" icon="arrow-right" utterance="What's next?">Keep going</Button>
-</Celebration>
+<Celebration title="A sun for your sky" message="You finished chapter three." ceremonial><Button>Keep reading</Button></Celebration>
 ```
-
-Multiple earns queue — never stack: `<CelebrationQueue items={[{kind:'sun',title:'A new sun!'},{kind:'badge',title:'Word collector!'}]} onEmpty={goHome} />` (order sun → badge → word, 600ms gap).
+Bell-cascade earcon; queued through CelebrationQueue so ceremonies never stack.

@@ -1,4 +1,4 @@
-Weekly reading-day suns; unearned days are quiet paper wells (promise, not absence).
+One-line: earned suns for the day — brass when warm, faint outline when waiting.
 ```jsx
-<SunsRow earned={[0,1,3]} today={4} justEarned={3} />
+<SunsRow total={5} earned={4} label="four suns"/>
 ```

@@ -1,4 +1,4 @@
-Badge shelf — earned badges are glowing watercolor medallions; unearned are dim silhouettes labeled "?" ("Something's waiting for you here…"). Never padlocks, never punitive.
+One-line: medallions on a walnut board — double-ring brass when earned, faint when waiting.
 ```jsx
-<BadgeShelf badges={[{name:'First book!',icon:'book-open',earned:true,color:'var(--teal)'},{name:'Word collector',icon:'star',earned:false}]} />
+<BadgeShelf badges={[{id:'b1',label:'first story',icon:'motif-book',earned:true},{id:'b2',label:'word keeper',icon:'motif-key'}]}/>
 ```

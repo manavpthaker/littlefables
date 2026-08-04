@@ -1,26 +1,25 @@
-<!-- @dsCard group="Components" viewport="700x420" name="System States" subtitle="Offline, sync, painting, warm error — kid-warm vs parent-informative" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<!-- @dsCard group="Components" viewport="700x420" name="System" subtitle="Offline is a rest; errors stay in-world; loading is the mark" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:18px}
+.demo{display:flex;flex-direction:column;gap:16px}
+.demo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.demo-cap{font-family:var(--font-sc);font-size:12px;letter-spacing:0.09em;color:var(--brass);margin-bottom:-6px}
+</style></head><body>
+<div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/lucide@0.462.0"></script>
 <script src="../../_ds_bundle.js"></script>
-</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
 <script type="text/babel">
-const { StateBanner, PaintingWash, ErrorCharacter, Button } = window.LittleFablesDesignSystem_30c7a2;
-ReactDOM.createRoot(document.getElementById('root')).render(
-<div style={{padding:16,display:'flex',gap:20}}>
-  <div style={{flex:1.2,display:'flex',flexDirection:'column',gap:12}}>
-    <div style={{display:'flex',gap:10,alignItems:'center'}}><StateBanner state="offline" density="kid" /><StateBanner state="syncing" density="kid" /></div>
-    <div data-density="parent" style={{display:'flex',flexDirection:'column',gap:6}}>
-      <StateBanner state="offline" density="parent" />
-      <StateBanner state="syncing" density="parent" />
-      <StateBanner state="syncfail" density="parent" />
-    </div>
-    <PaintingWash height={130} />
+const { StateBanner, ErrorCharacter, LoadingMark, Button } = window.LittleFablesHeritageDS_bdeb10;
+function Demo(){ return (<div className="demo">
+  <StateBanner kind="offline" message="The shelf is saved for reading anywhere."/>
+  <StateBanner kind="syncing" message="Tucking tonight's reading into the cloud."/>
+  <div className="demo-row" style={{alignItems:'flex-start',gap:40}}>
+    <ErrorCharacter><Button variant="secondary" size="compact">Open the shelf</Button></ErrorCharacter>
+    <LoadingMark label="fetching your shelf"/>
   </div>
-  <div style={{flex:1,paddingTop:8}}>
-    <ErrorCharacter action={<Button variant="primary" icon="book-open" utterance="To the shelf!">To the shelf</Button>} />
-  </div>
-</div>);
-</script></body></html>
+</div>); }
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

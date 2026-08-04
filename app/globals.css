@@ -17,6 +17,21 @@
    * chrome so, on wide screens, content and controls line up instead of the
    * text sprawling full-width and the chrome flinging to the far corners. */
   --reader-measure: 700px;
+
+  /* App-level tokens. The v3 design system shipped these; Heritage (v4) scopes
+   * its equivalents to component CSS the app doesn't import, so they are
+   * defined here in Heritage terms rather than reintroduced upstream. */
+  --page-pad: var(--space-4);
+  --radius-pill: 999px;
+  --focus-ring: var(--navy);
+  --elev-raised: var(--shadow-raised);
+  --surface-page: var(--paper);
+
+  /* Word-highlight geometry. Heritage defines the colour half
+   * (--word-current-bg, --word-upcoming-opacity); these are the metrics. */
+  --word-current-pad: 2px 4px;
+  --word-current-radius: var(--radius-sm);
+  --word-upcoming-ink: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 html,
 body {
@@ -55,7 +70,7 @@ button:disabled {
   border-radius: var(--radius-sm);
   background: var(--ink);
   color: var(--paper-bright);
-  font: 600 14px/1 var(--font-ui);
+  font: 600 14px/1 var(--font-body);
   transform: translateY(-180%);
   transition: transform 120ms ease;
 }
@@ -74,11 +89,11 @@ button:disabled {
   display: grid;
   place-items: center;
   border-radius: 10px;
-  color: var(--action-ink);
-  background: var(--action);
-  font-family: var(--font-ui);
+  color: var(--paper-warm);
+  background: var(--oxblood);
+  font-family: var(--font-body);
   font-size: 15px;
-  box-shadow: var(--elev-rest);
+  box-shadow: var(--shadow-rest);
 }
 .lf-parent-create {
   min-height: 38px;
@@ -86,12 +101,12 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid color-mix(in srgb, var(--action) 24%, transparent);
+  border: 1px solid color-mix(in srgb, var(--oxblood) 24%, transparent);
   border-radius: var(--radius-pill);
-  background: var(--terracotta-wash);
+  background: var(--oxblood-wash);
   transition: transform 140ms ease, background-color 140ms ease;
 }
-.lf-parent-create:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--terracotta-wash) 76%, white); }
+.lf-parent-create:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--oxblood-wash) 76%, white); }
 .lf-parent-shell { max-width: 1080px; margin: 0 auto; padding: clamp(14px, 3.5vw, 28px); }
 .lf-parent-tabs { margin-bottom: var(--space-6); }
 .lf-parent-content { min-width: 0; }
@@ -249,7 +264,7 @@ body,
   display: grid;
   place-items: center;
   padding: 24px;
-  background: radial-gradient(circle at 50% 18%, var(--marigold-wash), transparent 36%), var(--paper);
+  background: radial-gradient(circle at 50% 18%, var(--brass-wash), transparent 36%), var(--paper);
   text-align: center;
 }
 .lf-state-card {
@@ -257,13 +272,13 @@ body,
   padding: clamp(28px, 7vw, 48px);
   border: var(--border-soft);
   border-radius: var(--radius-xl);
-  background: var(--surface-card);
+  background: var(--paper-warm);
   box-shadow: var(--elev-raised);
 }
-.lf-state-card h1 { margin: 6px 0 10px; font: 400 var(--text-display)/1.15 var(--font-display); }
-.lf-state-card > p:not(.lf-state-eyebrow) { margin: 0 auto 24px; color: var(--text-muted); font: 18px/1.5 var(--font-body); }
+.lf-state-card h1 { margin: 6px 0 10px; font: 400 var(--text-display-size)/1.15 var(--font-display); }
+.lf-state-card > p:not(.lf-state-eyebrow) { margin: 0 auto 24px; color: var(--ink-soft); font: 18px/1.5 var(--font-body); }
 .lf-state-emoji { display: block; margin-bottom: 10px; font-size: 52px; }
-.lf-state-eyebrow { margin: 0; color: var(--text-muted); font: 700 12px/1.2 var(--font-ui); letter-spacing: .1em; text-transform: uppercase; }
+.lf-state-eyebrow { margin: 0; color: var(--ink-soft); font: 700 12px/1.2 var(--font-body); letter-spacing: .1em; text-transform: uppercase; }
 .lf-state-action {
   min-height: 48px;
   box-sizing: border-box;
@@ -273,13 +288,13 @@ body,
   padding: 0 22px;
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--action);
-  color: var(--action-ink);
+  background: var(--oxblood);
+  color: var(--paper-warm);
   text-decoration: none;
-  font: 700 16px/1 var(--font-ui);
+  font: 700 16px/1 var(--font-body);
 }
-.lf-loading-mark { font-size: 42px; color: var(--action); animation: lf-loading-pulse 1.1s ease-in-out infinite alternate; }
-.lf-state-page > p { color: var(--text-muted); font: 18px/1.4 var(--font-body); }
+.lf-loading-mark { font-size: 42px; color: var(--oxblood); animation: lf-loading-pulse 1.1s ease-in-out infinite alternate; }
+.lf-state-page > p { color: var(--ink-soft); font: 18px/1.4 var(--font-body); }
 @keyframes lf-loading-pulse { to { transform: scale(1.18) rotate(12deg); opacity: .55; } }
 @media (prefers-reduced-motion: reduce) { .lf-loading-mark { animation: none; } }
 

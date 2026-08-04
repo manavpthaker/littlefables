@@ -1,9 +1,11 @@
-<!-- @dsCard group="Spacing" viewport="700x150" name="Space & Radius" subtitle="4-based scale · storybook radii 10/16/24/32" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../styles.css"><style>body{display:flex;align-items:center;gap:26px;padding:18px 24px;background:var(--paper);font-family:var(--font-ui);font-size:11px;color:var(--ink-soft)}.sp{display:flex;align-items:flex-end;gap:6px}.b{background:var(--river);opacity:.7;width:14px}.r{display:flex;flex-direction:column;align-items:center;gap:6px}.rb{width:56px;height:56px;background:var(--paper-bright);border:2px solid rgba(70,54,42,.2)}</style></head><body>
-<div class="sp"><div class="b" style="height:4px"></div><div class="b" style="height:8px"></div><div class="b" style="height:12px"></div><div class="b" style="height:16px"></div><div class="b" style="height:20px"></div><div class="b" style="height:24px"></div><div class="b" style="height:32px"></div><div class="b" style="height:40px"></div><div class="b" style="height:48px"></div><div class="b" style="height:64px"></div></div>
-<span>4 → 64</span>
-<div class="r"><div class="rb" style="border-radius:10px"></div>sm 10</div>
-<div class="r"><div class="rb" style="border-radius:16px"></div>md 16</div>
-<div class="r"><div class="rb" style="border-radius:24px"></div>lg 24</div>
-<div class="r"><div class="rb" style="border-radius:32px"></div>xl 32</div>
+<!-- @dsCard group="Spacing" viewport="700x180" name="Radii & line weight" subtitle="Radius rescales by density; strokes are always 2px warm ink" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css"><style>body{padding:16px}.g{display:flex;gap:12px;align-items:flex-end}.chip{background:var(--paper-warm);border:2px solid var(--ink);width:96px;height:76px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-family:var(--font-body);font-size:12px;color:var(--ink-soft)}.den{margin-top:12px;font-family:var(--font-body);font-size:12.5px;color:var(--ink-faint)}</style></head><body>
+<div class="g">
+<div class="chip" style="border-radius:var(--radius-sm)">sm · 10</div>
+<div class="chip" style="border-radius:var(--radius-md)">md · 16</div>
+<div class="chip" style="border-radius:var(--radius-lg)">lg · 24</div>
+<div class="chip" style="border-radius:var(--radius-xl)">xl · 32</div>
+<div class="chip" style="border-radius:var(--radius-md);border-color:var(--ink-faint);border-style:double;border-width:4px">double rule</div>
+</div>
+<p class="den">kid 10/16/24/32 · parent 6/12/20/28 · outward 8/16/24/32 — --line-weight: 2px</p>
 </body></html>

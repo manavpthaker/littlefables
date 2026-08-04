@@ -1,0 +1,15 @@
+/* Print: paper backgrounds forced, motion and hover dead, fonts fall back to Georgia/Cambria if webfonts unavailable. */
+@page{size:letter;margin:0.75in}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact;animation:none!important;transition:none!important}
+body{background:var(--paper)}
+.screen-only{display:none!important}
+.print-only{display:block!important}
+:root{--shadow-card:none;--shadow-raised:none;--shadow-float:none;--shadow-press:none;
+--print-1:0.125in; /* @kind spacing */
+--print-2:0.25in; /* @kind spacing */
+--print-3:0.375in; /* @kind spacing */
+--print-4:0.5in; /* @kind spacing */
+--print-5:0.75in; /* @kind spacing */
+--print-6:1in; /* @kind spacing */
+--print-7:1.5in; /* @kind spacing */
+--print-8:2in /* @kind spacing */}

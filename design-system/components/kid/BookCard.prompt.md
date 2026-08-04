@@ -1,9 +1,5 @@
-Book cover card + horizontal Shelf rail for the kid home screen.
+One-line: a book on the shelf — cover, title, child's name, brass progress, oxblood ribbon when new.
 ```jsx
-<Shelf label="Your books">
-  <BookCard title="Rosa and the River Star" progress={0.4} chapters="3 chapters" />
-  <BookCard title="The Car Wash Dragon" status="painting" />
-  <BookCard title="Mango Moon" status="new" />
-</Shelf>
+<BookCard title="The Paper Boat" childName="Rosa" progress={0.4} utterance="Shall we go back to the river?"/>
 ```
-States: default, progress ribbon, `painting` (marigold shimmer + brush icon — art generating), `new` (Gochi Hand badge). No locked/gray state exists.
+Cover art comes from generation; the empty state is a faint sunburst, never a gray box.

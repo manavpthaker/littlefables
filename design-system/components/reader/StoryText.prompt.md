@@ -1,6 +1,5 @@
-Reader page text with the word-highlight treatment and tap-any-word → star-save loop (PRD A9).
+One-line: the reading prose itself — EB Garamond 30/1.55 with the oxblood-wash word highlight.
 ```jsx
-<StoryText overArt words={"Rosa held the lantern high".split(' ').map(w=>({w}))}
-  currentIndex={3} starredWords={['lantern']} onHearWord={speak} onStarWord={save} />
+<StoryText text="The fox tucked the letter beneath his velvet coat." currentIndex={5} overArt dropcap/>
 ```
-Current word = terracotta-wash pill; first tap on a word hears it + arms it (marigold wash + star); a second tap on the SAME word saves it — the whole word capsule is the >=44px star target, the icon is visual-only. Armed state persists until another word tap or page turn. Set `overArt` whenever it sits on art.
+Over art it always sits on --wash-panel. Tapping a word summons a WordCapsule.

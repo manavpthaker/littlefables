@@ -44,8 +44,8 @@ export function StoryText({
     <p
       style={{
         fontFamily: 'var(--font-display)',
-        fontSize: 'var(--text-reading)',
-        lineHeight: 'var(--lh-reading)',
+        fontSize: 'var(--text-reading-size)',
+        lineHeight: 'var(--text-reading-lh)',
         color: 'var(--ink)',
         margin: 0,
       }}
@@ -78,9 +78,9 @@ export function StoryText({
                 color:
                   state === 'upcoming' && dimUpcoming
                     ? 'var(--word-upcoming-ink, var(--ink-soft))'
-                    : 'var(--word-spoken-ink, var(--ink))',
+                    : 'var(--ink)',
                 transition:
-                  'background var(--dur-tap, 140ms) var(--ease-settle, ease), color var(--dur-settle, 280ms) var(--ease-settle, ease)',
+                  'background var(--motion-tick) var(--ease-pendulum), color var(--motion-settle) var(--ease-pendulum)',
               }}
             >
               {t.w}

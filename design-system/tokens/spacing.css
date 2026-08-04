@@ -1,18 +1,9 @@
 :root{
---space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;--space-9:48px;--space-10:64px;
-/* touch (phone-derived; 4-year-old fingers) */
---tap-primary:64px;/* the one main action per screen */
---tap-standard:56px;--tap-min:44px;--tap-gap:12px;/* min space between adjacent targets */
-/* radius — soft storybook corners */
---radius-sm:12px;--radius-md:18px;--radius-lg:26px;--radius-xl:34px;--radius-pill:999px;
---line-weight:2px;/* borders + icon strokes share this */
---border-soft:2px solid rgba(70,54,42,.14);/* @kind other */
-/* layout */
---page-pad:20px;--card-gap:16px;--reach-zone:33vh;/* @kind other *//* transport/mic live in bottom third */
+--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;--space-9:48px;--space-10:64px;--space-11:96px;
+/* kid density (default) */
+--tap-primary:64px;--tap-standard:56px;--tap-min:44px;
+--radius-sm:10px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px;
+--line-weight:2px;
 }
-[data-density="parent"]{
---space-3:8px;--space-4:12px;--space-5:16px;--space-6:20px;--space-7:24px;--space-8:32px;
---tap-primary:44px;--tap-standard:36px;--tap-min:32px;--tap-gap:8px;
---radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:18px;
---page-pad:16px;--card-gap:12px;
-}
+[data-density="parent"]{--tap-primary:44px;--tap-standard:36px;--tap-min:32px;--radius-sm:6px;--radius-md:12px;--radius-lg:20px;--radius-xl:28px}
+[data-density="outward"]{--tap-primary:48px;--tap-standard:40px;--tap-min:36px;--radius-sm:8px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px}

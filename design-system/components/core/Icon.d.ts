@@ -1,13 +1,13 @@
-/** @startingPoint section="Core" subtitle="2px-stroke line icon (Lucide stand-in)" viewport="700x120" */
 export interface IconProps {
-  /** lucide kebab-case name, e.g. "play", "mic", "star" */
+  /** Feather stand-in names (play, pause, mic, star, gift, …) or wood-cut motifs: motif-sun, motif-moon, motif-book, motif-compass, motif-quill, motif-sheaf, motif-key */
   name: string;
-  /** px, default 24 */
+  /** @default 24 */
   size?: number;
+  /** @default 'currentColor' */
   color?: string;
-  /** always 2 to match --line-weight unless decorative */
+  /** @default 2 */
   strokeWidth?: number;
-  /** 'currentColor' for a filled (owned/saved) glyph; default 'none' */
-  fill?: string;
-  style?: React.CSSProperties;
+  /** Accessible title; omit for decorative icons (aria-hidden) */
+  title?: string;
+  className?: string;
 }

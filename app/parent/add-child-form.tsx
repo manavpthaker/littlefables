@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { SectionHeader } from '@ds/components/parent/ParentPrimitives.jsx';
+import { SectionHeader } from '@ds/components/parent/SectionHeader.jsx';
 
 export function AddChildForm() {
   const [displayName, setDisplayName] = useState('');
@@ -44,8 +44,8 @@ export function AddChildForm() {
           alignSelf: 'flex-start',
           padding: 'var(--space-2) var(--space-3)',
           background: 'transparent',
-          color: 'var(--action)',
-          border: '1px dashed var(--action)',
+          color: 'var(--oxblood)',
+          border: '1px dashed var(--oxblood)',
           borderRadius: 'var(--radius-pill)',
           cursor: 'pointer',
         }}
@@ -57,7 +57,7 @@ export function AddChildForm() {
 
   return (
     <form onSubmit={onSubmit} style={{ display: 'grid', gap: 'var(--space-2)', padding: 'var(--space-3)', background: 'var(--wash-panel)', borderRadius: 'var(--radius-md)' }}>
-      <SectionHeader>Add a child</SectionHeader>
+      <SectionHeader label="Add a child" />
       <label style={{ display: 'grid', gap: 'var(--space-1)' }}>
         <span>Name</span>
         <input
@@ -86,7 +86,7 @@ export function AddChildForm() {
           disabled={busy}
           style={{
             padding: 'var(--space-2) var(--space-3)',
-            background: 'var(--action)',
+            background: 'var(--oxblood)',
             color: 'var(--paper)',
             border: 'none',
             borderRadius: 'var(--radius-pill)',

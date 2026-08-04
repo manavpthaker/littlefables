@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { SectionHeader, Field } from '@ds/components/parent/ParentPrimitives.jsx';
+import { SectionHeader } from '@ds/components/parent/SectionHeader.jsx';
+import { Field } from '@ds/components/parent/Field.jsx';
 import type { ChildSettings } from '@/lib/models/settings';
 
 // Per-child settings editor. Bedtime window auto-triggers night mode in the
@@ -47,26 +48,26 @@ export function SettingsForm({
     padding: 'var(--space-2) var(--space-3)',
     borderRadius: 'var(--radius-sm)',
     border: '1px solid var(--ink-faint)',
-    background: 'var(--surface-card)',
-    color: 'var(--text-body)',
-    fontSize: 'var(--text-body)',
-    fontFamily: 'var(--font-ui)',
+    background: 'var(--paper-warm)',
+    color: 'var(--ink)',
+    fontSize: 'var(--text-body-size)',
+    fontFamily: 'var(--font-body)',
   } as const;
 
   return (
     <section
       style={{
-        background: 'var(--surface-card)',
+        background: 'var(--paper-warm)',
         borderRadius: 'var(--radius-md)',
         padding: 'var(--space-5)',
-        boxShadow: 'var(--elev-rest)',
+        boxShadow: 'var(--shadow-rest)',
         display: 'grid',
         gap: 'var(--space-4)',
       }}
     >
-      <SectionHeader>{displayName}&rsquo;s reading</SectionHeader>
+      <SectionHeader label={`${displayName}’s reading`} />
 
-      <Field label="Reading band" hint="the age band stories are pitched at">
+      <Field label="Reading band" help="the age band stories are pitched at">
         <select value={bandValue} onChange={(e) => { setBandValue(e.target.value); setState('idle'); }} style={input}>
           <option value="3-4">3–4</option>
           <option value="4-6">4–6</option>
@@ -75,9 +76,9 @@ export function SettingsForm({
         </select>
       </Field>
 
-      <Field label="Bedtime mode" hint="auto-switches the reader to night mode (sleepy voice, no illustrations) inside this window">
+      <Field label="Bedtime mode" help="auto-switches the reader to night mode (sleepy voice, no illustrations) inside this window">
         <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' }}>
-          <label style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center', fontSize: 'var(--text-body)' }}>
+          <label style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center', fontSize: 'var(--text-body-size)' }}>
             <input
               type="checkbox"
               checked={settings.bedtime.enabled}
@@ -95,7 +96,7 @@ export function SettingsForm({
               <option key={h.value} value={h.value}>{h.label}</option>
             ))}
           </select>
-          <span style={{ fontSize: 'var(--text-body)', color: 'var(--text-muted)' }}>to</span>
+          <span style={{ fontSize: 'var(--text-body-size)', color: 'var(--ink-soft)' }}>to</span>
           <select
             value={settings.bedtime.endHour}
             onChange={(e) => patch({ bedtime: { ...settings.bedtime, endHour: Number(e.target.value) } })}
@@ -109,7 +110,7 @@ export function SettingsForm({
         </div>
       </Field>
 
-      <Field label="Day voice" hint="ElevenLabs voice id used in day mode; blank = DAY_VOICE_ID env default">
+      <Field label="Day voice" help="ElevenLabs voice id used in day mode; blank = DAY_VOICE_ID env default">
         <input
           type="text"
           value={settings.narratorVoiceId ?? ''}
@@ -119,7 +120,7 @@ export function SettingsForm({
         />
       </Field>
 
-      <Field label="Night voice" hint="ElevenLabs voice id used in bedtime / night mode; blank = NIGHT_VOICE_ID env default">
+      <Field label="Night voice" help="ElevenLabs voice id used in bedtime / night mode; blank = NIGHT_VOICE_ID env default">
         <input
           type="text"
           value={settings.nightVoiceId ?? ''}
@@ -135,18 +136,18 @@ export function SettingsForm({
           disabled={state === 'saving'}
           style={{
             padding: 'var(--space-2) var(--space-5)',
-            background: 'var(--action)',
-            color: 'var(--action-ink)',
+            background: 'var(--oxblood)',
+            color: 'var(--paper-warm)',
             border: 'none',
             borderRadius: 'var(--radius-pill)',
             cursor: state === 'saving' ? 'wait' : 'pointer',
-            fontSize: 'var(--text-body)',
+            fontSize: 'var(--text-body-size)',
           }}
         >
           {state === 'saving' ? 'Saving…' : 'Save'}
         </button>
-        {state === 'saved' && <span style={{ color: 'var(--sage)', fontSize: 'var(--text-caption)' }}>Saved.</span>}
-        {state === 'error' && <span style={{ color: 'var(--danger)', fontSize: 'var(--text-caption)' }}>Could not save — try again.</span>}
+        {state === 'saved' && <span style={{ color: 'var(--forest)', fontSize: 'var(--text-caption-size)' }}>Saved.</span>}
+        {state === 'error' && <span style={{ color: 'var(--danger)', fontSize: 'var(--text-caption-size)' }}>Could not save — try again.</span>}
       </div>
     </section>
   );

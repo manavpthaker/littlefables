@@ -1,29 +1,30 @@
-<!-- @dsCard group="Components" viewport="700x260" name="Core: Button, IconButton, Icon" subtitle="Terracotta action pills · capsule over-art variant · 2px icons" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<!-- @dsCard group="Components" viewport="700x470" name="Core" subtitle="Buttons, icons, ornaments, the wordmark" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:18px}body{font-size:var(--text-body-size)}
+.demo{display:flex;flex-direction:column;gap:16px}
+.demo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.demo-cap{font-family:var(--font-sc);font-size:12px;letter-spacing:0.09em;color:var(--brass);margin-bottom:-6px}
+</style></head><body data-density="parent">
+<div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/lucide@0.462.0"></script>
 <script src="../../_ds_bundle.js"></script>
-</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
 <script type="text/babel">
-const { Button, IconButton, Icon } = window.LittleFablesDesignSystem_30c7a2;
-ReactDOM.createRoot(document.getElementById('root')).render(
-<div style={{padding:16,display:'flex',flexDirection:'column',gap:14}}>
-  <div style={{display:'flex',gap:14,alignItems:'center',flexWrap:'wrap'}}>
-    <Button variant="primary" size="primary" icon="book-open" utterance="Let's read!">Read to me</Button>
-    <Button variant="soft" icon="map">Chapters</Button>
-    <Button variant="ghost" icon="sparkles">Surprise me</Button>
-  </div>
-  <div style={{display:'flex',gap:14,alignItems:'center'}}>
-    <div style={{display:'flex',gap:12,background:'radial-gradient(80% 90% at 30% 20%,#8fb0c9,transparent 70%),#a8b89a',padding:12,borderRadius:16}}>
-      <IconButton name="play" label="Play" variant="capsule" />
-      <IconButton name="star" label="Keep this word" variant="capsule" />
-    </div>
-    <span style={{display:'flex',gap:10,alignItems:'center',color:'var(--ink)'}}>
-      <Icon name="mic" color="var(--river)" /><Icon name="sun" color="var(--marigold)" /><Icon name="star" color="var(--marigold)" /><Icon name="cloud-off" color="var(--bark)" />
-    </span>
-    <div data-density="parent"><Button variant="primary" icon="check">Approve</Button></div>
-  </div>
-</div>);
-</script></body></html>
+const { Button, IconButton, Icon, Ornament, Rule, Wordmark } = window.LittleFablesHeritageDS_bdeb10;
+function Demo(){ return (<div className="demo">
+  <span className="demo-cap">buttons</span>
+  <div className="demo-row"><Button>Read tonight's chapter</Button><Button variant="secondary">Browse the shelf</Button><Button variant="quiet">Not now</Button><Button disabled>Sold out</Button></div>
+  <div className="demo-row"><Button size="hero" icon="play">Begin the story</Button><Button size="compact" icon="gift">Gift it</Button></div>
+  <span className="demo-cap">icon buttons</span>
+  <div className="demo-row"><IconButton name="play" label="Play" variant="primary"/><IconButton name="pause" label="Pause" variant="outline"/><IconButton name="settings" label="Settings"/><IconButton name="motif-moon" label="Bedtime" variant="filled"/></div>
+  <span className="demo-cap">line icons · feather stand-ins + wood-cut motifs</span>
+  <div className="demo-row" style={{color:'var(--ink)'}}>{['book-open','play','mic','star','check','gift','map','award','feather','motif-sun','motif-moon','motif-book','motif-compass','motif-quill','motif-sheaf','motif-key'].map(n=><Icon key={n} name={n} size={24}/>)}</div>
+  <span className="demo-cap">ornaments & rules</span>
+  <div className="demo-row"><Ornament kind="fleuron"/><Ornament kind="sunburst"/><Ornament kind="filigree"/><Ornament kind="dropcap" letter="R" size={52}/><div style={{flex:1,minWidth:120}}><Rule kind="double"/></div><div style={{flex:1,minWidth:120}}><Rule kind="dot"/></div></div>
+  <span className="demo-cap">wordmark</span>
+  <div className="demo-row" style={{gap:36}}><Wordmark markSize={44}/><Wordmark layout="stacked" markSize={40}/><Wordmark layout="mark-only" markSize={40}/></div>
+</div>); }
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

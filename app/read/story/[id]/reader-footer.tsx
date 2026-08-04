@@ -58,7 +58,7 @@ export function ReaderFooter({
     placeItems: 'center',
     fontSize: 16,
     fontFamily: 'inherit',
-    boxShadow: 'var(--elev-rest)',
+    boxShadow: 'var(--shadow-rest)',
     flex: 'none',
   };
 
@@ -87,10 +87,8 @@ export function ReaderFooter({
       <Transport
         playing={playing}
         onPlay={onPlay}
-        onPrev={onPrev}
-        onNext={onNext}
-        canPrev={canPrev}
-        canNext={canNext}
+        onBack={canPrev ? onPrev : undefined}
+        onForward={canNext ? onNext : undefined}
       />
 
       <button

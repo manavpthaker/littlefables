@@ -43,14 +43,14 @@ export default async function ParentSettingsPage() {
         <h1
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-display)',
+            fontSize: 'var(--text-display-size)',
             margin: 0,
-            color: 'var(--text-strong)',
+            color: 'var(--ink)',
           }}
         >
           Settings
         </h1>
-        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 'var(--text-body-size)' }}>
           Bedtime window and voices, per child. The kid never sees any of this.
         </p>
       </header>

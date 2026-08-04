@@ -126,7 +126,7 @@ export function Library({ books }: { books: ShelfBook[] }) {
   }
 
   if (books.length === 0) {
-    return <p style={{ color: 'var(--text-muted)', margin: 0 }}>Add a story from the terminal to fill the shelf.</p>;
+    return <p style={{ color: 'var(--ink-soft)', margin: 0 }}>Add a story from the terminal to fill the shelf.</p>;
   }
 
   return (
@@ -137,7 +137,7 @@ export function Library({ books }: { books: ShelfBook[] }) {
       )}
       <Controls sort={sort} view={view} onSort={chooseSort} onView={chooseView} count={sorted.length} query={q} />
       {sorted.length === 0 ? (
-        <p style={{ color: 'var(--text-muted)', margin: 0 }}>No stories match “{query}”.</p>
+        <p style={{ color: 'var(--ink-soft)', margin: 0 }}>No stories match “{query}”.</p>
       ) : view === 'grid' ? (
         <GridView books={sorted} />
       ) : (
@@ -205,7 +205,7 @@ function QuickActions({
         aria-label="Surprise me — pick a random story"
         style={{
           padding: '10px 16px',
-          background: 'var(--action)',
+          background: 'var(--oxblood)',
           color: 'var(--paper)',
           border: 'none',
           borderRadius: 'var(--radius-pill)',
@@ -239,7 +239,7 @@ function RecentlyOpened({ books }: { books: ShelfBook[] }) {
           fontWeight: 700,
           letterSpacing: '.18em',
           textTransform: 'uppercase',
-          color: 'var(--marigold-deep)',
+          color: 'var(--brass)',
         }}
       >
         Recently opened
@@ -266,10 +266,8 @@ function RecentlyOpened({ books }: { books: ShelfBook[] }) {
               title={b.title}
               utterance={b.title}
               progress={b.progress}
-              cover={b.coverImage ?? undefined}
-              bg={!b.coverImage && b.coverBg && !b.coverBg.startsWith('http') ? b.coverBg : undefined}
-              width={120}
-              artRatio="120/150"
+              coverSrc={b.coverImage ?? undefined}
+              coverAlt={b.title}
               onOpen={() => {
                 window.location.href = `/read/story/${b.id}`;
               }}
@@ -364,7 +362,7 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
         aria-pressed={value === 'grid'}
         style={{
           ...base,
-          background: value === 'grid' ? 'var(--action)' : base.background,
+          background: value === 'grid' ? 'var(--oxblood)' : base.background,
           color: value === 'grid' ? 'var(--paper)' : base.color,
           borderRight: 'none',
         }}
@@ -377,7 +375,7 @@ function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMo
         aria-pressed={value === 'list'}
         style={{
           ...base,
-          background: value === 'list' ? 'var(--action)' : base.background,
+          background: value === 'list' ? 'var(--oxblood)' : base.background,
           color: value === 'list' ? 'var(--paper)' : base.color,
         }}
       >

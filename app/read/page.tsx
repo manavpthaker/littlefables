@@ -82,9 +82,9 @@ export default async function ReadHome() {
           style={{
             fontFamily: 'var(--font-display)',
             margin: 0,
-            fontSize: 'var(--text-display)',
-            lineHeight: 'var(--lh-display)',
-            color: 'var(--text-strong)',
+            fontSize: 'var(--text-display-size)',
+            lineHeight: 'var(--text-display-lh)',
+            color: 'var(--ink)',
           }}
         >
           {headerTitle}
@@ -114,7 +114,7 @@ export default async function ReadHome() {
               fontWeight: 700,
               letterSpacing: '.18em',
               textTransform: 'uppercase',
-              color: 'var(--marigold-deep)',
+              color: 'var(--brass)',
             }}
           >
             Keep going
@@ -124,7 +124,7 @@ export default async function ReadHome() {
               fontFamily: 'var(--font-display)',
               fontSize: 22,
               lineHeight: 1.15,
-              color: 'var(--text-strong)',
+              color: 'var(--ink)',
             }}
           >
             {continueBook.title}

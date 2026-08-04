@@ -1,8 +1,5 @@
-/* Clock-driven ambient lighting. App shell sets data-lighting on <html> from local time.
-   Each theme tints paper + shifts shadow temperature; ink and pigments never change. */
-[data-lighting="morning"]{--paper:#F6EEDC;--paper-bright:#FBF5E8;--paper-deep:#ECDFC6;--shadow-color:var(--shadow-cool);--light-glow:rgba(93,127,168,.10)/* @kind color */}
-[data-lighting="day"]{--paper:#F4EBD8;--paper-bright:#F9F2E3;--paper-deep:#EADCC0;--shadow-color:var(--shadow-cool);--light-glow:rgba(227,154,50,.06)/* @kind color */}
-[data-lighting="dusk"]{--paper:#F1E4CE;--paper-bright:#F7EDDA;--paper-deep:#E5D3B4;--shadow-color:var(--shadow-warm);--light-glow:rgba(227,154,50,.14)/* @kind color */}
-[data-lighting="night"]{--paper:#EDDfC7;--paper-bright:#F3E8D2;--paper-deep:#E0CCAA;--shadow-color:var(--shadow-warm);--light-glow:rgba(116,86,124,.12)/* @kind color */}
-:root{--light-glow:rgba(227,154,50,.06)/* @kind color */}
-/* usage: body{background:var(--surface-page)} plus one fixed .lf-light-layer{background:radial-gradient(120% 80% at 50% -10%,var(--light-glow),transparent 60%)} */
+/* Lighting stages tint the paper only. Ink and pigments never change. No glow. */
+[data-lighting="morning"]{--paper:#F1E8D3;--paper-warm:#F6EFDD;--paper-deep:#DECDA9}
+[data-lighting="day"]{--paper:#EDE3CE;--paper-warm:#F3EBD8;--paper-deep:#D9C7A2}
+[data-lighting="dusk"]{--paper:#E9DCC2;--paper-warm:#EFE5CE;--paper-deep:#D3BF97}
+[data-lighting="night"]{--paper:#E4D6BC;--paper-warm:#EBDFC8;--paper-deep:#CDB88E}

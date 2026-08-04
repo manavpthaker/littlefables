@@ -1,9 +1,5 @@
-Buddy presence — watercolor-blob avatar whose ring/motion shows the system state (speaking teal bars, listening river breathing ring, thinking dusk dots).
+One-line: the reading companion — a drawn folk-fox token with a state ring (listening navy, thinking sepia, speaking forest, painting brass).
 ```jsx
-<Buddy name="Pip" color="var(--teal)" state="speaking" size={96}
-  speech="Good morning, Azad! Want to find out what Rosa saw in the river?" utterance="Good morning, Azad!" />
-<Buddy compact size={56} state="listening" />
+<Buddy state="listening" say="Which way should the fox go?"/>
 ```
-The buddy is the ONLY element that speaks; its state ring is the same vocabulary used by MicButton and StateOrb.
-
-Rule: when `speech` is shown, the utterance is the SAME text verbatim — the bubble is a caption to the voice.
+Never talks over narration. The fox art is a stand-in for the commissioned character.

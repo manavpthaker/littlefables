@@ -1,38 +1,32 @@
-<!-- @dsCard group="Components" viewport="700x640" name="Kid: Shelf, Buddy, Continue, Transport, Mic" subtitle="Book cards + continue card + buddy states + transport + voice orb + word capsule" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<!-- @dsCard group="Components" viewport="700x640" name="Kid" subtitle="Shelf, buddy, transport, word jar — voice-first" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:18px}
+.demo{display:flex;flex-direction:column;gap:16px}
+.demo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.demo-cap{font-family:var(--font-sc);font-size:12px;letter-spacing:0.09em;color:var(--brass);margin-bottom:-6px}
+</style></head><body>
+<div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/lucide@0.462.0"></script>
 <script src="../../_ds_bundle.js"></script>
-</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
 <script type="text/babel">
-const { BookCard, Shelf, Buddy, Transport, MicOrb, ContinueCard, WordCapsule } = window.LittleFablesDesignSystem_30c7a2;
-ReactDOM.createRoot(document.getElementById('root')).render(
-<div style={{padding:16,display:'flex',flexDirection:'column',gap:16}}>
-  <div style={{display:'flex',gap:24,alignItems:'flex-start'}}>
-    <Shelf label="Your books">
-      <BookCard width={110} title="Rosa and the River Star" progress={0.4} chapters="3 chapters" />
-      <BookCard width={110} title="The Car Wash Dragon" status="painting" chapters="painting…" />
-      <BookCard width={110} title="Mango Moon" status="new" />
-    </Shelf>
-    <Buddy name="Pip" color="var(--teal)" state="speaking" size={80} speech="Want to find out what Rosa saw?" />
-  </div>
-  <div style={{display:'flex',gap:24,alignItems:'flex-start'}}>
-    <div style={{width:340,display:'flex',flexDirection:'column',gap:12}}>
-      <ContinueCard title="Rosa and the River Star" chapter="Chapter 2 · The Little Round Door" progress={0.4} />
-      <div style={{display:'flex',gap:10,alignItems:'center'}}>
-        <WordCapsule word="lantern" justSaved />
-        <WordCapsule word="shimmer" />
-      </div>
-    </div>
-    <div style={{flex:1,display:'flex',flexDirection:'column',gap:14}}>
-      <Transport playing={false} onPlay={()=>{}} onPrev={()=>{}} onNext={()=>{}} />
-      <div style={{display:'flex',gap:20,alignItems:'flex-start'}}>
-        <MicOrb state="listening" />
-        <MicOrb state="heard" echo="A berry by the door! What a kind idea…" transcript="put a berry by the door" />
-      </div>
+const { BookCard, Shelf, Buddy, Transport, MicOrb, ContinueCard, WordCapsule, TabBar, WordJar } = window.LittleFablesHeritageDS_bdeb10;
+function Demo(){ return (<div className="demo">
+  <div className="demo-row" style={{alignItems:'flex-start'}}>
+    <div style={{flex:'1 1 340px'}}><Shelf label="rosa's shelf">
+      <BookCard title="The Paper Boat" childName="Rosa" progress={0.4} utterance="Shall we go back to the river?"/>
+      <BookCard title="The Winter Key" childName="Rosa" isNew utterance="A brand new story!"/>
+    </Shelf></div>
+    <div style={{display:'flex',flexDirection:'column',gap:14,alignItems:'center'}}>
+      <Buddy state="listening" say="Which way should the fox go?"/>
+      <WordJar words={['beneath','velvet','lantern']} countLabel="three words"/>
     </div>
   </div>
-</div>);
-</script></body></html>
+  <div className="demo-row"><ContinueCard title="The Paper Boat" chapterLabel="chapter three · the river" progress={0.62} utterance="Shall we keep going?"/></div>
+  <div className="demo-row" style={{alignItems:'center',gap:20}}><Transport playing label="page four"/><MicOrb state="listening"/><WordCapsule word="beneath" utterance="Beneath. Under something."/></div>
+  <div style={{border:'1px solid var(--border-soft)',borderRadius:'var(--radius-md)',overflow:'hidden'}}><TabBar activeId="shelf" items={[{id:'shelf',label:'shelf',icon:'book-open'},{id:'words',label:'words',icon:'bookmark'},{id:'suns',label:'suns',icon:'motif-sun'}]}/></div>
+</div>); }
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

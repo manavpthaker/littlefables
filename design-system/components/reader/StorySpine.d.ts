@@ -1,11 +1,8 @@
-export interface StorySpineBeat {
-  /** the beat text, e.g. "Ember was scared of the dark" */
-  label: string;
-  /** covered by the child's retelling — develops sage with a filled check */
-  hit?: boolean;
-}
-
 export interface StorySpineProps {
-  /** ordered story beats; renders nothing when empty (retell still works) */
-  beats: StorySpineBeat[];
+  /** 0-1 through the book */
+  progress?: number;
+  /** Chapter marks along the spine */
+  ticks?: Array<{ at: number; done?: boolean }>;
+  /** px @default 280 */
+  height?: number;
 }

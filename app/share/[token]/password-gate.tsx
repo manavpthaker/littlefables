@@ -47,7 +47,7 @@ export function SharePasswordGate({ token }: { token: string }) {
           width: '100%',
           maxWidth: 380,
           padding: 'var(--space-6)',
-          background: 'var(--surface-card)',
+          background: 'var(--paper-warm)',
           border: 'var(--border-soft)',
           borderRadius: 'var(--radius-lg)',
           display: 'grid',
@@ -57,18 +57,18 @@ export function SharePasswordGate({ token }: { token: string }) {
         <h1
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-title)',
+            fontSize: 'var(--text-title-size)',
             margin: 0,
-            color: 'var(--text-strong)',
+            color: 'var(--ink)',
           }}
         >
           A shared story
         </h1>
-        <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 'var(--text-body)' }}>
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 'var(--text-body-size)' }}>
           Enter the password to open this story.
         </p>
         <label style={{ display: 'grid', gap: 'var(--space-1)' }}>
-          <span style={{ fontSize: 'var(--text-body)' }}>Password</span>
+          <span style={{ fontSize: 'var(--text-body-size)' }}>Password</span>
           <input
             type="password"
             autoFocus
@@ -85,7 +85,7 @@ export function SharePasswordGate({ token }: { token: string }) {
           />
         </label>
         {error && (
-          <p style={{ margin: 0, color: 'var(--danger, #c94a3b)', fontSize: 'var(--text-caption)' }}>{error}</p>
+          <p style={{ margin: 0, color: 'var(--danger, #c94a3b)', fontSize: 'var(--text-caption-size)' }}>{error}</p>
         )}
         <button
           type="submit"
@@ -93,7 +93,7 @@ export function SharePasswordGate({ token }: { token: string }) {
           style={{
             marginTop: 'var(--space-1)',
             padding: 'var(--space-2) var(--space-4)',
-            background: 'var(--action)',
+            background: 'var(--oxblood)',
             color: 'var(--paper)',
             border: 'none',
             borderRadius: 'var(--radius-pill)',

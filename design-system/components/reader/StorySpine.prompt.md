@@ -1,11 +1,5 @@
-The retell checklist: authored story beats that fill in as the child recounts the arc. Hit beats develop like watercolor (sage wash + filled check); unhit beats wait as quiet silhouettes. No numerals, no score, no red — it reads as the story remembering itself. Lives inside the retell sheet under the mic.
-
+One-line: a vertical spine of the whole book — brass fill, chapter ticks, oxblood ribbon at the current spot.
 ```jsx
-<StorySpine
-  beats={[
-    { label: 'Ember was scared of the dark', hit: true },
-    { label: 'He made his own little light', hit: true },
-    { label: 'He felt brave and cozy' },
-  ]}
-/>
+<StorySpine progress={0.55} ticks={[{at:0.2,done:true},{at:0.5,done:true},{at:0.8}]}/>
 ```
+Decorative summary (aria-hidden); pair with spoken progress.

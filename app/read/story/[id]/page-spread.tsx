@@ -1,6 +1,6 @@
 'use client';
 
-import { PaintingWash } from '@ds/components/system/SystemStates.jsx';
+import { PaintingWash } from '@ds/components/reader/PaintingWash.jsx';
 import { StoryText } from './story-text';
 import type { ReaderPage } from '@/lib/reader/types';
 import { useLandscapeSpread } from '@/lib/reader/use-landscape';
@@ -45,10 +45,10 @@ export function PageSpread({
   // motion.css @media block that already collapses --dur-page.
   const pageAnim =
     turnDirection === 'next'
-      ? 'lf-page-turn-next var(--dur-page) var(--ease-page) 1'
+      ? 'lf-page-turn-next var(--motion-wind) var(--ease-pendulum) 1'
       : turnDirection === 'prev'
-        ? 'lf-page-turn-prev var(--dur-page) var(--ease-page) 1'
-        : 'lf-page-in var(--dur-page) var(--ease-page) 1';
+        ? 'lf-page-turn-prev var(--motion-wind) var(--ease-pendulum) 1'
+        : 'lf-page-in var(--motion-wind) var(--ease-pendulum) 1';
   const landscape = useLandscapeSpread();
   const artUrl = hideArt ? undefined : (page.img ?? coverImage);
   const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
@@ -57,7 +57,7 @@ export function PageSpread({
     <p
       style={{
         fontFamily: 'var(--font-body)',
-        color: 'var(--text-muted)',
+        color: 'var(--ink-soft)',
         margin: '0 0 var(--space-4)',
         textAlign: 'center',
         fontSize: 13,
@@ -124,12 +124,12 @@ export function PageSpread({
                 position: 'absolute',
                 inset: 0,
                 background: `url(${artUrl}) center/cover no-repeat`,
-                animation: 'var(--motion-develop)',
+                animation: 'var(--motion-settle)',
               }}
             />
           ) : (
             <div style={{ position: 'absolute', inset: 0 }}>
-              <PaintingWash fullBleed label="this one's still being painted for you…" />
+              <PaintingWash height="100%" label="this one's still being painted for you…" />
             </div>
           )}
           <div
@@ -185,12 +185,12 @@ export function PageSpread({
               position: 'absolute',
               inset: 0,
               background: `url(${artUrl}) center/cover no-repeat`,
-              animation: 'var(--motion-develop)',
+              animation: 'var(--motion-settle)',
             }}
           />
         ) : (
           <div style={{ position: 'absolute', inset: 0 }}>
-            <PaintingWash fullBleed label="this one's still being painted for you…" />
+            <PaintingWash height="100%" label="this one's still being painted for you…" />
           </div>
         )}
       </div>

@@ -1,18 +1,9 @@
 import React from 'react';
-import { Icon } from '../core/Icon.jsx';
-// Star-save landing: a wash-capsule pill (star + word in hand font) that blooms on save and lands in the top bar.
-// owned (Redesign 2026-07-21): the word was re-encountered + understood at a checkpoint — sage ring, full-strength star.
-export function WordCapsule({ word, justSaved = false, owned = false, onTap }) {
-  return (
-    <button data-utterance={owned ? `${word} — yours now!` : `${word} — kept!`} onClick={onTap} style={{
-      display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)', border: 'none', cursor: 'pointer',
-      background: 'var(--wash-capsule)', backdropFilter: 'blur(14px)', borderRadius: 'var(--radius-pill)',
-      padding: '8px 16px 8px 12px', minHeight: 'var(--tap-min)',
-      boxShadow: owned ? '0 0 0 3px var(--sage), var(--elev-card)' : 'var(--elev-card)',
-      animation: justSaved ? 'lf-bloom var(--dur-bloom) var(--ease-settle) 1' : 'none',
-    }}>
-      <Icon name="star" size={18} color="var(--marigold)" fill="currentColor" />
-      <span style={{ fontFamily: 'var(--font-hand)', fontSize: 'var(--text-hand)', color: 'var(--ink)' }}>{word}</span>
+export function WordCapsule({ word, saved, utterance, onStar }) {
+  return <span className="lf-wordcapsule" data-utterance={utterance}>
+    <span className="lf-wordcapsule-word">{word}</span>
+    <button type="button" className="lf-wordcapsule-star" data-saved={saved?'true':'false'} aria-label={saved?'Saved to your word jar':'Save to your word jar'} aria-pressed={!!saved} onClick={onStar}>
+      <svg width="22" height="22" viewBox="0 0 20 20" fill={saved?'var(--brass)':'none'} stroke="var(--brass)" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true"><path d="M10 1.5 12.4 7l6 .5-4.6 4 1.4 5.9L10 14.2 4.8 17.4 6.2 11.5 1.6 7.5l6-.5Z"/></svg>
     </button>
-  );
+  </span>;
 }

@@ -1,4 +1,4 @@
-Story lifecycle chip for Parent Corner — dot + outline in the lifecycle pigment; `checking` pulses.
+One-line: order/content lifecycle state — dot color from the lifecycle palette, small-caps word.
 ```jsx
-<LifecycleChip status="blocked" detail="failed hard gate, attempt 3 of 3" />
+<LifecycleChip state="published"/>
 ```

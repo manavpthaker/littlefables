@@ -1,48 +1,13 @@
 import React from 'react';
-// Continue hero (mockup-fidelity, Redesign 2026-07-21): big rounded card —
-// art on top (cover or night-sky wash), white panel below with the caps
-// eyebrow, serif title, and the screen's ONE primary ("📖 Keep reading",
-// action gradient). Kid density only.
-export function ContinueCard({ title, chapter, cover, progress = 0, utterance, onContinue }) {
-  return (
-    <article style={{
-      background: 'var(--paper-bright)', borderRadius: 34, overflow: 'hidden',
-      boxShadow: 'var(--elev-raised)', display: 'grid',
-    }}>
-      <div aria-hidden="true" style={{
-        height: 172, position: 'relative',
-        background: cover
-          ? `url(${cover}) center 30%/cover no-repeat`
-          : 'linear-gradient(160deg,#3D4E7C 0%,#2E3A61 100%)',
-      }}>
-        {!cover && (
-          <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 44, opacity: .9 }}>✨</span>
-        )}
-        {progress > 0 && (
-          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 6, background: 'rgba(70,54,42,.3)' }}>
-            <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--marigold)' }}></div>
-          </div>
-        )}
-      </div>
-      <div style={{ padding: 'var(--space-5)', display: 'grid', gap: 'var(--space-2)', justifyItems: 'start' }}>
-        <span style={{ fontFamily: 'var(--font-hand)', fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--marigold-deep)', fontWeight: 700 }}>
-          Continue{chapter ? ` · ${chapter}` : ''}
-        </span>
-        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 21, lineHeight: 1.2, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{title}</h3>
-        <button
-          data-utterance={utterance || `Keep reading ${title}!`}
-          onClick={onContinue}
-          style={{
-            marginTop: 6, border: 'none', cursor: 'pointer',
-            background: 'var(--marigold-deep)', color: 'var(--action-ink)',
-            borderRadius: 'var(--radius-pill)', padding: '14px 26px',
-            minHeight: 'var(--tap-standard)', fontFamily: 'var(--font-hand)', fontSize: 16, fontWeight: 700,
-            boxShadow: 'var(--elev-card)',
-          }}
-        >
-          📖 Keep reading
-        </button>
-      </div>
-    </article>
-  );
+import { Icon } from '../core/Icon.jsx';
+export function ContinueCard({ title, chapterLabel, progress=0, coverSrc, utterance, onContinue }) {
+  return <button type="button" className="lf-continue" data-utterance={utterance} onClick={onContinue}>
+    <span className="lf-continue-thumb">{coverSrc?<img src={coverSrc} alt=""/>:null}</span>
+    <span>
+      <span className="lf-continue-eyebrow">{chapterLabel||'keep reading'}</span>
+      <span className="lf-continue-title" style={{display:'block'}}>{title}</span>
+      <span className="lf-continue-bar"><i style={{width:(progress*100)+'%'}}></i></span>
+    </span>
+    <Icon name="chevron-right" size={26}/>
+  </button>;
 }

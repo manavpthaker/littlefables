@@ -1,5 +1,4 @@
-Chapter map — non-reading navigation: a row of art tiles joined by a dotted path; the current one breathes inside a marigold ring.
+One-line: the story's path — done nodes fill forest, the current one wears an oxblood ring.
 ```jsx
-<ChapterMap current={1} onPick={go} chapters={[{title:'The River'},{title:'The Cave',tint:'var(--plum-wash)'},{title:'Home Again'}]} />
+<ChapterMap currentId="c3" chapters={[{id:'c1',label:'the letter',done:true},{id:'c3',label:'the river'},{id:'c4',label:'the crossing',locked:true}]}/>
 ```
-Tapping a tile speaks its title. Future chapters soften to 75% — never locked or grayed.

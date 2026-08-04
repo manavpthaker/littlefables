@@ -1,5 +1,5 @@
-Reader transport controls, always in the bottom-third reach zone, capsule prev/next around a 64px terracotta play.
+One-line: the reader's capsule transport — big oxblood play, page skips, small-caps page label.
 ```jsx
-<Transport playing={false} onPlay={toggle} onPrev={prev} onNext={next} canPrev={page>0} />
+<Transport playing label="page four"/>
 ```
-Invariants are behavioral contracts: play/pause never navigates; prev/next never auto-plays (PRD A3).
+Sits over art as a capsule (blur + gilt border). Numerals stay off kid surfaces — "page four".

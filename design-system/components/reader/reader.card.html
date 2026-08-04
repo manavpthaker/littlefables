@@ -1,35 +1,36 @@
-<!-- @dsCard group="Components" viewport="700x860" name="Reader: StoryText, Checkpoint, Choices, ChapterMap" subtitle="Word highlight (stem-matched stars) + two-stage mercy + choice sheet + chapter map" -->
-<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<!-- @dsCard group="Components" viewport="700x760" name="Reader" subtitle="Story text, checkpoints, chapter map, over-art chrome" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{padding:18px}
+.demo{display:flex;flex-direction:column;gap:16px}
+.demo-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.demo-cap{font-family:var(--font-sc);font-size:12px;letter-spacing:0.09em;color:var(--brass);margin-bottom:-6px}
+</style></head><body>
+<div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/lucide@0.462.0"></script>
 <script src="../../_ds_bundle.js"></script>
-</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
 <script type="text/babel">
-const { StoryText, Checkpoint, ChoiceBlocks, ChapterMap, ReaderTopBar } = window.LittleFablesDesignSystem_30c7a2;
-// punctuated-word case: "lantern," and "shine." still match their saved stems
-const words = "Rosa held the lantern, high above the river, and the water began to shine.".split(' ').map(w=>({w}));
-ReactDOM.createRoot(document.getElementById('root')).render(
-<div style={{padding:16,display:'flex',flexDirection:'column',gap:16}}>
-  <div style={{background:'radial-gradient(80% 90% at 30% 20%,#8fb0c9,transparent 70%),radial-gradient(70% 80% at 80% 70%,#c9a06a,transparent 70%),#a8b89a',borderRadius:20,padding:14}}>
-    <StoryText overArt words={words} currentIndex={7} starredWords={['lantern','shine']} />
-  </div>
-  <div style={{display:'flex',gap:16,alignItems:'flex-start'}}>
-    <div style={{flex:1,display:'flex',flexDirection:'column',gap:12}}>
-      <Checkpoint type="inference" question="How do you think Rosa felt when the water started to shine?" micState="listening" />
-      <Checkpoint type="recall" question="What did Rosa hold up high?" mercy="hint" hint="Remember the cave? It glows…" />
-      <Checkpoint type="recall" question="What did Rosa hold up high?" mercy="given" given="It was the lantern! You remembered the cave part." onMoveOn={()=>{}} />
-    </div>
-    <div style={{width:250,display:'flex',flexDirection:'column',gap:12}}>
-      <div style={{background:'radial-gradient(80% 90% at 30% 20%,#8fb0c9,transparent 70%),#a8b89a',borderRadius:16,paddingTop:40,overflow:'hidden'}}>
-        <ChoiceBlocks sheet="Which way should Rosa go?" options={[{label:'Follow the light',icon:'sparkles'},{label:'Wait for morning',icon:'sun'}]} onIdea={()=>{}} />
-      </div>
-      <ChapterMap current={1} chapters={[{title:'The River'},{title:'The Cave',tint:'var(--plum-wash)'},{title:'Home Again',tint:'var(--marigold-wash)'}]} />
-      <div style={{position:'relative',height:86,borderRadius:14,overflow:'hidden',background:'radial-gradient(80% 90% at 30% 20%,#8fb0c9,transparent 70%),#a8b89a'}}>
-        <ReaderTopBar savedWord="lantern" syncing buddyState="idle" />
-      </div>
+const { StoryText, Checkpoint, ChoiceBlocks, ChapterMap, Sheet, ReaderTopBar, StorySpine, PaintingWash } = window.LittleFablesHeritageDS_bdeb10;
+function Demo(){ return (<div className="demo">
+  <div style={{position:'relative',borderRadius:'var(--radius-md)',overflow:'hidden',background:'linear-gradient(160deg,#3A4E63,#2E4B3B 60%,#22301F)'}}>
+    <ReaderTopBar chapterLabel="chapter three · the river" sunsLabel="four suns"/>
+    <div style={{padding:'8px 18px 18px',display:'flex',gap:16,alignItems:'flex-end'}}>
+      <div style={{flex:1}}><StoryText overArt dropcap text="The fox tucked the letter beneath his velvet coat and bowed to the moon." currentIndex={5}/></div>
+      <StorySpine progress={0.55} height={150} ticks={[{at:0.2,done:true},{at:0.5,done:true},{at:0.8}]}/>
     </div>
   </div>
-</div>);
-</script></body></html>
+  <div className="demo-row" style={{alignItems:'flex-start'}}>
+    <Checkpoint question="Why did Rosa hide the lantern?">
+      <ChoiceBlocks choices={[{id:'a',label:'To keep it safe'},{id:'b',label:'To trick the crow'}]} pickedId="a"/>
+    </Checkpoint>
+    <div style={{flex:1,minWidth:220,display:'flex',flexDirection:'column',gap:14}}>
+      <PaintingWash height={130}/>
+      <Sheet title="What should the fox do?" style={{boxShadow:'var(--shadow-card)'}}><ChoiceBlocks choices={[{id:'x',label:'Help the crow'},{id:'y',label:'Cross alone'}]}/></Sheet>
+    </div>
+  </div>
+  <ChapterMap currentId="c3" chapters={[{id:'c1',label:'the letter',done:true},{id:'c2',label:'the market',done:true},{id:'c3',label:'the river'},{id:'c4',label:'the crossing',locked:true},{id:'c5',label:'home again',locked:true}]}/>
+</div>); }
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

@@ -1,0 +1,42 @@
+/* Outward: MarketingHero, TrustRow, GiftCertificate, ColoringPage, EmailShell, EtsyHero, PinterestPin, BuyerFooter */
+.lf-mkhero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding:56px 32px;background:var(--paper)}
+.lf-mkhero-eyebrow{font-family:var(--font-sc);font-size:var(--text-label-size);letter-spacing:var(--track-label);color:var(--brass)}
+.lf-mkhero-title{font-family:var(--font-display);font-size:var(--text-display-size);line-height:var(--text-display-lh);color:var(--ink);max-width:15em;text-wrap:pretty}
+.lf-mkhero-sub{font-family:var(--font-body);font-size:calc(var(--text-body-size)*1.12);line-height:1.55;color:var(--ink-soft);max-width:34em;text-wrap:pretty}
+.lf-mkhero-ctas{display:flex;gap:14px;align-items:center;margin-top:6px}
+.lf-trustrow{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:18px 24px}
+.lf-trustrow-item{display:flex;align-items:center;gap:10px;font-family:var(--font-body);font-size:var(--text-body-size);color:var(--ink-soft)}
+.lf-trustrow-item .lf-icon{color:var(--forest)}
+.lf-cert{position:relative;background:var(--paper-warm);border:1px solid var(--ink-faint);outline:2px solid var(--ink-faint);outline-offset:5px;padding:44px 52px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;font-family:var(--font-body);color:var(--ink);margin:8px}
+.lf-cert-fil{position:absolute;color:var(--gilt)}
+.lf-cert-fil--tl{top:10px;left:10px}.lf-cert-fil--tr{top:10px;right:10px;transform:scaleX(-1)}.lf-cert-fil--bl{bottom:10px;left:10px;transform:scaleY(-1)}.lf-cert-fil--br{bottom:10px;right:10px;transform:scale(-1)}
+.lf-cert-eyebrow{font-family:var(--font-sc);font-size:15px;letter-spacing:0.12em;color:var(--brass)}
+.lf-cert-name{font-family:var(--font-display);font-size:44px;line-height:1.1;color:var(--ink);margin:2px 0}
+.lf-cert-message{font-size:16px;line-height:1.5;color:var(--ink-soft);max-width:30em}
+.lf-cert-meta{display:flex;gap:26px;font-family:var(--font-sc);font-size:13px;letter-spacing:0.08em;color:var(--ink-soft);margin-top:8px}
+.lf-coloring{background:#FFFFFF;border:1px solid var(--border-soft);padding:28px 32px;display:flex;flex-direction:column;gap:14px;font-family:var(--font-body);color:var(--ink)}
+.lf-coloring-head{display:flex;align-items:center;justify-content:space-between}
+.lf-coloring-title{font-family:var(--font-display);font-size:24px}
+.lf-coloring-art{border:1px solid var(--ink-faint);outline:1px solid var(--ink-faint);outline-offset:3px;aspect-ratio:4/4.4;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:var(--font-sc);font-size:14px;letter-spacing:0.08em}
+.lf-coloring-nameline{display:flex;align-items:baseline;gap:12px;font-family:var(--font-sc);font-size:14px;letter-spacing:0.08em;color:var(--ink-soft)}
+.lf-coloring-nameline i{flex:1;border-bottom:1.5px solid var(--ink-faint)}
+.lf-etsyhero{position:relative;width:1350px;height:1012px;background:var(--paper);overflow:hidden;display:flex;align-items:center;gap:70px;padding:80px 96px}
+.lf-etsyhero-frame{position:absolute;inset:26px;border:1.5px solid var(--ink-faint);outline:3px solid var(--ink-faint);outline-offset:-10px;pointer-events:none}
+.lf-etsyhero-book{flex:none;width:430px;aspect-ratio:3/4;background:var(--paper-warm);border:1px solid var(--border-card);border-radius:14px;box-shadow:var(--shadow-float);padding:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;position:relative}
+.lf-etsyhero-book::before{content:"";position:absolute;left:14px;top:10px;bottom:10px;width:2px;background:var(--ink-faint);opacity:0.5}
+.lf-etsyhero-booktitle{font-family:var(--font-display);font-size:40px;line-height:1.15;color:var(--ink)}
+.lf-etsyhero-bookname{font-family:var(--font-sc);font-size:19px;letter-spacing:0.1em;color:var(--brass)}
+.lf-etsyhero-copy{display:flex;flex-direction:column;gap:22px;color:var(--ink)}
+.lf-etsyhero-h{font-family:var(--font-display);font-size:64px;line-height:1.08;text-wrap:pretty}
+.lf-etsyhero-points{display:flex;flex-direction:column;gap:12px;font-family:var(--font-body);font-size:24px;color:var(--ink-soft)}
+.lf-etsyhero-tags{font-family:var(--font-sc);font-size:20px;letter-spacing:0.12em;color:var(--brass)}
+.lf-pin{width:1000px;height:1500px;background:var(--paper);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.lf-pin-art{flex:1;background:var(--paper-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;padding:60px;position:relative}
+.lf-pin-art::after{content:"";position:absolute;inset:22px;border:1.5px solid rgba(42,29,18,0.25)}
+.lf-pin-title{font-family:var(--font-display);font-size:66px;line-height:1.1;color:var(--ink);max-width:11em;text-wrap:pretty}
+.lf-pin-bottom{background:var(--paper);padding:44px 60px 52px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.lf-pin-line{font-family:var(--font-body);font-size:30px;color:var(--ink-soft);max-width:22em}
+.lf-buyerfooter{display:flex;flex-direction:column;align-items:center;gap:16px;padding:36px 24px 30px;background:var(--paper)}
+.lf-buyerfooter-links{display:flex;gap:26px;font-family:var(--font-body);font-size:var(--text-caption-size)}
+.lf-buyerfooter-links a{color:var(--ink-soft)}
+.lf-buyerfooter-fine{font-family:var(--font-body);font-size:var(--text-fine-size);color:var(--ink-faint);text-align:center;max-width:46em}

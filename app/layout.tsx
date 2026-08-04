@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   applicationName: 'Little Fables',
   appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Little Fables' },
   formatDetection: { telephone: false },
-  icons: { icon: '/icons/icon.svg', apple: '/icons/icon.svg' },
+  icons: { icon: '/icons/icon.svg', apple: '/icons/apple-touch-icon.png' },
 };
 
 // PRD F2: userScalable stays enabled at the root. Only the /read (kid) subtree
@@ -22,7 +22,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#f2e7d3',
+  themeColor: '#EDE3CE',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
