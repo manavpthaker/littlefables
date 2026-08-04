@@ -16,13 +16,13 @@ export interface Beat {
 export const BEATS = {
   coldOpen: { start: 0, end: 5 },
   promise: { start: 5, end: 12 },
-  aboutChild: { start: 12, end: 22 },
-  comesTogether: { start: 22, end: 42 },
-  arrives: { start: 42, end: 52 },
-  payoff: { start: 52, end: 68 },
-  night: { start: 68, end: 75 },
-  quiet: { start: 75, end: 83 },
-  close: { start: 83, end: 90 },
+  intake: { start: 12, end: 30 },
+  comesTogether: { start: 30, end: 50 },
+  arrives: { start: 50, end: 64 },
+  payoff: { start: 64, end: 88 },
+  night: { start: 88, end: 96 },
+  quiet: { start: 96, end: 104 },
+  close: { start: 104, end: 111 },
 } as const;
 
 export const frames = (b: { start: number; end: number }) => ({
@@ -50,6 +50,7 @@ export const BOOK = {
  */
 export const READY = new Set([
   'recordings/02-open.mp4',
+  'recordings/03-intake.mp4',
   'recordings/04-page-turn.mp4',
   'recordings/05-word-tap.mp4',
   'recordings/06-transport.mp4',
@@ -58,6 +59,7 @@ export const READY = new Set([
 
 export const RECORDINGS = {
   email: 'recordings/01-email.mp4',
+  intake: 'recordings/03-intake.mp4',
   open: 'recordings/02-open.mp4',
   addToHome: 'recordings/03-add-to-home.mp4',
   pageTurn: 'recordings/04-page-turn.mp4',
@@ -86,7 +88,7 @@ export const AUDIO = {
   narration: 'audio/narration.mp3',
   narrationVolume: 0.92,
   /** Seconds into the payoff beat before she starts speaking. */
-  narrationDelay: 1.5,
+  narrationDelay: 2,
   /** Base level for the bed everywhere else. */
   volume: 0.34,
   /** Level during the reading beat, so narration reads over it. */
@@ -101,12 +103,14 @@ export const COPY = {
   brand: 'Little Fables',
   tagline: 'custom storybooks, made one at a time',
   promise: 'Your kid, in their own storybook.',
+  intake: 'Tell us about your child',
+  intakeSub: 'A photo helps, but words are enough',
   child: ['Rosa.', 'Five.', 'Loves ponds, geese, and waiting for things.'],
   childCoda: 'That was all we asked for.',
   assembled: 'Written, illustrated, and read aloud — in three days.',
   arrives: 'Delivered in days',
   arrivesSub: 'saved to their iPad like a favourite app',
-  payoff: ['Read aloud, warmly', 'Tap any word to hear it', 'Their book, their pace'],
+  payoff: ['Read aloud, warmly', 'Their book, their pace', 'Tap any word to hear it'],
   night: 'And a quieter one for bedtime',
   quiet: [
     'No ads. No algorithm. No autoplay.',

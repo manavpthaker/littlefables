@@ -425,3 +425,96 @@ body,
 [data-mode='night'] h2 {
   transition: color 600ms ease;
 }
+
+/* Buyer intake (/intake). Outward density — adult, evaluating, not a kid
+   surface, so targets and type follow the outward scale rather than the
+   64px kid one. */
+.lf-eyebrow {
+  font-family: var(--font-sc);
+  font-size: var(--text-fine-size);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+.lf-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  color: var(--ink);
+  background: var(--paper-warm);
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+}
+.lf-input:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.lf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lf-chip {
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: var(--text-fine-size);
+  color: var(--ink);
+  background: var(--paper-warm);
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: var(--radius-pill);
+  transition: background-color var(--motion-tick) var(--ease-mechanical),
+              border-color var(--motion-tick) var(--ease-mechanical);
+}
+.lf-chip[aria-pressed='true'] {
+  background: var(--oxblood-wash);
+  border-color: color-mix(in srgb, var(--oxblood) 40%, transparent);
+  color: var(--oxblood);
+}
+.lf-upload {
+  display: block;
+  margin-top: var(--space-3);
+  padding: 16px;
+  border: 1px dashed color-mix(in srgb, var(--ink) 24%, transparent);
+  border-radius: var(--radius-md);
+  background: var(--paper-warm);
+  cursor: pointer;
+  transition: border-color var(--motion-tick) var(--ease-mechanical);
+}
+.lf-upload:hover { border-color: color-mix(in srgb, var(--oxblood) 44%, transparent); }
+.lf-upload-empty,
+.lf-upload-done { display: flex; align-items: center; gap: 14px; }
+.lf-upload-empty span,
+.lf-upload-done span {
+  display: grid;
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  color: var(--ink);
+}
+.lf-upload em {
+  font-size: var(--text-fine-size);
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.lf-upload-plus {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  font-size: 22px;
+  color: var(--brass);
+  border: 1px solid color-mix(in srgb, var(--brass) 40%, transparent);
+  border-radius: var(--radius-sm);
+}
+.lf-upload-thumb {
+  width: 44px; height: 44px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+.lf-submit {
+  padding: 14px 26px;
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  color: var(--paper-warm);
+  background: var(--oxblood);
+  border: none;
+  border-radius: var(--radius-pill);
+  justify-self: start;
+  box-shadow: var(--shadow-card);
+}

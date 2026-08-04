@@ -36,21 +36,59 @@ async function openBook(page) {
 }
 
 const SHOTS = {
+  /** 03 · the intake being filled in, including a photo. */
+  intake: async (page) => {
+    await page.goto(`${BASE}/intake`, { waitUntil: 'networkidle' });
+    await pause(1400);
+
+    // Real typing speed. Speed-ramped typing reads as fake.
+    await page.getByLabel("Child's name").pressSequentially('Rosa', { delay: 180 });
+    await pause(900);
+
+    await page.getByRole('button', { name: '5–6', exact: true }).click();
+    await pause(800);
+
+    for (const v of ['horses', 'animals', 'magic']) {
+      await page.getByRole('button', { name: v, exact: true }).click();
+      await pause(520);
+    }
+    await pause(700);
+
+    for (const v of ['curious', 'gentle']) {
+      await page.getByRole('button', { name: v, exact: true }).click();
+      await pause(520);
+    }
+    await pause(900);
+
+    await page.getByLabel('Art inspirations')
+      .pressSequentially('The Snowy Day, Julia Denos watercolour', { delay: 42 });
+    await pause(1100);
+
+    await page.getByLabel('What the child looks like')
+      .pressSequentially('Dark curly hair, warm brown skin, green cardigan', { delay: 38 });
+    await pause(900);
+
+    // A reference photo going in — the interaction is the point, so the file
+    // itself is one of the book's own pages standing in for a family snap.
+    await page.setInputFiles('input[type="file"]', 'public/book/01.png');
+    await pause(2600);
+  },
+
   /** 02 · shelf → tapping the book → the reader opening. */
   open: async (page) => {
     await page.goto(`${BASE}/f/${TOKEN}`, { waitUntil: 'networkidle' });
-    await pause(1800); // hold on the shelf so the cover reads
+    await pause(2600); // hold on the shelf so the cover reads
     await page.getByText('The Lantern of Round Pond').first().click();
     await page.waitForSelector('main', { state: 'visible' });
-    await pause(2500);
+    await pause(5000);
   },
 
   /** 04 · two page turns, each flip captured whole. */
   pageTurn: async (page) => {
     await openBook(page);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       await page.getByLabel('Next page').click();
-      await pause(2200); // the flip is 700ms; the rest is breathing room
+      await pause(2600); // the flip is 700ms; the rest is breathing room
     }
   },
 
@@ -65,11 +103,11 @@ const SHOTS = {
       const target = page.getByLabel(`Hear ${word}`).first();
       if (await target.count()) {
         await target.click();
-        await pause(2000);
+        await pause(2400);
         break;
       }
     }
-    await pause(800);
+    await pause(2000);
   },
 
   /** 06 · pressing play, narration starting, words highlighting in sequence. */
@@ -77,20 +115,21 @@ const SHOTS = {
     await openBook(page);
     await pause(600);
     await page.getByLabel('Play').first().click();
-    await pause(4500); // let several words highlight
+    await pause(9000); // long enough to sit under the narration
   },
 
   /** 07 · the day-to-night switch, one continuous take. */
   night: async (page) => {
     await openBook(page);
-    await pause(1800); // establish day mode with the illustration up
+    await pause(1600); // brief day-mode establish; the switch is the shot
     await page.getByLabel('Switch to bedtime reading').click();
-    await pause(3200); // hold on night so the palette shift reads
+    await pause(9000); // long hold on night so the palette shift can breathe
   },
 };
 
 // Playwright records WebM; Remotion wants H.264. Convert on the way out.
 const FILENAME = {
+  intake: '03-intake.mp4',
   open: '02-open.mp4',
   pageTurn: '04-page-turn.mp4',
   wordTap: '05-word-tap.mp4',

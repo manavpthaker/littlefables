@@ -1,5 +1,5 @@
 import React from 'react';
-import { OffthreadVideo, staticFile } from 'remotion';
+import { Img, OffthreadVideo, staticFile, useVideoConfig } from 'remotion';
 import { READY } from '../beats';
 import { font, ink, paper, pigment } from '../theme';
 
@@ -7,8 +7,17 @@ export interface DeviceFrameProps {
   /** Path relative to video/public — e.g. "recordings/04-page-turn.mov" */
   src: string;
   device?: 'ipad' | 'phone';
-  /** Trim, in seconds, from the start of the source file. */
+  /**
+   * Trim from the head of the source file, **in seconds**.
+   *
+   * Remotion's own startFrom is in frames; this converts, because every capture
+   * carries a second or two of its own page load and reasoning about that in
+   * frames invites exactly the off-by-30x that shipped a film where the night
+   * switch never arrived.
+   */
   startFrom?: number;
+  /** The source is an image rather than a recording — e.g. the delivery email. */
+  still?: boolean;
   scale?: number;
 }
 
@@ -27,9 +36,11 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
   src,
   device = 'ipad',
   startFrom,
+  still = false,
   scale = 1,
 }) => {
   const d = SPEC[device];
+  const { fps } = useVideoConfig();
 
   return (
     <div
@@ -62,10 +73,12 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
             background: paper.warm,
           }}
         >
-          {READY.has(src) ? (
+          {still ? (
+            <Img src={staticFile(src)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : READY.has(src) ? (
             <OffthreadVideo
               src={staticFile(src)}
-              startFrom={startFrom}
+              startFrom={startFrom === undefined ? undefined : Math.round(startFrom * fps)}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (

@@ -21,9 +21,7 @@ import { PageFan } from './components/PageFan';
 import { Bind } from './components/Bind';
 import { DeviceFrame } from './components/DeviceFrame';
 import { Caption } from './components/Caption';
-import { loadFonts } from './fonts';
-
-loadFonts();
+import { useHeritageFonts } from './fonts';
 
 const sec = (s: number) => Math.round(s * FPS);
 
@@ -90,7 +88,7 @@ const ComesTogether: React.FC = () => {
       {/* b. Colour — pages develop like wet paper drying. */}
       <Sequence from={M} durationInFrames={M}>
         <AbsoluteFill>
-          <Develop src={staticFile(BOOK.pages[3])} />
+          <Develop src={staticFile(BOOK.pages[3]!)} />
         </AbsoluteFill>
       </Sequence>
 
@@ -112,41 +110,47 @@ const ComesTogether: React.FC = () => {
   );
 };
 
-/** Beat 5 — email, link, home screen. Three cuts. */
+/**
+ * Beat 5 — the email, then the book opening.
+ *
+ * Everything sits in an iPad frame. An earlier cut put the email and the
+ * open shot in a phone bezel, which cropped footage captured at iPad
+ * landscape — one device throughout is both truer and cleaner.
+ */
 const Arrives: React.FC = () => {
-  const third = sec(10 / 3);
+  const half = sec(7);
   return (
     <AbsoluteFill style={{ background: paper.base }}>
-      {/* The email is our own artwork, so it renders from the design system
-          rather than needing a phone pointed at Gmail. */}
-      <Sequence durationInFrames={third}>
-        <AbsoluteFill style={{ background: paper.base, alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ height: '72%', aspectRatio: '1200 / 780', overflow: 'hidden', boxShadow: '0 8px 16px rgba(42,29,18,0.10)' }}>
-            <SlowPush src={staticFile(BOOK.email)} amount={0.05} />
-          </div>
-        </AbsoluteFill>
+      <Sequence durationInFrames={half}>
+        <DeviceFrame src={BOOK.email} device="ipad" still />
+        <Caption text={COPY.arrives} delay={motion.settle} />
       </Sequence>
-      <Sequence from={third} durationInFrames={third}>
-        <DeviceFrame src={RECORDINGS.open} device="phone" />
-      </Sequence>
-      <Sequence from={third * 2}>
-        <DeviceFrame src={RECORDINGS.addToHome} device="ipad" />
+      <Sequence from={half}>
+        <DeviceFrame src={RECORDINGS.open} device="ipad" startFrom={1} />
         <Caption text={COPY.arrivesSub} delay={motion.settle} />
       </Sequence>
     </AbsoluteFill>
   );
 };
 
-/** Beat 6 — real reading. Minimal overlay; the software talks. */
+/**
+ * Beat 6 — real reading, in the order a person actually does it: press play,
+ * turn a page, tap a word.
+ *
+ * Three shots across twenty-four seconds rather than four across sixteen. The
+ * earlier cut moved faster than the narration underneath it, so the eye and
+ * the ear were describing different things.
+ */
 const Payoff: React.FC = () => {
-  const quarter = sec(4);
+  // startFrom skips each capture's own navigation — goto, click, load — so the
+  // film cuts straight to the reader rather than watching it boot.
   const shots = [
-    { src: RECORDINGS.pageTurn, caption: COPY.payoff[0] },
-    { src: RECORDINGS.wordTap, caption: COPY.payoff[1] },
-    { src: RECORDINGS.transport, caption: COPY.payoff[2] },
-    { src: RECORDINGS.pageTurn, caption: null },
+    { src: RECORDINGS.transport, caption: COPY.payoff[0], len: sec(9), from: 2.8 },
+    { src: RECORDINGS.pageTurn, caption: COPY.payoff[1], len: sec(8), from: 3.6 },
+    { src: RECORDINGS.wordTap, caption: COPY.payoff[2], len: sec(7), from: 3.6 },
   ];
 
+  let at = 0;
   return (
     <AbsoluteFill style={{ background: paper.base }}>
       {/* The product reading itself aloud — the one voice in the film. */}
@@ -154,12 +158,16 @@ const Payoff: React.FC = () => {
         <Audio src={staticFile(AUDIO.narration)} volume={AUDIO.narrationVolume} />
       </Sequence>
 
-      {shots.map((shot, i) => (
-        <Sequence key={i} from={quarter * i} durationInFrames={quarter}>
-          <DeviceFrame src={shot.src} device="ipad" />
-          {shot.caption && <Caption text={shot.caption} delay={motion.wind} />}
-        </Sequence>
-      ))}
+      {shots.map((shot, i) => {
+        const from = at;
+        at += shot.len;
+        return (
+          <Sequence key={i} from={from} durationInFrames={shot.len}>
+            <DeviceFrame src={shot.src} device="ipad" startFrom={shot.from} />
+            <Caption text={shot.caption} delay={motion.settle} hold={shot.len - motion.settle * 2} />
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 };
@@ -225,7 +233,10 @@ const MusicBed: React.FC = () => {
   );
 };
 
-export const Walkthrough: React.FC = () => (
+export const Walkthrough: React.FC = () => {
+  useHeritageFonts();
+
+  return (
   <AbsoluteFill style={{ background: paper.base }}>
     {existsSync && <MusicBed />}
     <Sequence {...frames(BEATS.coldOpen)}>
@@ -239,8 +250,10 @@ export const Walkthrough: React.FC = () => (
       </AbsoluteFill>
     </Sequence>
 
-    <Sequence {...frames(BEATS.aboutChild)}>
-      <TitleCard lines={COPY.child} coda={COPY.childCoda} size={64} />
+    <Sequence {...frames(BEATS.intake)}>
+      <DeviceFrame src={RECORDINGS.intake} device="ipad" />
+      <Caption text={COPY.intake} delay={motion.settle} hold={sec(5)} />
+      <Caption text={COPY.intakeSub} delay={sec(11)} hold={sec(5)} />
     </Sequence>
 
     <Sequence {...frames(BEATS.comesTogether)}>
@@ -257,7 +270,7 @@ export const Walkthrough: React.FC = () => (
 
     <Sequence {...frames(BEATS.night)}>
       <AbsoluteFill>
-        <DeviceFrame src={RECORDINGS.night} device="ipad" />
+        <DeviceFrame src={RECORDINGS.night} device="ipad" startFrom={4.2} />
         <Caption text={COPY.night} delay={motion.settle} />
       </AbsoluteFill>
     </Sequence>
@@ -271,3 +284,4 @@ export const Walkthrough: React.FC = () => (
     </Sequence>
   </AbsoluteFill>
 );
+};

@@ -232,12 +232,24 @@ async function narratePage(
   for (const seg of segments) {
     const { audio, timestamps } = await narrateSegment(seg.voiceId, seg.text, args.modelId);
     audioChunks.push(audio);
-    for (const t of timestamps) {
+    // Remap timestamps' .word back to the original (pre-pronunciation) page
+    // words so the reader's audioMatchesText check passes at fetch time.
+    // Pronunciation substitution is word-boundary + 1:1, so word count is
+    // preserved; a length mismatch means we shouldn't remap (drop through).
+    const originalWords = seg.origin.text.split(/\s+/).filter(Boolean);
+    const remap = originalWords.length === timestamps.length;
+    for (let i = 0; i < timestamps.length; i++) {
+      const t = timestamps[i]!;
       allTimestamps.push({
-        word: t.word,
+        word: remap ? originalWords[i]! : t.word,
         start: t.start + cumulativeDuration,
         end: t.end + cumulativeDuration,
       });
+    }
+    if (!remap) {
+      console.warn(
+        `    ⚠ word-count mismatch (${originalWords.length} orig vs ${timestamps.length} ts) — keeping raw words for this segment`,
+      );
     }
     // Duration ≈ last timestamp end; if empty, no forward offset.
     const last = timestamps[timestamps.length - 1];

@@ -14,7 +14,7 @@ cd "$(dirname "$0")"
 
 SRC="${1:?usage: ./prep-audio.sh <track.mp3> [start-seconds]}"
 START="${2:-50}"
-LEN=95          # film is 90s; the tail needs somewhere to fade
+LEN=116          # film is 111s; the tail needs somewhere to fade
 OUT="public/audio/bed.mp3"
 
 mkdir -p public/audio

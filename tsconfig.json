@@ -31,5 +31,5 @@
     "design-system/**/*.jsx",
     "design-system/**/*.d.ts"
   ],
-  "exclude": ["node_modules", ".next", "supabase/.temp", "reference", "content/originals", "content/art/candidates"]
+  "exclude": ["node_modules", ".next", "supabase/.temp", "reference", "content/originals", "content/art/candidates", "video"]
 }

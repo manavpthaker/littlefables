@@ -40,7 +40,7 @@ ASSETS=(
   # surface. One pin kept as a working template.
   "pin-christmas|PinterestPin|2000|3000|2|{\"title\":\"A Christmas gift they'll open all year\",\"line\":\"Custom storybook - delivered in days\"}"
   # Delivery email, rendered as a still for the film's beat 5.
-  "email-delivery|EmailShell|1200|780|1.6|{\"variant\":\"delivery\",\"childName\":\"Rosa\",\"markSrc\":\"../../public/icons/mark-ink.svg\"}"
+  "email-delivery|EmailShell|1194|834|1.45|{\"variant\":\"delivery\",\"childName\":\"Rosa\",\"markSrc\":\"../../public/icons/mark-ink.svg\"}"
   "coloring-page|ColoringPage|1700|2200|4.35|{}"
   "gift-certificate|GiftCertificate|1700|2200|4.35|{}"
 )

@@ -1,25 +1,47 @@
-import { continueRender, delayRender } from 'remotion';
+import { useEffect, useState } from 'react';
+import { continueRender, delayRender, staticFile } from 'remotion';
+import { FONT_FACES } from './fontFaces';
 
-// Remotion renders in a headless browser with no fonts of its own. Block the
-// render until IM Fell English and EB Garamond have actually arrived — without
-// this, early frames silently fall back to Times and the film ships wrong.
+// Remotion renders in a headless browser with no fonts of its own, so the film
+// has to load IM Fell English and EB Garamond itself.
+//
+// Two things this got wrong before, both worth keeping written down:
+//
+// 1. The fonts were fetched from Google. Remotion renders across many parallel
+//    workers, each a fresh page making the same request, and Google rate-limits
+//    that. It surfaces as a delayRender timeout two thirds through a render,
+//    nothing resembling a network error. They are bundled now.
+//
+// 2. delayRender() was called at module scope. Remotion wants it inside a
+//    component, tied to that component's lifecycle — called during import it
+//    registers against a handle the renderer never reconciles, and the render
+//    stalls until it times out.
 
-let started = false;
+export const useHeritageFonts = () => {
+  const [handle] = useState(() => delayRender('Loading Heritage fonts'));
 
-export const loadFonts = () => {
-  if (started || typeof document === 'undefined') return;
-  started = true;
+  useEffect(() => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      continueRender(handle);
+    };
 
-  const handle = delayRender('Loading Heritage fonts');
+    const style = document.createElement('style');
+    style.textContent = FONT_FACES.replace(
+      /FONTBASE/g,
+      staticFile('fonts/x.woff2').replace(/\/x\.woff2$/, ''),
+    );
+    document.head.appendChild(style);
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href =
-    'https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap';
-  document.head.appendChild(link);
+    document.fonts.ready.then(finish).catch(finish);
+    // Wrong fonts beat no render.
+    const timer = setTimeout(finish, 10000);
 
-  link.onload = () => {
-    document.fonts.ready.then(() => continueRender(handle));
-  };
-  link.onerror = () => continueRender(handle);
+    return () => {
+      clearTimeout(timer);
+      finish();
+    };
+  }, [handle]);
 };
