@@ -66,6 +66,26 @@ export const RECORDINGS = {
   night: 'recordings/07-night.mp4',
 };
 
+/**
+ * Music bed. Drop a file at video/public/audio/bed.mp3 and it plays; until then
+ * the film renders silent rather than failing.
+ *
+ * The mix ducks under the reading beat so the product's own narration is the
+ * only voice competing for attention — that beat is the one place the software
+ * should be audible.
+ */
+export const AUDIO = {
+  bed: 'audio/bed.mp3',
+  /** Base level for the bed everywhere else. */
+  volume: 0.34,
+  /** Level during the reading beat, so narration reads over it. */
+  duckedVolume: 0.12,
+  duckFrom: BEATS.payoff.start,
+  duckTo: BEATS.night.end,
+  fadeInSeconds: 1.5,
+  fadeOutSeconds: 4,
+};
+
 export const COPY = {
   brand: 'Little Fables',
   tagline: 'custom storybooks, made one at a time',

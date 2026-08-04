@@ -1,7 +1,16 @@
 import React from 'react';
-import { AbsoluteFill, Sequence, staticFile, interpolate, useCurrentFrame } from 'remotion';
+import {
+  AbsoluteFill,
+  Audio,
+  Sequence,
+  staticFile,
+  interpolate,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import { existsSync } from './hasAudio';
 
-import { BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
+import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
 import { font, ink, paper, pigment, motion, FPS } from './theme';
 
 import { MarkDraw } from './components/MarkDraw';
@@ -179,8 +188,41 @@ const Close: React.FC = () => {
   );
 };
 
+/** Music bed, fading in and ducking under the narration beat. */
+const MusicBed: React.FC = () => {
+  const { fps, durationInFrames } = useVideoConfig();
+  const duckIn = AUDIO.duckFrom * fps;
+  const duckOut = AUDIO.duckTo * fps;
+  const fadeIn = AUDIO.fadeInSeconds * fps;
+  const fadeOut = AUDIO.fadeOutSeconds * fps;
+
+  return (
+    <Audio
+      src={staticFile(AUDIO.bed)}
+      volume={(f) =>
+        interpolate(
+          f,
+          [0, fadeIn, duckIn, duckIn + fps, duckOut, duckOut + fps, durationInFrames - fadeOut, durationInFrames],
+          [
+            0,
+            AUDIO.volume,
+            AUDIO.volume,
+            AUDIO.duckedVolume,
+            AUDIO.duckedVolume,
+            AUDIO.volume,
+            AUDIO.volume,
+            0,
+          ],
+          { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
+        )
+      }
+    />
+  );
+};
+
 export const Walkthrough: React.FC = () => (
   <AbsoluteFill style={{ background: paper.base }}>
+    {existsSync && <MusicBed />}
     <Sequence {...frames(BEATS.coldOpen)}>
       <ColdOpen />
     </Sequence>
