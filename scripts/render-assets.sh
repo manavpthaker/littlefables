@@ -36,11 +36,9 @@ ASSETS=(
   "etsy-hero-speed|EtsyHero|2700|2025|2|{\"headline\":\"No shipping, ever\",\"points\":[\"Style previews in 24 hours\",\"Finished book in 3-4 days\",\"Christmas orders through Dec 22\"]}"
   "etsy-hero-screentime|EtsyHero|2700|2025|2|{\"headline\":\"Screen time that earns its place\",\"points\":[\"No ads. No algorithm. No autoplay.\",\"Twenty quiet minutes\",\"Then it ends, on purpose\"]}"
   "etsy-hero-second-book|EtsyHero|2700|2025|2|{\"headline\":\"The second book is \$17\",\"points\":[\"We keep their profile only if you ask\",\"Same character, new story\",\"One click, half price\"]}"
+  # Pinterest is parked for launch — Etsy plus the landing page is enough
+  # surface. One pin kept as a working template.
   "pin-christmas|PinterestPin|2000|3000|2|{\"title\":\"A Christmas gift they'll open all year\",\"line\":\"Custom storybook - delivered in days\"}"
-  "pin-grandparent|PinterestPin|2000|3000|2|{\"title\":\"Not another toy\",\"line\":\"Your grandchild, inside their own story\"}"
-  "pin-homeschool|PinterestPin|2000|3000|2|{\"title\":\"A book written for who they actually are\",\"line\":\"Custom storybook for ages 3-9\"}"
-  "pin-speed|PinterestPin|2000|3000|2|{\"title\":\"Ordered December 22. Read Christmas morning.\",\"line\":\"No shipping - it arrives on their iPad\"}"
-  "pin-privacy|PinterestPin|2000|3000|2|{\"title\":\"We delete your kid's details when the book ships\",\"line\":\"Unless you tell us to keep them\"}"
   "coloring-page|ColoringPage|1700|2200|4.35|{}"
   "gift-certificate|GiftCertificate|1700|2200|4.35|{}"
 )
