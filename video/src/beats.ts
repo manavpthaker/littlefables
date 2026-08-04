@@ -35,25 +35,35 @@ export const TOTAL_FRAMES = sec(BEATS.close.end);
 /** Book art. Paths are relative to video/public. */
 export const BOOK = {
   cover: 'book/cover.png',
+  /** The real delivery email, rendered from the design system's EmailShell. */
+  email: 'book/email.png',
   pages: Array.from({ length: 8 }, (_, i) => `book/${String(i + 1).padStart(2, '0')}.png`),
 };
 
 /**
- * Flip to true once video/public/recordings/ is populated. Until then the
- * device beats render a labelled placeholder so the rest of the film can be
- * previewed and reviewed without waiting on a camera.
+ * Which recordings actually exist. Anything not listed renders a labelled
+ * placeholder rather than failing the build.
+ *
+ * The five app shots are captured automatically by capture.mjs — Playwright
+ * drives the real reader and records it. The two absent ones are not our
+ * software: an email client and the iOS share sheet both need a phone.
  */
-export const RECORDINGS_READY = false;
+export const READY = new Set([
+  'recordings/02-open.mp4',
+  'recordings/04-page-turn.mp4',
+  'recordings/05-word-tap.mp4',
+  'recordings/06-transport.mp4',
+  'recordings/07-night.mp4',
+]);
 
-/** Screen recordings. Drop files here and the beats pick them up. */
 export const RECORDINGS = {
-  email: 'recordings/01-email.mov',
-  open: 'recordings/02-open.mov',
-  addToHome: 'recordings/03-add-to-home.mov',
-  pageTurn: 'recordings/04-page-turn.mov',
-  wordTap: 'recordings/05-word-tap.mov',
-  transport: 'recordings/06-transport.mov',
-  night: 'recordings/07-night.mov',
+  email: 'recordings/01-email.mp4',
+  open: 'recordings/02-open.mp4',
+  addToHome: 'recordings/03-add-to-home.mp4',
+  pageTurn: 'recordings/04-page-turn.mp4',
+  wordTap: 'recordings/05-word-tap.mp4',
+  transport: 'recordings/06-transport.mp4',
+  night: 'recordings/07-night.mp4',
 };
 
 export const COPY = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { OffthreadVideo, staticFile } from 'remotion';
-import { RECORDINGS_READY } from '../beats';
+import { READY } from '../beats';
 import { font, ink, paper, pigment } from '../theme';
 
 export interface DeviceFrameProps {
@@ -62,7 +62,7 @@ export const DeviceFrame: React.FC<DeviceFrameProps> = ({
             background: paper.warm,
           }}
         >
-          {RECORDINGS_READY ? (
+          {READY.has(src) ? (
             <OffthreadVideo
               src={staticFile(src)}
               startFrom={startFrom}

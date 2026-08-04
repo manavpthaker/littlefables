@@ -108,8 +108,14 @@ const Arrives: React.FC = () => {
   const third = sec(10 / 3);
   return (
     <AbsoluteFill style={{ background: paper.base }}>
+      {/* The email is our own artwork, so it renders from the design system
+          rather than needing a phone pointed at Gmail. */}
       <Sequence durationInFrames={third}>
-        <DeviceFrame src={RECORDINGS.email} device="phone" />
+        <AbsoluteFill style={{ background: paper.base, alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ height: '72%', aspectRatio: '1200 / 780', overflow: 'hidden', boxShadow: '0 8px 16px rgba(42,29,18,0.10)' }}>
+            <SlowPush src={staticFile(BOOK.email)} amount={0.05} />
+          </div>
+        </AbsoluteFill>
       </Sequence>
       <Sequence from={third} durationInFrames={third}>
         <DeviceFrame src={RECORDINGS.open} device="phone" />
