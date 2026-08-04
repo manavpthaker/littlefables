@@ -1,13 +1,12 @@
 # Narrator Cast
 
-Image prompts for the characters who read stories aloud. Anchored to the
-Heritage design system (v4), so a narrator sitting in the reader's top bar
-belongs to the same made object as the chrome around it.
+Image prompts for the six characters who read stories aloud. Anchored to the
+Heritage design system, so a narrator sitting in the reader's chrome belongs to
+the same made object as the frame around it.
 
-Each narrator needs three things: a **character block** (pasted verbatim into
-every prompt so the face never drifts), a **turnaround** (four angles, generated
-once, reused as reference), and a **state set** (five expressions the `Buddy`
-component switches between).
+Six characters. **Each one reads by day and by night** — same carved figure, two
+lightings, two moods. A child keeps their narrator across the whole day rather
+than being handed off to a stranger at bedtime.
 
 ---
 
@@ -20,17 +19,15 @@ hand-carved and hand-painted folk-craft character portrait, in the tradition of
 antique carousel figures and music-box automata, visible carving grain and
 brushwork, warm aged palette (aged ivory #EDE3CE, walnut ink #2A1D12, oxblood
 #7D2E2B, tarnished brass #A67C3A, pre-war forest green #2E4B3B, burnished gilt
-#B89154), soft even light with no theatrical shadow, paint slightly worn at the
-high points as if loved for eighty years, centered portrait on plain aged-ivory
-ground, no text, no logos, no watermarks, no photorealism, no modern tech,
-gentle and age-appropriate for young children
+#B89154, deep navy #233450), paint slightly worn at the high points as if loved
+for eighty years, centered portrait, no text, no logos, no watermarks, no
+photorealism, no modern tech, gentle and age-appropriate for young children
 ```
 
-**Why this and not the family style anchor.** `ART-PROMPT.md` describes the
-book-page style — watercolor scenes a child reads inside. Narrators are not
-scenes. They are *objects in the room*: carved, painted, sitting on a shelf.
-The distinction is what keeps a narrator from looking like a character who
-escaped from the story they're reading.
+**Why this differs from `ART-PROMPT.md`.** Book pages are painted plates — scenes
+a child reads *inside*. Narrators are carved objects *in the room*, sitting on a
+shelf. Same palette, different medium. That distinction is what stops a narrator
+from looking like a character who escaped the story they're reading.
 
 ### Never
 Corporate mascot proportions · big-eye cartoon cuteness · glossy 3D render ·
@@ -40,72 +37,112 @@ than a made thing.
 
 ---
 
+## Day and night
+
+Two lighting treatments, applied to the same carving. Append the relevant block
+after the character block in every prompt.
+
+**Day**
+
+```text
+Lit by even, soft daylight from a window just out of frame. Plain aged-ivory
+ground. Colours at full warmth — brass, forest green and oxblood clearly read.
+Eyes fully open, alert and present.
+```
+
+**Night**
+
+```text
+Lit by a single warm lantern low and to one side, everything else falling into
+deep walnut and navy shadow. Ground is dark walnut rather than ivory. A thin rim
+of burnished gilt catches the top edge of the figure. Eyes heavy-lidded and
+drowsy, expression settled and unhurried.
+```
+
+The night treatment is not a different character and not a costume change. It is
+the same object, later in the evening.
+
+---
+
 ## The cast
 
-Six narrators. Three read by day, three by night. Each is an animal or figure
-that already belongs to folk-craft tradition — nothing invented, nothing cute
-for its own sake.
+Each entry gives the **character block** — paste verbatim into every prompt for
+that narrator, day or night. Never paraphrase it.
 
-### 1 · Wren — day, bright and quick
+### 1 · Wren
 
 > Small carved wren, round body, warm brass-brown breast with fine painted
 > feather strokes, alert black bead eyes, head tilted slightly as if
 > mid-question, one tiny sprig of forest-green leaf tucked at the shoulder.
 
-Reads: birthday adventures, silly stories, anything with momentum.
-Voice: light, quick, a little mischievous. Mid-range, forward energy.
+Quick, bright, a little mischievous. Best at momentum — birthday adventures,
+silly stories, anything that wants to move.
+**Day voice:** light, forward, smiling. **Night voice:** the same brightness
+pulled down to a murmur, like someone telling you a secret.
 
-### 2 · Hollow — day, steady and grandfatherly
+### 2 · Hollow
 
 > Carved brown bear in three-quarter bulk, deep walnut fur with visible chisel
 > grain, heavy kind brow, small round gilt spectacles resting low, oxblood
 > scarf worn soft at the fold.
 
-Reads: long chapter books, anything a child needs to feel safe inside.
-Voice: low, unhurried, warm. The one you want for a hard subject.
+Steady and grandfatherly. The one you want for a hard subject — big feelings,
+long chapter books, anything a child needs to feel safe inside.
+**Day voice:** low, unhurried, warm. **Night voice:** lower still, wide and slow,
+almost a lullaby.
 
-### 3 · Tilda — day, curious and precise
+### 3 · Tilda
 
 > Carved fox in seated poise, narrow intelligent face, tarnished-brass coat with
 > cream throat and forest-green collar, ears forward and sharply attentive, one
 > paw lifted mid-thought.
 
-Reads: mysteries, how-things-work stories, questions.
-Voice: crisp, articulate, a smile underneath. Good with vocabulary.
+Curious and precise. Good with vocabulary. Mysteries, how-things-work stories,
+anything built around a question.
+**Day voice:** crisp, articulate, a smile underneath. **Night voice:** the same
+precision, softened — thinking out loud rather than explaining.
 
-### 4 · Moth — night, hushed and delicate
+### 4 · Moth
 
 > Pale carved moth with broad soft wings in aged ivory and faint gilt vein
 > tracery, small gentle body, antennae feathered and slightly drooping, wings
 > half-folded as if settling.
 
-Reads: bedtime, quiet stories, anything after lights-out.
-Voice: breathy, very soft, close to the microphone. Nearly a whisper.
+Delicate and hushed. Naturally a night creature, but daylight suits her for
+quiet stories and gentle subjects.
+**Day voice:** soft, airy, unhurried. **Night voice:** breathy, close to the
+microphone, nearly a whisper.
 
-### 5 · Barrow — night, slow and deliberate
+### 5 · Barrow
 
 > Carved tortoise, dome shell in deep forest green with worn gilt seams between
 > the plates, ancient patient face, heavy lids half-lowered, neck extended just
 > a little.
 
-Reads: stories for a child who winds down slowly. Long, even pacing.
-Voice: deep, wide gaps between phrases, no urgency at all.
+Slow and deliberate. For a child who winds down gradually, or a story that
+should not be rushed.
+**Day voice:** deep, even, generous gaps between phrases. **Night voice:** slower
+again, with real silence between sentences.
 
-### 6 · Vesper — night, watchful and wise
+### 6 · Vesper
 
 > Carved owl, compact and upright, walnut and ivory barred plumage in fine
 > painted strokes, enormous still amber eyes, small tufted ears, talons curled
 > over a worn brass perch.
 
-Reads: fables with a lesson, folk tales, anything with weight.
-Voice: measured, slightly formal, kind. The oldest voice in the cast.
+Watchful and wise — the oldest voice in the cast. Fables with a lesson, folk
+tales, anything with weight.
+**Day voice:** measured, slightly formal, kind. **Night voice:** the same
+formality gone gentle, like a grandparent who has told this one before.
 
 ---
 
-## Turnaround sheet
+## What to generate, in order
 
-Generate these four **once per narrator**, before any state work. Together they
-are the reference set every later prompt attaches to.
+### Step 1 — Turnaround (once per narrator, day light)
+
+The reference every later image attaches to. Generate this first and do not skip
+it; it is what actually holds a face together across a dozen prompts.
 
 ```text
 [STYLE ANCHOR]
@@ -113,33 +150,31 @@ are the reference set every later prompt attaches to.
 Character turnaround reference sheet. [CHARACTER BLOCK, verbatim].
 
 Four views of the same carved figure in one row, evenly spaced on plain
-aged-ivory ground: front-facing, three-quarter turned left, three-quarter
-turned right, and full profile facing left. Identical carving, identical paint,
-identical proportions across all four — this is one object photographed from
-four sides, not four similar objects. Neutral resting expression throughout.
-Even soft light. No text, no labels, no numbering.
+aged-ivory ground: front-facing, three-quarter turned left, three-quarter turned
+right, and full profile facing left. Identical carving, identical paint,
+identical proportions across all four — this is one object photographed from four
+sides, not four similar objects. Neutral resting expression throughout. Even soft
+daylight. No text, no labels, no numbering.
 ```
 
-Save as `content/art/narrators/<name>/turnaround.png`. Attach it as a character
-or style reference on every subsequent prompt — Midjourney `--cref`, Flux Redux,
-or Gemini image-to-image. This is what actually holds the face together across
-a dozen images.
+→ `content/art/narrators/<name>/turnaround.png`
 
----
+Attach it as a character or style reference on everything after — Midjourney
+`--cref`, Flux Redux, Gemini image-to-image.
 
-## State set
+### Step 2 — Day states (five per narrator)
 
-The `Buddy` component switches between five states. Each needs its own portrait,
-and each has a fixed ring colour from the design system — the art should feel at
-home inside that ring without repeating it.
+The `Buddy` component switches between five states. Each has a fixed ring colour
+from the design system; the portrait should sit comfortably inside that ring
+without repeating it.
 
-| State | Ring | Expression to generate |
+| State | Ring | Expression |
 |---|---|---|
 | `idle` | none | Resting, eyes open, gently attentive. The default face. |
-| `listening` | navy `#233450` | Head turned slightly toward the viewer, ears or antennae forward, mouth closed, held still — the face of someone genuinely waiting. |
-| `thinking` | ink-soft `#57432E` | Eyes cast slightly up and away, brow softened, a small considering tilt. Not confused. Turning something over. |
-| `speaking` | forest `#2E4B3B` | Mouth open mid-word, warm and animated, eyes engaged with the viewer. |
-| `painting` | brass `#A67C3A` | Looking off to one side with quiet anticipation, as though watching something being made just out of frame. |
+| `listening` | navy `#233450` | Head turned slightly toward the viewer, ears or antennae forward, mouth closed, held still — genuinely waiting. |
+| `thinking` | ink-soft `#57432E` | Eyes cast slightly up and away, brow softened, small considering tilt. Not confused. Turning something over. |
+| `speaking` | forest `#2E4B3B` | Mouth open mid-word, warm and animated, engaged with the viewer. |
+| `painting` | brass `#A67C3A` | Looking off to one side with quiet anticipation, watching something being made just out of frame. |
 
 ```text
 [STYLE ANCHOR]
@@ -147,19 +182,38 @@ home inside that ring without repeating it.
 Portrait of the same carved figure, front-facing, matching the attached
 turnaround reference exactly. [CHARACTER BLOCK, verbatim].
 
-Expression: [STATE DESCRIPTION from the table above].
+Expression: [STATE DESCRIPTION from the table].
 
-Head and shoulders, centered, plain aged-ivory ground, even soft light.
-Identical carving and paint to the reference. No text, no props beyond those
-named in the character block.
+[DAY LIGHTING BLOCK]
+
+Head and shoulders, centered, even soft light. Identical carving and paint to the
+reference. No text, no props beyond those named in the character block.
 ```
 
-Save as `content/art/narrators/<name>/<state>.png`.
+→ `content/art/narrators/<name>/day-<state>.png`
 
-The `Buddy` face renders at 84px by default. **Check every state at 84px before
-accepting it** — expression that reads clearly at full size often collapses to
-mush at thumbnail scale. If two states are indistinguishable small, exaggerate
-the head angle rather than the face.
+### Step 3 — Night states (two per narrator)
+
+Night mode is text-only, so the narrator is present but quiet — it does not need
+the full five. Generate `idle` and `speaking` only.
+
+Same prompt as Step 2, with the **night lighting block** substituted and the
+expression softened toward drowsiness.
+
+→ `content/art/narrators/<name>/night-idle.png`, `night-speaking.png`
+
+**Total: 8 images per narrator, 48 across the cast.** If that is too much to do
+at once, generate all six turnarounds first, then `day-idle` for all six — that
+alone is enough to wire the cast into the app and see it working.
+
+---
+
+## Check every state at 84px
+
+The `Buddy` face renders at 84px by default. Expression that reads clearly at
+full resolution often collapses to mush at thumbnail scale. If two states are
+indistinguishable small, **exaggerate the head angle rather than the face** —
+silhouette survives downscaling, eyebrows do not.
 
 ---
 
@@ -168,13 +222,15 @@ the head angle rather than the face.
 ```text
 content/art/narrators/
   wren/
+    character-block.md      # the verbatim block, so a later session need not reconstruct it
     turnaround.png
-    idle.png
-    listening.png
-    thinking.png
-    speaking.png
-    painting.png
-    character-block.md
+    day-idle.png
+    day-listening.png
+    day-thinking.png
+    day-speaking.png
+    day-painting.png
+    night-idle.png
+    night-speaking.png
   hollow/
   tilda/
   moth/
@@ -182,41 +238,36 @@ content/art/narrators/
   vesper/
 ```
 
-`character-block.md` holds the verbatim block for that narrator, so a later
-session regenerating one state doesn't have to reconstruct it from this file.
-
 ---
 
 ## Pairing narrators to voices
 
 `story.json` carries a `characters` map of name → ElevenLabs `voiceId` and
-optional `nightVoiceId`. Once a narrator's voice is cast, record it here so the
-visual and the voice never drift apart.
+optional `nightVoiceId`. Record casting here so the visual and the voice never
+drift apart.
 
-| Narrator | Register | voiceId | Cast |
-|---|---|---|---|
-| Wren | light, quick, mischievous | — | not yet |
-| Hollow | low, unhurried, warm | — | not yet |
-| Tilda | crisp, articulate | — | not yet |
-| Moth | breathy, near-whisper | — | not yet |
-| Barrow | deep, very slow | — | not yet |
-| Vesper | measured, slightly formal | — | not yet |
+| Narrator | Day register | Night register | voiceId | nightVoiceId |
+|---|---|---|---|---|
+| Wren | light, forward, smiling | bright pulled to a murmur | — | — |
+| Hollow | low, unhurried, warm | wide and slow, near-lullaby | — | — |
+| Tilda | crisp, articulate | precise but thinking aloud | — | — |
+| Moth | soft, airy | breathy, near-whisper | — | — |
+| Barrow | deep, even, spacious | slower, real silence between lines | — | — |
+| Vesper | measured, slightly formal | formal gone gentle | — | — |
 
-Day narrators should sit between roughly 0.95× and 1.05× speaking rate. Night
-narrators want 0.85× to 0.92× — the reader already applies a further 0.9×
-multiplier in night mode, so casting a night voice that is *also* slow at source
-will drag.
+Day voices sit between roughly 0.95× and 1.05× speaking rate. Night voices want
+0.85× to 0.92× — the reader already applies a further 0.9× multiplier in night
+mode, so a night voice that is *also* slow at source will drag.
 
 ---
 
 ## For custom orders
 
-Buyers do not pick a narrator in the intake today. If that becomes an upsell,
-the natural shape is a single question — "who should read it?" — with three or
-four narrator portraits and a one-line personality description each. The
-turnaround and state sets above are what make that possible without new art per
-order.
+Buyers do not pick a narrator in the intake today. If it becomes an upsell, the
+shape is one question — "who should read it?" — with six portraits and a
+one-line personality each. The turnaround and state sets above are exactly what
+makes that possible without commissioning new art per order.
 
-Until then, choose the narrator yourself from the occasion: Wren or Tilda for
-birthdays and adventures, Hollow for big feelings, Moth or Barrow for bedtime,
-Vesper for anything with a lesson in it.
+Until then, choose from the occasion: Wren or Tilda for birthdays and
+adventures, Hollow for big feelings, Moth or Barrow for bedtime, Vesper for
+anything with a lesson in it.

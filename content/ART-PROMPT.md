@@ -3,7 +3,7 @@
 Paste the relevant section into your image generator (Midjourney, Flux,
 SDXL, Gemini Nano Banana, DALL-E, etc.) and fill in the bracketed pieces.
 Each book gets a cover plus optional per-page scene art. Both live inside
-the app's warm palette so the shelf and reader feel like one book.
+the Heritage palette so the shelf and reader feel like one bound book.
 
 The whole point is **consistency**. If Bramble is a hedgehog on page 1, he's
 the same hedgehog with the same colors and the same posture on page 8.
@@ -17,27 +17,37 @@ For family characters, heritage is context for language, food, music, and
 relationships, not a wardrobe cue; keep clothing modern and everyday unless the
 page text explicitly calls for a specific cultural outfit.
 
+> **Page art is painted. The app around it is carved.** The reader chrome
+> follows the Heritage design system — antique folk-craft, woodcut, hand-carved.
+> Book pages do not. They are painted plates inside that frame, the way an N.C.
+> Wyeth illustration sits inside a bound Scribner's edition. Same palette, warmer
+> medium. Narrator portraits are the carved half — see `NARRATOR-CAST.md`.
+
 ---
 
 ## The style anchor (in every prompt)
 
 Use this exact language — every book uses it, so the shelf stays coherent:
 
-> warm children's picture-book watercolor illustration, soft edges,
-> hand-painted feel, cozy bedtime palette (paper cream #F4ECDA,
-> terracotta, marigold, honey, sage green, teal), one clear focal moment,
-> natural composition, gentle depth, no text, no logos, no watermarks,
-> no photorealism, no harsh contrast, no screens or modern tech
+> hand-painted storybook illustration in layered gouache and watercolor,
+> visible brushwork, the richness of a mid-century illustrated classic,
+> aged palette (aged ivory #EDE3CE, walnut ink #2A1D12, oxblood #7D2E2B,
+> tarnished brass #A67C3A, pre-war forest green #2E4B3B, burnished gilt
+> #B89154, deep navy #233450), one clear focal moment, natural composition,
+> gentle depth, no text, no logos, no watermarks, no photorealism,
+> no harsh contrast, no screens or modern tech
 
 Optional intensifiers when you want a specific mood:
 
-- **cozy / snug:** "soft glow, wool-textured, tucked-in", "small warm
-  light source (a lantern, a hearth, a moon)"
-- **outdoors:** "dappled light, tall grass, hand-drawn foliage"
-- **quiet / bedtime-leaning:** "hushed palette, moonlight,
-  low-saturation, breath-held stillness"
-- **wonder / discovery:** "big open sky, small character looking up,
-  soft awe"
+- **cozy / snug:** "lamplight warmth, wool texture, tucked-in", "one small
+  warm light source — a lantern, a hearth, a low moon"
+- **outdoors:** "dappled light through leaves, tall grass, hand-drawn foliage"
+- **quiet / bedtime-leaning:** "hushed palette pulled toward navy and walnut,
+  moonlight, low saturation, breath-held stillness"
+- **wonder / discovery:** "big open sky, small character looking up, soft awe,
+  a thread of gilt light"
+- **ceremonial / a big moment:** "deeper burgundy and gilt, slightly more
+  formal composition, a sense of occasion"
 
 ---
 
@@ -61,15 +71,15 @@ Template:
 
 **Example** (for a story called "Hedgehog's Goodnight"):
 
-> warm children's picture-book watercolor illustration, soft edges,
-> hand-painted feel, cozy bedtime palette (paper cream, terracotta,
-> marigold, honey, sage green, teal), one clear focal moment, no text,
-> no logos.
+> hand-painted storybook illustration in layered gouache and watercolor,
+> visible brushwork, the richness of a mid-century illustrated classic,
+> aged palette (aged ivory, walnut ink, oxblood, tarnished brass, pre-war
+> forest green, burnished gilt), one clear focal moment, no text, no logos.
 >
 > Book cover for "Hedgehog's Goodnight". A small round hedgehog with warm
-> honey-brown quills, black button nose, a tiny yellow scarf around his
-> neck, sitting on a bed of autumn leaves under a soft yellow lantern
-> hanging from a birch branch. Twilight sky just deepening to indigo.
+> brass-brown quills, black button nose, a tiny oxblood scarf around his
+> neck, sitting on a bed of autumn leaves under a soft brass lantern
+> hanging from a birch branch. Twilight sky just deepening to navy.
 > Hedgehog is looking up at the lantern with eyes half-closed, smiling
 > softly. Composition centers him with the lantern glowing above.
 
@@ -105,10 +115,10 @@ the wind held its breath."):
 
 > [style anchor]
 >
-> Scene illustration. Small round hedgehog, warm honey-brown quills,
-> black button nose, tiny yellow scarf. Sitting very still on a fallen
+> Scene illustration. Small round hedgehog, warm brass-brown quills,
+> black button nose, tiny oxblood scarf. Sitting very still on a fallen
 > log, ears turned outward, listening. Autumn birch forest at dusk;
-> mist gathering low; no wind — every leaf still. A single golden leaf
+> mist gathering low; no wind — every leaf still. A single gilt-edged leaf
 > is suspended mid-fall in front of him, caught in a paused breath.
 >
 > Composition: wide, character small in the middle of a big quiet
@@ -144,6 +154,8 @@ Also:
   explicitly ("the last light going out of the sky").
 - **Palette discipline.** Reject any output that goes neon, high-contrast,
   or introduces a color that isn't in the anchor palette. Regenerate.
+  The Heritage palette is deeper and more saturated than the old cream-and-
+  terracotta one — if a result looks washed out or pastel, it has drifted.
 - **No text in art.** Every generator adds gibberish text sometimes.
   Reject and regenerate — never ship it.
 
@@ -155,7 +167,7 @@ Once the cover is generated, spend two minutes pulling a 4-color palette
 from it. The reader chrome (page background, story text, eyebrow +
 play button, muted captions) re-tints per book — so the same reader
 feels like a nocturne for The Midnight Train and a sunset for The Moose.
-Skip this step and the reader falls back to the shared cream palette,
+Skip this step and the reader falls back to the shared Heritage palette,
 which is fine but generic.
 
 How: use any color picker (macOS Digital Color Meter, Sip, browser
@@ -182,7 +194,7 @@ Guardrails baked into the reader:
 - **Contrast is enforced.** ink vs paper must be ≥4.5:1 (WCAG AA large).
   Fails silently to the shared palette with a console warning naming
   the ratio.
-- **Applies to reader only.** The shelf stays neutral cream so the
+- **Applies to reader only.** The shelf stays neutral aged ivory so the
   covers do the visual talking. Themed chrome shows up only inside the
   book.
 
