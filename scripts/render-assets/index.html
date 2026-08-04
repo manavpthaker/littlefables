@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Headless-render harness for marketing assets.
+     Renders one Heritage outward component, full-bleed, at native size so a
+     headless screenshot is the deliverable. Driven by query params:
+       ?c=EtsyHero&scale=2          component + render scale
+       &props={"headline":"..."}    URL-encoded JSON, merged into the component
+     See scripts/render-assets.sh for the runner. -->
+<link rel="stylesheet" href="../../design-system/styles.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--paper); }
+  /* No scrollbars, no page chrome — the component IS the frame. */
+  body { overflow: hidden; }
+  #root { display: inline-block; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="../../design-system/_ds_bundle.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const name = q.get('c');
+  const scale = parseFloat(q.get('scale') || '1');
+
+  let props = {};
+  try { props = JSON.parse(q.get('props') || '{}'); }
+  catch (e) { console.error('bad props json', e); }
+
+  const DS = window.LittleFablesHeritageDS_bdeb10;
+  const Component = DS && DS[name];
+
+  if (!Component) {
+    document.body.innerHTML =
+      '<pre style="padding:24px;font:14px monospace">unknown component: ' + name +
+      '\n\navailable: ' + Object.keys(DS || {}).sort().join(', ') + '</pre>';
+    document.title = 'ERROR';
+  } else {
+    // Components that lay out at a fixed design size take `scale`; the rest
+    // are sized by their own CSS and ignore it.
+    const takesScale = ['EtsyHero', 'PinterestPin'].includes(name);
+    const merged = takesScale ? Object.assign({ scale }, props) : props;
+
+    // Components without a `scale` prop size themselves from their own CSS and
+    // would otherwise render small in the corner of a large canvas. `zoom`
+    // blows them up to fill the frame — used for the print formats.
+    const zoom = parseFloat(q.get('zoom') || '1');
+    if (zoom !== 1) document.getElementById('root').style.zoom = zoom;
+
+    ReactDOM.createRoot(document.getElementById('root'))
+      .render(React.createElement(Component, merged));
+
+    // Signal readiness once fonts have settled, so the runner isn't guessing.
+    document.fonts.ready.then(() => {
+      requestAnimationFrame(() => { document.title = 'READY'; });
+    });
+  }
+</script>
+</body>
+</html>
