@@ -58,3 +58,9 @@ content/books/**/references*/
 # Test / coverage
 coverage/
 .vitest-cache/
+
+# Walkthrough film — deps, renders, and staged assets are all reproducible
+video/node_modules/
+video/out/
+video/public/book/
+video/public/recordings/
