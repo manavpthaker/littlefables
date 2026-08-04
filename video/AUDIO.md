@@ -1,13 +1,21 @@
 # Music
 
-The film renders silent today. Drop one file in and it has a score.
+Scored. `public/audio/bed.mp3` is in place and the duck is wired.
 
-```
-public/audio/bed.mp3
+## Replacing the track
+
+```bash
+node analyse-audio.mjs ~/Downloads/some-track.mp3   # find where it sits flattest
+./prep-audio.sh ~/Downloads/some-track.mp3 50       # trim, level, fade
+npm run render
 ```
 
-Then flip `existsSync` to `true` in `src/hasAudio.ts` and re-render. That is the
-whole job — the fades and the duck are already wired.
+`prep-audio.sh` exists because generated piano drifts louder as it goes. Both
+takes we tried climbed 3-5 dB over ninety seconds — expressive on their own,
+but it fights narration once it is under a film. The script trims to the
+flattest stretch, flattens what remains with `dynaudnorm`, and fades the ends.
+
+The current bed is Take 2 from 0:50, levelled to about -25 dB across the body.
 
 ## What to ask for
 
