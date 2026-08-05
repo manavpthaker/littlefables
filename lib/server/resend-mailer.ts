@@ -65,64 +65,103 @@ export async function sendEmail(args: SendArgs): Promise<string> {
   return body.id;
 }
 
-/** Branded 6-digit OTP email. Kept close to the sending helper so the
- *  copy and the render stay in one file — one screen for a designer to
- *  audit. See docs/commerce/positioning.md for voice. */
-export async function sendOtpEmail(params: { to: string; code: string }): Promise<string> {
-  const { to, code } = params;
-  const grouped = `${code.slice(0, 3)} ${code.slice(3)}`; // 123 456 — easier to type
-  const subject = `Your Little Fables sign-in code: ${grouped}`;
+/** Branded OTP email. Layout matches design-handoff at
+ *  /Users/manavthaker/Downloads/OTP email HTML code/otp-email.html:
+ *  header wordmark, double-rule ornament, code box, magic-link button.
+ *
+ *  Palette hex-baked (not tokens) because email clients don't support
+ *  CSS variables. Inline styles because <style> and <link> get stripped
+ *  by Gmail/Outlook. */
+export async function sendOtpEmail(params: {
+  to: string;
+  code: string;
+  signInUrl: string;
+}): Promise<string> {
+  const { to, code, signInUrl } = params;
+
+  const subject = 'Your Little Fables Code';
 
   const text = [
-    `Your Little Fables sign-in code is ${grouped}.`,
+    'Your Little Fables sign-in code',
     '',
-    'Enter it on the sign-in page to open your parent settings.',
-    'The code expires in about an hour.',
+    `  ${code}`,
     '',
-    'If you did not ask for this, you can ignore this email.',
-    '— Little Fables',
+    'Enter this code to sign in. It works once and expires shortly.',
+    '',
+    'Or follow this link and we will sign you in directly:',
+    signInUrl,
+    '',
+    'If you did not ask for this code, you can ignore this note — nothing changes without it.',
+    '',
+    'Little Fables · made for one child at a time',
+    `This code was requested for ${to}.`,
   ].join('\n');
 
-  // Inline styles because email clients strip <style> and <link>.
-  // Palette hex-baked (not tokens) because CSS variables aren't available
-  // in email contexts.
-  const html = `<!doctype html>
-<html>
-<body style="margin:0;padding:0;background:#EDE3CE;font-family:Georgia,'EB Garamond',serif;color:#2A1D12">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EDE3CE;padding:32px 16px">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="background:#F3EBD8;border:1px solid rgba(42,29,18,0.10);border-radius:12px;padding:36px 32px;max-width:480px">
-          <tr>
-            <td align="center" style="font-family:Georgia,'IM Fell English SC',serif;font-size:12px;letter-spacing:0.14em;color:#A67C3A;text-transform:lowercase;padding-bottom:8px">
-              little fables
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="font-family:Georgia,'IM Fell English',serif;font-size:22px;line-height:1.3;color:#2A1D12;padding-bottom:24px">
-              Sign in to your parent settings
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="font-family:Consolas,'Courier New',monospace;font-size:34px;letter-spacing:0.18em;color:#2A1D12;background:#EDE3CE;border:1px solid rgba(138,113,86,0.4);border-radius:8px;padding:18px 28px">
-              ${grouped}
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="font-family:Georgia,'EB Garamond',serif;font-size:15px;line-height:1.6;color:#57432E;padding-top:24px">
-              Enter it on the sign-in page to open your parent settings.<br>
-              The code expires in about an hour.
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="font-family:Georgia,'EB Garamond',serif;font-size:12px;line-height:1.5;color:#8A7156;padding-top:28px;border-top:1px solid rgba(42,29,18,0.10);margin-top:20px">
-              If you didn&rsquo;t ask for this, you can ignore this email.
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Your sign-in code</title>
+</head>
+<body style="margin:0;padding:0;background:#EDE3CE;">
+<span style="display:none;font-size:1px;line-height:1px;color:#EDE3CE;max-height:0;max-width:0;opacity:0;overflow:hidden;">Your one-time sign-in code for Little Fables. It works once and expires shortly.</span>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EDE3CE;padding:24px 0;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:100%;background:#EDE3CE;">
+        <tr>
+          <td style="padding:18px 32px 8px;font-family:'IM Fell English',Georgia,serif;font-size:19px;color:#2A1D12;">Little Fables</td>
+        </tr>
+        <tr>
+          <td style="padding:0 32px;">
+            <div style="border-top:1px solid #8A7156;height:3px;font-size:0;line-height:0;">&nbsp;</div>
+            <div style="border-top:2px solid #8A7156;font-size:0;line-height:0;">&nbsp;</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:26px 32px 6px;font-family:'IM Fell English',Georgia,serif;font-size:26px;line-height:32px;mso-line-height-rule:exactly;color:#2A1D12;">Your sign-in code</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 32px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:17px;line-height:26px;mso-line-height-rule:exactly;color:#57432E;">Enter this code to sign in. It works once and expires shortly.</td>
+        </tr>
+        <tr>
+          <td style="padding:16px 32px 8px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="background:#F3EBD8;border:1px solid #B89154;border-radius:12px;padding:16px 28px;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:36px;mso-line-height-rule:exactly;letter-spacing:8px;color:#2A1D12;">${code}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 32px 4px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:17px;line-height:26px;mso-line-height-rule:exactly;color:#57432E;">Or follow the link and we will sign you in directly.</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 32px 8px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td bgcolor="#7D2E2B" style="background:#7D2E2B;border-radius:10px;">
+                  <a href="${signInUrl}" style="display:inline-block;padding:13px 26px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:17px;color:#F3EBD8;text-decoration:none;">Sign in</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:18px 32px 0;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:14px;line-height:21px;mso-line-height-rule:exactly;color:#8A7156;">If you did not ask for this code, you can ignore this note — nothing changes without it.</td>
+        </tr>
+        <tr>
+          <td style="padding:26px 32px 30px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:13px;line-height:19px;mso-line-height-rule:exactly;color:#8A7156;">
+            Little Fables · made for one child at a time<br>
+            This code was requested for ${to}.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 </body>
 </html>`;
 

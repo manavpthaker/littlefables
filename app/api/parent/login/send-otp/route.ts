@@ -65,18 +65,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   // Generate a magiclink-style OTP without asking Supabase to send.
-  // The returned properties include the 6-digit code we email ourselves.
+  // Returns both the 6-digit code AND a hashed token we use to build
+  // our own magic-link URL (see /api/parent/login/magic).
   const { data: linkData, error: linkErr } = await admin().auth.admin.generateLink({
     type: 'magiclink',
     email: parent.email,
   });
-  if (linkErr || !linkData?.properties?.email_otp) {
+  const otp = linkData?.properties?.email_otp;
+  const tokenHash = linkData?.properties?.hashed_token;
+  if (linkErr || !otp || !tokenHash) {
     console.error('[send-otp] generateLink failed:', linkErr?.message);
     return NextResponse.json({ error: 'could not issue code' }, { status: 500 });
   }
 
+  // Build the sign-in URL against the incoming request's origin so it
+  // works in dev (localhost:3000) and prod (littlefables.app) without an
+  // env var. Callback exchanges the token for our session cookies.
+  const signInUrl = new URL('/api/parent/login/magic', request.url);
+  signInUrl.searchParams.set('token_hash', tokenHash);
+
   try {
-    await sendOtpEmail({ to: parent.email, code: linkData.properties.email_otp });
+    await sendOtpEmail({
+      to: parent.email,
+      code: otp,
+      signInUrl: signInUrl.toString(),
+    });
   } catch (err) {
     // A Resend outage is the only realistic path to this branch. Surface
     // a real error so the login form can tell the parent to try again.
