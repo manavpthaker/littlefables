@@ -5,7 +5,7 @@
 import { execFileSync } from 'node:child_process';
 
 const BLOCK = 15;
-const SPAN = 105; // the film is 90s; look slightly past it
+const SPAN = Number(process.env.SPAN ?? 120); // film is 114s; look past it
 
 // ffmpeg writes volumedetect stats to stderr, not stdout.
 const rms = (file, start) => {

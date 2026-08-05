@@ -12,16 +12,26 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-SRC="${1:?usage: ./prep-audio.sh <track.mp3> [start-seconds]}"
+SRC="${1:?usage: ./prep-audio.sh <track.mp3> [start-seconds] [gentle]}"
 START="${2:-50}"
-LEN=116          # film is 111s; the tail needs somewhere to fade
+MODE="${3:-level}"   # "gentle" skips dynaudnorm for a track that is already flat
+LEN=116          # film is 114s; the tail needs somewhere to fade
 OUT="public/audio/bed.mp3"
 
 mkdir -p public/audio
 
+# dynaudnorm squashes a piano's natural dynamics. Worth it for a track that
+# drifts; actively harmful for one that is already flat, where it flattens the
+# expression that made the track worth using. `gentle` levels only.
+if [ "$MODE" = "gentle" ]; then
+  FILTERS="loudnorm=I=-23:LRA=7:TP=-3,afade=t=in:st=0:d=2,afade=t=out:st=$((LEN - 3)):d=3"
+else
+  FILTERS="dynaudnorm=f=250:g=15:p=0.6,loudnorm=I=-23:LRA=4:TP=-3,afade=t=in:st=0:d=2,afade=t=out:st=$((LEN - 5)):d=5"
+fi
+
 ffmpeg -y -loglevel error \
   -ss "$START" -t "$LEN" -i "$SRC" \
-  -af "dynaudnorm=f=250:g=15:p=0.6,loudnorm=I=-23:LRA=4:TP=-3,afade=t=in:st=0:d=2,afade=t=out:st=$((LEN - 5)):d=5" \
+  -af "$FILTERS" \
   -c:a libmp3lame -b:a 192k \
   "$OUT"
 
