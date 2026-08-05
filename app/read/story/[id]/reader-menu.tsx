@@ -20,10 +20,18 @@ const RATES: { value: PlaybackRate; label: string }[] = [
   { value: 1.15, label: 'faster' },
 ];
 
+export interface ReaderMenuChapter {
+  title: string;
+  pageCount: number;
+  /** First illustrated page in the chapter, or the book cover as a
+   *  fallback. Used as the card thumbnail. */
+  thumbnail: string | null;
+}
+
 export interface ReaderMenuProps {
   open: boolean;
   bookTitle: string;
-  chapters: { title: string }[] | null;
+  chapters: ReaderMenuChapter[] | null;
   currentChapter: number | null;
   rate: PlaybackRate;
   onRate: (r: PlaybackRate) => void;
@@ -126,24 +134,82 @@ export function ReaderMenu({
         {chapters && chapters.length > 0 && (
           <>
             <Label>Chapters</Label>
-            <div style={{ display: 'grid', marginBottom: 'var(--space-4)' }}>
-              {chapters.map((c, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => {
-                    onPickChapter(i);
-                    onClose();
-                  }}
-                  aria-current={i === currentChapter}
-                  style={{
-                    ...row,
-                    color: i === currentChapter ? 'var(--oxblood-text)' : 'var(--ink)',
-                  }}
-                >
-                  {c.title}
-                </button>
-              ))}
+            <div
+              style={{
+                display: 'grid',
+                gap: 'var(--space-2)',
+                marginBottom: 'var(--space-5)',
+              }}
+            >
+              {chapters.map((c, i) => {
+                const current = i === currentChapter;
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      onPickChapter(i);
+                      onClose();
+                    }}
+                    aria-current={current}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--space-3)',
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: 'var(--space-2) var(--space-2)',
+                      borderRadius: 'var(--radius-md)',
+                      border: current ? '1px solid var(--oxblood)' : '1px solid var(--pill-edge)',
+                      background: current ? 'var(--oxblood-wash)' : 'var(--paper-warm)',
+                      color: 'var(--ink)',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-body)',
+                    }}
+                  >
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        flex: '0 0 auto',
+                        width: 48,
+                        height: 60,
+                        borderRadius: 4,
+                        overflow: 'hidden',
+                        background: c.thumbnail
+                          ? `center / cover no-repeat url(${c.thumbnail})`
+                          : 'var(--paper-deep)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+                      }}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-sc, var(--font-body))',
+                          fontSize: 11,
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: current ? 'var(--oxblood-text)' : 'var(--ink-faint)',
+                        }}
+                      >
+                        chapter {i + 1}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-display)',
+                          fontSize: 17,
+                          lineHeight: 1.2,
+                          color: 'var(--ink)',
+                        }}
+                      >
+                        {c.title}
+                      </span>
+                      <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>
+                        {c.pageCount} page{c.pageCount === 1 ? '' : 's'}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </>
         )}

@@ -68,9 +68,12 @@ export function toReaderBook(book: Book): ReaderBook {
   return { id: book.id, title: book.title, kind: book.kind, chapters, vocab, coverImage, theme: book.theme };
 }
 
-/** Initial state per book kind: quick books enter straight into chapter 0. */
-export function initialState(book: ReaderBook): ReaderState {
-  return { chapterIdx: book.kind === 'quick' ? 0 : null, pageIdx: 0 };
+/** Initial state: every book opens on chapter 0, page 0. The old chapter-map
+ *  gate for chapter books moved into the reader menu — the front door is
+ *  always the story itself. `book` kept as a parameter so the shape stays
+ *  future-proof (e.g. resuming from a marker), but for now we ignore it. */
+export function initialState(_book: ReaderBook): ReaderState {
+  return { chapterIdx: 0, pageIdx: 0 };
 }
 
 export function currentChapter(book: ReaderBook, state: ReaderState): ReaderChapter | null {

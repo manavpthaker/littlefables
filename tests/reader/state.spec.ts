@@ -52,15 +52,16 @@ describe('initialState', () => {
   it('quick books start inside chapter 0', () => {
     expect(initialState(quick)).toEqual({ chapterIdx: 0, pageIdx: 0 });
   });
-  it('chapter books start at the map', () => {
-    expect(initialState(chapter)).toEqual({ chapterIdx: null, pageIdx: 0 });
+  it('chapter books also start inside chapter 0 — the map moved into the menu', () => {
+    expect(initialState(chapter)).toEqual({ chapterIdx: 0, pageIdx: 0 });
   });
 });
 
 describe('reducer', () => {
   it('enterChapter clamps invalid index', () => {
     const s = reducer(chapter, initialState(chapter), { type: 'enterChapter', chapterIdx: 99 });
-    expect(s.chapterIdx).toBeNull();
+    // Out-of-range enter is a no-op; state stays at the initial chapter 0.
+    expect(s.chapterIdx).toBe(0);
   });
 
   it('nextPage advances within a chapter, then stops', () => {
@@ -88,8 +89,10 @@ describe('reducer', () => {
 });
 
 describe('selectors', () => {
-  it('currentPage returns null on the map', () => {
-    expect(currentPage(chapter, initialState(chapter))).toBeNull();
+  it('currentPage returns null only when chapterIdx is explicitly null', () => {
+    // initialState now returns chapter 0 for every book, so callers need to
+    // synthesize a null state to exercise the "not in a chapter" branch.
+    expect(currentPage(chapter, { chapterIdx: null, pageIdx: 0 })).toBeNull();
   });
   it('currentChapter returns the picked chapter', () => {
     const s = { chapterIdx: 1, pageIdx: 0 };

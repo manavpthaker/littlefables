@@ -14,9 +14,10 @@ import { ReaderPill } from './reader-pill';
 import { ReaderMenu, type PlaybackRate } from './reader-menu';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
-import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
 import { InstallPrompt } from './install-prompt';
+import { ChapterOpener } from './chapter-opener';
+import type { ReaderMenuChapter } from './reader-menu';
 import {
   currentChapter,
   currentPage,
@@ -65,8 +66,19 @@ export function Reader({
 
   const ch = currentChapter(book, state);
   const page = currentPage(book, state);
-  const showMap = state.chapterIdx === null;
   const lastPage = isLastPage(book, state);
+
+  // Chapter cards for the menu overlay — includes a thumbnail (first
+  // illustrated page in the chapter, or the book cover as a fallback) and
+  // page count. Recomputed only when the book itself changes.
+  const menuChapters = useMemo<ReaderMenuChapter[] | null>(() => {
+    if (book.kind !== 'chapter') return null;
+    return book.chapters.map((c) => ({
+      title: c.title,
+      pageCount: c.pages.length,
+      thumbnail: c.pages.find((p) => p.img)?.img ?? book.coverImage ?? null,
+    }));
+  }, [book]);
 
   // Painted-book policy: if ANY page in this book has approved scene art, a
   // page without one shows PaintingWash instead of plain paper — partially
@@ -206,7 +218,7 @@ export function Reader({
   );
 
   const swipe = useSwipeTurn({
-    enabled: !showMap,
+    enabled: Boolean(ch && page),
     onPrev,
     onNext,
   });
@@ -228,15 +240,7 @@ export function Reader({
 
       <ReaderChip isNight={isNight} onToggle={toggleBedtime} />
 
-      {showMap && book.kind === 'chapter' ? (
-        <main style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
-          <MapSection
-            title={book.title}
-            chapters={book.chapters.map((c) => ({ title: c.title, tint: c.wash }))}
-            onPick={onPickChapter}
-          />
-        </main>
-      ) : ch && page ? (
+      {ch && page ? (
         <PageSpread
           page={page}
           pageKey={`${state.chapterIdx}-${state.pageIdx}`}
@@ -282,12 +286,22 @@ export function Reader({
         />
       ) : null}
 
-      <InstallPrompt visible={lastPage && !showMap} />
+      <ChapterOpener
+        // Keyed on chapter so the fade-in restarts when the chapter
+        // changes. Only shows on page 0, when we've actually entered a
+        // new chapter — not on prev-page back into it.
+        chapterIdx={state.chapterIdx}
+        pageIdx={state.pageIdx}
+        chapterCount={book.chapters.length}
+        chapterTitle={ch?.title ?? ''}
+      />
+
+      <InstallPrompt visible={lastPage} />
 
       <ReaderMenu
         open={menuOpen}
         bookTitle={book.title}
-        chapters={book.kind === 'chapter' ? book.chapters.map((c) => ({ title: c.title })) : null}
+        chapters={menuChapters}
         currentChapter={state.chapterIdx}
         rate={rate}
         onRate={chooseRate}
