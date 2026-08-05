@@ -31,6 +31,14 @@ const TMP = '.capture-tmp';
 // iPad Pro 11" landscape. The reader's spread layout needs the width.
 const VIEWPORT = { width: 1194, height: 834 };
 
+// Playwright scrolls an element into view instantly before clicking it, which
+// on camera reads as the page teleporting. Travelling to each field first, at
+// a speed a thumb would move, is what makes the form look like a form.
+const reveal = async (locator) => {
+  await locator.evaluate((el) => el.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  await new Promise((r) => setTimeout(r, 850));
+};
+
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** Sign the browser in, then open the book. Every shot starts here. */
@@ -47,37 +55,49 @@ const SHOTS = {
     await page.goto(`${BASE}/intake`, { waitUntil: 'networkidle' });
     await pause(1400);
 
+    const name = page.getByLabel("Child's name");
+    await reveal(name);
     // Real typing speed. Speed-ramped typing reads as fake.
-    await page.getByLabel("Child's name").pressSequentially('Rosa', { delay: 180 });
-    await pause(900);
+    await name.pressSequentially('Rosa', { delay: 180 });
+    await pause(700);
 
-    await page.getByRole('button', { name: '5–6', exact: true }).click();
-    await pause(800);
+    const age = page.getByRole('button', { name: '5–6', exact: true });
+    await reveal(age);
+    await age.click();
+    await pause(700);
 
+    await reveal(page.getByRole('button', { name: 'horses', exact: true }));
     for (const v of ['horses', 'animals', 'magic']) {
       await page.getByRole('button', { name: v, exact: true }).click();
-      await pause(520);
+      await pause(500);
+    }
+    await pause(600);
+
+    await reveal(page.getByRole('button', { name: 'curious', exact: true }));
+    for (const v of ['curious', 'gentle']) {
+      await page.getByRole('button', { name: v, exact: true }).click();
+      await pause(500);
     }
     await pause(700);
 
-    for (const v of ['curious', 'gentle']) {
-      await page.getByRole('button', { name: v, exact: true }).click();
-      await pause(520);
-    }
+    const inspo = page.getByLabel('Art inspirations');
+    await reveal(inspo);
+    await inspo.pressSequentially('The Snowy Day, Julia Denos watercolour', { delay: 42 });
     await pause(900);
 
-    await page.getByLabel('Art inspirations')
-      .pressSequentially('The Snowy Day, Julia Denos watercolour', { delay: 42 });
-    await pause(1100);
-
-    await page.getByLabel('What the child looks like')
-      .pressSequentially('Dark curly hair, warm brown skin, green cardigan', { delay: 38 });
-    await pause(900);
+    const looks = page.getByLabel('What the child looks like');
+    await reveal(looks);
+    await looks.pressSequentially('Dark curly hair, warm brown skin, green cardigan', { delay: 38 });
+    await pause(800);
 
     // A reference photo going in — the interaction is the point, so the file
     // itself is one of the book's own pages standing in for a family snap.
     await page.setInputFiles('input[type="file"]', 'public/book/01.png');
-    await pause(2600);
+    await pause(1200);
+
+    // Settle on the finished form rather than cutting on the upload.
+    await page.evaluate(() => window.scrollBy({ top: 260, behavior: 'smooth' }));
+    await pause(2200);
   },
 
   /** 02 · shelf → tapping the book → the reader opening. */

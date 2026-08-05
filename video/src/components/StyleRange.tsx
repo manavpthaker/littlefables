@@ -6,13 +6,17 @@ import { COPY, STYLES } from '../beats';
 const pendulum = Easing.bezier(...ease.pendulum);
 
 /**
- * The range beat — three books, three mediums, side by side.
+ * The range beat — six mediums at once.
  *
- * Side by side rather than one after another for two reasons. The comparison
- * is the entire point, and it only lands if the eye can make it in one glance.
- * And the samples are about 615px wide, so a full-frame shot would be a 1.8x
- * upscale and go soft; three-up puts each at roughly 540px, very slightly
- * downscaled, which stays crisp.
+ * All together rather than one after another: the comparison is the entire
+ * point, and it only lands if the eye can make it in a single glance. A
+ * sequence would also make the viewer hold five images in memory to do the
+ * same work.
+ *
+ * Six fits because the artwork changed. The first version used three ~615px
+ * strips, where anything larger than a third of the frame went soft. These are
+ * 1448x1086, so a 3x2 grid puts each near 560px — still a downscale, and twice
+ * the range for the same eight seconds.
  */
 export const StyleRange: React.FC = () => {
   const frame = useCurrentFrame();
@@ -33,14 +37,23 @@ export const StyleRange: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        gap: 46,
+        gap: 34,
       }}
     >
-      <div style={{ display: 'flex', gap: 34, alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '26px 30px',
+          alignItems: 'start',
+        }}
+      >
         {STYLES.map((s, i) => {
           // Staggered so they read as three separate books being laid down,
           // not one image sliced into thirds.
-          const at = Math.round(i * 0.34 * FPS);
+          // Reading order, a beat apart, so it lands as six books rather than
+          // one image cut into six.
+          const at = Math.round(i * 0.2 * FPS);
           const t = interpolate(frame, [at, at + motion.chime], [0, 1], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp',
@@ -57,7 +70,7 @@ export const StyleRange: React.FC = () => {
               <Img
                 src={staticFile(`styles/${s.file}`)}
                 style={{
-                  width: 578,
+                  width: 452,
                   display: 'block',
                   borderRadius: 4,
                   boxShadow: '0 8px 26px rgba(46,33,22,0.22)',
@@ -65,10 +78,10 @@ export const StyleRange: React.FC = () => {
               />
               <div
                 style={{
-                  marginTop: 18,
+                  marginTop: 12,
                   textAlign: 'center',
                   fontFamily: font.sc,
-                  fontSize: 19,
+                  fontSize: 17,
                   letterSpacing: '0.13em',
                   color: pigment.brass,
                 }}
@@ -81,7 +94,7 @@ export const StyleRange: React.FC = () => {
       </div>
 
       <div style={{ textAlign: 'center' }}>
-        <div style={{ opacity: heading, fontFamily: font.display, fontSize: 54, color: ink.base }}>
+        <div style={{ opacity: heading, fontFamily: font.display, fontSize: 50, color: ink.base }}>
           {COPY.range}
         </div>
         <div

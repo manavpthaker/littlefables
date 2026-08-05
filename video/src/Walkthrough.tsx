@@ -223,8 +223,10 @@ export const Walkthrough: React.FC = () => {
     </Sequence>
 
     <Sequence {...frames(BEATS.intake)}>
-      {/* The capture's first 1.2s is a blank white page load. */}
-      <DeviceFrame src={RECORDINGS.intake} device="ipad" startFrom={1.3} />
+      {/* Skips the white page load, and lands the window so the finished form —
+          photo attached, submit button live — gets a few seconds rather than
+          arriving as the beat cuts. */}
+      <DeviceFrame src={RECORDINGS.intake} device="ipad" startFrom={4} />
       <Caption text={COPY.intake} delay={motion.settle} hold={sec(5)} />
       <Caption text={COPY.intakeSub} delay={sec(11)} hold={sec(5)} />
     </Sequence>

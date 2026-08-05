@@ -12,7 +12,7 @@ import { execFileSync } from 'node:child_process';
 
 const WINDOWS = {
   '02-open.mp4': { startFrom: 1.0, len: 7 },
-  '03-intake.mp4': { startFrom: 1.3, len: 18 },
+  '03-intake.mp4': { startFrom: 4, len: 18 },
   '04-page-turn.mp4': { startFrom: 3.6, len: 8 },
   '05-word-tap.mp4': { startFrom: 3.6, len: 7 },
   '06-transport.mp4': { startFrom: 2.8, len: 9 },

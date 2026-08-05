@@ -26,19 +26,28 @@ export const BEATS = {
   arrives: { start: 45, end: 59 },
   payoff: { start: 59, end: 83 },
   night: { start: 83, end: 91 },
-  range: { start: 91, end: 98 },
-  quiet: { start: 98, end: 106 },
-  close: { start: 106, end: 114 },
+  range: { start: 91, end: 100 },
+  quiet: { start: 100, end: 108 },
+  close: { start: 108, end: 116 },
 } as const;
 
 /**
- * Sample spreads for the range beat. Source art and the reasoning behind the
- * three-up layout live in content/marketing/style-samples/README.md.
+ * Style samples for the range beat, with the figcaptions the listing page
+ * uses — one vocabulary across the film and the shop.
+ *
+ * These replace three ~615px strips that could only ever be shown small. At
+ * 1448x1086 a 3x2 grid puts each near 560px, still a downscale, so the beat
+ * can carry six styles instead of three without going soft.
+ *
+ * Source and the reasoning live in assets/listing/custom-story-page/README.md.
  */
 export const STYLES = [
-  { file: 'painterly.png', label: 'painted' },
-  { file: 'cutpaper.png', label: 'cut paper' },
-  { file: 'woodcut.png', label: 'woodcut' },
+  { file: 'sample-1-painted-storybook-single-panel.jpg', label: 'painted storybook' },
+  { file: 'sample-2-watercolor-classic-single-panel.jpg', label: 'watercolor classic' },
+  { file: 'sample-3-cut-paper-collage-single-panel.png', label: 'cut-paper collage' },
+  { file: 'sample-4-woodcut-ink-single-panel.jpg', label: 'woodcut & ink' },
+  { file: 'sample-5-manga-ghibli-single-panel.jpg', label: 'manga & anime' },
+  { file: 'sample-6-crayon-pencil-single-panel.jpg', label: 'crayon & pencil' },
 ] as const;
 
 export const frames = (b: { start: number; end: number }) => ({
