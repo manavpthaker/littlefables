@@ -11,8 +11,9 @@ import {
 import { existsSync } from './hasAudio';
 
 import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
-import { font, ink, paper, pigment, motion, FPS } from './theme';
+import { font, ink, paper, motion, FPS } from './theme';
 
+import { CornerMark } from './components/CornerMark';
 import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
 import { SlowPush } from './components/SlowPush';
@@ -24,45 +25,6 @@ import { Caption } from './components/Caption';
 import { useHeritageFonts } from './fonts';
 
 const sec = (s: number) => Math.round(s * FPS);
-
-/** Beat 1 — the mark draws itself in, wordmark beneath. */
-const ColdOpen: React.FC = () => {
-  const frame = useCurrentFrame();
-  // The mark finishes drawing around frame 60 — its rays are the last thing in.
-  // The name arrives after that, so the two don't compete.
-  const wordmark = interpolate(frame, [58, 58 + motion.wind], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-
-  return (
-    <AbsoluteFill
-      style={{
-        background: paper.base,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: 24,
-      }}
-    >
-      <MarkAnim size={300} mode="grow" />
-      <div style={{ opacity: wordmark, textAlign: 'center' }}>
-        <div style={{ fontFamily: font.display, fontSize: 66, color: ink.base }}>{COPY.brand}</div>
-        <div
-          style={{
-            fontFamily: font.sc,
-            fontSize: 21,
-            letterSpacing: '0.14em',
-            color: pigment.brass,
-            marginTop: 12,
-          }}
-        >
-          {COPY.tagline}
-        </div>
-      </div>
-    </AbsoluteFill>
-  );
-};
 
 /** Beat 4 — the book assembling itself. Four movements, no recording. */
 const ComesTogether: React.FC = () => {
@@ -192,7 +154,7 @@ const Close: React.FC = () => {
         gap: 28,
       }}
     >
-      <MarkAnim size={190} mode="breathe" />
+      <MarkAnim size={230} mode="grow" />
       <div style={{ opacity: details, textAlign: 'center' }}>
         <div style={{ fontFamily: font.body, fontSize: 34, color: ink.soft }}>{COPY.close}</div>
         <div style={{ fontFamily: font.display, fontSize: 52, color: ink.base, marginTop: 20 }}>
@@ -241,10 +203,6 @@ export const Walkthrough: React.FC = () => {
   return (
   <AbsoluteFill style={{ background: paper.base }}>
     {existsSync && <MusicBed />}
-    <Sequence {...frames(BEATS.coldOpen)}>
-      <ColdOpen />
-    </Sequence>
-
     <Sequence {...frames(BEATS.promise)}>
       <AbsoluteFill>
         <SlowPush src={staticFile(BOOK.cover)} />
@@ -279,6 +237,17 @@ export const Walkthrough: React.FC = () => {
 
     <Sequence {...frames(BEATS.quiet)}>
       <TitleCard lines={COPY.quiet} separators size={50} stagger={sec(2.2)} />
+    </Sequence>
+
+    {/* Two passes rather than one, because the promise beat is full-bleed art
+        and everything after it is paper. Splitting it keeps the tone an
+        explicit statement about each beat instead of a frame-number guess
+        buried inside the component. */}
+    <Sequence {...frames(BEATS.promise)}>
+      <CornerMark tone="art" />
+    </Sequence>
+    <Sequence from={sec(BEATS.intake.start)} durationInFrames={sec(BEATS.quiet.end - BEATS.intake.start)}>
+      <CornerMark tone="ink" fadeInAt={0} />
     </Sequence>
 
     <Sequence {...frames(BEATS.close)}>

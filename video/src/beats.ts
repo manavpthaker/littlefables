@@ -13,16 +13,21 @@ export interface Beat {
   end: number;
 }
 
+/**
+ * No brand card at the top. The film opens straight on the product, because a
+ * logo is not what earns five more seconds of a stranger's attention — the
+ * mark rides in the corner throughout instead, and gets its full draw-on at
+ * the close, where a signature belongs.
+ */
 export const BEATS = {
-  coldOpen: { start: 0, end: 5 },
-  promise: { start: 5, end: 12 },
-  intake: { start: 12, end: 30 },
-  comesTogether: { start: 30, end: 50 },
-  arrives: { start: 50, end: 64 },
-  payoff: { start: 64, end: 88 },
-  night: { start: 88, end: 96 },
-  quiet: { start: 96, end: 104 },
-  close: { start: 104, end: 111 },
+  promise: { start: 0, end: 7 },
+  intake: { start: 7, end: 25 },
+  comesTogether: { start: 25, end: 45 },
+  arrives: { start: 45, end: 59 },
+  payoff: { start: 59, end: 83 },
+  night: { start: 83, end: 91 },
+  quiet: { start: 91, end: 99 },
+  close: { start: 99, end: 107 },
 } as const;
 
 export const frames = (b: { start: number; end: number }) => ({
@@ -100,8 +105,6 @@ export const AUDIO = {
 };
 
 export const COPY = {
-  brand: 'Little Fables',
-  tagline: 'custom storybooks, made one at a time',
   promise: 'Your kid, in their own storybook.',
   intake: 'Tell us about your child',
   intakeSub: 'A photo helps, but words are enough',
