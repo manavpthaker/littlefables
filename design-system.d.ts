@@ -25,6 +25,23 @@ declare module '@ds/components/core/Wordmark.jsx' {
   export function Wordmark(props: WordmarkProps): JSX.Element;
 }
 
+declare module '@ds/components/core/Ornament.jsx' {
+  import type { OrnamentProps } from '@ds/components/core/Ornament';
+  export function Ornament(
+    props: Partial<OrnamentProps> & { style?: React.CSSProperties },
+  ): JSX.Element;
+}
+
+declare module '@ds/components/outward/TrustRow.jsx' {
+  import type { TrustRowProps } from '@ds/components/outward/TrustRow';
+  export function TrustRow(props?: TrustRowProps): JSX.Element;
+}
+
+declare module '@ds/components/outward/BuyerFooter.jsx' {
+  import type { BuyerFooterProps } from '@ds/components/outward/BuyerFooter';
+  export function BuyerFooter(props?: BuyerFooterProps): JSX.Element;
+}
+
 declare module '@ds/components/reader/ChapterMap.jsx' {
   import type { ChapterMapProps } from '@ds/components/reader/ChapterMap';
   export function ChapterMap(props: ChapterMapProps): JSX.Element;

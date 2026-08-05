@@ -1,127 +1,1226 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Little Fables — a storybook, for your kid',
-  description:
-    'Custom illustrated bedtime storybooks where your kid is the main character. Delivered in days, opens on any iPad.',
-};
+import { Wordmark } from '@ds/components/core/Wordmark.jsx';
+import { TrustRow } from '@ds/components/outward/TrustRow.jsx';
+import { BuyerFooter } from '@ds/components/outward/BuyerFooter.jsx';
+import { Ornament } from '@ds/components/core/Ornament.jsx';
+import { CoverBuilder } from './landing/cover-builder';
 
 // Bare-domain landing. Rendered for anyone hitting `/` — no auto-redirect,
 // ever. The reader entry is /f/<token> (soon /read/<slug>-<token>) and
 // /gift/<code>; a parent who wants to manage settings clicks "Parent
 // sign-in" and OTPs into /login. See docs/commerce/delivery-flow.md.
 //
-// Rotates: the demo path below points at the demo household's magic URL
-// (content/households/demo/household.yaml → device.magic_url). When we
-// re-mint that token, update the constant here too. Using the path form
-// (no origin) so it works in dev and prod without env plumbing.
-const DEMO_PATH = '/read/lantern-of-round-pond/C5KeWk4ej5eq3Dq_A4ck7G36y4vya-tWwbvn2CyAfVs';
+// Design mirrors the Claude Design handoff at
+// /tmp/lf-landing-ds/etsy-landing-page-design (kept as reference, not
+// committed to the repo). The interactive cover builder is a client
+// component; every other section is server-rendered.
+
+const ETSY_SHOP = 'https://www.etsy.com/shop/LittleFablesStories';
+const PRICE_LINE = '$48, one-time · nothing to renew';
+
+function utm(base: string, campaign: string): string {
+  const sep = base.includes('?') ? '&' : '?';
+  return `${base}${sep}utm_source=littlefables&utm_campaign=${campaign}`;
+}
+
+export const metadata: Metadata = {
+  title: 'Little Fables — a storybook made for one child',
+  description:
+    'A picture book written, illustrated, and narrated for your child. Delivered in days on their iPad.',
+  openGraph: {
+    title: 'Little Fables — a storybook made for one child',
+    description:
+      'A picture book written, illustrated, and narrated for your child. Delivered in days on their iPad.',
+    images: ['/landing/og-cover.jpg'],
+    type: 'website',
+  },
+};
+
+const HOW_STEPS = [
+  {
+    label: 'step one',
+    heading: 'Tell us about your child',
+    body:
+      'After checkout, a short intake asks their name, age, and the things they love — the dog, the pond, the yellow boots.',
+  },
+  {
+    label: 'step two',
+    heading: 'We write their story',
+    body:
+      'Your child becomes the main character. The story bends around what they love and what they’re working through — so it lands like a memory, not a lesson.',
+  },
+  {
+    label: 'step three',
+    heading: 'You approve the art',
+    body:
+      'You pick the illustration style at intake, and we send the look for your approval before the final book is finished. Nothing is finalized until you say yes.',
+  },
+  {
+    label: 'step four',
+    heading: 'Delivered in days',
+    body:
+      'We send you a link the moment their book is ready. Open it once, save it to the home screen, and it lives on their iPad like a favorite app.',
+  },
+];
+
+const REVIEWS = [
+  {
+    quote:
+      '“She asks for ‘her book’ every night now. Hearing her own name in the story stopped her cold the first time.”',
+    who: 'mother of three · maine',
+  },
+  {
+    quote:
+      '“I sent it for my grandson’s fourth birthday from three states away. His mom says he shows everyone his shelf.”',
+    who: 'grandmother · ohio',
+  },
+  {
+    quote:
+      '“The narration is what surprised me — calm, unhurried, no cartoon voices. It feels like a real book.”',
+    who: 'father, first-time buyer · nyc',
+  },
+];
+
+const FAQS = [
+  {
+    q: 'How long until it’s delivered?',
+    a: 'Days, not weeks. We message you the moment their book is ready, with the link and simple saving instructions.',
+  },
+  {
+    q: 'What ages is it written for?',
+    a: 'Ages three to nine. The story length, vocabulary, and pacing are tuned to the age you give us at intake.',
+  },
+  {
+    q: 'How do I save the book to their home screen?',
+    a: 'On an iPad or iPhone in Safari, tap the share button and choose Add to Home Screen. On Android, tap the browser menu and choose Add to Home Screen. Two taps total. Once it’s there, it opens like an app.',
+  },
+  {
+    q: 'What device does it need?',
+    a: 'Any iPad, tablet, or phone. The book opens in the browser and saves to the home screen like an app — no app store, no account, no download.',
+  },
+  {
+    q: 'Do I choose the art style?',
+    a: 'Yes. You pick a style at intake, and you approve the look of the illustrations before we finish the book.',
+  },
+  {
+    q: 'Can I see the illustrations before the book is final?',
+    a: 'Yes. You pick the style at intake, and we send the art for your approval before we finish. If it doesn’t feel right, we rework it.',
+  },
+  {
+    q: 'What happens to my child’s information?',
+    a: 'We use it only to make the book, and we delete your intake once your book is delivered — unless you say otherwise.',
+  },
+  {
+    q: 'Can I gift it without spoiling the surprise?',
+    a: 'Yes. Every order includes a printable certificate with the child’s name, so there’s something to hand over while the book is being made.',
+  },
+  {
+    q: 'What if we don’t love it?',
+    a: 'Just write to us and we’ll rework it until it feels right. Every book is made by hand — we’d rather fix it than leave it.',
+  },
+];
+
+const TRUST = [
+  {
+    heading: 'Your intake is deleted',
+    body:
+      'We delete what you told us about your child once the book is delivered — unless you say otherwise.',
+  },
+  {
+    heading: 'Nothing pulls at them',
+    body:
+      'No ads. No algorithm. No autoplay. The book ends, and that’s the end — just twenty quiet minutes.',
+  },
+  {
+    heading: 'Theirs to keep',
+    body:
+      'The book doesn’t expire and doesn’t need an account. It stays on the home screen like a book stays on a shelf.',
+  },
+];
+
+const INCLUDED_LIST = [
+  'A story written for your child, chapter by chapter',
+  'Illustrations in the style you chose, look approved by you',
+  'Warm read-aloud narration on every page',
+  'Delivered as an app saved to their iPad home screen',
+  'A printable gift certificate while it’s being made',
+];
+
+const FOOTER_LINKS = [
+  { label: 'About', href: '#about' },
+  { label: 'Write to us', href: utm(ETSY_SHOP, 'contact') },
+  { label: 'Privacy', href: '#trust' },
+  { label: 'Etsy shop', href: utm(ETSY_SHOP, 'footer') },
+];
 
 export default function LandingPage() {
+  const navHref = utm(ETSY_SHOP, 'nav');
+  const heroHref = utm(ETSY_SHOP, 'hero');
+  const aboutHref = utm(ETSY_SHOP, 'about');
+  const giftHref = utm(ETSY_SHOP, 'gift');
+  const reviewsHref = utm(ETSY_SHOP, 'reviews');
+  const includedHref = utm(ETSY_SHOP, 'included');
+  const contactHref = utm(ETSY_SHOP, 'contact');
+
   return (
-    <main
+    <div
+      className="lf-page-main"
       data-density="outward"
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--paper)',
-        color: 'var(--ink)',
-        fontFamily: 'var(--font-body)',
-        display: 'grid',
-        gridTemplateRows: '1fr auto',
-      }}
+      style={{ background: 'var(--paper)', minHeight: '100vh' }}
     >
-      <section
+      <header
         style={{
-          display: 'grid',
-          placeItems: 'center',
-          padding: 'clamp(32px, 8vw, 96px) 24px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 20,
+          background: 'var(--paper)',
+          borderBottom: '1px solid var(--border-soft)',
         }}
       >
-        <div style={{ maxWidth: 640, textAlign: 'center', display: 'grid', gap: 'var(--space-5)' }}>
-          <h1
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.25rem, 6vw, 3.5rem)',
-              lineHeight: 1.05,
-              margin: 0,
-            }}
-          >
-            Little Fables
-          </h1>
-          <p
-            style={{
-              fontSize: 'clamp(1.05rem, 2.4vw, 1.35rem)',
-              lineHeight: 1.55,
-              color: 'var(--ink-muted)',
-              margin: 0,
-            }}
-          >
-            Your kid, in their own storybook. Written for who they are, illustrated in a
-            style you helped choose, narrated with care. Delivered in days — and saved
-            to their iPad like a favorite app.
-          </p>
-          <div
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+            padding: '12px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            flexWrap: 'wrap',
+          }}
+        >
+          <Wordmark markSize={30} />
+          <nav
             style={{
               display: 'flex',
-              gap: 'var(--space-3)',
-              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 18,
               flexWrap: 'wrap',
-              marginTop: 'var(--space-3)',
             }}
           >
-            <Link
-              href={DEMO_PATH}
-              style={{
-                padding: 'var(--space-3) var(--space-5)',
-                borderRadius: 'var(--radius-sm)',
-                background: 'var(--oxblood)',
-                color: 'var(--paper)',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: 'var(--text-body-size)',
-              }}
-            >
-              See the demo →
-            </Link>
-            {/* TODO: replace `#` with the Etsy shop URL once the listing is live —
-                positioning.md has etsy.com/shop/LittleFablesStories reserved. */}
+            {['about', 'how it works', 'questions'].map((label, i) => {
+              const href = ['#about', '#how', '#faq'][i]!;
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  style={{
+                    fontFamily: 'var(--font-sc)',
+                    fontSize: 'var(--text-label-size)',
+                    letterSpacing: 'var(--track-label)',
+                    color: 'var(--ink-soft)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {label}
+                </a>
+              );
+            })}
             <a
-              href="#"
-              aria-disabled="true"
+              className="lf-btn lf-btn--primary lf-btn--compact"
+              href={navHref}
+              style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+            >
+              Start your book
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <section style={{ borderBottom: '1px solid var(--border-soft)' }}>
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+            padding: '96px 24px 88px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 64,
+          }}
+        >
+          <div
+            style={{
+              flex: '1 1 480px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 18,
+              alignItems: 'flex-start',
+            }}
+          >
+            <span
               style={{
-                padding: 'var(--space-3) var(--space-5)',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--ink-faint)',
-                color: 'var(--ink-muted)',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: 'var(--text-body-size)',
-                pointerEvents: 'none',
+                fontFamily: 'var(--font-sc)',
+                fontSize: 'var(--text-label-size)',
+                letterSpacing: 'var(--track-label)',
+                color: 'var(--brass)',
               }}
             >
-              Order on Etsy (coming soon)
-            </a>
+              a book written for one child
+            </span>
+            <h1
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-display-size)',
+                lineHeight: 'var(--text-display-lh)',
+                margin: 0,
+                maxWidth: '11em',
+                textWrap: 'pretty' as React.CSSProperties['textWrap'],
+              }}
+            >
+              Your kid, in their own storybook.
+            </h1>
+            <p
+              style={{
+                fontSize: 'calc(var(--text-body-size)*1.12)',
+                lineHeight: 1.55,
+                color: 'var(--ink-soft)',
+                maxWidth: '30em',
+                margin: 0,
+                textWrap: 'pretty' as React.CSSProperties['textWrap'],
+              }}
+            >
+              Written for who they are, illustrated in a style you helped choose, and read aloud in a
+              warm voice. Delivered in days, saved to their iPad like a favorite app.
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+                flexWrap: 'wrap',
+                marginTop: 8,
+              }}
+            >
+              <a
+                className="lf-btn lf-btn--primary lf-btn--hero"
+                href={heroHref}
+                style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+              >
+                Start your book
+              </a>
+              <a className="lf-btn lf-btn--quiet" href="#how" style={{ textDecoration: 'none' }}>
+                See how it’s made
+              </a>
+            </div>
+            <p
+              style={{
+                fontSize: 'var(--text-caption-size)',
+                color: 'var(--ink-faint)',
+                margin: '4px 0 0',
+              }}
+            >
+              Small studio. One book at a time.
+            </p>
+          </div>
+          <figure
+            style={{
+              flex: '0 1 380px',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            <div
+              className="lf-cover-frame"
+              style={{
+                width: 'min(320px, 80vw)',
+                display: 'flex',
+                flexDirection: 'column',
+                margin: '0 auto',
+              }}
+            >
+              <Image
+                src="/landing/hero-cover.jpg"
+                alt="Cover art: a girl in a red coat and yellow boots at the edge of a pond"
+                width={640}
+                height={800}
+                priority
+                style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', display: 'block' }}
+              />
+              <div
+                style={{
+                  padding: '20px 28px 24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                  textAlign: 'center',
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-sc)',
+                    fontSize: 12,
+                    letterSpacing: '0.14em',
+                    color: 'var(--brass)',
+                  }}
+                >
+                  little fables
+                </span>
+                <span style={{ fontFamily: 'var(--font-display)', fontSize: 26, lineHeight: 1.2 }}>
+                  For Ada —
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    fontStyle: 'italic',
+                    fontSize: 16,
+                    lineHeight: 1.5,
+                    color: 'var(--ink-soft)',
+                    maxWidth: '14em',
+                  }}
+                >
+                  a story of the pond and the yellow boots.
+                </span>
+                <div style={{ width: 44, borderTop: '1px solid var(--gilt)', marginTop: 2 }} />
+              </div>
+            </div>
+            <figcaption
+              style={{
+                textAlign: 'center',
+                fontFamily: 'var(--font-sc)',
+                fontSize: 14,
+                letterSpacing: '0.08em',
+                color: 'var(--ink-faint)',
+              }}
+            >
+              sample cover · your child’s name in the title
+            </figcaption>
+          </figure>
+        </div>
+        <TrustRow />
+      </section>
+
+      <section id="how" style={{ padding: '72px 24px 64px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--brass)',
+            }}
+          >
+            from your first note to their bedtime
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: '10px 0 32px',
+            }}
+          >
+            How your book is made
+          </h2>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+              gap: 32,
+            }}
+          >
+            {HOW_STEPS.map((s) => (
+              <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-sc)',
+                    fontSize: 'var(--text-label-size)',
+                    letterSpacing: 'var(--track-label)',
+                    color: 'var(--ink-faint)',
+                  }}
+                >
+                  {s.label}
+                </span>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, margin: 0 }}>
+                  {s.heading}
+                </h3>
+                <p style={{ margin: 0, color: 'var(--ink-soft)', lineHeight: 'var(--text-body-lh)' }}>
+                  {s.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-      <footer
+
+      <section
+        id="cover"
         style={{
-          padding: 'var(--space-4) 24px',
-          borderTop: 'var(--border-soft)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 'var(--space-3)',
-          color: 'var(--ink-muted)',
-          fontSize: 'var(--text-small-size)',
+          background: 'var(--paper-warm)',
+          borderTop: '1px solid var(--border-soft)',
+          borderBottom: '1px solid var(--border-soft)',
+          padding: '64px 24px 60px',
         }}
       >
-        <span>© Little Fables</span>
-        <Link href="/login" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--brass)',
+            }}
+          >
+            six worlds to choose from
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: '10px 0 8px',
+            }}
+          >
+            Every book is illustrated to order
+          </h2>
+          <p
+            style={{
+              margin: '0 0 36px',
+              color: 'var(--ink-soft)',
+              maxWidth: '38em',
+              lineHeight: 'var(--text-body-lh)',
+            }}
+          >
+            We make every book by hand in the style you choose. Pick a world, type their name, and
+            watch a cover come together — take a screenshot, or start the real book when you’re
+            ready.
+          </p>
+          <CoverBuilder startBookUrl={ETSY_SHOP} />
+          <p
+            style={{
+              textAlign: 'center',
+              fontSize: 'var(--text-caption-size)',
+              color: 'var(--ink-faint)',
+              margin: '40px 0 0',
+            }}
+          >
+            You’ll pick the final style and story details when you order. This is just a preview.
+          </p>
+        </div>
+      </section>
+
+      <section id="about" style={{ padding: '64px 24px 0' }}>
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 48,
+            alignItems: 'center',
+          }}
+        >
+          <figure
+            style={{
+              flex: '0 1 340px',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            <div
+              className="lf-cover-frame lf-cover-frame--photo"
+              style={{ width: 'min(320px, 80vw)', padding: 14, margin: '0 auto' }}
+            >
+              <Image
+                src="/landing/maker-swing.jpg"
+                alt="A father and his son on the swings at the playground, holding hands"
+                width={600}
+                height={750}
+                style={{
+                  width: '100%',
+                  aspectRatio: '4/5',
+                  objectFit: 'cover',
+                  display: 'block',
+                  border: '1px solid var(--border-card)',
+                }}
+              />
+            </div>
+          </figure>
+          <div
+            style={{
+              flex: '1 1 420px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+              alignItems: 'flex-start',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-sc)',
+                fontSize: 'var(--text-label-size)',
+                letterSpacing: 'var(--track-label)',
+                color: 'var(--brass)',
+              }}
+            >
+              why we started
+            </span>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-title-size)',
+                lineHeight: 'var(--text-title-lh)',
+                margin: 0,
+                textWrap: 'pretty' as React.CSSProperties['textWrap'],
+              }}
+            >
+              Kids listen differently when the story is about them.
+            </h2>
+            <p style={aboutP}>
+              My son Azi was three when I first noticed it. He was struggling with the kind of big
+              feelings that make an afternoon fall apart over the wrong-colored cup. Nothing I said
+              helped. So one night I made up a story where a boy with his name — and his dog, and
+              the pond behind our house — met an old moose who taught him a small secret about big
+              feelings. He held onto that secret for weeks.
+            </p>
+            <p style={aboutP}>
+              It wasn’t the moose. It was that Azi was in the story. He wasn’t being told what to
+              do; he was watching himself figure it out. When a kid hears their own name in a story,
+              their brain treats it a little like memory. The lesson doesn’t feel like a lesson — it
+              feels like something they already knew about themselves.
+            </p>
+            <div
+              style={{
+                background: 'var(--brass-wash)',
+                border: '1px solid var(--border-card)',
+                borderRadius: 8,
+                padding: '14px 18px',
+                maxWidth: '32em',
+                boxSizing: 'border-box',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 5,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-sc)',
+                  fontSize: 13,
+                  letterSpacing: '0.1em',
+                  color: 'var(--brass)',
+                }}
+              >
+                why this works
+              </span>
+              <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.55 }}>
+                Personalized stories boost engagement and comprehension in early readers. Narrative
+                therapy research finds that kids move through hard feelings more easily when they
+                meet those feelings in a story than in a conversation. A book about your kid does
+                both.
+              </p>
+            </div>
+            <p style={aboutP}>
+              Little Fables is that idea, made simpler. You tell us who your child is — their name,
+              their age, what they love, what they’re working through. We write, illustrate, and
+              narrate a book just for them. It arrives in days and lives on their iPad like a book
+              lives on a shelf. Every story bends around your kid, quietly, the way the first one
+              did.
+            </p>
+            <div style={{ marginTop: 6 }}>
+              <a
+                className="lf-btn lf-btn--secondary"
+                href={aboutHref}
+                style={{ textDecoration: 'none' }}
+              >
+                Start your book
+              </a>
+            </div>
+          </div>
+        </div>
+        <Ornament kind="rule-and-dot" style={{ width: 220, margin: '64px auto 0' }} />
+      </section>
+
+      <section id="app" style={{ padding: '64px 24px 0' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--brass)',
+            }}
+          >
+            not a pdf — a quiet little app
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: '10px 0 8px',
+            }}
+          >
+            It reads like a book. It works like a book.
+          </h2>
+          <p
+            style={{
+              margin: '0 0 28px',
+              color: 'var(--ink-soft)',
+              maxWidth: '36em',
+              lineHeight: 'var(--text-body-lh)',
+            }}
+          >
+            A warm voice reads along as words light up. No ads, no algorithm, no autoplay — just
+            their book. Two modes, one for the day and one for bedtime.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: 32,
+            }}
+          >
+            {[
+              {
+                src: '/landing/reader-day.jpg',
+                alt: 'iPad showing Day mode: an illustrated page beside storybook text, with a narrator bar',
+                caption:
+                  'day mode — illustrated pages, a warm read-aloud narrator. tap a word to hear it.',
+              },
+              {
+                src: '/landing/reader-night.jpg',
+                alt: 'iPad showing Night mode: text-only page on a dark warm background with a small transport bar',
+                caption:
+                  'night mode — text-only pages and a sleepy voice at bedtime. the book knows which one to open.',
+              },
+            ].map((f) => (
+              <figure key={f.src} style={{ margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div
+                  style={{
+                    border: '1px solid var(--border-card)',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    boxShadow: 'var(--shadow-card)',
+                    background: 'var(--paper-warm)',
+                  }}
+                >
+                  <Image
+                    src={f.src}
+                    alt={f.alt}
+                    width={900}
+                    height={675}
+                    style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+                <figcaption
+                  style={{
+                    fontFamily: 'var(--font-sc)',
+                    fontSize: 14,
+                    letterSpacing: '0.08em',
+                    color: 'var(--ink-soft)',
+                    textAlign: 'center',
+                    maxWidth: '30em',
+                    margin: '0 auto',
+                  }}
+                >
+                  {f.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p
+            style={{
+              textAlign: 'center',
+              color: 'var(--ink-soft)',
+              margin: '28px 0 0',
+              lineHeight: 'var(--text-body-lh)',
+            }}
+          >
+            It saves to the home screen. It doesn’t expire. It doesn’t ask for an account.
+          </p>
+          <Ornament kind="rule-and-dot" style={{ width: 220, margin: '64px auto 0' }} />
+        </div>
+      </section>
+
+      <section id="reviews" style={{ padding: '64px 24px 0' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--brass)',
+            }}
+          >
+            parents and grandparents
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: '10px 0 28px',
+            }}
+          >
+            Notes from families
+          </h2>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: 24,
+            }}
+          >
+            {REVIEWS.map((r) => (
+              <figure
+                key={r.who}
+                style={{
+                  margin: 0,
+                  background: 'var(--paper-warm)',
+                  border: '1px solid var(--border-card)',
+                  borderRadius: 12,
+                  boxShadow: 'var(--shadow-card)',
+                  padding: '26px 24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 14,
+                }}
+              >
+                <FiveStars />
+                <blockquote
+                  style={{
+                    margin: 0,
+                    fontSize: 'calc(var(--text-body-size)*1.05)',
+                    lineHeight: 1.55,
+                    color: 'var(--ink)',
+                  }}
+                >
+                  {r.quote}
+                </blockquote>
+                <figcaption
+                  style={{
+                    fontFamily: 'var(--font-sc)',
+                    fontSize: 13,
+                    letterSpacing: '0.08em',
+                    color: 'var(--ink-faint)',
+                  }}
+                >
+                  {r.who}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p style={{ textAlign: 'center', margin: '26px 0 0' }}>
+            <a
+              href={reviewsHref}
+              style={{
+                fontFamily: 'var(--font-sc)',
+                fontSize: 14,
+                letterSpacing: '0.08em',
+                color: 'var(--ink-soft)',
+              }}
+            >
+              Every book on our shelf has real reviews on Etsy →
+            </a>
+          </p>
+          <Ornament kind="rule-and-dot" style={{ width: 220, margin: '48px auto 0' }} />
+        </div>
+      </section>
+
+      <section id="gift" style={{ padding: '64px 24px 0' }}>
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 48,
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flex: '1 1 380px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-sc)',
+                fontSize: 'var(--text-label-size)',
+                letterSpacing: 'var(--track-label)',
+                color: 'var(--brass)',
+              }}
+            >
+              most of our books are gifts
+            </span>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'var(--text-title-size)',
+                lineHeight: 'var(--text-title-lh)',
+                margin: 0,
+              }}
+            >
+              A present that arrives before the book does
+            </h2>
+            <p style={{ ...aboutP, maxWidth: '32em' }}>
+              Grandparents are our best customers. Order from anywhere, and we include a printable
+              certificate to hand over on the day — birthdays, a new sibling, the first day of
+              school — while the book is being made.
+            </p>
+            <p style={{ ...aboutP, maxWidth: '32em' }}>
+              You don’t need to know their iPad from their tablet. The grown-up on the receiving end
+              gets a link that simply opens.
+            </p>
+            <div style={{ marginTop: 6 }}>
+              <a className="lf-btn lf-btn--secondary" href={giftHref} style={{ textDecoration: 'none' }}>
+                Gift a book
+              </a>
+            </div>
+          </div>
+          <figure
+            style={{
+              flex: '1 1 380px',
+              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
+            <div
+              className="lf-cover-frame"
+              style={{
+                width: 'min(300px, 78vw)',
+                aspectRatio: '4/5',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                padding: '40px 30px',
+                boxSizing: 'border-box',
+                gap: 10,
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-sc)',
+                  fontSize: 12,
+                  letterSpacing: '0.14em',
+                  color: 'var(--brass)',
+                }}
+              >
+                little fables
+              </span>
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: 30, lineHeight: 1.2 }}>
+                For Rosa —
+              </span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontStyle: 'italic',
+                  fontSize: 16,
+                  lineHeight: 1.5,
+                  color: 'var(--ink-soft)',
+                  maxWidth: '14em',
+                }}
+              >
+                a story being written just for her, from Grandma June.
+              </span>
+              <div style={{ width: 44, borderTop: '1px solid var(--gilt)', margin: '6px 0 2px' }} />
+              <span
+                style={{
+                  fontFamily: 'var(--font-sc)',
+                  fontSize: 12,
+                  letterSpacing: '0.12em',
+                  color: 'var(--ink-faint)',
+                }}
+              >
+                certificate LF-2041 · august 2026
+              </span>
+            </div>
+            <figcaption
+              style={{
+                textAlign: 'center',
+                fontFamily: 'var(--font-sc)',
+                fontSize: 14,
+                letterSpacing: '0.08em',
+                color: 'var(--ink-faint)',
+                maxWidth: '28em',
+              }}
+            >
+              The certificate to hand over on the day, while the book is being made.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="trust" style={{ padding: '72px 24px 0' }}>
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+            background: 'var(--forest-wash)',
+            border: '1px solid var(--border-card)',
+            borderRadius: 16,
+            padding: '40px 32px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--forest)',
+            }}
+          >
+            the quiet parts
+          </span>
+          <p
+            style={{
+              margin: '-8px 0 0',
+              color: 'var(--ink-soft)',
+              lineHeight: 'var(--text-body-lh)',
+            }}
+          >
+            How we handle your child’s info, and what the book won’t do.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: 24,
+            }}
+          >
+            {TRUST.map((t) => (
+              <div key={t.heading} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, margin: 0 }}>
+                  {t.heading}
+                </h3>
+                <p style={{ margin: 0, color: 'var(--ink-soft)', lineHeight: 'var(--text-body-lh)' }}>
+                  {t.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="included" style={{ padding: '72px 24px 0' }}>
+        <p
+          style={{
+            maxWidth: 760,
+            margin: '0 auto 20px',
+            textAlign: 'center',
+            fontFamily: 'var(--font-sc)',
+            fontSize: 'var(--text-label-size)',
+            letterSpacing: 'var(--track-label)',
+            color: 'var(--ink-faint)',
+          }}
+        >
+          Written, illustrated, and narrated in a small studio — one book at a time.
+        </p>
+        <div
+          style={{
+            maxWidth: 760,
+            margin: '0 auto',
+            background: 'var(--paper-warm)',
+            border: '1px solid var(--ink-faint)',
+            padding: '40px 36px 44px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 18,
+            textAlign: 'center',
+          }}
+        >
+          <Wordmark layout="mark-only" markSize={46} />
+          <span
+            style={{
+              fontFamily: 'var(--font-sc)',
+              fontSize: 'var(--text-label-size)',
+              letterSpacing: 'var(--track-label)',
+              color: 'var(--brass)',
+            }}
+          >
+            one book, made once
+          </span>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: 0,
+            }}
+          >
+            What you get
+          </h2>
+          <ul
+            style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+              color: 'var(--ink-soft)',
+              fontSize: 'calc(var(--text-body-size)*1.05)',
+              lineHeight: 1.5,
+            }}
+          >
+            {INCLUDED_LIST.map((l) => (
+              <li key={l}>{l}</li>
+            ))}
+          </ul>
+          <p
+            style={{
+              margin: '6px 0 0',
+              fontFamily: 'var(--font-sc)',
+              fontSize: 15,
+              letterSpacing: '0.08em',
+              color: 'var(--ink-faint)',
+            }}
+          >
+            {PRICE_LINE}
+          </p>
+          <a
+            className="lf-btn lf-btn--primary lf-btn--hero"
+            href={includedHref}
+            style={{ textDecoration: 'none' }}
+          >
+            Start your book
+          </a>
+        </div>
+      </section>
+
+      <section id="faq" style={{ padding: '72px 24px 24px' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+            <Ornament kind="fleuron" size={28} />
+          </div>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-title-size)',
+              lineHeight: 'var(--text-title-lh)',
+              margin: '0 0 20px',
+              textAlign: 'center',
+            }}
+          >
+            Questions, answered
+          </h2>
+          {FAQS.map((f) => (
+            <details
+              key={f.q}
+              style={{ borderTop: '1px solid var(--border-ornament)', padding: '16px 4px' }}
+            >
+              <summary
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 20,
+                  cursor: 'pointer',
+                  color: 'var(--ink)',
+                }}
+              >
+                {f.q}
+              </summary>
+              <p
+                style={{
+                  margin: '12px 0 0',
+                  color: 'var(--ink-soft)',
+                  lineHeight: 'var(--text-body-lh)',
+                  maxWidth: '38em',
+                }}
+              >
+                {f.a}
+              </p>
+            </details>
+          ))}
+          <div style={{ borderTop: '1px solid var(--border-ornament)' }} />
+          <p style={{ textAlign: 'center', color: 'var(--ink-soft)', margin: '28px 0 0' }}>
+            Something else? <a href={contactHref}>Write to us</a> — we answer quickly.
+          </p>
+        </div>
+      </section>
+
+      <BuyerFooter links={FOOTER_LINKS} />
+
+      <div
+        className="lf-sticky-cta"
+        style={{
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 40,
+          background: 'var(--paper)',
+          borderTop: '1px solid var(--border-soft)',
+          alignItems: 'center',
+          gap: 12,
+          padding: '10px 16px calc(10px + env(safe-area-inset-bottom, 0px))',
+        }}
+      >
+        <span
+          style={{
+            flex: 1,
+            minWidth: 0,
+            fontFamily: 'var(--font-sc)',
+            fontSize: 14,
+            letterSpacing: '0.08em',
+            color: 'var(--ink-soft)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          Little Fables · custom storybook
+        </span>
+        <a
+          className="lf-btn lf-btn--primary"
+          href={utm(ETSY_SHOP, 'sticky')}
+          style={{ textDecoration: 'none', flex: '0 0 auto' }}
+        >
+          Start your book
+        </a>
+      </div>
+
+      {/* Small footer link back into the app for parents who already have an account. */}
+      <div
+        style={{
+          padding: '18px 24px 32px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Link
+          href="/login"
+          style={{
+            color: 'var(--ink-faint)',
+            textDecoration: 'none',
+            fontFamily: 'var(--font-sc)',
+            fontSize: 13,
+            letterSpacing: '0.08em',
+          }}
+        >
           Parent sign-in
         </Link>
-      </footer>
-    </main>
+      </div>
+    </div>
+  );
+}
+
+const aboutP: React.CSSProperties = {
+  margin: 0,
+  color: 'var(--ink-soft)',
+  lineHeight: 'var(--text-body-lh)',
+  maxWidth: '32em',
+};
+
+function FiveStars() {
+  return (
+    <svg width="110" height="20" viewBox="0 0 110 20" fill="var(--brass)" role="img" aria-label="five stars">
+      <path d="M10 1.5 12.4 7l6 .5-4.6 4 1.4 5.9L10 14.2 4.8 17.4 6.2 11.5 1.6 7.5l6-.5Z" />
+      <path d="M32 1.5 34.4 7l6 .5-4.6 4 1.4 5.9L32 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
+      <path d="M54 1.5 56.4 7l6 .5-4.6 4 1.4 5.9L54 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
+      <path d="M76 1.5 78.4 7l6 .5-4.6 4 1.4 5.9L76 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
+      <path d="M98 1.5 100.4 7l6 .5-4.6 4 1.4 5.9L98 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
+    </svg>
   );
 }

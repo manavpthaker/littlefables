@@ -11,6 +11,46 @@
  * Do NOT add a parallel Tailwind layer (audit S5). Do NOT inline colors here. */
 @import '../design-system/styles.css';
 
+/* Landing-page helpers not shipped by the DS. Both come from the design
+   handoff's inline <style> block — kept here rather than as inline JSX
+   styles because they carry pseudo-elements and media queries. */
+.lf-cover-frame {
+  position: relative;
+  background: var(--paper-warm);
+  border: 1px solid var(--border-card);
+  border-radius: 10px 14px 14px 10px;
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+}
+.lf-cover-frame::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--ink-faint);
+  opacity: 0.5;
+  z-index: 2;
+}
+.lf-cover-frame--photo::before {
+  content: none;
+}
+/* Mobile-only bottom CTA bar on the landing page. Hidden by default so
+   desktop stays clean; the landing page also nudges its main padding on
+   mobile so content isn't hidden under the fixed bar. */
+.lf-sticky-cta {
+  display: none;
+}
+@media (max-width: 960px) {
+  .lf-sticky-cta {
+    display: flex;
+  }
+  .lf-page-main {
+    padding-bottom: 96px;
+  }
+}
+
 /* Global layout defaults. Kid vs parent density is set at the subtree via data-density. */
 :root {
   /* Comfortable reading measure — shared by the reader text column and its top

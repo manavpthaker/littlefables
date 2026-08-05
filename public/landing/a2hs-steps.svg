@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+  <title id="title">Add to Home Screen instructions</title>
+  <desc id="desc">Three illustrated panels showing share, Add to Home Screen, and the finished home-screen icon.</desc>
+  <defs>
+    <filter id="paper-grain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="noise"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.08"></feFuncA>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="noise" mode="multiply"></feBlend>
+    </filter>
+    
+  </defs>
+
+  <rect fill="#EDE3CE" width="1600" height="700"></rect>
+  <rect x="28" y="28" width="1544" height="644" rx="24" fill="#f8efdd" filter="url(#paper-grain)"></rect>
+
+  <g transform="translate(68 70)">
+    <rect fill="#FDF7E7" x="0" y="0" width="438" height="508" rx="20"></rect>
+    <g transform="rotate(-5 219 210)">
+      <rect x="124" y="62" width="220" height="310" rx="28" fill="#f4ead5" stroke="#2c2720" stroke-width="5"></rect>
+      <rect x="144" y="96" width="180" height="232" rx="10" fill="#efe0bd" stroke="#2c2720" stroke-width="3"></rect>
+      <rect x="168" y="122" width="132" height="174" rx="6" fill="#fff6e3" stroke="#36533a" stroke-width="3"></rect>
+      <path d="M176 252c36-48 72-44 112-10v46H176z" fill="#36533a" opacity="0.9"></path>
+      <circle cx="274" cy="152" r="24" fill="#B89154"></circle>
+      <path d="M196 226c22-28 54-34 84-10" fill="none" stroke="#2c2720" stroke-width="3" stroke-linecap="round"></path>
+      <rect x="208" y="342" width="48" height="8" rx="4" fill="#2c2720"></rect>
+    </g>
+    <g transform="translate(304 90)">
+      <path d="M78 150c-38-18-76-7-107 35" fill="none" stroke="#7D2E2B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="M-31 184l-5-40M-31 184l39-6" fill="none" stroke="#7D2E2B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+      <rect x="66" y="0" width="66" height="66" rx="10" fill="#fff8ea" stroke="#7b2d26" stroke-width="5"></rect>
+      <path d="M99 48V16M99 16l-17 17M99 16l17 17" fill="none" stroke="#7D2E2B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+    <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="34" fill="#2A1D12" x="219" y="454" text-anchor="middle">1. Tap share.</text>
+  </g>
+
+  <g transform="translate(582 70)">
+    <rect fill="#FDF7E7" x="0" y="0" width="438" height="508" rx="20"></rect>
+    <g transform="translate(86 62)">
+      <rect x="0" y="0" width="266" height="310" rx="24" fill="#fff6e3" stroke="#2c2720" stroke-width="5"></rect>
+      <rect x="30" y="38" width="206" height="54" rx="12" fill="#f6edda" stroke="#2c2720" stroke-width="3"></rect>
+      <rect x="30" y="124" width="206" height="54" rx="12" fill="#fff8ea" stroke="#2c2720" stroke-width="3"></rect>
+      <rect x="30" y="210" width="206" height="54" rx="12" fill="#f6edda" stroke="#2c2720" stroke-width="3"></rect>
+      <circle cx="58" cy="65" r="11" fill="#2E4B3B"></circle>
+      <circle cx="58" cy="151" r="11" fill="#B89154"></circle>
+      <circle cx="58" cy="237" r="11" fill="#7b2d26"></circle>
+      <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="23" fill="#2A1D12" x="86" y="72">Add Bookmark</text>
+      <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="23" fill="#2A1D12" x="86" y="158">Add to Home Screen</text>
+      <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="23" fill="#2A1D12" x="86" y="244">Copy</text>
+      <path d="M18 115c54-20 198-17 242 13M260 128c-9 22-18 44-26 65M234 193c-65 17-152 20-222-4M12 189c-4-25-2-50 6-74" fill="none" stroke="#7D2E2B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+    <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="34" fill="#2A1D12" x="219" y="430" text-anchor="middle">2. Choose</text>
+    <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="34" fill="#2A1D12" x="219" y="470" text-anchor="middle">Add to Home Screen.</text>
+  </g>
+
+  <g transform="translate(1096 70)">
+    <rect fill="#FDF7E7" x="0" y="0" width="438" height="508" rx="20"></rect>
+    <g transform="translate(107 56)">
+      <rect x="0" y="0" width="224" height="318" rx="30" fill="#f4ead5" stroke="#2c2720" stroke-width="5"></rect>
+      <rect x="20" y="34" width="184" height="236" rx="12" fill="#efe0bd" stroke="#2c2720" stroke-width="3"></rect>
+      <g transform="translate(44 58)">
+        <rect x="0" y="0" width="38" height="38" rx="9" fill="#2E4B3B"></rect>
+        <rect x="58" y="0" width="38" height="38" rx="9" fill="#b88b3d"></rect>
+        <rect x="116" y="0" width="38" height="38" rx="9" fill="#7b2d26"></rect>
+        <rect x="0" y="62" width="38" height="38" rx="9" fill="#b88b3d"></rect>
+        <rect x="58" y="62" width="38" height="38" rx="9" fill="#fff8ea" stroke="#7b2d26" stroke-width="3"></rect>
+        <rect x="116" y="62" width="38" height="38" rx="9" fill="#2E4B3B"></rect>
+        <rect x="0" y="124" width="38" height="38" rx="9" fill="#7b2d26"></rect>
+        <g transform="translate(58 124)">
+          <rect x="-6" y="-8" width="50" height="54" rx="10" fill="#fff8ea" stroke="#b88b3d" stroke-width="4"></rect>
+          <path d="M3 31c12-18 22-17 32-2v9H3z" fill="#36533a"></path>
+          <path d="M11 16c9-12 18-13 26-2" fill="none" stroke="#2c2720" stroke-width="3" stroke-linecap="round"></path>
+          <circle cx="31" cy="10" r="5" fill="#B89154"></circle>
+        </g>
+        <rect x="116" y="124" width="38" height="38" rx="9" fill="#b88b3d"></rect>
+      </g>
+      <rect x="88" y="286" width="48" height="8" rx="4" fill="#2c2720"></rect>
+    </g>
+    <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="34" fill="#2A1D12" x="219" y="430" text-anchor="middle">3. The book lives</text>
+    <text font-family="Georgia, &#39;EB Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="34" fill="#2A1D12" x="219" y="470" text-anchor="middle">on their home screen.</text>
+  </g>
+
+  <path d="M512 322c20-11 39-10 58 0M1026 322c20-11 39-10 58 0" fill="none" stroke="#b88b3d" stroke-width="5" stroke-linecap="round"></path>
+</svg>
