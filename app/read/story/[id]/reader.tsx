@@ -16,6 +16,7 @@ import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { MapSection } from './map-section';
 import { PageSpread } from './page-spread';
+import { InstallPrompt } from './install-prompt';
 import {
   currentChapter,
   currentPage,
@@ -280,6 +281,8 @@ export function Reader({
           }
         />
       ) : null}
+
+      <InstallPrompt visible={lastPage && !showMap} />
 
       <ReaderMenu
         open={menuOpen}
