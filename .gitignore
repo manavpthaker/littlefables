@@ -32,23 +32,33 @@ content/art/live/
 # book and remain tracked; the heavy binary assets do not (they upload
 # via `pnpm content:add` to the Supabase Storage buckets and re-fetch
 # on any fresh clone via the same command).
-content/books/**/*.png
-content/books/**/*.jpg
-content/books/**/*.jpeg
-content/books/**/*.webp
-content/books/**/*.heic
-content/books/**/*.HEIC
-content/books/**/*.gif
-content/books/**/*.mp3
-content/books/**/*.m4a
-content/books/**/*.wav
-content/books/**/*.mp4
-content/books/**/*.MP4
-content/books/**/*.mov
-content/books/**/*.docx
-content/books/**/audio/
-content/books/**/reference*/
-content/books/**/references*/
+#
+# These globs said content/books/** until the tree moved to
+# content/households/<household>/books/**. The rule silently stopped matching
+# and forty-odd illustration PNGs became eligible to commit — nine of them
+# actually did, in 9d73fef. Path changes have to be mirrored here.
+content/households/**/*.png
+content/households/**/*.jpg
+content/households/**/*.jpeg
+content/households/**/*.webp
+content/households/**/*.heic
+content/households/**/*.HEIC
+content/households/**/*.gif
+content/households/**/*.mp3
+
+# Marketing samples are the exception: irreplaceable output of an
+# image-generation session with no script to regenerate them. See the README
+# in that folder.
+!content/marketing/style-samples/*.png
+content/households/**/*.m4a
+content/households/**/*.wav
+content/households/**/*.mp4
+content/households/**/*.MP4
+content/households/**/*.mov
+content/households/**/*.docx
+content/households/**/audio/
+content/households/**/reference*/
+content/households/**/references*/
 
 # OS / editor
 .DS_Store

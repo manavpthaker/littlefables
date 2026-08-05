@@ -1,23 +1,35 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-// Surface the request pathname to Server Components. The App Router does not
-// hand a layout/page its own path, so this sets `x-pathname` for any RSC that
-// needs it. Nothing reads it today (it fed the parent tab highlight before
-// multi-tab nav was removed); the header is cheap and kept for the next RSC
-// that wants its own route.
-//
-// Header-only pass-through: this does not gate anything. Child-route auth
-// lives in requireChildDevice(); nothing rides on middleware for access
-// control. A household password gate lived here 2026-07-31 → 2026-08-01 —
-// restore from git history at lib/server/household-gate.ts if it comes back.
+// Duplicated from lib/server/parent-session to keep this Edge-runtime
+// module free of Node-only imports (supabase-js, node:crypto). Kept in
+// sync by hand — the constant only appears in three places.
+const PARENT_ACCESS_COOKIE = 'lf_parent_access';
+
+// Two jobs:
+// 1. Surface the request pathname to Server Components via x-pathname.
+// 2. Gate /parent/* HTML routes: if no parent session cookie, redirect
+//    to /login?next=<pathname>. This is defense-in-depth only — every
+//    /api/parent/* handler AND the /parent layout re-check server-side.
+//    Nothing rides on middleware alone (CLAUDE.md rule). Middleware
+//    can't verify the JWT (no Node crypto in edge without setup), so
+//    it only checks cookie presence — a real check happens downstream.
 export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-pathname', request.nextUrl.pathname);
+
+  const hasAccessCookie = Boolean(request.cookies.get(PARENT_ACCESS_COOKIE)?.value);
+  if (!hasAccessCookie) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    url.search = `?next=${encodeURIComponent(request.nextUrl.pathname)}`;
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {
-  // Only the parent tree needs the path hint today. Matches /parent and every
-  // route beneath it; leaves the kid app and static assets untouched.
+  // Only /parent HTML routes. /api/parent/* handlers re-check server-side,
+  // and the reader (/read, /f, /gift, /login, /) stays unrestricted.
   matcher: ['/parent', '/parent/:path*'],
 };

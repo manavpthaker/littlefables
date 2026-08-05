@@ -1,26 +1,21 @@
 import { admin } from '@/lib/supabase/admin';
+import { getParentSession } from './parent-session';
 
-// Single-household resolution for the parent surface (S4.2). Removes the
-// SEED_HOUSEHOLD_ID hardcode from app code. When we move to multi-household
-// (V2 wave 2.5), swap the picker to read the household_id from the parent
-// gate cookie — same call sites, different implementation.
+// Household resolution for the parent surface. Resolves from the parent
+// OTP session — every parent belongs to exactly one household. When
+// multi-child grandparent access is added later, this becomes a picker
+// with a session-scoped selection.
 
-let cachedId: string | null = null;
-
-/** Household id the parent surface currently operates on. In single-household
- *  mode this is the first (and only) row in `households`. Cached at module
- *  level within a server runtime so this is one query per process. */
+/** Household id for the currently-authenticated parent. Throws if no
+ *  parent session — every caller runs inside a guarded parent route
+ *  (either middleware + layout, or requireParentSession() at the route
+ *  boundary), so a missing session here is a programmer error. */
 export async function currentHouseholdId(): Promise<string> {
-  if (cachedId) return cachedId;
-  const { data, error } = await admin()
-    .from('households')
-    .select('id')
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  if (error || !data?.id) throw new Error('No household found — provision one via scripts/new-household.ts');
-  cachedId = data.id;
-  return cachedId;
+  const session = await getParentSession();
+  if (!session) {
+    throw new Error('currentHouseholdId called without a parent session — call from inside a guarded parent route');
+  }
+  return session.householdId;
 }
 
 /** Cheap membership check — throws if the given child_id doesn't belong to

@@ -2,8 +2,8 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { CHILD_TOKEN_COOKIE, verifyChildToken, type ChildContext } from '@/lib/auth/child-token';
 
-// Route guards. Only the child-device token is verified. The parent surface
-// runs UNGATED by household decision (2026-07-21) — see lib/server/parent-gate.ts.
+// Route guards. Child-device token verification for the kid surface.
+// Parent surface auth lives in lib/server/parent-session.ts (email OTP).
 
 export function unauthorized(reason: string): NextResponse {
   return NextResponse.json({ error: 'unauthorized', reason }, { status: 401 });
