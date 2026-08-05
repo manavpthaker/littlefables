@@ -38,7 +38,7 @@ feature we do not have.
 
 ## Structure
 
-Nine beats, 114 seconds, as of the current cut.
+Nine beats, 116 seconds, as of the current cut.
 
 | # | Beat | Time | Source |
 |---|---|---|---|
@@ -48,9 +48,9 @@ Nine beats, 114 seconds, as of the current cut.
 | 4 | It arrives | 0:45–0:59 | Rendered email + screen recording |
 | 5 | The payoff | 0:59–1:23 | Screen recording |
 | 6 | Night | 1:23–1:31 | Screen recording |
-| 7 | The range | 1:31–1:38 | Three style samples |
-| 8 | The quiet part | 1:38–1:46 | Type only |
-| 9 | Close | 1:46–1:54 | Logomark draw-on |
+| 7 | The range | 1:31–1:40 | Six style samples |
+| 8 | The quiet part | 1:40–1:48 | Type only |
+| 9 | Close | 1:48–1:56 | Logomark draw-on |
 
 **There is no cold open.** An earlier cut spent five seconds on an animated
 logo before showing anything. A logo is not what earns a stranger's next five
@@ -159,15 +159,18 @@ The longest live beat. Real reading, minimal overlay.
 
 ### 7 · The range — 1:31–1:38
 
-- **Source:** three sample spreads from `content/marketing/style-samples/`.
+- **Source:** six samples from `assets/listing/custom-story-page/`, sharing the
+  figcaptions the listing page uses so the film and the shop speak one
+  vocabulary.
 - **What happens:** painted, cut paper and woodcut arrive side by side, a beat
   apart, each labelled.
 - **Type:** `No two look alike.` · then `the style comes from the books you already love`
 - **Why it works:** everything before this follows one book in one style, which
-  sells that book rather than the service. Three at once, rather than one after
-  another, because the comparison only lands if the eye can make it in a single
-  glance — and because the samples are ~615px, so filling the frame with one
-  would be a 1.8x upscale and go soft.
+  sells that book rather than the service. All six at once, rather than in
+  sequence, because the comparison only lands if the eye can make it in a
+  single glance — a sequence asks the viewer to hold five images in memory to
+  do the same work. Six fits because these are 1448x1086; the three strips this
+  replaced were ~615px and could only ever be shown a third of a frame wide.
 - **Placement:** after night, not before. The product demo finishes — day, then
   bedtime — and only then does the range open up.
 
