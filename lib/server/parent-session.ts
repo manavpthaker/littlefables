@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { NextResponse, type NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { admin } from '@/lib/supabase/admin';
@@ -72,11 +73,15 @@ export function clearParentSessionCookies(response: NextResponse): void {
 /** Read the current parent session from cookies. Returns null if no valid
  *  session (missing cookie, revoked user, no linked parent row).
  *
+ *  Wrapped with React's cache() so parallel RSC callers within a single
+ *  request (layout + page) share one lookup instead of two round-trips to
+ *  Supabase Auth for JWT validation. Cache is per-render, not per-server.
+ *
  *  Does NOT refresh — refresh happens at the route boundary so we can
  *  return the fresh cookies on the response. Callers that need refresh
  *  should use requireParentSession() from a route handler or use
  *  refreshParentSessionIfNeeded() manually. */
-export async function getParentSession(): Promise<ParentSession | null> {
+export const getParentSession = cache(async (): Promise<ParentSession | null> => {
   const jar = await cookies();
   const accessToken = jar.get(PARENT_ACCESS_COOKIE)?.value;
   if (!accessToken) return null;
@@ -101,7 +106,7 @@ export async function getParentSession(): Promise<ParentSession | null> {
     parentEmail: parent.email,
     householdId: parent.household_id,
   };
-}
+});
 
 /** Route-handler guard. Returns the session or a NextResponse — 401 for
  *  API routes, redirect to /login for HTML routes.

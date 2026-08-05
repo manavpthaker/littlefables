@@ -1,6 +1,8 @@
 import { admin } from '@/lib/supabase/admin';
 import { currentHouseholdId } from '@/lib/server/current-household';
+import { getParentSession } from '@/lib/server/parent-session';
 import { parseChildSettings } from '@/lib/models/settings';
+import { AccountSection } from '../account-section';
 import { ChildrenSection, type ChildRow } from '../children-section';
 import { SharesSection } from '../shares-section';
 import { SettingsForm } from './settings-form';
@@ -12,22 +14,31 @@ import { SettingsForm } from './settings-form';
 const KID_VISIBLE_STATUSES = ['complete', 'published'];
 
 export default async function ParentSettingsPage() {
+  // Session is guaranteed by the /parent layout gate; getParentSession is
+  // cache()-wrapped so this doesn't cost a second JWT verification round-trip.
+  const session = (await getParentSession())!;
   const householdId = await currentHouseholdId();
 
-  const [{ data: household }, { data: children }, { data: bookRows }] = await Promise.all([
-    admin().from('households').select('name').eq('id', householdId).maybeSingle(),
-    admin()
-      .from('children')
-      .select('id, display_name, band, settings')
-      .eq('household_id', householdId)
-      .order('created_at', { ascending: true }),
-    admin()
-      .from('books')
-      .select('id, title')
-      .eq('household_id', householdId)
-      .in('status', KID_VISIBLE_STATUSES)
-      .order('title'),
-  ]);
+  const [{ data: household }, { data: parent }, { data: children }, { data: bookRows }] =
+    await Promise.all([
+      admin().from('households').select('name').eq('id', householdId).maybeSingle(),
+      admin()
+        .from('parents')
+        .select('display_name, email')
+        .eq('id', session.parentId)
+        .maybeSingle(),
+      admin()
+        .from('children')
+        .select('id, display_name, band, settings')
+        .eq('household_id', householdId)
+        .order('created_at', { ascending: true }),
+      admin()
+        .from('books')
+        .select('id, title')
+        .eq('household_id', householdId)
+        .in('status', KID_VISIBLE_STATUSES)
+        .order('title'),
+    ]);
 
   const childRows: ChildRow[] = (children ?? []).map((c) => ({
     id: c.id,
@@ -54,6 +65,12 @@ export default async function ParentSettingsPage() {
           Bedtime window and voices, per child. The kid never sees any of this.
         </p>
       </header>
+
+      <AccountSection
+        parentDisplayName={parent?.display_name?.trim() || 'Parent'}
+        parentEmail={parent?.email ?? session.parentEmail}
+        householdName={household?.name?.trim() || 'Your household'}
+      />
 
       {(children ?? []).map((c) => (
         <SettingsForm

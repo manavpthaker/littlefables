@@ -5,6 +5,7 @@ import { Wordmark } from '@ds/components/core/Wordmark.jsx';
 import { TrustRow } from '@ds/components/outward/TrustRow.jsx';
 import { BuyerFooter } from '@ds/components/outward/BuyerFooter.jsx';
 import { Ornament } from '@ds/components/core/Ornament.jsx';
+import { getParentSession } from '@/lib/server/parent-session';
 import { CoverBuilder } from './landing/cover-builder';
 
 // Bare-domain landing. Rendered for anyone hitting `/` — no auto-redirect,
@@ -155,7 +156,10 @@ const FOOTER_LINKS = [
   { label: 'Etsy shop', href: utm(ETSY_SHOP, 'footer') },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  // If a parent is already signed in, swap the "Parent sign-in" link for
+  // a direct handoff into the parent surface. Cache()-wrapped, cheap.
+  const session = await getParentSession();
   const navHref = utm(ETSY_SHOP, 'nav');
   const heroHref = utm(ETSY_SHOP, 'hero');
   const aboutHref = utm(ETSY_SHOP, 'about');
@@ -1185,7 +1189,8 @@ export default function LandingPage() {
         </a>
       </div>
 
-      {/* Small footer link back into the app for parents who already have an account. */}
+      {/* Small footer link back into the app for parents. Text changes based
+          on whether we already have a session for this browser. */}
       <div
         style={{
           padding: '18px 24px 32px',
@@ -1194,7 +1199,7 @@ export default function LandingPage() {
         }}
       >
         <Link
-          href="/login"
+          href={session ? '/parent' : '/login'}
           style={{
             color: 'var(--ink-faint)',
             textDecoration: 'none',
@@ -1203,7 +1208,7 @@ export default function LandingPage() {
             letterSpacing: '0.08em',
           }}
         >
-          Parent sign-in
+          {session ? `Continue as ${session.parentEmail} →` : 'Parent sign-in'}
         </Link>
       </div>
     </div>
