@@ -67,3 +67,5 @@ video/public/recordings/
 video/public/audio/
 # 49MB of PNG sequences — regenerate with `npm run mark`.
 video/public/mark/
+# Copies of content/marketing/style-samples/ — re-copy, don't commit twice.
+video/public/styles/

@@ -14,6 +14,7 @@ import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
 import { font, ink, paper, motion, FPS } from './theme';
 
 import { CornerMark } from './components/CornerMark';
+import { StyleRange } from './components/StyleRange';
 import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
 import { SlowPush } from './components/SlowPush';
@@ -233,6 +234,10 @@ export const Walkthrough: React.FC = () => {
         <DeviceFrame src={RECORDINGS.night} device="ipad" startFrom={4.2} />
         <Caption text={COPY.night} delay={motion.settle} />
       </AbsoluteFill>
+    </Sequence>
+
+    <Sequence {...frames(BEATS.range)}>
+      <StyleRange />
     </Sequence>
 
     <Sequence {...frames(BEATS.quiet)}>

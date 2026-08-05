@@ -26,9 +26,20 @@ export const BEATS = {
   arrives: { start: 45, end: 59 },
   payoff: { start: 59, end: 83 },
   night: { start: 83, end: 91 },
-  quiet: { start: 91, end: 99 },
-  close: { start: 99, end: 107 },
+  range: { start: 91, end: 98 },
+  quiet: { start: 98, end: 106 },
+  close: { start: 106, end: 114 },
 } as const;
+
+/**
+ * Sample spreads for the range beat. Source art and the reasoning behind the
+ * three-up layout live in content/marketing/style-samples/README.md.
+ */
+export const STYLES = [
+  { file: 'painterly.png', label: 'painted' },
+  { file: 'cutpaper.png', label: 'cut paper' },
+  { file: 'woodcut.png', label: 'woodcut' },
+] as const;
 
 export const frames = (b: { start: number; end: number }) => ({
   from: sec(b.start),
@@ -115,6 +126,8 @@ export const COPY = {
   arrivesSub: 'saved to their iPad like a favourite app',
   payoff: ['Read aloud, warmly', 'Their book, their pace', 'Tap any word to hear it'],
   night: 'And a quieter one for bedtime',
+  range: 'No two look alike.',
+  rangeSub: 'the style comes from the books you already love',
   quiet: [
     'No ads. No algorithm. No autoplay.',
     'It ends when the story ends.',
