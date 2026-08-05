@@ -217,7 +217,7 @@ no watermarks.
 Drop the nine PNGs into this folder, then:
 
 ```bash
-pnpm content:add content/books/custom/lantern-round-pond --check   # verify
+pnpm content:add content/households/demo/books/lantern-round-pond --check   # verify
 ```
 
 and tell me — I'll provision the household, import it, smoke-test the reader,

@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { requireParentPassword } from '@/lib/server/parent-gate';
+import { requireParentSession } from '@/lib/server/parent-session';
 import { admin } from '@/lib/supabase/admin';
-import { currentHouseholdId } from '@/lib/server/current-household';
 import {
   childSettingsSchema,
   parseChildSettings,
@@ -11,12 +10,12 @@ import type { Json } from '@/types/database';
 
 // Parent Settings — GET rosters children with their parsed settings; PUT
 // partial-merges a child's settings and optional band, revalidates the
-// merged object. Household-scoped. Restored after the pare-back sweep.
+// merged object. Household-scoped to the authenticated parent.
 
-export async function GET() {
-  const gate = await requireParentPassword();
-  if (gate) return gate;
-  const householdId = await currentHouseholdId();
+export async function GET(request: NextRequest) {
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
 
   const { data: children, error } = await admin()
     .from('children')
@@ -36,9 +35,9 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const gate = await requireParentPassword();
-  if (gate) return gate;
-  const householdId = await currentHouseholdId();
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
 
   const body = updateSettingsBodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });

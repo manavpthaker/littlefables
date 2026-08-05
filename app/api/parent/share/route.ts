@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { currentHouseholdId } from '@/lib/server/current-household';
+import { requireParentSession } from '@/lib/server/parent-session';
 import { listSharesForBook, mintShare, revokeShare } from '@/lib/server/book-shares';
 
 // Parent-side share management. Restore-style scope check: the book must
@@ -29,7 +29,9 @@ async function assertBookInHousehold(bookId: string, householdId: string): Promi
 }
 
 export async function GET(request: NextRequest) {
-  const householdId = await currentHouseholdId();
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
   const bookId = request.nextUrl.searchParams.get('bookId');
   if (!bookId) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
   if (!(await assertBookInHousehold(bookId, householdId))) {
@@ -40,7 +42,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const householdId = await currentHouseholdId();
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
   const body = createSchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
   if (!(await assertBookInHousehold(body.data.bookId, householdId))) {
@@ -66,7 +70,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const householdId = await currentHouseholdId();
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
   const body = revokeSchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });
   const ok = await revokeShare(body.data.shareId, householdId);

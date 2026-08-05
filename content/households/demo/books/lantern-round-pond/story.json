@@ -1,7 +1,7 @@
 {
   "id": "lantern-round-pond",
   "title": "The Lantern of Round Pond",
-  "by": "Little Fables, for Rosa",
+  "by": "for Rosa",
   "kind": "quick",
   "theme": {
     "paper": "#EDE3CE",
@@ -12,17 +12,26 @@
   "vocab": [
     {
       "word": "lantern",
-      "syllables": ["lan", "tern"],
+      "syllables": [
+        "lan",
+        "tern"
+      ],
       "kidDefinition": "a little box that keeps a light safe from the wind"
     },
     {
       "word": "patient",
-      "syllables": ["pa", "tient"],
+      "syllables": [
+        "pa",
+        "tient"
+      ],
       "kidDefinition": "waiting without getting cross about it"
     },
     {
       "word": "ripple",
-      "syllables": ["rip", "ple"],
+      "syllables": [
+        "rip",
+        "ple"
+      ],
       "kidDefinition": "the small rings water makes when something touches it"
     }
   ],

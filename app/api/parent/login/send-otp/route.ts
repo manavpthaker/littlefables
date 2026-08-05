@@ -58,6 +58,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     options: { shouldCreateUser: false },
   });
   if (otpErr) {
+    console.error('[send-otp]', otpErr.message);
+    // Supabase enforces ~60s per-email throttle. Surface that specifically
+    // so the login form can show "try again in a minute" instead of a
+    // generic "something went wrong."
+    if (/rate limit/i.test(otpErr.message)) {
+      return NextResponse.json({ error: 'rate_limited' }, { status: 429 });
+    }
     return NextResponse.json({ error: 'could not send code' }, { status: 500 });
   }
 

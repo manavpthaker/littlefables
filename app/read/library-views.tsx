@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookCard } from '@ds/components/kid/BookCard.jsx';
+import { BookCover } from './book-cover';
 import type { ShelfBook } from './library';
 
 // The two library layouts, kept out of library.tsx so the parent
@@ -12,17 +12,7 @@ export function GridView({ books }: { books: ShelfBook[] }) {
   return (
     <div className="lf-covers">
       {books.map((book) => (
-        <BookCard
-          key={book.id}
-          title={book.title}
-          utterance={book.title}
-          progress={book.progress}
-          coverSrc={book.coverImage ?? undefined}
-          coverAlt={book.title}
-          onOpen={() => {
-            window.location.href = `/read/story/${book.id}`;
-          }}
-        />
+        <BookCover key={book.id} book={book} />
       ))}
     </div>
   );

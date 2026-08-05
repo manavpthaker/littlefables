@@ -8,6 +8,8 @@ import { GridView, ListView } from './library-views';
 export interface ShelfBook {
   id: string;
   title: string;
+  /** Author credit from the book folder — "Papa", a grandparent's name. */
+  byLine?: string | null;
   kind: 'quick' | 'chapter';
   coverEmoji: string | null;
   coverBg: string | null;

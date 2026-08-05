@@ -1,12 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { requireParentPassword } from '@/lib/server/parent-gate';
+import { requireParentSession } from '@/lib/server/parent-session';
 import { z } from 'zod';
 import { admin } from '@/lib/supabase/admin';
-import { currentHouseholdId } from '@/lib/server/current-household';
 import { CHILD_BANDS } from '@/lib/models/child';
 
-// Add a child to the current household. Restored after the pare-back sweep;
-// the "Add child" form in the parent surface was calling a dead endpoint.
+// Add a child to the current household. Scoped to the authenticated
+// parent's household — no cross-household child creation.
 const bodySchema = z.object({
   displayName: z.string().min(1).max(40),
   band: z.enum(CHILD_BANDS).default('4-8'),
@@ -15,10 +14,9 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const householdId = await currentHouseholdId();
-
-  const gate = await requireParentPassword();
-  if (gate) return gate;
+  const session = await requireParentSession(request);
+  if (session instanceof NextResponse) return session;
+  const householdId = session.householdId;
 
   const body = bodySchema.safeParse(await request.json().catch(() => ({})));
   if (!body.success) return NextResponse.json({ error: 'bad_request' }, { status: 400 });

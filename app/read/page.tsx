@@ -20,7 +20,7 @@ export default async function ReadHome() {
   const [{ data: bookRows }, { data: progressRows }, { data: childRow }] = await Promise.all([
     admin()
       .from('books')
-      .select('id, title, kind, cover_emoji, cover_bg, created_at')
+      .select('id, title, by_line, kind, cover_emoji, cover_bg, created_at')
       .eq('household_id', ctx.householdId)
       .in('status', KID_VISIBLE_STATUSES)
       .eq('shelf_enabled', true),
@@ -54,6 +54,7 @@ export default async function ReadHome() {
     .map((b) => ({
       id: b.id,
       title: b.title,
+      byLine: b.by_line,
       kind: b.kind as 'quick' | 'chapter',
       coverEmoji: b.cover_emoji,
       coverBg: b.cover_bg,

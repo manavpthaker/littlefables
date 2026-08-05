@@ -28,6 +28,14 @@ export function LoginForm() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),
       });
+      if (res.status === 429) {
+        // Rate-limited — but we still advance to the code step. If the
+        // user already got an earlier code, they can use that; otherwise
+        // they'll wait 60s and retry.
+        setStep('code');
+        setError('Waiting on the last code we sent — check your email, or try again in a minute.');
+        return;
+      }
       if (!res.ok) throw new Error('send failed');
       setStep('code');
     } catch {
