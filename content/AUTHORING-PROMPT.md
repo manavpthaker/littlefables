@@ -2,7 +2,7 @@
 
 Paste this into Claude.ai / ChatGPT / any LLM, then attach or paste your
 source story. The model returns a `story.json` you can drop straight into a
-`content/books/<slug>/` folder and upload with `pnpm content:add`.
+`content/households/<household>/books/<slug>/` folder and upload with `pnpm content:add`.
 
 ---
 
@@ -117,16 +117,16 @@ source story. The model returns a `story.json` you can drop straight into a
 
 ## After you have the JSON
 
-1. Create the folder: `content/books/<slug>/`
+1. Create the folder: `content/households/<household>/books/<slug>/`
 2. Save the JSON as `story.json` inside it.
 3. Drop in `cover.png` (any size, roughly square looks best on the shelf).
 4. Optional: `pages/01.png`, `pages/02.png`, … per-page illustrations.
 5. Optional: `audio/day-01.mp3` + `audio/day-01.json` (word timestamps) if
    you've pre-recorded narration. Same for `night-01.*`. See the reader's
    `page-audio-source.ts` for the exact timestamp shape.
-6. Dry-run: `pnpm content:add content/books/<slug> --check` — validates
-   `story.json` and lists what would upload.
-7. For real: `pnpm content:add content/books/<slug>`
+6. Dry-run: `pnpm content:add content/households/<household>/books/<slug> --check`
+   — validates `story.json` and lists what would upload.
+7. For real: `pnpm content:add content/households/<household>/books/<slug>`
 
 Re-running on the same folder updates the existing book row (idempotent).
 

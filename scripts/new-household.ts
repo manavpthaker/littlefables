@@ -48,6 +48,20 @@ function arg(name: string): string | undefined {
   return i >= 0 && i < process.argv.length - 1 ? process.argv[i + 1] : undefined;
 }
 
+/** Kebab-case a book title so it fits in a URL segment. Strips articles
+ *  at the start ("the"/"a"/"an") so /read/the-lantern-of-round-pond becomes
+ *  /read/lantern-of-round-pond — reads more like a book, less like an
+ *  account. Special-cases the literal "story" (would collide with the
+ *  reader's /read/story/[id] route) by suffixing it. */
+function slugifyBookTitle(title: string): string {
+  const raw = title
+    .toLowerCase()
+    .replace(/^(the|a|an)\s+/i, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return raw === 'story' ? 'story-book' : raw;
+}
+
 async function main(): Promise<void> {
   const name = arg('name');
   const childName = arg('child');
@@ -56,9 +70,15 @@ async function main(): Promise<void> {
   const parentName = arg('parent') ?? 'Parent';
   const deviceLabel = arg('device-label') ?? `${childName ?? 'child'}'s device`;
   const baseUrl = arg('base-url') ?? process.env.NEXT_PUBLIC_SITE_URL ?? 'https://littlefables.app';
+  // Story-title slug for the magic URL. Cosmetic only — the token, not
+  // the slug, is what authenticates. If unknown at provision time (book
+  // not authored yet), we use a placeholder and the operator can rerun
+  // once the title is settled.
+  const bookTitle = arg('book-title');
+  const slug = bookTitle ? slugifyBookTitle(bookTitle) : 'your-book';
 
   if (!name || !childName) {
-    console.error('usage: pnpm exec tsx scripts/new-household.ts --name "Family Name" --child "Child Name" [--band 4-8] [--email x@y.z] [--parent "Papa"] [--device-label "iPad"] [--base-url https://...]');
+    console.error('usage: pnpm exec tsx scripts/new-household.ts --name "Family Name" --child "Child Name" [--band 4-8] [--email x@y.z] [--parent "Papa"] [--device-label "iPad"] [--book-title "The Lantern of Round Pond"] [--base-url https://...]');
     process.exit(1);
   }
 
@@ -101,7 +121,8 @@ async function main(): Promise<void> {
     deviceLabel,
   });
 
-  const magicUrl = `${baseUrl.replace(/\/$/, '')}/f/${token.raw}`;
+  const cleanBase = baseUrl.replace(/\/$/, '');
+  const magicUrl = `${cleanBase}/read/${slug}/${token.raw}`;
 
   console.log('✓ Provisioned:');
   console.log(`  household   ${householdId}  "${name}"`);
@@ -110,9 +131,12 @@ async function main(): Promise<void> {
   console.log(`  device      ${token.deviceId}  "${deviceLabel}"  expires ${token.expiresAt}`);
   console.log('');
   console.log('  MAGIC URL   ' + magicUrl);
+  if (!bookTitle) {
+    console.log('              (slug is a placeholder — pass --book-title once the title is settled to re-emit)');
+  }
   console.log('');
   console.log('  Import books scoped to this household with:');
-  console.log(`    pnpm content:add content/books/custom/<slug> --household ${householdId}`);
+  console.log(`    pnpm content:add content/households/<slug>/books/<book-slug> --household ${householdId}`);
   console.log('');
   console.log('  The raw token above is only visible once. If lost, re-run this script');
   console.log('  to mint a fresh token — the old one stays valid until it expires.');

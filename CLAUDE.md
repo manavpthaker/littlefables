@@ -45,9 +45,11 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
    (via `/api/child/tts`).
 
 2. **Books are files, not database records.** The source of truth for a
-   book is its folder under `content/books/<slug>/`. The DB row is a
-   deployment cache. Re-running `pnpm content:add` on an updated folder
-   overwrites the row.
+   book is its folder under `content/households/<household>/books/<slug>/`.
+   The DB row is a deployment cache. Re-running `pnpm content:add` on an
+   updated folder overwrites the row. `home/` is us, `demo/` is the public
+   demo, buyer households are their own slug — see
+   `content/households/README.md`.
 
 3. **Two voices, always.** Day = illustrated + narrator voice. Night =
    text-only + sleepy voice. The reader auto-switches on the bedtime
@@ -76,7 +78,9 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
 
 ## Where to change what
 
-- **New book** → author in `content/books/<slug>/`, run `pnpm content:add`.
+- **New book** → author in `content/households/<household>/books/<slug>/`
+  (usually `home/` unless it's for a specific customer), run
+  `pnpm content:add`.
 - **Reader UI** → `app/read/story/[id]/reader.tsx` (orchestrator, ~200 lines)
   + `page-spread.tsx` (illustrated / text-only rendering).
 - **Reader state** → `lib/reader/state.ts` (pure reducer + selectors,
@@ -98,10 +102,12 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
 - **Selling custom books (Etsy)** → `docs/commerce/`. Positioning, listing
   copy, buyer intake, fulfillment runbook, email templates, market
   research. Start at `docs/commerce/README.md`.
-- **Custom-order books** → `content/books/custom/<slug>/`, provisioned via
-  `scripts/new-household.ts` (prints a magic URL), delivered through
-  `app/f/[token]/route.ts`. Art prompts come from the `fable-art-custom`
-  skill at `~/.codex/skills/fable-art-custom/`.
+- **Custom-order books** → `content/households/<lastname>/books/<slug>/`,
+  provisioned via `scripts/new-household.ts` (prints a magic URL),
+  delivered through `app/f/[token]/route.ts`. Every buyer gets a full
+  household folder with `household.yaml` — see
+  `content/households/README.md` and `_TEMPLATE.yaml`. Art prompts come
+  from the `fable-art-custom` skill at `~/.codex/skills/fable-art-custom/`.
 
 ## What's gone (don't ask to restore without checking with the user)
 

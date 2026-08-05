@@ -1,0 +1,41 @@
+# Our household. Special: this one predates the /f/<token> flow; the reader
+# auto-enters here via /api/enter (single-family default). Not provisioned via
+# scripts/new-household.ts — the seed IDs live in lib/models/seed.ts and match
+# supabase/migrations/20260717000003_seed.sql + 20260717000005_reseed_valid_uuids.sql.
+
+household:
+  slug: home
+  name: "Thaker Family"
+  provisioned_id: 4ecabfb5-dcce-4c7f-b40d-f94e84e3a427  # SEED_HOUSEHOLD_ID
+
+child:
+  name: "Azi"
+  band: "4-8"
+  provisioned_id: e27b2fa0-d16f-4c38-9d97-ed05374167de  # SEED_CHILD_ID
+
+parent:
+  display_name: "Papa"
+  email: "manavpthaker@gmail.com"
+
+device:
+  label: "Azi's iPad"
+  # No magic URL — this household is entered via /api/enter, not /f/<token>.
+  magic_url: null
+
+books:
+  - brambles-hello
+  - jujy-christmas
+  - leon-jones
+  - little-bhen
+  - lokjit-first
+  - meadow-fables
+  - midnight-train
+  - mikey-the-moto
+  - moon-time
+  - moose-bigness
+  - papa-moon
+  - rain-inside
+  - thunder-symphony
+  - two-paper-birds
+  - when-can-we-talk
+  - word-collector

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+  <title id="title">Add to Home Screen instructions</title>
+  <desc id="desc">Three illustrated panels showing share, Add to Home Screen, and the finished home-screen icon.</desc>
+  <defs>
+    <filter id="paper-grain" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.08"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="noise" mode="multiply"/>
+    </filter>
+    <style>
+      .paper { fill: #f6edda; }
+      .panel { fill: #fff8ea; stroke: #7b2d26; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .ink { fill: none; stroke: #2c2720; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #2c2720; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .oxblood { fill: none; stroke: #7b2d26; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+      .brass { fill: #b88b3d; }
+      .forest { fill: #36533a; }
+      .cream { fill: #f6edda; }
+      .label { fill: #2c2720; font-family: Georgia, 'Times New Roman', serif; font-size: 31px; font-weight: 700; letter-spacing: 0; }
+      .small { fill: #2c2720; font-family: Georgia, 'Times New Roman', serif; font-size: 25px; letter-spacing: 0; }
+      .tiny { fill: #2c2720; font-family: Georgia, 'Times New Roman', serif; font-size: 21px; letter-spacing: 0; }
+    </style>
+  </defs>
+
+  <rect class="paper" width="1600" height="700"/>
+  <rect x="28" y="28" width="1544" height="644" rx="24" fill="#f8efdd" filter="url(#paper-grain)"/>
+
+  <g transform="translate(68 70)">
+    <rect class="panel" x="0" y="0" width="438" height="508" rx="20"/>
+    <g transform="rotate(-5 219 210)">
+      <rect x="124" y="62" width="220" height="310" rx="28" fill="#f4ead5" stroke="#2c2720" stroke-width="5"/>
+      <rect x="144" y="96" width="180" height="232" rx="10" fill="#efe0bd" stroke="#2c2720" stroke-width="3"/>
+      <rect x="168" y="122" width="132" height="174" rx="6" fill="#fff6e3" stroke="#36533a" stroke-width="3"/>
+      <path d="M176 252c36-48 72-44 112-10v46H176z" fill="#36533a" opacity="0.9"/>
+      <circle cx="274" cy="152" r="24" class="brass"/>
+      <path d="M196 226c22-28 54-34 84-10" class="thin"/>
+      <rect x="208" y="342" width="48" height="8" rx="4" fill="#2c2720"/>
+    </g>
+    <g transform="translate(304 90)">
+      <path d="M78 150c-38-18-76-7-107 35" class="oxblood"/>
+      <path d="M-31 184l-5-40M-31 184l39-6" class="oxblood"/>
+      <rect x="66" y="0" width="66" height="66" rx="10" fill="#fff8ea" stroke="#7b2d26" stroke-width="5"/>
+      <path d="M99 48V16M99 16l-17 17M99 16l17 17" class="oxblood"/>
+    </g>
+    <text class="label" x="219" y="454" text-anchor="middle">1. Tap share.</text>
+  </g>
+
+  <g transform="translate(582 70)">
+    <rect class="panel" x="0" y="0" width="438" height="508" rx="20"/>
+    <g transform="translate(86 62)">
+      <rect x="0" y="0" width="266" height="310" rx="24" fill="#fff6e3" stroke="#2c2720" stroke-width="5"/>
+      <rect x="30" y="38" width="206" height="54" rx="12" fill="#f6edda" stroke="#2c2720" stroke-width="3"/>
+      <rect x="30" y="124" width="206" height="54" rx="12" fill="#fff8ea" stroke="#2c2720" stroke-width="3"/>
+      <rect x="30" y="210" width="206" height="54" rx="12" fill="#f6edda" stroke="#2c2720" stroke-width="3"/>
+      <circle cx="58" cy="65" r="11" class="forest"/>
+      <circle cx="58" cy="151" r="11" class="brass"/>
+      <circle cx="58" cy="237" r="11" fill="#7b2d26"/>
+      <text class="tiny" x="86" y="72">Send link</text>
+      <text class="tiny" x="86" y="158">Add to Home Screen</text>
+      <text class="tiny" x="86" y="244">Save for later</text>
+      <path d="M18 115c54-20 198-17 242 13M260 128c-9 22-18 44-26 65M234 193c-65 17-152 20-222-4M12 189c-4-25-2-50 6-74" class="oxblood"/>
+    </g>
+    <text class="label" x="219" y="430" text-anchor="middle">2. Choose</text>
+    <text class="label" x="219" y="470" text-anchor="middle">'Add to Home Screen'.</text>
+  </g>
+
+  <g transform="translate(1096 70)">
+    <rect class="panel" x="0" y="0" width="438" height="508" rx="20"/>
+    <g transform="translate(107 56)">
+      <rect x="0" y="0" width="224" height="318" rx="30" fill="#f4ead5" stroke="#2c2720" stroke-width="5"/>
+      <rect x="20" y="34" width="184" height="236" rx="12" fill="#efe0bd" stroke="#2c2720" stroke-width="3"/>
+      <g transform="translate(44 58)">
+        <rect x="0" y="0" width="38" height="38" rx="9" class="forest"/>
+        <rect x="58" y="0" width="38" height="38" rx="9" fill="#b88b3d"/>
+        <rect x="116" y="0" width="38" height="38" rx="9" fill="#7b2d26"/>
+        <rect x="0" y="62" width="38" height="38" rx="9" fill="#b88b3d"/>
+        <rect x="58" y="62" width="38" height="38" rx="9" fill="#fff8ea" stroke="#7b2d26" stroke-width="3"/>
+        <rect x="116" y="62" width="38" height="38" rx="9" class="forest"/>
+        <rect x="0" y="124" width="38" height="38" rx="9" fill="#7b2d26"/>
+        <g transform="translate(58 124)">
+          <rect x="-6" y="-8" width="50" height="54" rx="10" fill="#fff8ea" stroke="#b88b3d" stroke-width="4"/>
+          <path d="M3 31c12-18 22-17 32-2v9H3z" fill="#36533a"/>
+          <path d="M11 16c9-12 18-13 26-2" class="thin"/>
+          <circle cx="31" cy="10" r="5" class="brass"/>
+        </g>
+        <rect x="116" y="124" width="38" height="38" rx="9" fill="#b88b3d"/>
+      </g>
+      <rect x="88" y="286" width="48" height="8" rx="4" fill="#2c2720"/>
+    </g>
+    <path d="M168 297c22-22 75-24 100-2M177 304c30 18 73 17 100-3" fill="none" stroke="#b88b3d" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
+    <text class="label" x="219" y="430" text-anchor="middle">3. The book lives</text>
+    <text class="label" x="219" y="470" text-anchor="middle">on their home screen.</text>
+  </g>
+
+  <path d="M512 322c20-11 39-10 58 0M1026 322c20-11 39-10 58 0" fill="none" stroke="#b88b3d" stroke-width="5" stroke-linecap="round"/>
+</svg>

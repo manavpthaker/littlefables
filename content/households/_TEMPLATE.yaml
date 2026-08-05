@@ -1,0 +1,37 @@
+# Household manifest — one per buyer / family.
+# Fill this in after running scripts/new-household.ts. Metadata only —
+# not read at runtime today; kept in the repo so we can rebuild the
+# household deterministically or audit who has what.
+
+household:
+  slug: patel                           # matches this folder name
+  name: "Patel Family"                  # --name arg
+  provisioned_id: 00000000-0000-0000-0000-000000000000  # printed by new-household.ts
+
+child:
+  name: "Ravi"                          # --child arg
+  band: "4-8"                           # 3-4 | 4-6 | 4-8 | 6-8
+  provisioned_id: 00000000-0000-0000-0000-000000000000
+
+parent:
+  display_name: "Priya Patel"           # --parent arg
+  email: "buyer@example.com"            # --email arg
+  provisioned_id: 00000000-0000-0000-0000-000000000000
+
+device:
+  label: "Ravi's iPad"                  # --device-label arg
+  # magic URL the buyer opens on their iPad. Rotates each time
+  # new-household.ts runs — old tokens stay valid until they expire.
+  magic_url: "https://littlefables.app/f/REPLACE_ME"
+
+books:
+  # book slugs (dirnames under books/) that were imported into this household
+  # via `pnpm content:add content/households/<slug>/books/<book-slug> --household <id>`.
+  - lantern-round-pond
+
+order:
+  # Etsy fulfillment breadcrumbs — see docs/commerce/fulfillment-playbook.md.
+  etsy_order_id: null
+  intake_at: null
+  delivered_at: null
+  notes: ""

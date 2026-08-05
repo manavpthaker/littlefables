@@ -18,10 +18,10 @@
  *   }
  *
  * Usage:
- *   pnpm content:narrate content/books/brambles-hello
- *   pnpm content:narrate content/books/brambles-hello --voice day
- *   pnpm content:narrate content/books/brambles-hello --check
- *   pnpm content:narrate content/books/brambles-hello --force
+ *   pnpm content:narrate content/households/home/books/brambles-hello
+ *   pnpm content:narrate content/households/home/books/brambles-hello --voice day
+ *   pnpm content:narrate content/households/home/books/brambles-hello --check
+ *   pnpm content:narrate content/households/home/books/brambles-hello --force
  *
  * Env:
  *   ELEVENLABS_API_KEY        required

@@ -5,8 +5,8 @@
  * story, put it on the shelf."
  *
  * Usage:
- *   pnpm content:publish                                    # picks the folder (prompts if multiple)
- *   pnpm content:publish content/books/brambles-hello       # explicit
+ *   pnpm content:publish                                                        # picks the folder (prompts if multiple)
+ *   pnpm content:publish content/households/home/books/brambles-hello           # explicit
  *   pnpm content:publish --voice day                        # narrate day only
  *   pnpm content:publish --check                            # dry-run add + narrate
  *   pnpm content:publish --force                            # pass through to narrate
@@ -63,28 +63,35 @@ function parseArgs(): Args {
   return { folder, passthrough, skipImport, skipNarrate };
 }
 
-/** Every child directory of content/books/ that carries a story.json. */
+/** Every book folder across every household — content/households/<hh>/books/<slug>/. */
 function discoverBooks(): string[] {
-  const root = resolve('content/books');
+  const root = resolve('content/households');
   if (!existsSync(root)) return [];
-  return readdirSync(root)
-    .map((name) => join(root, name))
-    .filter((p) => statSync(p).isDirectory() && existsSync(join(p, 'story.json')))
-    .sort();
+  const out: string[] = [];
+  for (const hh of readdirSync(root)) {
+    const booksDir = join(root, hh, 'books');
+    if (!existsSync(booksDir) || !statSync(booksDir).isDirectory()) continue;
+    for (const slug of readdirSync(booksDir)) {
+      const p = join(booksDir, slug);
+      if (statSync(p).isDirectory() && existsSync(join(p, 'story.json'))) out.push(p);
+    }
+  }
+  return out.sort();
 }
 
 async function pickFolder(): Promise<string> {
   const found = discoverBooks();
   if (found.length === 0) {
-    console.error('\nNo books found under content/books/. Author one first — see content/AUTHORING-PROMPT.md.');
+    console.error('\nNo books found under content/households/*/books/. Author one first — see content/AUTHORING-PROMPT.md.');
     process.exit(1);
   }
+  const label = (p: string) => `${basename(join(p, '..', '..'))}/${basename(p)}`;
   if (found.length === 1) {
-    console.log(`\n📖 One book found: ${basename(found[0]!)}`);
+    console.log(`\n📖 One book found: ${label(found[0]!)}`);
     return found[0]!;
   }
   console.log('\nMultiple books found:');
-  found.forEach((f, i) => console.log(`  ${i + 1}. ${basename(f)}`));
+  found.forEach((f, i) => console.log(`  ${i + 1}. ${label(f)}`));
   const rl = createInterface({ input, output });
   try {
     const answer = (await rl.question('\nPick one (number): ')).trim();

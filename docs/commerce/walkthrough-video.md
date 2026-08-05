@@ -199,7 +199,7 @@ Drop them in `video/recordings/` as `01-email.mov`, `02-open.mov`, and so on.
 ## Dependency
 
 Beats 2, 4, 6 and 7 need the finished art for **The Lantern of Round Pond**
-(`content/books/custom/lantern-round-pond/`). Beat 4 uses all nine images
+(`content/households/demo/books/lantern-round-pond/`). Beat 4 uses all nine images
 directly; beats 6 and 7 need the book imported so it can be read on a device.
 
 Nothing else is blocking.

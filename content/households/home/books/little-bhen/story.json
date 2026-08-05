@@ -1,0 +1,67 @@
+{
+  "id": "azis-little-bhen",
+  "title": "Azi's Little Bhen",
+  "kind": "quick",
+  "chapters": [
+    {
+      "title": "Azi's Little Bhen",
+      "pages": [
+        { "text": "Far away in bright L.A., a baby girl was born today. Kaka called. Kaki did, too. \"Kaira's here - and she's brand-new!\" A bhen! A bhen! A little bhen! Azi asked, \"When? When? WHEN?\"" },
+        { "text": "\"Sunday,\" said Mama. \"Sunday, then. Let's pack a box for little bhen.\" Azi looked at bear, bear, bear. Big one, blue one, soft one there. He picked the softest of the three and held it up for all to see." },
+        { "text": "Into the box it goes, it goes — for Kaira, Kaira, Kaira." },
+        { "text": "Saturday! A sale. A street. Old toys waiting at his feet. Dada found a lion book. Azi found a puzzle. LOOK!" },
+        { "text": "Into the box they go, they go — for Kaira, Kaira, Kaira." },
+        { "text": "Mama cut. Mama glued. \"Mira!\" Hearts in red and blue. Azi pressed his hand in red. \"That's for Kaira,\" Azi said." },
+        { "text": "Into the box they go, they go — for Kaira, Kaira, Kaira." },
+        { "text": "Dadi stirred. The kitchen hummed. Azi watched. His fingers drummed. Roll the ladoos - one, two, ten. Sweet for Kaira. Sweet for bhen." },
+        { "text": "Into the box they go, they go — for Kaira, Kaira, Kaira." },
+        { "text": "Papa flipped. The records spun. \"This one, Azi?\" \"That's the one!\" A song for morning. One for night. A song to hold her sleepy-tight." },
+        { "text": "Into the box it goes, it goes — for Kaira, Kaira, Kaira." },
+        { "text": "Bear and book and puzzle, too. Hearts of paper, red and blue. Sweet ladoos. And one good song. RIIIP goes the tape. Now - come along!" },
+        { "text": "Up, up, up - the plane! The sky! Over mountains, way up high. Down, down, down. And there's a door. Azi's never knocked before." },
+        { "text": "There she is. So small. So new. Ten small fingers. Ten toes, too. She grabs his thumb. She won't let go. \"Hi,\" says Azi. \"Hi. Hello.\"" },
+        { "text": "Moon comes up. The day is done. Empty box - they gave each one. Nothing left inside, and then - just Azi. And his little bhen." }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "bhen",
+      "syllables": ["bhen"],
+      "kidDefinition": "your sister, in Gujarati - the girl in your family who is yours to look after"
+    },
+    {
+      "word": "ladoos",
+      "syllables": ["la", "doos"],
+      "kidDefinition": "round Indian sweets about the size of a plum, sticky and warm and very sugary"
+    },
+    {
+      "word": "puzzle",
+      "syllables": ["puz", "zle"],
+      "kidDefinition": "a picture cut into pieces that you fit back together"
+    },
+    {
+      "word": "records",
+      "syllables": ["rec", "ords"],
+      "kidDefinition": "big black circles that spin around and play music"
+    },
+    {
+      "word": "hummed",
+      "syllables": ["hummed"],
+      "kidDefinition": "made a soft warm sound, like a song with no words in it"
+    },
+    {
+      "word": "drummed",
+      "syllables": ["drummed"],
+      "kidDefinition": "tapped out a beat with your fingers when a good sound gets into your hands"
+    }
+  ],
+  "pronunciations": {
+    "bhen": "behn",
+    "Kaka": "Kaa-kaa",
+    "Kaki": "Kaa-kee",
+    "Kaira": "Kye-rah",
+    "ladoos": "luh-doos",
+    "Mira": "Mee-rah"
+  }
+}

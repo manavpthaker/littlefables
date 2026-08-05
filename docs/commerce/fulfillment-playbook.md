@@ -5,6 +5,12 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 
 **Target timeline:** previews within 24h · final book 3–4 days after approval.
 
+> **Delivery & gift flow:** steps 24, 27, and 28 below are being superseded by
+> [`delivery-flow.md`](delivery-flow.md) — readable `/read/<slug>-<token>` URLs,
+> a separate `/gift/<code>` redemption route, and install prompt moved to the
+> end of the book. Once the code changes land, this playbook will be edited to
+> match; for now the spec is the source of truth for those three steps.
+
 ## At your desk
 
 - Chrome: Gmail, Etsy Seller dashboard, ChatGPT (with `fable-art-custom` skill),
@@ -54,15 +60,15 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 
 9. **Save and validate:**
    ```bash
-   # save to content/books/custom/<slug>/story.json
-   pnpm content:add content/books/custom/<slug> --check
+   # save to content/households/<slug>/books/<book-slug>/story.json
+   pnpm content:add content/households/<slug>/books/<book-slug> --check
    ```
    Must pass `bookSchema.parse` before any art work starts.
 
 10. **Write `character-notes.md`** in the same folder — a 15–25 word character block
     per the `fable-art-custom` skill. This block gets pasted verbatim into every
     prompt. If the buyer sent a photo, drop it at
-    `content/books/custom/<slug>/reference/child-photo.jpg` (already gitignored).
+    `content/households/<slug>/books/<book-slug>/reference/child-photo.jpg` (already gitignored).
 
 ---
 
@@ -123,8 +129,8 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 
 21. **Save into the book folder:**
     ```
-    content/books/custom/<slug>/cover.png
-    content/books/custom/<slug>/pages/01.png … NN.png
+    content/households/<slug>/books/<book-slug>/cover.png
+    content/households/<slug>/books/<book-slug>/pages/01.png … NN.png
     ```
     Pages are numbered globally across chapters: `01` = ch1p1, `02` = ch1p2,
     `03` = ch2p1 if chapter 1 has two pages.
@@ -132,7 +138,7 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 22. **Narration:** skip for orders 1–10. The reader falls back to browser speech
     synthesis, which is decent. If narration is ever sold as an upsell:
     ```bash
-    pnpm content:narrate content/books/custom/<slug>
+    pnpm content:narrate content/households/<slug>/books/<book-slug>
     ```
     Requires `ELEVENLABS_API_KEY`, `DAY_VOICE_ID`, `NIGHT_VOICE_ID` in `.env.local`.
 
@@ -163,10 +169,14 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
     Prints the household uuid, child uuid, device token, and **the magic URL**. Save
     all of it to `orders.csv` — the raw token is only shown once.
 
-25. **Import the book:**
+25. **Fill in `content/households/<slug>/household.yaml`** with the uuids the
+    provisioning script printed (copy `_TEMPLATE.yaml` if you haven't yet).
+    Then **import the book:**
     ```bash
-    pnpm content:add content/books/custom/<slug> --household <uuid>
+    pnpm content:add content/households/<slug>/books/<book-slug>
     ```
+    The household is inferred from the folder path via `household.yaml`. Pass
+    `--household <uuid>` only if you deliberately want to override.
 
 26. **Smoke test.** Open the magic URL in a private window. Confirm: cover appears on
     the shelf, the book opens, every page renders, day mode shows art, night mode
@@ -218,6 +228,6 @@ noted.
 - Story schema: `lib/models/book.ts`
 - Import script: `scripts/import-book.ts` (read the header docblock)
 - Provisioning: `scripts/new-household.ts`
-- Magic URL route: `app/f/[token]/route.ts`
+- Magic URL routes: `app/read/[slug]/[token]/route.ts` (readable, preferred) + `app/f/[token]/route.ts` (legacy, still works)
 - Art skill: `~/.codex/skills/fable-art-custom/SKILL.md`
 - Audio fallback chain: `lib/reader/page-audio-source.ts`

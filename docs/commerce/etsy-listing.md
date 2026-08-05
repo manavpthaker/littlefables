@@ -247,7 +247,7 @@ All blocked on the Heritage DS.
 | # | Shot | Purpose |
 |---|---|---|
 | 1 | iPad in a child's hands, book open to an illustrated page, warm room light | Hero. Must communicate "real book on a real device" instantly. |
-| 2 | Grid of 4 art styles — same character rendered 4 ways | Proves the "your taste, not our dropdown" claim |
+| 2 | Grid of 6 art styles - same storybook promise rendered six ways | Proves the "your taste, not our dropdown" claim |
 | 3 | Text-overlay card: "Preview in 24 hours · Book in 3–4 days · No shipping ever" | The turnaround differentiator as a scannable graphic |
 | 4 | Home screen of an iPad with the Little Fables icon among other apps | Demystifies "saveable web app" for non-technical buyers |
 | 5 | The gift certificate, printed, on a table with a ribbon | Grandparent conversion |

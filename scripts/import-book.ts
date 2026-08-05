@@ -4,10 +4,10 @@
  * to the hosted Supabase (art + audio to Storage; the book row to Postgres).
  *
  * Usage:
- *   pnpm content:add content/books/hedgehog-goodnight
+ *   pnpm content:add content/households/home/books/hedgehog-goodnight
  *
  * Folder convention:
- *   content/books/hedgehog-goodnight/
+ *   content/households/<household-slug>/books/hedgehog-goodnight/
  *     story.json          # authored story (see FORMAT below)
  *     cover.png           # book cover — used as the shelf cover and as the
  *                         # per-page fallback when the page has no illustration
@@ -57,12 +57,11 @@
  */
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
-import { basename, join, relative, resolve } from 'node:path';
+import { basename, join, relative, resolve, sep } from 'node:path';
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { bookSchema, type Book } from '../lib/models/book';
-import { SEED_HOUSEHOLD_ID } from '../lib/models/seed';
 
 config({ path: '.env.local' });
 
@@ -75,20 +74,61 @@ interface Args {
   dryRun: boolean;
 }
 
+/** Walk up from a book folder to find the enclosing content/households/<slug>
+ *  directory, then read its household.yaml and extract `household.provisioned_id`.
+ *  Returns null if the folder isn't under content/households/ or the yaml is
+ *  missing / lacks a provisioned id. */
+function inferHouseholdIdFromPath(folder: string): { id: string; slug: string } | null {
+  const parts = folder.split(sep);
+  const anchor = parts.lastIndexOf('households');
+  if (anchor === -1 || anchor === parts.length - 1) return null;
+  const slug = parts[anchor + 1];
+  if (!slug) return null;
+  const yamlPath = join(parts.slice(0, anchor + 2).join(sep), 'household.yaml');
+  if (!existsSync(yamlPath)) return null;
+  const text = readFileSync(yamlPath, 'utf8');
+  // Grab the provisioned_id under the top-level `household:` block. Deliberately
+  // strict — we want to fail loud rather than accidentally pick up a child or
+  // parent id from elsewhere in the file.
+  const match = text.match(/^household:\s*\n(?:[ \t]+.*\n)*?[ \t]+provisioned_id:\s*([^\s#]+)/m);
+  if (!match || !match[1] || match[1] === 'null') return null;
+  return { id: match[1], slug };
+}
+
 function parseArgs(): Args {
   const folder = process.argv[2];
   if (!folder) {
     console.error('usage: pnpm content:add <folder> [--household <id>] [--check]');
     process.exit(1);
   }
+  const resolvedFolder = resolve(folder);
   const householdIdx = process.argv.indexOf('--household');
   const householdArg =
     householdIdx > 0 && process.argv.length > householdIdx + 1
       ? process.argv[householdIdx + 1]
       : undefined;
-  const householdId = householdArg ?? SEED_HOUSEHOLD_ID;
+
+  let householdId = householdArg;
+  if (!householdId) {
+    const inferred = inferHouseholdIdFromPath(resolvedFolder);
+    if (inferred) {
+      householdId = inferred.id;
+      console.log(`  household inferred from path: ${inferred.slug} (${inferred.id})`);
+    }
+  }
+  if (!householdId) {
+    console.error(
+      'Could not determine target household. Either:\n' +
+        '  - author the book under content/households/<slug>/books/<book-slug>/\n' +
+        '    with a filled-in household.yaml (provisioned_id set), OR\n' +
+        '  - pass --household <uuid> explicitly.\n' +
+        'Silent default to the seed household was removed to prevent accidentally\n' +
+        'importing a demo/customer book onto our shelf.',
+    );
+    process.exit(1);
+  }
   const dryRun = process.argv.includes('--check');
-  return { folder: resolve(folder), householdId, dryRun };
+  return { folder: resolvedFolder, householdId, dryRun };
 }
 
 interface StoryFile {

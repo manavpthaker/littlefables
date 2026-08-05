@@ -29,7 +29,10 @@ device:
   provisioned_id: bee6a41d-d769-40f8-842f-a1018bb948b6
   expires_at: "2026-11-02T23:26:24.100Z"
   # The magic URL we hand out in walkthroughs and marketing.
-  magic_url: "https://littlefables.app/f/C5KeWk4ej5eq3Dq_A4ck7G36y4vya-tWwbvn2CyAfVs"
+  # Two forms work — the readable form is preferred. The legacy /f/<token>
+  # form still resolves (via app/f/[token]/route.ts) for URLs handed out
+  # before the rename; new provisioning emits the /read/ form.
+  magic_url: "https://littlefables.app/read/lantern-of-round-pond/C5KeWk4ej5eq3Dq_A4ck7G36y4vya-tWwbvn2CyAfVs"
 
 books:
   - lantern-round-pond

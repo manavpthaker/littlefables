@@ -36,10 +36,13 @@ NIGHT_VOICE_ID=...          # sleepy voice for bedtime narration
 
 ## Adding a book
 
-Books live in `content/books/<slug>/`. Each folder:
+Books live under the household they belong to:
+`content/households/<household-slug>/books/<slug>/`. `home/` is us; `demo/`
+is the public demo; buyer households get their own slug (usually a family
+name). See `content/households/README.md` for the full pattern.
 
 ```
-content/books/hedgehog-goodnight/
+content/households/home/books/hedgehog-goodnight/
   story.json         # authored story text (see format below)
   cover.png          # book cover (also used as per-page fallback art)
   pages/             # optional day-mode illustrations, one PNG per page
@@ -80,8 +83,8 @@ content/books/hedgehog-goodnight/
 Upload:
 
 ```bash
-pnpm content:add content/books/hedgehog-goodnight            # for real
-pnpm content:add content/books/hedgehog-goodnight --check    # dry run
+pnpm content:add content/households/home/books/hedgehog-goodnight            # for real
+pnpm content:add content/households/home/books/hedgehog-goodnight --check    # dry run
 ```
 
 The script uploads cover + pages to the `book-art` bucket, audio to
@@ -115,7 +118,9 @@ edit the folder and re-import to update.
 - **`lib/voice/`** — voice priority + tap-to-hear.
 - **`design-system/`** — accepted DS, consumed verbatim.
 - **`supabase/migrations/`** — linear, date-prefixed.
-- **`content/books/`** — your authored books (uploaded via `pnpm content:add`).
+- **`content/households/<slug>/books/`** — books scoped to that household
+  (uploaded via `pnpm content:add`). `home/` for us, `demo/` for the public
+  demo, `<lastname>/` for buyers.
 - **`scripts/`** — `import-book.ts` (book uploader), `new-household.ts`
   (provision a new household), `build-precache-manifest.ts` (SW stamp).
 

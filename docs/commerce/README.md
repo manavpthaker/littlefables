@@ -19,6 +19,7 @@ Target: first listing live **October 2026**, Christmas 2026 as the volume season
 | [`etsy-listing.md`](etsy-listing.md) | Listing title, tags, description, personalization fields, SKUs, photo shot list |
 | [`intake-typeform.md`](intake-typeform.md) | The 18-screen buyer intake, question by question |
 | [`fulfillment-playbook.md`](fulfillment-playbook.md) | Per-order runbook, intake → delivery |
+| [`delivery-flow.md`](delivery-flow.md) | Landing / `/read/<slug>-<token>` / `/gift/<code>` — the three arrival states, and why gift orders get their own route. Supersedes steps 24/27/28 of the playbook. |
 | [`email-templates.md`](email-templates.md) | Six canned emails covering the whole order lifecycle |
 | [`market-research.md`](market-research.md) | Competitor pricing, audience data, channel findings |
 | [`orders.csv`](orders.csv) | Order tracking template |
@@ -40,8 +41,8 @@ Target: first listing live **October 2026**, Christmas 2026 as the volume season
 - **Intake**: Typeform (conversational mode), linked from the Etsy order confirmation
 - **Art**: ChatGPT `fable-art-custom` skill (`~/.codex/skills/fable-art-custom/`)
 - **Provisioning**: `pnpm exec tsx scripts/new-household.ts` → prints magic URL
-- **Import**: `pnpm content:add content/books/custom/<slug> --household <uuid>`
-- **Delivery**: magic URL at `/f/<token>` → buyer adds to home screen
+- **Import**: `pnpm content:add content/households/<slug>/books/<book-slug>` (household inferred from folder path via `household.yaml`)
+- **Delivery**: readable magic URL at `/read/<story-slug>/<token>` → buyer adds to home screen (see [`delivery-flow.md`](delivery-flow.md))
 
 ## Open items
 

@@ -133,7 +133,7 @@ Save as `pages/03.png` (matches the page number in the reader).
 Choose one and stick to it. Order from cheapest to best:
 
 1. **Copy-paste the character block.** Write your character in 6–15
-   words the first time, save it to `content/books/<slug>/character-notes.md`,
+   words the first time, save it to `content/households/<household>/books/<slug>/character-notes.md`,
    and paste that exact block into every subsequent prompt. Small
    wording drift → visible drift.
 2. **Reference-image style transfer.** After the cover generates,
@@ -216,7 +216,7 @@ depends on, an emotional beat).
 For each book folder:
 
 ```
-content/books/<slug>/
+content/households/<household>/books/<slug>/
   story.json
   cover.png                (from Section 1)
   character-notes.md       (your character block — for reuse)
@@ -226,7 +226,7 @@ content/books/<slug>/
     ...
 ```
 
-Then `pnpm content:add content/books/<slug>` uploads everything.
+Then `pnpm content:add content/households/<household>/books/<slug>` uploads everything.
 
 Re-runs are idempotent — swap a `pages/03.png` for a better version and
 re-import; the reader picks up the new image on the next open.
