@@ -32,6 +32,31 @@
   --word-current-pad: 2px 4px;
   --word-current-radius: var(--radius-sm);
   --word-upcoming-ink: color-mix(in srgb, var(--ink) 55%, transparent);
+
+  /* Hairline edge on the reader capsule and its progress rule. Faint enough
+     to define the shape without drawing a box around it. */
+  --pill-edge: color-mix(in srgb, var(--ink) 14%, transparent);
+
+  /* Paper lighter than the page — for type sitting on ink. Heritage ships
+     --paper, --paper-warm and --paper-deep but not this one, and the night
+     block below was defining it unilaterally. That left it undefined in day
+     mode, where .lf-skip-link asks for it as the colour of text on an ink
+     background: dark on dark, so the skip link was invisible to exactly the
+     keyboard users it exists for. */
+  --paper-bright: #f7f0e0;
+
+  /* Two companions to --oxblood, because one action colour cannot do both
+     jobs across both modes.
+
+     --on-oxblood is content sitting ON an oxblood fill, and deliberately does
+     NOT flip at night: the fill stays dark in both modes, so its content has
+     to stay light in both. Using --paper-bright here painted the play glyph
+     dark-on-dark once night swapped it.
+
+     --oxblood-text is oxblood used AS text. Night never redefined --oxblood,
+     so action labels were dark red on a dark brown panel. */
+  --on-oxblood: #f7f0e0;
+  --oxblood-text: var(--oxblood);
 }
 html,
 body {
@@ -128,24 +153,14 @@ button:disabled {
 /* Page change. The reader re-mounts its main on each (chapterIdx, pageIdx)
  * change via React key.
  *
- * This is deliberately NOT a page turn, and does not pretend to be one. Only
- * one page is ever in the DOM, so there is no outgoing leaf to rotate away —
- * an earlier version swung the incoming page in from 45 degrees, which read
- * as a door rather than paper, and swung the binding along with it because
- * the animation sat on the container that holds the crease.
+ * There is no transition. A bound book does not move when you change page, so
+ * neither does this: the picture fades up in place and the words set
+ * themselves after it. An earlier version swung the incoming page in from 45
+ * degrees, which read as a door rather than paper — and because the animation
+ * sat on the container, it swung the crease along with it.
  *
- * What a bound book actually does when you change page: the book does not
- * move at all. So the gutter and the page furniture stay nailed down, and
- * only the printed content settles — a short drift in the direction of
- * travel, art first and words just behind it, the way a leaf lands before
- * the eye catches up to reading it.
- *
- *   lf-leaf-in    first mount / return from the chapter map; settles upward
- *   lf-leaf-next  advancing; content drifts in from the right
- *   lf-leaf-prev  going back; mirror
- *
- * Under reduced motion these lose their travel and become a plain fade. That
- * is handled by redefining the keyframes below rather than by overriding
+ * Under reduced motion the word reveal loses its rise and becomes a plain
+ * fade. That is done by redefining the keyframes rather than by overriding
  * animation-name: the shorthand is set inline per element, so a rule would
  * need !important to win, whereas a second @keyframes of the same name simply
  * supersedes the first. */
@@ -458,6 +473,9 @@ body,
   --sand-line: #5c4432;
   --wash-panel: #38271e;
   --wash-capsule: rgba(56, 39, 30, 0.85);
+  /* Terracotta rather than oxblood: ~5:1 on the night panel, where the day
+     oxblood manages barely 1.5:1. Still unmistakably the action colour. */
+  --oxblood-text: #c97b62;
   transition: background 600ms ease, color 600ms ease;
 }
 [data-mode='night'] main,

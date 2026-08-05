@@ -8,8 +8,10 @@ import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-so
 import type { WordTimestamp } from '@/lib/reader/speech';
 import { bookThemeCss } from '@/lib/reader/theme';
 import { useBedtime } from '@/lib/reader/use-bedtime';
-import { ReaderHeader } from './reader-header';
-import { ReaderFooter, type PlaybackRate } from './reader-footer';
+import { Wordmark } from '@ds/components/core/Wordmark.jsx';
+import { ReaderChip } from './reader-chip';
+import { ReaderPill } from './reader-pill';
+import { ReaderMenu, type PlaybackRate } from './reader-menu';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { MapSection } from './map-section';
@@ -87,6 +89,7 @@ export function Reader({
   //   day + 1×    = 1×
   //   night + 1×  = 0.9× (default bedtime cadence)
   //   night + 1.15× = 1.035× (kid wants faster even at bedtime)
+  const [menuOpen, setMenuOpen] = useState(false);
   const [rate, setRate] = useState<PlaybackRate>(1);
   useEffect(() => {
     try {
@@ -176,15 +179,6 @@ export function Reader({
         : undefined,
   });
 
-  const onBack = useCallback(() => {
-    transport.stop();
-    if (book.kind === 'chapter' && !showMap) {
-      dispatch({ type: 'exitChapter' });
-      return;
-    }
-    router.push('/read');
-  }, [book.kind, showMap, router, transport]);
-
   const onPickChapter = useCallback((i: number) => {
     dispatch({ type: 'enterChapter', chapterIdx: i });
   }, []);
@@ -225,27 +219,13 @@ export function Reader({
     <div
       data-book-id={book.id}
       data-mode={isNight ? 'night' : 'day'}
-      style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)', overflow: 'hidden' }}
+      style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--surface-page)', overflow: 'hidden', position: 'relative' }}
       onTouchStart={swipe.onTouchStart}
       onTouchEnd={swipe.onTouchEnd}
     >
       {themeCss && <style dangerouslySetInnerHTML={{ __html: themeCss }} />}
-      <ReaderHeader
-        bookTitle={book.title}
-        chapterTitle={book.kind === 'chapter' && ch ? ch.title : null}
-        segments={ch ? { current: state.pageIdx, total: ch.pages.length } : undefined}
-        isNight={isNight}
-        onBack={onBack}
-        onToggleMode={toggleBedtime}
-        onBackToMap={
-          book.kind === 'chapter' && state.chapterIdx !== null
-            ? () => {
-                transport.stop();
-                dispatch({ type: 'exitChapter' });
-              }
-            : null
-        }
-      />
+
+      <ReaderChip isNight={isNight} onToggle={toggleBedtime} />
 
       {showMap && book.kind === 'chapter' ? (
         <main style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
@@ -256,34 +236,65 @@ export function Reader({
           />
         </main>
       ) : ch && page ? (
-        <>
-          <main style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-            <PageSpread
-              page={page}
-              pageKey={`${state.chapterIdx}-${state.pageIdx}`}
-              chapterTitle={book.kind === 'chapter' ? ch.title : null}
-              useWashFallback={Boolean(useWashFallback)}
-              currentIndex={transport.wordIdx}
-              narrating={transport.playing}
-              coverImage={book.coverImage}
-              hideArt={isNight}
-              onHearWord={onHearWord}
-            />
-          </main>
-
-          <ReaderFooter
-            playing={transport.playing}
-            canPrev={!isFirstPage(state)}
-            canNext={!lastPage}
-            onPlay={transport.toggle}
-            onPrev={onPrev}
-            onNext={onNext}
-            onRestartPage={() => transport.seekToWord(0)}
-            rate={rate}
-            onCycleRate={chooseRate}
-          />
-        </>
+        <PageSpread
+          page={page}
+          pageKey={`${state.chapterIdx}-${state.pageIdx}`}
+          useWashFallback={Boolean(useWashFallback)}
+          currentIndex={transport.wordIdx}
+          narrating={transport.playing}
+          coverImage={book.coverImage}
+          hideArt={isNight}
+          onHearWord={onHearWord}
+          controls={
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                aria-label="Menu"
+                style={{
+                  border: '1px solid var(--pill-edge)',
+                  background: 'var(--wash-capsule)',
+                  width: 44,
+                  height: 44,
+                  borderRadius: '50%',
+                  display: 'grid',
+                  placeItems: 'center',
+                  flex: 'none',
+                  boxShadow: 'var(--shadow-rest)',
+                  padding: 0,
+                }}
+              >
+                <Wordmark layout="mark-only" markSize={22} />
+              </button>
+              <ReaderPill
+                playing={transport.playing}
+                canPrev={!isFirstPage(state)}
+                canNext={!lastPage}
+                onPlay={transport.toggle}
+                onPrev={onPrev}
+                onNext={onNext}
+                label={book.kind === 'chapter' && ch ? ch.title : book.title}
+                progress={page.words.length > 1 ? transport.wordIdx / (page.words.length - 1) : null}
+              />
+            </div>
+          }
+        />
       ) : null}
+
+      <ReaderMenu
+        open={menuOpen}
+        bookTitle={book.title}
+        chapters={book.kind === 'chapter' ? book.chapters.map((c) => ({ title: c.title })) : null}
+        currentChapter={state.chapterIdx}
+        rate={rate}
+        onRate={chooseRate}
+        onPickChapter={onPickChapter}
+        onLibrary={() => {
+          transport.stop();
+          router.push('/read');
+        }}
+        onClose={() => setMenuOpen(false)}
+      />
     </div>
   );
 }

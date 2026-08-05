@@ -20,6 +20,11 @@ declare module '@ds/components/kid/Transport.jsx' {
   export function Transport(props: TransportProps): JSX.Element;
 }
 
+declare module '@ds/components/core/Wordmark.jsx' {
+  import type { WordmarkProps } from '@ds/components/core/Wordmark';
+  export function Wordmark(props: WordmarkProps): JSX.Element;
+}
+
 declare module '@ds/components/reader/ChapterMap.jsx' {
   import type { ChapterMapProps } from '@ds/components/reader/ChapterMap';
   export function ChapterMap(props: ChapterMapProps): JSX.Element;
