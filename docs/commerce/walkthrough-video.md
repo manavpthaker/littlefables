@@ -137,17 +137,21 @@ rule draws around the edge. The book exists.
 
 ### 5 · The payoff — 0:59–1:23
 
-The longest live beat. Real reading, minimal overlay.
-
-- **Source:** screen recording on iPad.
-  - (a) a page turn, full directional flip
-  - (b) a word tapped, lighting up as it is spoken
-  - (c) the transport controls, a thumb hitting play
-  - (d) a slow pan across an illustrated spread
-- **Overlay:** almost none. One small caption per sub-shot, low, in EB Garamond,
-  fading in and out. Never covering the art.
-- **Type:** `Read aloud, warmly` → `Tap any word to hear it` → `Their book, their pace`
-- **Audio:** bring the real narration up. The only voice in the film.
+- **Source:** one continuous screen recording — `06-payoff.mp4`.
+- **What happens:** play is pressed, the page is read to the end, the page
+  turns, a word is tapped.
+- **Type:** `Read aloud, warmly` → `Their book, their pace` → `Tap any word to
+  hear it`, timed to the actions rather than to even thirds.
+- **Why one take:** this was three separate captures cut together, and each one
+  re-opened the book — so page one appeared, the film cut, and page one
+  appeared again before flipping away. The narration ran on across that join
+  too, still reading a page the picture had already left. A single take fixes
+  both, and the hold after play is sized to outlast the 9.9s narration so the
+  page finishes being read before it is turned.
+- **Timing:** the recording's actions are at fixed offsets — page one settles
+  at 7.5s, the turn is at 19.5s, the tap at 24.5s. `COPY.payoffAt` carries the
+  caption times derived from those. A re-capture that shifts the actions has
+  to shift those too.
 
 ### 6 · Night — 1:23–1:31
 

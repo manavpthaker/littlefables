@@ -78,7 +78,7 @@ export const READY = new Set([
   'recordings/03-intake.mp4',
   'recordings/04-page-turn.mp4',
   'recordings/05-word-tap.mp4',
-  'recordings/06-transport.mp4',
+  'recordings/06-payoff.mp4',
   'recordings/07-night.mp4',
 ]);
 
@@ -89,7 +89,7 @@ export const RECORDINGS = {
   open: 'recordings/02-open.mp4',
   pageTurn: 'recordings/04-page-turn.mp4',
   wordTap: 'recordings/05-word-tap.mp4',
-  transport: 'recordings/06-transport.mp4',
+  payoff: 'recordings/06-payoff.mp4',
   night: 'recordings/07-night.mp4',
 };
 
@@ -113,13 +113,25 @@ export const AUDIO = {
   narration: 'audio/narration.mp3',
   narrationVolume: 0.92,
   /** Seconds into the payoff beat before she starts speaking. */
-  narrationDelay: 2,
+  /**
+   * The beat joins just after play is pressed, so the voice starts almost at
+   * once. It runs 9.9s and the page turns at 12.0s — the page is finished
+   * being read before it is turned, which is the whole point of the beat.
+   */
+  narrationDelay: 0.3,
   /** Base level for the bed everywhere else. */
   volume: 0.34,
   /** Level during the reading beat, so narration reads over it. */
   duckedVolume: 0.12,
+  /**
+   * The duck exists to make room for the voice, so it tracks the voice rather
+   * than a beat boundary. Ducking to the end of the night beat left twenty-two
+   * seconds — the page turn, the word tap, the whole night beat — sitting at
+   * about -29 dB with nothing over it, which reads as the audio dropping out
+   * rather than as restraint.
+   */
   duckFrom: BEATS.payoff.start,
-  duckTo: BEATS.night.end,
+  duckTo: BEATS.payoff.start + 0.3 + 9.9 + 1.2,
   fadeInSeconds: 1.5,
   fadeOutSeconds: 4,
 };
@@ -134,6 +146,13 @@ export const COPY = {
   arrives: 'Delivered in days',
   arrivesSub: 'saved to their iPad like a favourite app',
   payoff: ['Read aloud, warmly', 'Their book, their pace', 'Tap any word to hear it'],
+  /**
+   * Seconds into the payoff beat at which each caption lands, measured off
+   * 06-payoff.mp4: the page turns 12.0s in and a word is tapped at 17.0s.
+   * Keep these with the recording, not the component — a re-capture that
+   * shifts the actions has to shift these too.
+   */
+  payoffAt: [0.8, 11.5, 16.5],
   night: 'And a quieter one for bedtime',
   range: 'No two look alike.',
   rangeSub: 'the style comes from the books you already love',

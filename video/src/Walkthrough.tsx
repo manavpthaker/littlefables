@@ -107,15 +107,10 @@ const Arrives: React.FC = () => {
  * the ear were describing different things.
  */
 const Payoff: React.FC = () => {
-  // startFrom skips each capture's own navigation — goto, click, load — so the
-  // film cuts straight to the reader rather than watching it boot.
-  const shots = [
-    { src: RECORDINGS.transport, caption: COPY.payoff[0], len: sec(9), from: 2.8 },
-    { src: RECORDINGS.pageTurn, caption: COPY.payoff[1], len: sec(8), from: 3.6 },
-    { src: RECORDINGS.wordTap, caption: COPY.payoff[2], len: sec(7), from: 3.6 },
-  ];
-
-  let at = 0;
+  // One continuous take rather than three cuts. Each of the old shots
+  // re-opened the book, so page one appeared, the film cut, and page one
+  // appeared again before flipping away — and the narration ran on across the
+  // join, reading a page the picture had already left.
   return (
     <AbsoluteFill style={{ background: paper.base }}>
       {/* The product reading itself aloud — the one voice in the film. */}
@@ -123,16 +118,17 @@ const Payoff: React.FC = () => {
         <Audio src={staticFile(AUDIO.narration)} volume={AUDIO.narrationVolume} />
       </Sequence>
 
-      {shots.map((shot, i) => {
-        const from = at;
-        at += shot.len;
-        return (
-          <Sequence key={i} from={from} durationInFrames={shot.len}>
-            <DeviceFrame src={shot.src} device="ipad" startFrom={shot.from} />
-            <Caption text={shot.caption} delay={motion.settle} hold={shot.len - motion.settle * 2} />
-          </Sequence>
-        );
-      })}
+      {/* startFrom lands on page one already settled, just after play. */}
+      <DeviceFrame src={RECORDINGS.payoff} device="ipad" startFrom={7.5} />
+
+      {COPY.payoff.map((text, i) => (
+        <Caption
+          key={i}
+          text={text}
+          delay={Math.round((COPY.payoffAt[i] ?? 0) * FPS)}
+          hold={sec(i === 0 ? 8.5 : i === 1 ? 4 : 6)}
+        />
+      ))}
     </AbsoluteFill>
   );
 };

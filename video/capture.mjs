@@ -109,42 +109,38 @@ const SHOTS = {
     await pause(5000);
   },
 
-  /** 04 · two page turns, each flip captured whole. */
-  pageTurn: async (page) => {
-    await openBook(page);
-    for (let i = 0; i < 4; i++) {
-      await page.getByLabel('Next page').click();
-      await pause(2600); // the settle is 600ms; the rest is breathing room
-    }
-  },
 
-  /** 05 · tapping a word and watching it light up. */
-  wordTap: async (page) => {
-    await openBook(page);
-    await page.getByLabel('Next page').click();
-    await pause(1500);
-    // "lantern" and "patient" are both in the vocab list — words a five-year-old
-    // would actually stop on.
-    for (const word of ['lantern', 'patient', 'Rosa']) {
-      const target = page.getByLabel(`Hear ${word}`).first();
-      if (await target.count()) {
-        await target.click();
-        await pause(2400);
-        break;
-      }
-    }
-    await pause(4000);
-  },
 
-  /** 06 · pressing play, narration starting, words highlighting in sequence. */
-  transport: async (page) => {
+  /**
+   * 06 · the whole reading session, one continuous take: press play, let the
+   * page be read, turn to the next, tap a word.
+   *
+   * Was three separate captures cut together, and each one re-opened the book
+   * — so page one appeared, the film cut, and page one appeared again before
+   * flipping away. The hold after play is sized to outlast the narration the
+   * film lays underneath it, so the voice finishes the page before the page
+   * turns rather than talking over the cut.
+   */
+  payoff: async (page) => {
     await openBook(page);
-    await pause(600);
-    // The capsule labels this "Read to me" — the reader rebuild moved play out
-    // of the old footer Transport and relabelled it.
+    await pause(700);
+
     await page.getByRole('button', { name: 'Read to me' }).click();
-    await pause(9000); // long enough to sit under the narration
+    await pause(12000); // narration.mp3 is 9.9s — this outlasts it
+
+    await page.getByLabel('Next page').click();
+    await pause(5000);
+
+    const word = page.getByLabel('Hear lantern').first();
+    if (await word.count()) {
+      await word.click();
+    } else {
+      await page.getByLabel(/^Hear /).first().click();
+    }
+    await pause(5000);
+    await pause(3000);
   },
+
 
   /** 07 · the day-to-night switch, one continuous take. */
   night: async (page) => {
@@ -159,9 +155,7 @@ const SHOTS = {
 const FILENAME = {
   intake: '03-intake.mp4',
   open: '02-open.mp4',
-  pageTurn: '04-page-turn.mp4',
-  wordTap: '05-word-tap.mp4',
-  transport: '06-transport.mp4',
+  payoff: '06-payoff.mp4',
   night: '07-night.mp4',
 };
 
