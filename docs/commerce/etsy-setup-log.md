@@ -47,7 +47,10 @@ Storybooks, renewal automatic.
 | Shop sections | `Custom Storybooks`, `Add-Ons` | both created |
 | Tagline | `Make your kid the main character of their stories.` | 50/**55** — limit verified live |
 | About headline | `One kid, one book, made on purpose for them.` | 44/150 |
-| About story | Parent-founder rewrite | 1,916/5,000 — replaced the pasted listing copy |
+| About story | Parent-founder rewrite, then cut | 1,153/5,000 — replaced the pasted listing copy, then trimmed from 1,916 |
+| Occasion | Birthday | was empty |
+| Holiday | **Christmas** | was empty — feeds Etsy's holiday gift-guide filtering |
+| Description | + `AT A GLANCE` spec block | inserted after the hook, before HOW IT WORKS |
 
 **On the AI disclosure.** Selected *With an AI generator*. The fulfillment stack uses the ChatGPT
 `fable-art-custom` skill and the listing FAQ already says "we use modern tools to help illustrate,"
@@ -103,6 +106,25 @@ Entered verbatim as specced. Two ways to fix, both keep the meaning:
 
 The 157 version clears the cut cleanly including the period. Dropping "help" costs a little
 of the "you're in control" beat — worth it to keep "3–4 days" in the snippet.
+
+## The attributes finding
+
+Only **two** structured attributes exist for Children's Books + Digital: `Occasion` and
+`Holiday`. Both were empty; now Birthday and Christmas.
+
+The long list Etsy shows in the listing-editor sidebar — Book Type, Format, Subject,
+Target Age, Page Count, Language, Illustrator, Educational Focus, ISBN, Binding and a
+dozen more — is **not** a set of fields. It's Etsy telling you what buyers of children's
+books look for **in the description**. That's where the `AT A GLANCE` block came from:
+it answers the applicable ones in a scannable block at the top, which is what a
+made-to-order buyer scans for before they'll risk $29 on a shop with no reviews.
+
+Two lines were deliberately left out rather than invented:
+
+- **Page count / length** — nothing in `docs/commerce` states it. Add it.
+- **Narration coverage** — the block says narration is included with a quieter night
+  voice and word-tap audio, because that's what `email-templates.md` #3 actually
+  supports. It does *not* claim narration on every page. Confirm and tighten.
 
 ## Field limits worth recording (all verified live, not guessed)
 

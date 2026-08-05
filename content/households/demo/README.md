@@ -34,5 +34,5 @@ pnpm content:narrate content/households/demo/books/lantern-round-pond
 
 Do not add Azi-specific or family-only books here. If we ever want to
 ship a book to every future customer as a freebie, put it in a shared
-pool (introduce `content/books/shared/` at that point) rather than
+pool (introduce `content/households/_shared/` at that point) rather than
 duplicating it into every household folder.

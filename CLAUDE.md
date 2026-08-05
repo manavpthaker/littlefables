@@ -81,8 +81,17 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
 - **New book** → author in `content/households/<household>/books/<slug>/`
   (usually `home/` unless it's for a specific customer), run
   `pnpm content:add`.
-- **Reader UI** → `app/read/story/[id]/reader.tsx` (orchestrator, ~200 lines)
-  + `page-spread.tsx` (illustrated / text-only rendering).
+- **Reader UI** → `app/read/story/[id]/reader.tsx` (orchestrator, ~300 lines)
+  + `page-spread.tsx` (full-bleed art / text-only rendering). Chrome is three
+  small pieces: `reader-pill.tsx` (the only persistent control — page arrows,
+  play, chapter label, progress), `reader-menu.tsx` (back, chapters, reading
+  speed, behind the mark button), `reader-chip.tsx` (day/night, top-right).
+  There is no header or footer component; the illustration runs to every edge
+  and the controls sit under the words.
+- **Library shelf** → `app/read/library.tsx` (search/sort/view state) +
+  `library-views.tsx` (single / grid / list) + `book-cover.tsx` (the printed
+  cover). Which view a fresh visitor lands on comes from
+  `lib/util/shelf-view.ts`, by book count.
 - **Reader state** → `lib/reader/state.ts` (pure reducer + selectors,
   tested in `tests/reader/state.spec.ts`).
 - **Transport (play/pause/prev/next)** → `lib/reader/transport.ts`.
@@ -143,3 +152,17 @@ before deleting the pared-back replacement.
 - Schema changes are additive migrations. Update enum lists in
   `lib/models/book.ts` in the same commit; `tests/models/schema-sync.spec.ts`
   enforces parity.
+- **Night swaps `--ink` and `--paper`.** `[data-mode="night"]` redefines both,
+  so `--ink` is the light colour at bedtime and `--paper` is the dark ground.
+  Never name `--paper` to mean "light" — it goes dark the moment night
+  arrives. This has caused four separate invisible-control bugs: the moon chip,
+  the play glyph, the view toggle's selected label, and the skip link. Use
+  `--ink*` for content in both modes, `--on-oxblood` for content on an oxblood
+  fill (it deliberately does not flip), and `--oxblood-text` for oxblood used
+  as text (night lightens it to keep contrast).
+- `.gitignore` globs name `content/households/**`. When content paths move,
+  move these too — they silently stopped matching once already, and forty
+  illustration PNGs became committable.
+- Migrations: check `supabase migration list --linked` before pushing. The
+  hosted ledger has drifted from reality before, with SQL applied by hand and
+  never recorded.

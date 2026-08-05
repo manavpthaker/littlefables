@@ -74,10 +74,10 @@ export const READY = new Set([
 ]);
 
 export const RECORDINGS = {
+  /** Unused by the current cut, which renders the email from EmailShell. */
   email: 'recordings/01-email.mp4',
   intake: 'recordings/03-intake.mp4',
   open: 'recordings/02-open.mp4',
-  addToHome: 'recordings/03-add-to-home.mp4',
   pageTurn: 'recordings/04-page-turn.mp4',
   wordTap: 'recordings/05-word-tap.mp4',
   transport: 'recordings/06-transport.mp4',

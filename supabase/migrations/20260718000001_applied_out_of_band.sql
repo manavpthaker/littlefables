@@ -1,0 +1,26 @@
+-- Placeholder for a migration that exists in the remote ledger but never in
+-- this repo.
+--
+-- The hosted database records version 20260718000001 as applied on
+-- 2026-07-18. No file for it was ever committed, so its contents are unknown —
+-- most likely SQL run straight from the Supabase dashboard, which records a
+-- ledger row without producing a file.
+--
+-- This file exists so local and remote migration histories line up. Without
+-- it the CLI refuses every push with "Remote migration versions not found in
+-- local migrations directory", which is what blocked the gift_codes push.
+--
+-- Deliberately NOT repaired to `reverted`. That would delete the ledger row
+-- and with it the only evidence anything happened on that date. This keeps the
+-- record and makes the gap legible.
+--
+-- The body is empty on purpose. It is already applied remotely, so it will
+-- never run there. On a fresh local database it is a no-op, which is an honest
+-- representation of what we know: nothing.
+--
+-- If local ever diverges from production in a way nobody can explain, start
+-- here. Recovering the real statements needs the `statements` column of
+-- supabase_migrations.schema_migrations, which is not reachable through
+-- PostgREST — it needs a direct Postgres connection.
+
+select 1;

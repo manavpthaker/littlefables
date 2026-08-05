@@ -28,9 +28,11 @@ headline or a duration means editing that file, not a component.
 
 | File | Role |
 |---|---|
-| `src/beats.ts` | Timings, copy, asset paths, `RECORDINGS_READY` flag |
+| `src/beats.ts` | Timings, copy, asset paths, the `READY` set of captured shots |
 | `src/theme.ts` | Heritage tokens as plain values so they can be interpolated |
 | `src/Walkthrough.tsx` | Assembles the nine beats |
+| `capture.mjs` | Drives the real reader and records five of the app shots |
+| `check-clips.mjs` | Verifies each recording outlasts the beat that uses it |
 | `src/fonts.ts` | Blocks rendering until IM Fell English and EB Garamond arrive |
 | `src/components/` | The motion vocabulary |
 
@@ -38,14 +40,16 @@ headline or a duration means editing that file, not a component.
 
 | Component | Beat | What it does |
 |---|---|---|
-| `MarkDraw` | 1, 9 | The mark drawing itself in, then breathing. Imports the artwork straight from `design-system/components/core/markSvg.js` so it can never drift from the app. |
-| `TitleCard` | 1, 3, 8, 9 | Sequenced type on aged ivory, optional fleuron separators |
-| `SlowPush` | 2 | 4% zoom across a whole beat — felt, not seen |
-| `Develop` | 4b | Blurred and drained resolving to sharp, like wet paper drying |
-| `PageFan` | 4c | Pages arriving from a pile into reading order |
-| `Bind` | 4d | Cover forming, gilt rule drawing around it |
-| `DeviceFrame` | 5, 6, 7 | Recording inside an iPad or phone bezel |
-| `Caption` | 2, 5, 6, 7 | Low paper capsule over footage |
+| `MarkAnim` | 9 | The mark drawing itself on, as a PNG sequence photographed from the design harness |
+| `CornerMark` | all but 9 | The small mark in the corner, tinted per beat so it survives paper and full-bleed art alike |
+| `TitleCard` | 3a, 8 | Sequenced type on aged ivory, optional fleuron separators |
+| `SlowPush` | 1 | 4% zoom across a whole beat — felt, not seen |
+| `Develop` | 3b | Blurred and drained resolving to sharp, like wet paper drying |
+| `PageFan` | 3c | Pages arriving from a pile into reading order |
+| `Bind` | 3d | Cover forming, gilt rule drawing around it |
+| `StyleRange` | 7 | Three sample spreads side by side |
+| `DeviceFrame` | 2, 4, 5, 6 | Recording or still inside an iPad bezel |
+| `Caption` | 1, 2, 4, 5, 6 | Low paper capsule over footage |
 
 ## Assets
 
@@ -65,30 +69,35 @@ every animation and sets `currentTime` per frame through the Web Animations
 API — same input, same pixels, every run. Frame counts are declared in
 `MarkAnim.tsx`, so changing a shot's length here means updating `LENGTH` there.
 
-**Book art** — already staged in `public/book/` from
-`content/books/custom/lantern-round-pond/`. Re-copy if the art changes:
+**Book art** — staged in `public/book/` from the demo book. Re-copy if the art
+changes:
 
 ```bash
-cp ../content/books/custom/lantern-round-pond/cover.png public/book/
-cp ../content/books/custom/lantern-round-pond/pages/*.png public/book/
+cp ../content/households/demo/books/lantern-round-pond/cover.png public/book/
+cp ../content/households/demo/books/lantern-round-pond/pages/*.png public/book/
 ```
 
-**Recordings** — seven files, not yet captured. Drop them in
-`public/recordings/` with these exact names:
+**Style samples** — `public/styles/`, copied from
+`content/marketing/style-samples/`. Ignored here; that folder is the original.
 
-```
-01-email.mov        delivery email on a phone
-02-open.mov         tapping the link, reader opening
-03-add-to-home.mov  iPad share sheet → Add to Home Screen
-04-page-turn.mov    landscape, full directional flip
-05-word-tap.mov     a word tapped and lighting up
-06-transport.mov    thumb hitting play
-07-night.mov        day → night switch, one continuous take
+**Recordings** — five of the six the film uses are captured automatically:
+
+```bash
+node capture.mjs                 # all of them
+node capture.mjs transport       # or just one
+node check-clips.mjs             # then always this
 ```
 
-Then flip `RECORDINGS_READY` to `true` in `src/beats.ts`. Until you do, the
-device beats render a labelled placeholder so the rest of the film can be
-previewed without waiting on a camera.
+Re-run after any reader change, or the film shows a UI that no longer exists.
+Only the iOS share sheet still needs a phone; the delivery email is rendered
+from the design system's `EmailShell` instead of photographed.
+
+Readiness is per-shot, not a single flag: add the file's path to the `READY`
+set in `src/beats.ts` and that beat starts using it. Anything absent renders a
+labelled placeholder, so the film stays previewable while shots are missing.
+
+Run `node check-clips.mjs` afterwards. A recording shorter than the beat that
+uses it makes the film hold its last frame, and the render says nothing.
 
 **Recording tips.** On iOS turn on Do Not Disturb first — a notification banner
 mid-take ruins it. Record at the highest resolution the device offers;
@@ -96,10 +105,14 @@ downscaling is free, upscaling is not.
 
 ## Audio
 
-Not wired yet. The storyboard calls for soft piano or solo strings, low, with
-the product's own narration coming up only during the reading beat. Add as an
-`<Audio>` in `Walkthrough.tsx`, then normalise the export:
+A music bed at `public/audio/bed.mp3` and the book's own narration at
+`public/audio/narration.mp3`. The bed ducks under the reading beat so the
+product's voice is the only one competing for attention there. Both are
+gitignored — see `AUDIO.md` for the brief and `prep-audio.sh` for levelling.
+
+Normalise the export:
 
 ```bash
-ffmpeg -i out/walkthrough.mp4 -af loudnorm=I=-14:TP=-1 out/walkthrough-normalised.mp4
+ffmpeg -i out/walkthrough.mp4 -af loudnorm=I=-14:TP=-1.5:LRA=11 \
+  -c:v copy -c:a aac -b:a 192k out/walkthrough-final.mp4
 ```

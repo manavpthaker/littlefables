@@ -1,6 +1,6 @@
 # Recording guide
 
-**Five of the seven shots are automated.** `capture.mjs` drives the real reader
+**Six of the seven shots are automated.** `capture.mjs` drives the real reader
 in a real browser with Playwright and records while it does — more precisely
 than a hand, and repeatable.
 
@@ -9,8 +9,10 @@ pnpm exec next dev --turbopack     # in the repo root
 cd video && node capture.mjs       # ~90 seconds
 ```
 
-Writes `02-open`, `04-page-turn`, `05-word-tap`, `06-transport` and `07-night`
-straight into `public/recordings/` as H.264 mp4, at iPad Pro 11" landscape.
+Writes `02-open`, `03-intake`, `04-page-turn`, `05-word-tap`, `06-transport`
+and `07-night` straight into `public/recordings/` as H.264 mp4, at iPad Pro
+11" landscape. Follow it with `node check-clips.mjs`: a recording shorter than
+its beat freezes the film on its last frame and the render never says so.
 
 Re-run any single shot while tuning:
 
@@ -50,7 +52,7 @@ If the token has expired, mint a fresh one — and note the book must be importe
 
 ```bash
 pnpm exec tsx scripts/new-household.ts --name "Rosa Demo Family" --child "Rosa" --band 4-6
-pnpm content:add content/books/custom/lantern-round-pond --household <uuid>
+pnpm content:add content/households/demo/books/lantern-round-pond --household <uuid>
 ```
 
 Re-running `pnpm content:add` *without* `--household` silently moves the book

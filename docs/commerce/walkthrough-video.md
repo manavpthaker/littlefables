@@ -1,8 +1,12 @@
 # Walkthrough Video — "How it works"
 
-A 75-second film for the landing page hero and the Etsy listing's video slot.
-Mostly the finished product; just enough of the beginning to explain where it
-came from.
+A film for the landing page hero and the Etsy listing's video slot. Mostly the
+finished product; just enough of the beginning to explain where it came from.
+
+**Timings live in `video/src/beats.ts`, not here.** That file is the film as
+data, and it moves — this document holds the reasoning, which does not. The
+table below is a snapshot for orientation only; when the two disagree, the code
+is right.
 
 **The job:** a parent who has never heard of this understands, in about a
 minute, what they get and why it is not the usual AI slop. The proof is
@@ -34,60 +38,58 @@ feature we do not have.
 
 ## Structure
 
-Nine beats, 75 seconds.
+Nine beats, 114 seconds, as of the current cut.
 
 | # | Beat | Time | Source |
 |---|---|---|---|
-| 1 | Cold open | 0:00–0:05 | Motion graphics |
-| 2 | The promise | 0:05–0:12 | Real cover, slow push |
-| 3 | A few words about a child | 0:12–0:22 | Type only |
-| 4 | **It comes together** | 0:22–0:42 | Motion graphics, real art |
-| 5 | It arrives | 0:42–0:52 | Screen recording |
-| 6 | The payoff | 0:52–1:08 | Screen recording |
-| 7 | Night | 1:08–1:15 | Screen recording |
-| 8 | The quiet part | 1:15–1:23 | Type only |
-| 9 | Close | 1:23–1:30 | Motion graphics |
+| 1 | The promise | 0:00–0:07 | Real cover, slow push |
+| 2 | Tell us about your child | 0:07–0:25 | Screen recording of `/intake` |
+| 3 | **It comes together** | 0:25–0:45 | Motion graphics, real art |
+| 4 | It arrives | 0:45–0:59 | Rendered email + screen recording |
+| 5 | The payoff | 0:59–1:23 | Screen recording |
+| 6 | Night | 1:23–1:31 | Screen recording |
+| 7 | The range | 1:31–1:38 | Three style samples |
+| 8 | The quiet part | 1:38–1:46 | Type only |
+| 9 | Close | 1:46–1:54 | Logomark draw-on |
 
-Only beats 5, 6 and 7 need a camera or a screen recorder. Everything else the
-pipeline builds from the book's own nine images.
+**There is no cold open.** An earlier cut spent five seconds on an animated
+logo before showing anything. A logo is not what earns a stranger's next five
+seconds, so the film opens on the book and the mark rides small in the corner
+throughout, taking its full draw-on at the close where a signature belongs.
+
+The app shots are captured by `video/capture.mjs` driving the real reader.
+Everything else the pipeline builds from the book's own art. Only two shots
+still need a phone, because neither is our software: the delivery email and the
+iOS share sheet.
+
+Run `node check-clips.mjs` after any capture. A recording shorter than the beat
+using it makes the film freeze on its last frame, and nothing in the render
+reports it.
 
 ---
 
 ## Shot list
 
-### 1 · Cold open — 0:00–0:05
-
-- **Source:** motion graphics.
-- **What happens:** aged-ivory field. The tree mark draws itself in —
-  stroke-dashoffset cascade, tree first, then rays radiating out, then roots.
-  Mark motion **mode 2** from `design-system/tokens/motion.css`. Settles into
-  **mode 1**, the slow halo breath. Wordmark fades in beneath.
-- **Type:** `Little Fables` · then smaller, `custom storybooks, made one at a time`
-- **Audio:** first piano note as the roots finish.
-
-### 2 · The promise — 0:05–0:12
+### 1 · The promise — 0:00–0:07
 
 - **Source:** `cover.png` from the real book, held.
 - **What happens:** slow push in, 4% over seven seconds. Barely perceptible —
-  just enough that it is not a still.
+  just enough that it is not a still. The corner mark fades in here and stays
+  for the rest of the film.
 - **Type:** `Your kid, in their own storybook.`
 
-### 3 · A few words about a child — 0:12–0:22
+### 2 · Tell us about your child — 0:07–0:25
 
-No form. No cursor. Just the words a parent gave us, appearing as type on aged
-ivory, one line at a time on `--motion-tick`.
+- **Source:** screen recording of the real `/intake` page, in an iPad frame.
+- **What happens:** a name typed, an age tapped, interest and trait chips
+  chosen, a line about what she looks like, a photo dropped in. Real speed,
+  nothing faked — the page exists at `app/intake/`.
+- **Type:** `Tell us about your child` · then `A photo helps, but words are enough`
+- **Why it works:** an earlier cut established the input as type on ivory,
+  which was faster but asked the viewer to take our word for it. Watching the
+  form get filled proves how little we ask.
 
-- **Source:** type only.
-- **Type, in sequence:**
-  `Rosa.`
-  `Five.`
-  `Loves ponds, geese, and waiting for things.`
-  then, smaller, after a beat: `That was all we asked for.`
-- **Why it works:** it takes ten seconds to establish the entire input, and the
-  last line does the job the whole intake sequence was going to do — it tells
-  you this is easy.
-
-### 4 · It comes together — 0:22–0:42
+### 3 · It comes together — 0:25–0:45
 
 **The centrepiece.** Twenty seconds. Built entirely from the book's nine images
 plus motion — no recording required.
@@ -114,7 +116,7 @@ rule draws around the edge. The book exists.
 - **Note:** movement (b) is the anti-slop argument made visually. It looks
   *painted*, not generated. Do not speed it up.
 
-### 5 · It arrives — 0:42–0:52
+### 4 · It arrives — 0:45–0:59
 
 - **Source:** screen recording, three quick cuts.
   - (a) the delivery email on a phone
@@ -127,7 +129,7 @@ rule draws around the edge. The book exists.
 - **This is the shot that sells grandparents.** It answers "but is it
   complicated" without a word.
 
-### 6 · The payoff — 0:52–1:08
+### 5 · The payoff — 0:59–1:23
 
 The longest live beat. Real reading, minimal overlay.
 
@@ -141,7 +143,7 @@ The longest live beat. Real reading, minimal overlay.
 - **Type:** `Read aloud, warmly` → `Tap any word to hear it` → `Their book, their pace`
 - **Audio:** bring the real narration up. The only voice in the film.
 
-### 7 · Night — 1:08–1:15
+### 6 · Night — 1:23–1:31
 
 - **Source:** screen recording, one continuous take.
 - **What happens:** the same book in day mode, the mode switch, then night —
@@ -149,7 +151,21 @@ The longest live beat. Real reading, minimal overlay.
 - **Overlay:** none. The transition is the point.
 - **Type:** `And a quieter one for bedtime`
 
-### 8 · The quiet part — 1:15–1:23
+### 7 · The range — 1:31–1:38
+
+- **Source:** three sample spreads from `content/marketing/style-samples/`.
+- **What happens:** painted, cut paper and woodcut arrive side by side, a beat
+  apart, each labelled.
+- **Type:** `No two look alike.` · then `the style comes from the books you already love`
+- **Why it works:** everything before this follows one book in one style, which
+  sells that book rather than the service. Three at once, rather than one after
+  another, because the comparison only lands if the eye can make it in a single
+  glance — and because the samples are ~615px, so filling the frame with one
+  would be a 1.8x upscale and go soft.
+- **Placement:** after night, not before. The product demo finishes — day, then
+  bedtime — and only then does the range open up.
+
+### 8 · The quiet part — 1:38–1:46
 
 - **Source:** type only, full frame on aged ivory.
 - **What happens:** three lines in sequence on `--motion-tick`, a small fleuron
@@ -162,10 +178,12 @@ The longest live beat. Real reading, minimal overlay.
   only place we say what we *don't* do, and it earns that because everything
   before it was product.
 
-### 9 · Close — 1:23–1:30
+### 9 · Close — 1:46–1:54
 
 - **Source:** motion graphics.
-- **What happens:** mark returns, breathing. Details settle beneath.
+- **What happens:** the logomark draws itself on — trunk, roots, branches,
+  leaves, then the halo. This is the only place the brand animation plays; the
+  film opened on the product instead. Details settle beneath once it lands.
 - **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.app`
 - **Audio:** piano resolves.
 
@@ -173,17 +191,14 @@ The longest live beat. Real reading, minimal overlay.
 
 ## Recording checklist
 
-Only seven shots. Everything else is built from the book's images.
+Two shots. `video/capture.mjs` drives the real reader and records the other
+five automatically — re-run it after any reader change, or the film shows a UI
+that no longer exists. Everything else is built from the book's own images.
 
 | # | Shot | Device | Notes |
 |---|---|---|---|
-| 1 | Delivery email | Phone | |
-| 2 | Tap link → reader opens | Phone | One continuous take |
-| 3 | Add to Home Screen | iPad | Full share-sheet flow, icon landing |
-| 4 | Page turn | iPad | Landscape, full directional flip |
-| 5 | Word tap + highlight | iPad | Close enough to read the word |
-| 6 | Transport, thumb on play | iPad | |
-| 7 | Day → night switch | iPad | One continuous take, do not cut |
+| 1 | Delivery email | Phone | Or render `EmailShell` — the current cut does |
+| 2 | Add to Home Screen | iPad | Apple's share sheet; nothing can automate it. Hold two seconds on the home-screen icon |
 
 **iOS:** Settings → Control Center → Screen Recording. Turn on Do Not Disturb
 first — a notification banner mid-take ruins it.
