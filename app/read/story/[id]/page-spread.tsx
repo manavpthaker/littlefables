@@ -93,7 +93,10 @@ export function PageSpread({
       >
         <article
           style={{
-            alignSelf: 'center',
+            minHeight: 0,
+            overflowY: 'auto',
+            display: 'grid',
+            alignContent: 'center',
             justifySelf: 'center',
             maxWidth: 620,
             width: '100%',
@@ -132,7 +135,16 @@ export function PageSpread({
             boxSizing: 'border-box',
           }}
         >
-          <article style={{ alignSelf: 'center', maxWidth: 520, width: '100%', overflowY: 'auto' }}>
+          <article
+            style={{
+              minHeight: 0,
+              overflowY: 'auto',
+              display: 'grid',
+              alignContent: 'center',
+              maxWidth: 520,
+              width: '100%',
+            }}
+          >
             {storyText}
           </article>
           {controls}
@@ -152,15 +164,22 @@ export function PageSpread({
         flex: 1,
         minHeight: 0,
         display: 'grid',
-        gridTemplateRows: 'minmax(0, 52%) 1fr auto',
+        gridTemplateRows: 'minmax(0, var(--reader-art-share)) minmax(0, 1fr) auto',
         position: 'relative',
       }}
     >
       <div style={{ position: 'relative', minHeight: 0, overflow: 'hidden' }}>{picture}</div>
       <article
         style={{
-          alignSelf: 'center',
+          // minHeight:0 + stretch is what lets this scroll. With
+          // alignSelf:'center' the item sizes to its content instead of the
+          // track, overflow-y never engages, and a long page runs on under
+          // the capsule below it. Short pages still centre — that is the
+          // inner grid's alignContent, not the item's alignment.
+          minHeight: 0,
           overflowY: 'auto',
+          display: 'grid',
+          alignContent: 'center',
           padding: 'var(--space-5) var(--page-pad) 0',
           maxWidth: 'var(--reader-measure)',
           width: '100%',

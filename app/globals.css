@@ -57,6 +57,27 @@
      so action labels were dark red on a dark brown panel. */
   --on-oxblood: #f7f0e0;
   --oxblood-text: var(--oxblood);
+
+  /* Share of a portrait reader given to the picture. Smaller on a phone,
+     where the prose has nowhere else to go. */
+  --reader-art-share: 52%;
+}
+
+/* The design system sets --text-reading-size to a flat 30px for kid density
+   with no responsive step. That is right on a tablet and far too large on a
+   phone: it sets about five words to a line, and a normal paragraph runs past
+   the bottom of the screen. Scaled here rather than upstream, because the
+   design system is consumed verbatim. */
+@media (max-width: 600px) {
+  [data-density='kid'] {
+    --text-reading-size: clamp(21px, 5.6vw, 26px);
+    --reader-art-share: 42%;
+  }
+}
+@media (max-height: 720px) and (orientation: portrait) {
+  [data-density='kid'] {
+    --reader-art-share: 38%;
+  }
 }
 html,
 body {
