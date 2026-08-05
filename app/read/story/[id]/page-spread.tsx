@@ -49,6 +49,14 @@ export function PageSpread({
       : turnDirection === 'prev'
         ? 'lf-page-turn-prev var(--motion-wind) var(--ease-pendulum) 1'
         : 'lf-page-in var(--motion-wind) var(--ease-pendulum) 1';
+
+  // transform-origin has to live on the element, not in the keyframes. It is an
+  // animatable property, so declaring it at 0% only made it interpolate toward
+  // the 50% 50% default across the turn — the hinge slid to the middle of the
+  // page while the page was still rotating, which is what made it read as a
+  // wobble rather than a fold.
+  const hinge =
+    turnDirection === 'next' ? 'left center' : turnDirection === 'prev' ? 'right center' : undefined;
   const landscape = useLandscapeSpread();
   const artUrl = hideArt ? undefined : (page.img ?? coverImage);
   const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
@@ -94,6 +102,7 @@ export function PageSpread({
           marginInline: 'auto',
           boxSizing: 'border-box',
           animation: pageAnim,
+          transformOrigin: hinge,
         }}
       >
         <article style={{ maxWidth: 560, width: '100%' }}>
@@ -114,6 +123,8 @@ export function PageSpread({
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 45%) minmax(0, 55%)',
           animation: pageAnim,
+          transformOrigin: hinge,
+          position: 'relative',
         }}
       >
         <div style={{ position: 'relative', minHeight: 0, overflow: 'hidden' }}>
@@ -132,16 +143,6 @@ export function PageSpread({
               <PaintingWash height="100%" label="this one's still being painted for you…" />
             </div>
           )}
-          <div
-            aria-hidden
-            style={{
-              position: 'absolute',
-              inset: '0 0 0 auto',
-              width: 22,
-              background: 'linear-gradient(to left, rgba(70,54,42,0.16), transparent)',
-              pointerEvents: 'none',
-            }}
-          />
         </div>
         <div
           style={{
@@ -157,6 +158,9 @@ export function PageSpread({
             {storyText}
           </article>
         </div>
+        {/* Drawn last so the fold lies over both leaves. `left` matches the
+            grid's column boundary; the class re-centres itself on it. */}
+        <div aria-hidden className="lf-gutter" style={{ left: '45%' }} />
       </main>
     );
   }
@@ -175,6 +179,7 @@ export function PageSpread({
         marginInline: 'auto',
         boxSizing: 'border-box',
         animation: pageAnim,
+          transformOrigin: hinge,
       }}
     >
       <div className="lf-art-card">

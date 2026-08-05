@@ -148,7 +148,6 @@ button:disabled {
   0% {
     opacity: 0;
     transform: translateX(40%) rotateY(-45deg);
-    transform-origin: left center;
     filter: drop-shadow(-8px 4px 12px rgba(70, 54, 42, 0.28));
   }
   50% {
@@ -166,7 +165,6 @@ button:disabled {
   0% {
     opacity: 0;
     transform: translateX(-40%) rotateY(45deg);
-    transform-origin: right center;
     filter: drop-shadow(8px 4px 12px rgba(70, 54, 42, 0.28));
   }
   50% {
@@ -351,16 +349,65 @@ body,
   }
 }
 
+/* ── Book feel ──────────────────────────────────────────────────────────
+   The reader should read as a bound object rather than two panes of a web
+   page. Two cues do nearly all of that work, and both are meant to be felt
+   rather than noticed:
+
+     .lf-gutter    the centre crease of an open spread (landscape)
+     .lf-art-card  a page tipped onto the leaf, not a floating card (portrait)
+
+   Kept deliberately faint. A heavy drop shadow reads as a UI card; paper
+   scatters very little light into its own fold. */
+
+/* The crease. Sits over the column boundary of the landscape spread, so the
+   shadow falls on BOTH leaves — a fold darkens the paper either side of
+   itself, and shading only one side reads as a divider rule instead. The
+   hairline at dead centre is what actually sells the fold; the wash around it
+   just keeps the hairline from looking drawn on. */
+.lf-gutter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to right,
+      transparent calc(50% - 0.5px),
+      rgba(70, 54, 42, 0.22) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      to right,
+      rgba(70, 54, 42, 0) 0%,
+      rgba(70, 54, 42, 0.05) 30%,
+      rgba(70, 54, 42, 0.13) 47%,
+      rgba(70, 54, 42, 0.15) 50%,
+      rgba(70, 54, 42, 0.13) 53%,
+      rgba(70, 54, 42, 0.05) 70%,
+      rgba(70, 54, 42, 0) 100%
+    );
+}
+
 /* Reader fit: the art card never eats the viewport — prose + transport stay
-   on screen on a phone. aspect-ratio yields to the max-height cap. */
+   on screen on a phone. aspect-ratio yields to the max-height cap.
+
+   The radius is smaller than a UI card's on purpose: trimmed paper has a
+   corner, not a pill. The inset shading along the left edge is the binding
+   the page is tipped into, which is what stops it floating. */
 .lf-art-card {
   position: relative;
   aspect-ratio: 1 / 0.76;
   max-height: 42dvh;
   width: 100%;
-  border-radius: 24px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: var(--elev-raised);
+  box-shadow:
+    inset 14px 0 18px -14px rgba(70, 54, 42, 0.5),
+    inset 0 0 0 1px rgba(70, 54, 42, 0.1),
+    0 2px 10px rgba(70, 54, 42, 0.14);
 }
 @media (max-height: 720px) {
   .lf-art-card {
