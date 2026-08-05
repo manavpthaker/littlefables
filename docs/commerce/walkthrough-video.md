@@ -72,10 +72,14 @@ reports it.
 
 ### 1 · The promise — 0:00–0:07
 
-- **Source:** `cover.png` from the real book, held.
-- **What happens:** slow push in, 4% over seven seconds. Barely perceptible —
-  just enough that it is not a still. The corner mark fades in here and stays
-  for the rest of the film.
+- **Source:** `cover.png` from the real book.
+- **What happens:** the whole cover, held for two and a half seconds, then a
+  push in that is still moving when the film cuts to the intake. The art is
+  square and the frame is 16:9, so an object-fit:cover push threw away about
+  forty-four percent of it and opened the film on a crop of pond weeds — you
+  could not tell it was a book. It is fitted now, margins and all, so the
+  viewer reads "book" before anything moves. The corner mark fades in here and
+  stays for the rest of the film.
 - **Type:** `Your kid, in their own storybook.`
 
 ### 2 · Tell us about your child — 0:07–0:25
@@ -84,7 +88,9 @@ reports it.
 - **What happens:** a name typed, an age tapped, interest and trait chips
   chosen, a line about what she looks like, a photo dropped in. Real speed,
   nothing faked — the page exists at `app/intake/`.
-- **Type:** `Tell us about your child` · then `A photo helps, but words are enough`
+- **Type:** `This is everything we ask.` · then `A photo helps, but words are enough`
+  The page on screen already carries its own heading; a caption repeating it
+  wasted the beat.
 - **Why it works:** an earlier cut established the input as type on ivory,
   which was faster but asked the viewer to take our word for it. Watching the
   form get filled proves how little we ask.
@@ -185,6 +191,7 @@ The longest live beat. Real reading, minimal overlay.
   leaves, then the halo. This is the only place the brand animation plays; the
   film opened on the product instead. Details settle beneath once it lands.
 - **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.app`
+  → `etsy.com/shop/LittleFablesStories` in brass small caps beneath
 - **Audio:** piano resolves.
 
 ---
