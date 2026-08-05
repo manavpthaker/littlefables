@@ -14,75 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      art_artifacts: {
-        Row: {
-          approved_at: string | null
-          book_id: string | null
-          candidate_path: string
-          chapter_idx: number | null
-          character_id: string | null
-          created_at: string
-          household_id: string
-          id: string
-          kind: string
-          live_url: string | null
-          model: string | null
-          page_idx: number | null
-          prompt: string | null
-          reject_reason: string | null
-          status: string
-        }
-        Insert: {
-          approved_at?: string | null
-          book_id?: string | null
-          candidate_path: string
-          chapter_idx?: number | null
-          character_id?: string | null
-          created_at?: string
-          household_id: string
-          id?: string
-          kind: string
-          live_url?: string | null
-          model?: string | null
-          page_idx?: number | null
-          prompt?: string | null
-          reject_reason?: string | null
-          status?: string
-        }
-        Update: {
-          approved_at?: string | null
-          book_id?: string | null
-          candidate_path?: string
-          chapter_idx?: number | null
-          character_id?: string | null
-          created_at?: string
-          household_id?: string
-          id?: string
-          kind?: string
-          live_url?: string | null
-          model?: string | null
-          page_idx?: number | null
-          prompt?: string | null
-          reject_reason?: string | null
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "art_artifacts_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "art_artifacts_household_id_fkey"
-            columns: ["household_id"]
-            isOneToOne: false
-            referencedRelation: "households"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       badges: {
         Row: {
           badge_slug: string
@@ -151,6 +82,67 @@ export type Database = {
           },
         ]
       }
+      book_shares: {
+        Row: {
+          book_id: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          household_id: string
+          id: string
+          password_hash: string | null
+          revoked_at: string | null
+          token_hash: string
+          view_count: number
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          household_id: string
+          id?: string
+          password_hash?: string | null
+          revoked_at?: string | null
+          token_hash: string
+          view_count?: number
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          household_id?: string
+          id?: string
+          password_hash?: string | null
+          revoked_at?: string | null
+          token_hash?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_shares_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_shares_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "parents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_shares_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       books: {
         Row: {
           book: Json
@@ -163,7 +155,6 @@ export type Database = {
           id: string
           kind: string
           origin_note: string | null
-          parent_guide: string | null
           shelf_enabled: boolean
           source: string
           status: string
@@ -181,7 +172,6 @@ export type Database = {
           id: string
           kind: string
           origin_note?: string | null
-          parent_guide?: string | null
           shelf_enabled?: boolean
           source: string
           status: string
@@ -199,7 +189,6 @@ export type Database = {
           id?: string
           kind?: string
           origin_note?: string | null
-          parent_guide?: string | null
           shelf_enabled?: boolean
           source?: string
           status?: string
@@ -318,56 +307,66 @@ export type Database = {
           },
         ]
       }
-      comprehension_records: {
+      gift_codes: {
         Row: {
-          asked_at: string
-          book_id: string | null
-          chapter_idx: number | null
+          book_slug: string
           child_id: string
+          code: string
+          created_at: string
+          expires_at: string | null
+          gift_from: string | null
+          household_id: string
           id: string
-          judged_signal: string | null
-          payload: Json | null
-          question: string
-          question_type: string
-          transcript: string | null
+          redeemed_at: string | null
+          redeemed_device_id: string | null
+          revoked_at: string | null
         }
         Insert: {
-          asked_at?: string
-          book_id?: string | null
-          chapter_idx?: number | null
+          book_slug: string
           child_id: string
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          gift_from?: string | null
+          household_id: string
           id?: string
-          judged_signal?: string | null
-          payload?: Json | null
-          question: string
-          question_type: string
-          transcript?: string | null
+          redeemed_at?: string | null
+          redeemed_device_id?: string | null
+          revoked_at?: string | null
         }
         Update: {
-          asked_at?: string
-          book_id?: string | null
-          chapter_idx?: number | null
+          book_slug?: string
           child_id?: string
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          gift_from?: string | null
+          household_id?: string
           id?: string
-          judged_signal?: string | null
-          payload?: Json | null
-          question?: string
-          question_type?: string
-          transcript?: string | null
+          redeemed_at?: string | null
+          redeemed_device_id?: string | null
+          revoked_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "comprehension_records_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comprehension_records_child_id_fkey"
+            foreignKeyName: "gift_codes_child_id_fkey"
             columns: ["child_id"]
             isOneToOne: false
             referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_codes_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_codes_redeemed_device_id_fkey"
+            columns: ["redeemed_device_id"]
+            isOneToOne: false
+            referencedRelation: "child_devices"
             referencedColumns: ["id"]
           },
         ]
@@ -392,48 +391,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      parent_insights: {
-        Row: {
-          bridge_line: string | null
-          child_id: string
-          created_at: string
-          household_id: string
-          layers: Json | null
-          week_start: string
-        }
-        Insert: {
-          bridge_line?: string | null
-          child_id: string
-          created_at?: string
-          household_id: string
-          layers?: Json | null
-          week_start: string
-        }
-        Update: {
-          bridge_line?: string | null
-          child_id?: string
-          created_at?: string
-          household_id?: string
-          layers?: Json | null
-          week_start?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "parent_insights_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: false
-            referencedRelation: "children"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "parent_insights_household_id_fkey"
-            columns: ["household_id"]
-            isOneToOne: false
-            referencedRelation: "households"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       parents: {
         Row: {
@@ -469,118 +426,6 @@ export type Database = {
             columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "households"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      qa_records: {
-        Row: {
-          attempt: number
-          book_id: string
-          canon_version: string | null
-          created_at: string
-          hard_gates: Json | null
-          household_id: string
-          id: string
-          model: string | null
-          soft_score: Json | null
-          stage0: Json
-          status: string
-        }
-        Insert: {
-          attempt?: number
-          book_id: string
-          canon_version?: string | null
-          created_at?: string
-          hard_gates?: Json | null
-          household_id: string
-          id?: string
-          model?: string | null
-          soft_score?: Json | null
-          stage0?: Json
-          status: string
-        }
-        Update: {
-          attempt?: number
-          book_id?: string
-          canon_version?: string | null
-          created_at?: string
-          hard_gates?: Json | null
-          household_id?: string
-          id?: string
-          model?: string | null
-          soft_score?: Json | null
-          stage0?: Json
-          status?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "qa_records_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "qa_records_household_id_fkey"
-            columns: ["household_id"]
-            isOneToOne: false
-            referencedRelation: "households"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      reading_days: {
-        Row: {
-          child_id: string
-          day: string
-        }
-        Insert: {
-          child_id: string
-          day: string
-        }
-        Update: {
-          child_id?: string
-          day?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reading_days_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: false
-            referencedRelation: "children"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      reading_sessions: {
-        Row: {
-          child_id: string
-          day: string
-          seconds: number
-          session_id: string
-          updated_at: string
-        }
-        Insert: {
-          child_id: string
-          day: string
-          seconds?: number
-          session_id: string
-          updated_at?: string
-        }
-        Update: {
-          child_id?: string
-          day?: string
-          seconds?: number
-          session_id?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reading_sessions_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: false
-            referencedRelation: "children"
             referencedColumns: ["id"]
           },
         ]
@@ -668,95 +513,11 @@ export type Database = {
           },
         ]
       }
-      wordbook_entries: {
-        Row: {
-          book_id: string | null
-          child_id: string
-          encounter_count: number
-          id: string
-          last_encounter_at: string | null
-          meaning: string | null
-          owned_at: string | null
-          saved_at: string
-          sentence: string | null
-          word: string
-        }
-        Insert: {
-          book_id?: string | null
-          child_id: string
-          encounter_count?: number
-          id?: string
-          last_encounter_at?: string | null
-          meaning?: string | null
-          owned_at?: string | null
-          saved_at?: string
-          sentence?: string | null
-          word: string
-        }
-        Update: {
-          book_id?: string | null
-          child_id?: string
-          encounter_count?: number
-          last_encounter_at?: string | null
-          id?: string
-          meaning?: string | null
-          owned_at?: string | null
-          saved_at?: string
-          sentence?: string | null
-          word?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "wordbook_entries_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "wordbook_entries_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: false
-            referencedRelation: "children"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      world_states: {
-        Row: {
-          child_id: string
-          data: Json
-          updated_at: string
-        }
-        Insert: {
-          child_id: string
-          data?: Json
-          updated_at?: string
-        }
-        Update: {
-          child_id?: string
-          data?: Json
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "world_states_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: true
-            referencedRelation: "children"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      bump_usage: {
-        Args: { p_household_id: string; p_kind: string }
-        Returns: number
-      }
       current_parent_household_id: { Args: never; Returns: string }
     }
     Enums: {

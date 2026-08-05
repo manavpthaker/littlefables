@@ -156,7 +156,7 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
     | `character-notes.md` | authoring only, ignored by import |
     | `reference/` | gitignored, buyer photos |
 
-24. **Provision the household:**
+24. **Provision the household.** For a **normal order** (buyer = parent):
     ```bash
     pnpm exec tsx scripts/new-household.ts \
       --name "{Kid} Family" \
@@ -164,10 +164,26 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
       --band 4-8 \
       --email {buyer_email} \
       --parent "{Buyer Name}" \
-      --device-label "{Kid}'s iPad"
+      --device-label "{Kid}'s iPad" \
+      --book-title "{Story Title}"
     ```
-    Prints the household uuid, child uuid, device token, and **the magic URL**. Save
-    all of it to `orders.csv` — the raw token is only shown once.
+    For a **gift order** (buyer ≠ parent), add `--gift-from "{Buyer Name}"`:
+    ```bash
+    pnpm exec tsx scripts/new-household.ts \
+      --name "{Recipient Family}" --child "{Kid}" --band 4-8 \
+      --email {recipient_email} --parent "{Recipient Parent Name}" \
+      --book-title "{Story Title}" \
+      --gift-from "{Buyer Name}"
+    ```
+    Prints:
+    - **MAGIC URL** — `/read/<story-slug>/<token>`. What the buyer/parent uses.
+    - **GIFT URL + GIFT CODE** *(gift orders only)* — `/gift/<code>`. What goes on the
+      printed certificate. The recipient parent opens it, sees one screen of context,
+      and taps **Open the book** — that redeems the code and provisions their own
+      device token. Single-use.
+
+    Save the household uuid, child uuid, magic URL, and (if gift) the gift URL + code
+    into `orders.csv`. The raw device token is only shown once.
 
 25. **Fill in `content/households/<slug>/household.yaml`** with the uuids the
     provisioning script printed (copy `_TEMPLATE.yaml` if you haven't yet).
@@ -186,10 +202,19 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 
 ## G · Delivery
 
-27. **Send email 3** (delivery) with the magic URL and install instructions.
+27. **Send email 3** (delivery). Normal orders: the **magic URL** from step 24
+    (`/read/<story-slug>/<token>`). Gift orders: no delivery email to the recipient
+    directly — instead the buyer gets an email with the printable **gift certificate
+    PDF** (see step 28). Install instructions are handled inside the reader (end-of-
+    book prompt), so the email itself is short — "here's the book" and nothing else.
 
-28. **Gift orders:** also send the printable gift certificate PDF with the same URL
-    and a QR code. *(Blocked on Heritage DS.)*
+28. **Gift orders — the certificate.** The PDF carries the **gift URL** and a QR of
+    the same, the child's name, "A gift from {buyer name}", the shop name, and the
+    Etsy shop URL (`etsy.com/shop/LittleFablesStories`) as an anti-phishing anchor.
+    See [`delivery-flow.md`](delivery-flow.md) for the full spec. **Never** put the
+    buyer's `/read/<slug>/<token>` on the certificate — gift codes are the design so
+    a lost/photographed certificate can be revoked and reissued. *(PDF layout is
+    blocked on Heritage DS; the underlying `/gift/<code>` flow is live.)*
 
 29. **Profile save:** if the buyer opted in on screen 17, archive `typeform.json` and
     `character-notes.md` to `~/fables-profiles/{buyer_email}/`. If they didn't,

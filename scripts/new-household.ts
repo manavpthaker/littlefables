@@ -39,6 +39,7 @@ import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 import { mintChildToken } from '../lib/auth/child-token';
+import { formatGiftCode, insertGiftCode } from '../lib/models/gift-code';
 
 config({ path: '.env.local' });
 
@@ -76,9 +77,14 @@ async function main(): Promise<void> {
   // once the title is settled.
   const bookTitle = arg('book-title');
   const slug = bookTitle ? slugifyBookTitle(bookTitle) : 'your-book';
+  // Gift order: --gift-from "Grandma June" mints a redemption code the
+  // buyer prints on the certificate. The recipient parent opens
+  // /gift/<code>, sees "A gift from Grandma June", one button, then the
+  // book. Absent this flag we skip the gift-code mint entirely.
+  const giftFrom = arg('gift-from');
 
   if (!name || !childName) {
-    console.error('usage: pnpm exec tsx scripts/new-household.ts --name "Family Name" --child "Child Name" [--band 4-8] [--email x@y.z] [--parent "Papa"] [--device-label "iPad"] [--book-title "The Lantern of Round Pond"] [--base-url https://...]');
+    console.error('usage: pnpm exec tsx scripts/new-household.ts --name "Family Name" --child "Child Name" [--band 4-8] [--email x@y.z] [--parent "Papa"] [--device-label "iPad"] [--book-title "The Lantern of Round Pond"] [--gift-from "Grandma June"] [--base-url https://...]');
     process.exit(1);
   }
 
@@ -134,6 +140,25 @@ async function main(): Promise<void> {
   if (!bookTitle) {
     console.log('              (slug is a placeholder — pass --book-title once the title is settled to re-emit)');
   }
+
+  if (giftFrom) {
+    // Requires content:add to have run first so `child_id` in the codes
+    // table points at a child with a real cover to show on the gift page.
+    // For a fresh household with no books yet, the redemption screen just
+    // renders without a cover — still functional.
+    const gift = await insertGiftCode({
+      householdId,
+      childId,
+      bookSlug: slug,
+      giftFrom,
+      expiresAt: null,
+    });
+    const giftUrl = `${cleanBase}/gift/${gift.code}`;
+    console.log('');
+    console.log(`  GIFT URL    ${giftUrl}`);
+    console.log(`  GIFT CODE   ${formatGiftCode(gift.code)}  (for the printed certificate)`);
+  }
+
   console.log('');
   console.log('  Import books scoped to this household with:');
   console.log(`    pnpm content:add content/households/<slug>/books/<book-slug> --household ${householdId}`);

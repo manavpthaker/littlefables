@@ -122,7 +122,7 @@ suspicious parent can go find a real shop with real reviews in ten seconds.
 | Playbook step 27 | Delivery email carries the readable URL |
 | Playbook step 28 | **Rewrite** — gift certificate carries `/gift/<code>`, never the buyer's URL |
 | `email-templates.md` #3 | Install steps move out of the email and into the reader |
-| All hosts | `littlefables.ai` → `littlefables.app` everywhere buyer-facing |
+| All hosts | ~~`littlefables.ai` → `littlefables.app`~~ everywhere buyer-facing (done 2026-08-05) |
 
 ## Open question
 

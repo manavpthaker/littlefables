@@ -166,7 +166,7 @@ The longest live beat. Real reading, minimal overlay.
 
 - **Source:** motion graphics.
 - **What happens:** mark returns, breathing. Details settle beneath.
-- **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.ai`
+- **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.app`
 - **Audio:** piano resolves.
 
 ---
