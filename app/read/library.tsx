@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BookCard } from '@ds/components/kid/BookCard.jsx';
 import { compareTitles } from '@/lib/util/sort-title';
 import { GridView, ListView, SingleView } from './library-views';
+import { VIEW_MODES, defaultView, type ViewMode } from '@/lib/util/shelf-view';
 
 export interface ShelfBook {
   id: string;
@@ -23,7 +24,6 @@ export interface ShelfBook {
 }
 
 type SortMode = 'title-asc' | 'title-desc' | 'added-new' | 'added-old';
-type ViewMode = 'single' | 'grid' | 'list';
 
 const SORT_STORAGE = 'lf-library-sort';
 const VIEW_STORAGE = 'lf-library-view';
@@ -92,7 +92,11 @@ export function Library({ books }: { books: ShelfBook[] }) {
 
   useEffect(() => {
     setSort(readPref<SortMode>(SORT_STORAGE, ['title-asc', 'title-desc', 'added-new', 'added-old'], 'title-asc'));
-    setView(readPref<ViewMode>(VIEW_STORAGE, ['single', 'grid', 'list'], 'grid'));
+    setView(readPref<ViewMode>(VIEW_STORAGE, VIEW_MODES, defaultView(books.length)));
+    // books.length only matters for the first paint, before a stored choice is
+    // known; re-running on every shelf change would yank the view out from
+    // under someone mid-browse.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const q = normalizeForSearch(query);
