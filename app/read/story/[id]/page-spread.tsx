@@ -39,24 +39,16 @@ export function PageSpread({
   turnDirection?: 'next' | 'prev' | null;
   onHearWord: (word: string, wordIdx: number) => void;
 }) {
-  // Pick the animation shorthand based on direction. Both directions use
-  // 3D rotation around the correct edge of the page so it reads as a
-  // physical page turn. Reduced-motion falls to a crossfade via
-  // motion.css @media block that already collapses --dur-page.
-  const pageAnim =
+  // The animation belongs on the page's contents, never on the container. The
+  // container holds the crease, and a binding that swings with the page is the
+  // one thing a book never does.
+  const name =
     turnDirection === 'next'
-      ? 'lf-page-turn-next var(--motion-wind) var(--ease-pendulum) 1'
+      ? 'lf-leaf-next'
       : turnDirection === 'prev'
-        ? 'lf-page-turn-prev var(--motion-wind) var(--ease-pendulum) 1'
-        : 'lf-page-in var(--motion-wind) var(--ease-pendulum) 1';
-
-  // transform-origin has to live on the element, not in the keyframes. It is an
-  // animatable property, so declaring it at 0% only made it interpolate toward
-  // the 50% 50% default across the turn — the hinge slid to the middle of the
-  // page while the page was still rotating, which is what made it read as a
-  // wobble rather than a fold.
-  const hinge =
-    turnDirection === 'next' ? 'left center' : turnDirection === 'prev' ? 'right center' : undefined;
+        ? 'lf-leaf-prev'
+        : 'lf-leaf-in';
+  const leaf = `${name} var(--motion-wind) var(--ease-pendulum) 1`;
   const landscape = useLandscapeSpread();
   const artUrl = hideArt ? undefined : (page.img ?? coverImage);
   const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
@@ -101,11 +93,9 @@ export function PageSpread({
           width: '100%',
           marginInline: 'auto',
           boxSizing: 'border-box',
-          animation: pageAnim,
-          transformOrigin: hinge,
         }}
       >
-        <article style={{ maxWidth: 560, width: '100%' }}>
+        <article style={{ maxWidth: 560, width: '100%', animation: leaf }}>
           {chapterLabel}
           {storyText}
         </article>
@@ -122,8 +112,6 @@ export function PageSpread({
           minHeight: 0,
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 45%) minmax(0, 55%)',
-          animation: pageAnim,
-          transformOrigin: hinge,
           position: 'relative',
         }}
       >
@@ -135,7 +123,7 @@ export function PageSpread({
                 position: 'absolute',
                 inset: 0,
                 background: `url(${artUrl}) center/cover no-repeat`,
-                animation: 'var(--motion-settle)',
+                animation: leaf,
               }}
             />
           ) : (
@@ -145,12 +133,14 @@ export function PageSpread({
           )}
         </div>
         <div
+          className="lf-leaf-words"
           style={{
             minHeight: 0,
             overflowY: 'auto',
             display: 'grid',
             placeItems: 'center',
             padding: 'var(--space-6) var(--space-7)',
+            animation: leaf,
           }}
         >
           <article style={{ maxWidth: 560, width: '100%' }}>
@@ -178,8 +168,6 @@ export function PageSpread({
         width: '100%',
         marginInline: 'auto',
         boxSizing: 'border-box',
-        animation: pageAnim,
-          transformOrigin: hinge,
       }}
     >
       <div className="lf-art-card">
@@ -190,7 +178,7 @@ export function PageSpread({
               position: 'absolute',
               inset: 0,
               background: `url(${artUrl}) center/cover no-repeat`,
-              animation: 'var(--motion-settle)',
+              animation: leaf,
             }}
           />
         ) : (
@@ -199,7 +187,7 @@ export function PageSpread({
           </div>
         )}
       </div>
-      <article>
+      <article className="lf-leaf-words" style={{ animation: leaf }}>
         {chapterLabel}
         {storyText}
       </article>

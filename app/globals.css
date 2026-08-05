@@ -125,71 +125,83 @@ button:disabled {
   .lf-wordmark-mark { width: 30px; height: 30px; }
 }
 
-/* Page-turn motion. The reader's main container re-mounts on each
- * (chapterIdx, pageIdx) change via React key. Three variants:
- *   lf-page-in       — first mount / chapter-map return; slide up + fade
- *   lf-page-turn-next — advancing: page slides in from the right with a
- *                       subtle rotateY, as if the previous page was
- *                       flipped over from the right edge of the spread
- *   lf-page-turn-prev — going back: mirror of next, from the left
- * Reduced-motion collapses --dur-page to 200ms (crossfade only) via
- * the motion.css @media block; no 3D rotation is applied then. */
-@keyframes lf-page-in {
-  0% {
+/* Page change. The reader re-mounts its main on each (chapterIdx, pageIdx)
+ * change via React key.
+ *
+ * This is deliberately NOT a page turn, and does not pretend to be one. Only
+ * one page is ever in the DOM, so there is no outgoing leaf to rotate away —
+ * an earlier version swung the incoming page in from 45 degrees, which read
+ * as a door rather than paper, and swung the binding along with it because
+ * the animation sat on the container that holds the crease.
+ *
+ * What a bound book actually does when you change page: the book does not
+ * move at all. So the gutter and the page furniture stay nailed down, and
+ * only the printed content settles — a short drift in the direction of
+ * travel, art first and words just behind it, the way a leaf lands before
+ * the eye catches up to reading it.
+ *
+ *   lf-leaf-in    first mount / return from the chapter map; settles upward
+ *   lf-leaf-next  advancing; content drifts in from the right
+ *   lf-leaf-prev  going back; mirror
+ *
+ * Under reduced motion these lose their travel and become a plain fade. That
+ * is handled by redefining the keyframes below rather than by overriding
+ * animation-name: the shorthand is set inline per element, so a rule would
+ * need !important to win, whereas a second @keyframes of the same name simply
+ * supersedes the first. */
+@keyframes lf-leaf-in {
+  from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
-@keyframes lf-page-turn-next {
-  0% {
+@keyframes lf-leaf-next {
+  from {
     opacity: 0;
-    transform: translateX(40%) rotateY(-45deg);
-    filter: drop-shadow(-8px 4px 12px rgba(70, 54, 42, 0.28));
+    transform: translateX(2.4%);
   }
-  50% {
+  to {
     opacity: 1;
-    transform: translateX(10%) rotateY(-14deg);
-    filter: drop-shadow(-6px 4px 10px rgba(70, 54, 42, 0.2));
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) rotateY(0);
-    filter: none;
+    transform: none;
   }
 }
-@keyframes lf-page-turn-prev {
-  0% {
+@keyframes lf-leaf-prev {
+  from {
     opacity: 0;
-    transform: translateX(-40%) rotateY(45deg);
-    filter: drop-shadow(8px 4px 12px rgba(70, 54, 42, 0.28));
+    transform: translateX(-2.4%);
   }
-  50% {
+  to {
     opacity: 1;
-    transform: translateX(-10%) rotateY(14deg);
-    filter: drop-shadow(6px 4px 10px rgba(70, 54, 42, 0.2));
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0) rotateY(0);
-    filter: none;
+    transform: none;
   }
 }
-/* The rotateY in lf-page-turn-* renders as a flat translate unless a
- * parent has `perspective` set. Apply it high up on the kid subtree so
- * every reader main (map, spread, night-only) picks up the same depth
- * cue — regardless of orientation or which layout branch renders. */
-[data-density='kid'] {
-  perspective: 1200px;
-  perspective-origin: 50% 40%;
+/* The words trail the picture by a beat. Same distance, same curve — the
+   offset alone is what stops the two panes reading as one sliding slab. */
+.lf-leaf-words {
+  animation-delay: 90ms;
+  animation-fill-mode: both;
 }
-[data-density='kid'] main {
-  transform-style: preserve-3d;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes lf-leaf-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes lf-leaf-next {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes lf-leaf-prev {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .lf-leaf-words {
+    animation-delay: 0ms;
+  }
 }
 
 /* Polish 3.0: bottom sheets spring up and settle — never appear instantly. */
@@ -373,20 +385,26 @@ body,
   transform: translateX(-50%);
   pointer-events: none;
   background:
+    /* The page edge, catching light as it curves up out of the fold. This is
+       the part that survives a dark illustration bleeding into the gutter —
+       a dark hairline there has nothing to darken and simply disappears. */
     linear-gradient(
       to right,
-      transparent calc(50% - 0.5px),
-      rgba(70, 54, 42, 0.22) 50%,
-      transparent calc(50% + 0.5px)
+      transparent calc(50% - 1.5px),
+      rgba(247, 240, 224, 0.5) calc(50% - 1px),
+      rgba(70, 54, 42, 0.3) 50%,
+      transparent calc(50% + 1.5px)
     ),
+    /* The fold itself, darkening both leaves. Weighted harder on the art side
+       because it is fighting a painted surface rather than bare paper. */
     linear-gradient(
       to right,
       rgba(70, 54, 42, 0) 0%,
-      rgba(70, 54, 42, 0.05) 30%,
-      rgba(70, 54, 42, 0.13) 47%,
-      rgba(70, 54, 42, 0.15) 50%,
-      rgba(70, 54, 42, 0.13) 53%,
-      rgba(70, 54, 42, 0.05) 70%,
+      rgba(70, 54, 42, 0.1) 26%,
+      rgba(70, 54, 42, 0.26) 47%,
+      rgba(70, 54, 42, 0.3) 50%,
+      rgba(70, 54, 42, 0.14) 53%,
+      rgba(70, 54, 42, 0.05) 72%,
       rgba(70, 54, 42, 0) 100%
     );
 }
