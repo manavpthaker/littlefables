@@ -17,6 +17,12 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
 const BASE = process.env.LF_BASE ?? 'http://localhost:3000';
+
+// Every capture must run comfortably longer than the beat that uses it.
+// Remotion's OffthreadVideo stalls on the last frame if a sequence outruns its
+// source, which reads as the film freezing. This has been shipped twice now,
+// so check-clips.mjs verifies it after every capture rather than trusting the
+// pauses below to stay ahead of the edit.
 const TOKEN = process.env.LF_TOKEN ?? 'fAJeL9TuziaPt_3cvwNkc3vuKeNJ74yuz-zvhJEV27k';
 const BOOK = 'lantern-round-pond';
 const OUT = 'public/recordings';
@@ -86,9 +92,9 @@ const SHOTS = {
   /** 04 · two page turns, each flip captured whole. */
   pageTurn: async (page) => {
     await openBook(page);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       await page.getByLabel('Next page').click();
-      await pause(2600); // the flip is 700ms; the rest is breathing room
+      await pause(2600); // the settle is 600ms; the rest is breathing room
     }
   },
 
@@ -107,14 +113,16 @@ const SHOTS = {
         break;
       }
     }
-    await pause(2000);
+    await pause(4000);
   },
 
   /** 06 · pressing play, narration starting, words highlighting in sequence. */
   transport: async (page) => {
     await openBook(page);
     await pause(600);
-    await page.getByLabel('Play').first().click();
+    // The capsule labels this "Read to me" — the reader rebuild moved play out
+    // of the old footer Transport and relabelled it.
+    await page.getByRole('button', { name: 'Read to me' }).click();
     await pause(9000); // long enough to sit under the narration
   },
 
