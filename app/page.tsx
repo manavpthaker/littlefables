@@ -181,7 +181,7 @@ export default function LandingPage() {
       >
         <div
           style={{
-            maxWidth: 1100,
+            maxWidth: 1240,
             margin: '0 auto',
             padding: '12px 24px',
             display: 'flex',
@@ -191,7 +191,7 @@ export default function LandingPage() {
             flexWrap: 'wrap',
           }}
         >
-          <Wordmark markSize={30} />
+          <Wordmark markSize={36} />
           <nav
             style={{
               display: 'flex',
@@ -232,7 +232,7 @@ export default function LandingPage() {
       <section style={{ borderBottom: '1px solid var(--border-soft)' }}>
         <div
           style={{
-            maxWidth: 1100,
+            maxWidth: 1240,
             margin: '0 auto',
             padding: '96px 24px 88px',
             display: 'flex',
@@ -317,7 +317,8 @@ export default function LandingPage() {
           </div>
           <figure
             style={{
-              flex: '0 1 380px',
+              flex: '0 0 auto',
+              width: 'min(320px, 80vw)',
               margin: '0 auto',
               display: 'flex',
               flexDirection: 'column',
@@ -326,21 +327,18 @@ export default function LandingPage() {
           >
             <div
               className="lf-cover-frame"
-              style={{
-                width: 'min(320px, 80vw)',
-                display: 'flex',
-                flexDirection: 'column',
-                margin: '0 auto',
-              }}
+              style={{ width: '100%', display: 'flex', flexDirection: 'column' }}
             >
-              <Image
-                src="/landing/hero-cover.jpg"
-                alt="Cover art: a girl in a red coat and yellow boots at the edge of a pond"
-                width={640}
-                height={800}
-                priority
-                style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', display: 'block' }}
-              />
+              <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5' }}>
+                <Image
+                  src="/landing/hero-cover.jpg"
+                  alt="Cover art: a girl in a red coat and yellow boots at the edge of a pond"
+                  fill
+                  sizes="(max-width: 640px) 80vw, 320px"
+                  priority
+                  style={{ objectFit: 'cover', display: 'block' }}
+                />
+              </div>
               <div
                 style={{
                   padding: '20px 28px 24px',
@@ -396,7 +394,7 @@ export default function LandingPage() {
       </section>
 
       <section id="how" style={{ padding: '72px 24px 64px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <span
             style={{
               fontFamily: 'var(--font-sc)',
@@ -457,7 +455,7 @@ export default function LandingPage() {
           padding: '64px 24px 60px',
         }}
       >
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <span
             style={{
               fontFamily: 'var(--font-sc)',
@@ -507,7 +505,7 @@ export default function LandingPage() {
       <section id="about" style={{ padding: '64px 24px 0' }}>
         <div
           style={{
-            maxWidth: 1100,
+            maxWidth: 1240,
             margin: '0 auto',
             display: 'flex',
             flexWrap: 'wrap',
@@ -638,7 +636,7 @@ export default function LandingPage() {
       </section>
 
       <section id="app" style={{ padding: '64px 24px 0' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <span
             style={{
               fontFamily: 'var(--font-sc)',
@@ -673,7 +671,10 @@ export default function LandingPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              // Cap the cell width so on very wide screens the mockups don't
+              // stretch to hundreds of extra pixels and dominate the layout.
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 460px))',
+              justifyContent: 'center',
               gap: 32,
             }}
           >
@@ -699,14 +700,17 @@ export default function LandingPage() {
                     overflow: 'hidden',
                     boxShadow: 'var(--shadow-card)',
                     background: 'var(--paper-warm)',
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '4 / 3',
                   }}
                 >
                   <Image
                     src={f.src}
                     alt={f.alt}
-                    width={900}
-                    height={675}
-                    style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 460px"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <figcaption
@@ -740,7 +744,7 @@ export default function LandingPage() {
       </section>
 
       <section id="reviews" style={{ padding: '64px 24px 0' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <span
             style={{
               fontFamily: 'var(--font-sc)',
@@ -827,7 +831,7 @@ export default function LandingPage() {
       <section id="gift" style={{ padding: '64px 24px 0' }}>
         <div
           style={{
-            maxWidth: 1100,
+            maxWidth: 1240,
             margin: '0 auto',
             display: 'flex',
             flexWrap: 'wrap',
@@ -952,7 +956,7 @@ export default function LandingPage() {
       <section id="trust" style={{ padding: '72px 24px 0' }}>
         <div
           style={{
-            maxWidth: 1100,
+            maxWidth: 1240,
             margin: '0 auto',
             background: 'var(--forest-wash)',
             border: '1px solid var(--border-card)',
