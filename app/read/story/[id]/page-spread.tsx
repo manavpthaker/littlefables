@@ -23,7 +23,6 @@ export function PageSpread({
   currentIndex,
   narrating,
   hideArt = false,
-  turnDirection = null,
   onHearWord,
 }: {
   page: ReaderPage;
@@ -35,20 +34,12 @@ export function PageSpread({
   narrating: boolean;
   /** Night mode: skip the art pane entirely; text-only page. */
   hideArt?: boolean;
-  /** Last page-turn direction — drives the flip animation. */
-  turnDirection?: 'next' | 'prev' | null;
   onHearWord: (word: string, wordIdx: number) => void;
 }) {
-  // The animation belongs on the page's contents, never on the container. The
-  // container holds the crease, and a binding that swings with the page is the
-  // one thing a book never does.
-  const name =
-    turnDirection === 'next'
-      ? 'lf-leaf-next'
-      : turnDirection === 'prev'
-        ? 'lf-leaf-prev'
-        : 'lf-leaf-in';
-  const leaf = `${name} var(--motion-wind) var(--ease-pendulum) 1`;
+  // Nothing slides. A bound book does not move when you change page — the
+  // picture simply arrives, and the words set themselves after it.
+
+  const art = 'lf-art-in var(--motion-chime) var(--ease-pendulum) both';
   const landscape = useLandscapeSpread();
   const artUrl = hideArt ? undefined : (page.img ?? coverImage);
   const hasArtPane = !hideArt && (Boolean(artUrl) || useWashFallback);
@@ -75,6 +66,7 @@ export function PageSpread({
       words={page.words.map((w) => ({ w: w.w }))}
       currentIndex={currentIndex}
       dimUpcoming={narrating}
+      reveal={!narrating}
       onHearWord={onHearWord}
     />
   );
@@ -95,7 +87,7 @@ export function PageSpread({
           boxSizing: 'border-box',
         }}
       >
-        <article style={{ maxWidth: 560, width: '100%', animation: leaf }}>
+        <article style={{ maxWidth: 560, width: '100%' }}>
           {chapterLabel}
           {storyText}
         </article>
@@ -123,7 +115,7 @@ export function PageSpread({
                 position: 'absolute',
                 inset: 0,
                 background: `url(${artUrl}) center/cover no-repeat`,
-                animation: leaf,
+                animation: art,
               }}
             />
           ) : (
@@ -133,14 +125,12 @@ export function PageSpread({
           )}
         </div>
         <div
-          className="lf-leaf-words"
           style={{
             minHeight: 0,
             overflowY: 'auto',
             display: 'grid',
             placeItems: 'center',
             padding: 'var(--space-6) var(--space-7)',
-            animation: leaf,
           }}
         >
           <article style={{ maxWidth: 560, width: '100%' }}>
@@ -178,7 +168,7 @@ export function PageSpread({
               position: 'absolute',
               inset: 0,
               background: `url(${artUrl}) center/cover no-repeat`,
-              animation: leaf,
+              animation: art,
             }}
           />
         ) : (
@@ -187,7 +177,7 @@ export function PageSpread({
           </div>
         )}
       </div>
-      <article className="lf-leaf-words" style={{ animation: leaf }}>
+      <article>
         {chapterLabel}
         {storyText}
       </article>

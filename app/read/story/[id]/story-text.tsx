@@ -19,6 +19,7 @@ export function StoryText({
   words,
   currentIndex = -1,
   dimUpcoming = true,
+  reveal = false,
   onHearWord,
 }: {
   words: StoryWord[];
@@ -27,6 +28,8 @@ export function StoryText({
   /** True while narration is moving — dims the not-yet-spoken words so the
    *  eye follows the voice. Idle pages read as plain book pages. */
   dimUpcoming?: boolean;
+  /** Set the words on one at a time when the page arrives. */
+  reveal?: boolean;
   onHearWord?: (word: string, wordIdx: number) => void;
 }) {
   const currentRef = useRef<HTMLSpanElement | null>(null);
@@ -81,6 +84,15 @@ export function StoryText({
                     : 'var(--ink)',
                 transition:
                   'background var(--motion-tick) var(--ease-pendulum), color var(--motion-settle) var(--ease-pendulum)',
+                // Capped so a long page still finishes setting in about a
+                // second — past that the reveal stops being charming and
+                // starts being a wait before you can read.
+                ...(reveal
+                  ? {
+                      animation: 'lf-word-in var(--motion-wind) var(--ease-pendulum) both',
+                      animationDelay: `${Math.min(i * 24, 900)}ms`,
+                    }
+                  : null),
               }}
             >
               {t.w}

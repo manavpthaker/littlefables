@@ -149,58 +149,32 @@ button:disabled {
  * animation-name: the shorthand is set inline per element, so a rule would
  * need !important to win, whereas a second @keyframes of the same name simply
  * supersedes the first. */
-@keyframes lf-leaf-in {
+/* The picture arrives the way a plate does — slowly, and without moving. */
+@keyframes lf-art-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The words set themselves, one at a time.
+ *
+ * Only when the page is silent. If narration is running the whole line is
+ * already there, because the voice owns the pacing then and a reveal would be
+ * racing the highlight for the same words. */
+@keyframes lf-word-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(0.3em);
   }
   to {
     opacity: 1;
     transform: none;
   }
-}
-@keyframes lf-leaf-next {
-  from {
-    opacity: 0;
-    transform: translateX(2.4%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes lf-leaf-prev {
-  from {
-    opacity: 0;
-    transform: translateX(-2.4%);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-/* The words trail the picture by a beat. Same distance, same curve — the
-   offset alone is what stops the two panes reading as one sliding slab. */
-.lf-leaf-words {
-  animation-delay: 90ms;
-  animation-fill-mode: both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  @keyframes lf-leaf-in {
+  @keyframes lf-word-in {
     from { opacity: 0; }
     to { opacity: 1; }
-  }
-  @keyframes lf-leaf-next {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes lf-leaf-prev {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  .lf-leaf-words {
-    animation-delay: 0ms;
   }
 }
 
@@ -381,7 +355,7 @@ body,
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 64px;
+  width: 88px;
   transform: translateX(-50%);
   pointer-events: none;
   background:
@@ -390,22 +364,24 @@ body,
        a dark hairline there has nothing to darken and simply disappears. */
     linear-gradient(
       to right,
-      transparent calc(50% - 1.5px),
-      rgba(247, 240, 224, 0.5) calc(50% - 1px),
-      rgba(70, 54, 42, 0.3) 50%,
-      transparent calc(50% + 1.5px)
+      transparent calc(50% - 2.5px),
+      rgba(250, 244, 230, 0.75) calc(50% - 1.5px),
+      rgba(46, 33, 22, 0.55) 50%,
+      rgba(46, 33, 22, 0.16) calc(50% + 1.5px),
+      transparent calc(50% + 3px)
     ),
     /* The fold itself, darkening both leaves. Weighted harder on the art side
        because it is fighting a painted surface rather than bare paper. */
     linear-gradient(
       to right,
-      rgba(70, 54, 42, 0) 0%,
-      rgba(70, 54, 42, 0.1) 26%,
-      rgba(70, 54, 42, 0.26) 47%,
-      rgba(70, 54, 42, 0.3) 50%,
-      rgba(70, 54, 42, 0.14) 53%,
-      rgba(70, 54, 42, 0.05) 72%,
-      rgba(70, 54, 42, 0) 100%
+      rgba(58, 43, 30, 0) 0%,
+      rgba(58, 43, 30, 0.12) 24%,
+      rgba(58, 43, 30, 0.32) 42%,
+      rgba(58, 43, 30, 0.46) 49%,
+      rgba(58, 43, 30, 0.46) 51%,
+      rgba(58, 43, 30, 0.24) 58%,
+      rgba(58, 43, 30, 0.08) 76%,
+      rgba(58, 43, 30, 0) 100%
     );
 }
 
@@ -423,9 +399,10 @@ body,
   border-radius: 14px;
   overflow: hidden;
   box-shadow:
-    inset 14px 0 18px -14px rgba(70, 54, 42, 0.5),
-    inset 0 0 0 1px rgba(70, 54, 42, 0.1),
-    0 2px 10px rgba(70, 54, 42, 0.14);
+    inset 22px 0 26px -18px rgba(46, 33, 22, 0.75),
+    inset -6px 0 14px -12px rgba(46, 33, 22, 0.35),
+    inset 0 0 0 1px rgba(70, 54, 42, 0.16),
+    0 3px 14px rgba(46, 33, 22, 0.2);
 }
 @media (max-height: 720px) {
   .lf-art-card {
