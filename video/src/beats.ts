@@ -117,7 +117,7 @@ export const AUDIO = {
 
 export const COPY = {
   promise: 'Your kid, in their own storybook.',
-  intake: 'Tell us about your child',
+  intake: 'This is everything we ask.',
   intakeSub: 'A photo helps, but words are enough',
   child: ['Rosa.', 'Five.', 'Loves ponds, geese, and waiting for things.'],
   childCoda: 'That was all we asked for.',
@@ -134,5 +134,6 @@ export const COPY = {
     'We delete what you told us once the book is delivered.',
   ],
   close: '$29 · previews in 24 hours · book in 3–4 days',
-  url: 'littlefables.ai',
+  url: 'littlefables.app',
+  etsy: 'etsy.com/shop/LittleFablesStories',
 };

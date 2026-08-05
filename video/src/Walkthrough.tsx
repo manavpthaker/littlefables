@@ -11,13 +11,13 @@ import {
 import { existsSync } from './hasAudio';
 
 import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
-import { font, ink, paper, motion, FPS } from './theme';
+import { font, ink, paper, pigment, motion, FPS } from './theme';
 
 import { CornerMark } from './components/CornerMark';
 import { StyleRange } from './components/StyleRange';
 import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
-import { SlowPush } from './components/SlowPush';
+import { CoverReveal } from './components/CoverReveal';
 import { Develop } from './components/Develop';
 import { PageFan } from './components/PageFan';
 import { Bind } from './components/Bind';
@@ -161,6 +161,17 @@ const Close: React.FC = () => {
         <div style={{ fontFamily: font.display, fontSize: 52, color: ink.base, marginTop: 20 }}>
           {COPY.url}
         </div>
+        <div
+          style={{
+            fontFamily: font.sc,
+            fontSize: 24,
+            letterSpacing: '0.1em',
+            color: pigment.brass,
+            marginTop: 16,
+          }}
+        >
+          {COPY.etsy}
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -206,13 +217,14 @@ export const Walkthrough: React.FC = () => {
     {existsSync && <MusicBed />}
     <Sequence {...frames(BEATS.promise)}>
       <AbsoluteFill>
-        <SlowPush src={staticFile(BOOK.cover)} />
-        <Caption text={COPY.promise} delay={motion.wind} position="bottom" />
+        <CoverReveal src={staticFile(BOOK.cover)} />
+        <Caption text={COPY.promise} delay={motion.wind} />
       </AbsoluteFill>
     </Sequence>
 
     <Sequence {...frames(BEATS.intake)}>
-      <DeviceFrame src={RECORDINGS.intake} device="ipad" />
+      {/* The capture's first 1.2s is a blank white page load. */}
+      <DeviceFrame src={RECORDINGS.intake} device="ipad" startFrom={1.3} />
       <Caption text={COPY.intake} delay={motion.settle} hold={sec(5)} />
       <Caption text={COPY.intakeSub} delay={sec(11)} hold={sec(5)} />
     </Sequence>
