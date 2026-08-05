@@ -42,7 +42,27 @@ export default async function ReadHome() {
   const headerTitle = firstName ? `${firstName}'s Little Fables` : 'Little Fables';
 
   const latest = progressRows?.[0];
-  const continueBook = latest ? (bookRows ?? []).find((b) => b.id === latest.book_id) : null;
+  const continueBookRow = latest ? (bookRows ?? []).find((b) => b.id === latest.book_id) : null;
+  // Resolve the chapter title from the persisted book jsonb (books.book).
+  // Shelf lookup for chapter labels is cheap — one small select — and it
+  // means "Keep going" reads like "Chapter 3 · The Song, page 2" instead
+  // of a bare book title.
+  let continueLabel: string | null = null;
+  let continueChapterTitle: string | null = null;
+  if (continueBookRow && latest) {
+    const { data: full } = await admin()
+      .from('books')
+      .select('book, kind')
+      .eq('id', continueBookRow.id)
+      .maybeSingle();
+    const chapters = (full?.book as { chapters?: { title?: string }[] } | null)?.chapters ?? [];
+    const chapterIdx = latest.chapter_idx ?? 0;
+    continueChapterTitle = chapters[chapterIdx]?.title ?? null;
+    const chapterN = full?.kind === 'chapter' ? `Chapter ${chapterIdx + 1}` : null;
+    const pageN = `page ${(latest.page_idx ?? 0) + 1}`;
+    continueLabel = [chapterN, continueChapterTitle, pageN].filter(Boolean).join(' · ');
+  }
+  const continueBook = continueBookRow;
 
   // Order books by most-recently-touched via book_progress.updated_at, so
   // the Library component can render a "Recently opened" ribbon without a
@@ -132,6 +152,18 @@ export default async function ReadHome() {
           >
             {continueBook.title}
           </span>
+          {continueLabel && (
+            <span
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 13,
+                color: 'var(--ink-soft)',
+                lineHeight: 1.4,
+              }}
+            >
+              {continueLabel}
+            </span>
+          )}
         </Link>
       )}
 

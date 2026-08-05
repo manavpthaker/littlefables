@@ -9,34 +9,48 @@ import { useEffect, useState } from 'react';
 // pointer-events: none — it never blocks the tap-to-hear layer.
 // Skipped for single-chapter (quick) books because there's no chapter
 // context to announce there.
+//
+// The visibility hook is exported so the reader can drive its pill
+// label off the same state — pill shows the book title while the
+// opener is up, then falls back to the chapter title once it fades.
 
 const SHOW_MS = 2600;
 
-export function ChapterOpener({
-  chapterIdx,
-  pageIdx,
-  chapterCount,
-  chapterTitle,
-}: {
+/** Fires `true` for SHOW_MS whenever chapterIdx changes and we're on
+ *  page 0 of a multi-chapter book. Same rules the ChapterOpener enforces
+ *  internally — exported so callers can co-render off the same signal. */
+export function useChapterOpenerVisible(params: {
   chapterIdx: number | null;
   pageIdx: number;
   chapterCount: number;
-  chapterTitle: string;
-}) {
+}): boolean {
+  const { chapterIdx, pageIdx, chapterCount } = params;
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (chapterIdx === null) return;
-    if (pageIdx !== 0) return; // Only announce on chapter arrival, not on back-navigation
-    if (chapterCount <= 1) return; // Quick book — no chapter identity to announce
+    if (pageIdx !== 0) return;
+    if (chapterCount <= 1) return;
     setVisible(true);
     const t = window.setTimeout(() => setVisible(false), SHOW_MS);
     return () => window.clearTimeout(t);
-    // Deliberately re-fires only when chapterIdx changes; pageIdx=0 gates
-    // to arrivals, and downstream props are read at render time.
+    // Fires only when chapterIdx changes; pageIdx gate is checked at
+    // fire time, and chapterCount is stable per book.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterIdx]);
 
+  return visible;
+}
+
+export function ChapterOpener({
+  visible,
+  chapterIdx,
+  chapterTitle,
+}: {
+  visible: boolean;
+  chapterIdx: number | null;
+  chapterTitle: string;
+}) {
   if (chapterIdx === null || !chapterTitle) return null;
 
   return (

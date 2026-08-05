@@ -104,16 +104,25 @@ export function ReaderMenu({
         style={{
           width: 'min(460px, 100%)',
           maxHeight: '78dvh',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
           background: 'var(--paper)',
           borderRadius: 20,
-          padding: 'var(--space-5) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
           boxShadow: 'var(--shadow-raised)',
           animation: 'lf-sheet-up var(--motion-settle) var(--ease-pendulum) both',
           outline: 'none',
+          overflow: 'hidden',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 'var(--space-4)' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: 'var(--space-5) var(--space-5) var(--space-3)',
+            flex: '0 0 auto',
+          }}
+        >
           <Wordmark layout="mark-only" markSize={30} />
           <span
             style={{
@@ -132,17 +141,35 @@ export function ReaderMenu({
         </div>
 
         {chapters && chapters.length > 0 && (
-          <>
+          <div
+            style={{
+              flex: '1 1 auto',
+              minHeight: 0,
+              overflowY: 'auto',
+              padding: '0 var(--space-5)',
+            }}
+          >
             <Label>Chapters</Label>
             <div
               style={{
                 display: 'grid',
                 gap: 'var(--space-2)',
-                marginBottom: 'var(--space-5)',
+                paddingBottom: 'var(--space-3)',
               }}
             >
               {chapters.map((c, i) => {
                 const current = i === currentChapter;
+                // Linear-read model: anything before current is "read".
+                // Doesn't handle skipping around perfectly, but for a
+                // parent glancing at "how far are we" it's the right
+                // read most of the time — and cheap to compute without
+                // a per-chapter progress store.
+                const read = currentChapter !== null && i < currentChapter;
+                const status: 'current' | 'read' | 'unread' = current
+                  ? 'current'
+                  : read
+                    ? 'read'
+                    : 'unread';
                 return (
                   <button
                     key={i}
@@ -179,9 +206,10 @@ export function ReaderMenu({
                           ? `center / cover no-repeat url(${c.thumbnail})`
                           : 'var(--paper-deep)',
                         boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
+                        opacity: status === 'unread' ? 0.85 : 1,
                       }}
                     />
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, flex: 1 }}>
                       <span
                         style={{
                           fontFamily: 'var(--font-sc, var(--font-body))',
@@ -207,53 +235,111 @@ export function ReaderMenu({
                         {c.pageCount} page{c.pageCount === 1 ? '' : 's'}
                       </span>
                     </div>
+                    <StatusChip status={status} />
                   </button>
                 );
               })}
             </div>
-          </>
+          </div>
         )}
 
-        <Label>Reading speed</Label>
-        <div style={{ display: 'flex', gap: 8, marginBottom: 'var(--space-5)' }}>
-          {RATES.map((r) => (
-            <button
-              key={r.value}
-              type="button"
-              onClick={() => onRate(r.value)}
-              aria-pressed={rate === r.value}
-              style={{
-                flex: 1,
-                border: '1px solid var(--pill-edge)',
-                borderRadius: 'var(--radius-pill)',
-                padding: '10px 0',
-                fontFamily: 'var(--font-body)',
-                fontSize: 15,
-                background: rate === r.value ? 'var(--oxblood-wash)' : 'transparent',
-                color: rate === r.value ? 'var(--oxblood-text)' : 'var(--ink-soft)',
-              }}
-            >
-              {r.label}
-            </button>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={onLibrary}
+        <div
           style={{
-            ...row,
-            textAlign: 'center',
-            border: '1px solid var(--pill-edge)',
-            borderRadius: 'var(--radius-pill)',
-            color: 'var(--oxblood-text)',
+            flex: '0 0 auto',
+            padding: 'var(--space-4) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom, 0px))',
+            borderTop: '1px solid var(--pill-edge)',
+            background: 'var(--paper)',
           }}
         >
-          Choose another story
-        </button>
+          <Label>Reading speed</Label>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 'var(--space-4)' }}>
+            {RATES.map((r) => (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => onRate(r.value)}
+                aria-pressed={rate === r.value}
+                style={{
+                  flex: 1,
+                  border: '1px solid var(--pill-edge)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '10px 0',
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 15,
+                  background: rate === r.value ? 'var(--oxblood-wash)' : 'transparent',
+                  color: rate === r.value ? 'var(--oxblood-text)' : 'var(--ink-soft)',
+                }}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={onLibrary}
+            style={{
+              ...row,
+              textAlign: 'center',
+              border: '1px solid var(--pill-edge)',
+              borderRadius: 'var(--radius-pill)',
+              color: 'var(--oxblood-text)',
+            }}
+          >
+            Choose another story
+          </button>
+        </div>
       </div>
     </div>
   );
+}
+
+function StatusChip({ status }: { status: 'current' | 'read' | 'unread' }) {
+  if (status === 'current') {
+    return (
+      <span
+        aria-label="reading"
+        style={{
+          flex: '0 0 auto',
+          fontFamily: 'var(--font-sc, var(--font-body))',
+          fontSize: 10,
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color: 'var(--oxblood-text)',
+          padding: '3px 8px',
+          borderRadius: 999,
+          background: 'var(--paper)',
+          border: '1px solid var(--oxblood)',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        reading
+      </span>
+    );
+  }
+  if (status === 'read') {
+    return (
+      <span
+        aria-label="read"
+        title="Read"
+        style={{
+          flex: '0 0 auto',
+          width: 20,
+          height: 20,
+          borderRadius: 999,
+          background: 'var(--forest-wash)',
+          color: 'var(--forest)',
+          display: 'grid',
+          placeItems: 'center',
+          fontSize: 12,
+          lineHeight: 1,
+        }}
+      >
+        ✓
+      </span>
+    );
+  }
+  return null;
 }
 
 function Label({ children }: { children: React.ReactNode }) {

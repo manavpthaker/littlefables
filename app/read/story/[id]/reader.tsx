@@ -8,7 +8,7 @@ import { pageAudioSource, fetchPageTimestamps } from '@/lib/reader/page-audio-so
 import type { WordTimestamp } from '@/lib/reader/speech';
 import { bookThemeCss } from '@/lib/reader/theme';
 import { useBedtime } from '@/lib/reader/use-bedtime';
-import { Wordmark } from '@ds/components/core/Wordmark.jsx';
+import { Menu } from 'lucide-react';
 import { ReaderChip } from './reader-chip';
 import { ReaderPill } from './reader-pill';
 import { ReaderMenu, type PlaybackRate } from './reader-menu';
@@ -16,7 +16,7 @@ import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { PageSpread } from './page-spread';
 import { InstallPrompt } from './install-prompt';
-import { ChapterOpener } from './chapter-opener';
+import { ChapterOpener, useChapterOpenerVisible } from './chapter-opener';
 import type { ReaderMenuChapter } from './reader-menu';
 import {
   currentChapter,
@@ -79,6 +79,17 @@ export function Reader({
       thumbnail: c.pages.find((p) => p.img)?.img ?? book.coverImage ?? null,
     }));
   }, [book]);
+
+  // Chapter-opener fade-in state. Owned here (not in ChapterOpener) so
+  // the reader pill can echo the same signal — pill shows book title
+  // while the opener caption is up, then falls back to chapter title.
+  const openerVisible = useChapterOpenerVisible({
+    chapterIdx: state.chapterIdx,
+    pageIdx: state.pageIdx,
+    chapterCount: book.chapters.length,
+  });
+  const pillLabel =
+    book.kind === 'chapter' && ch && !openerVisible ? ch.title : book.title;
 
   // Painted-book policy: if ANY page in this book has approved scene art, a
   // page without one shows PaintingWash instead of plain paper — partially
@@ -255,7 +266,9 @@ export function Reader({
               <button
                 type="button"
                 onClick={() => setMenuOpen(true)}
-                aria-label="Menu"
+                aria-label="Open menu"
+                aria-haspopup="dialog"
+                aria-expanded={menuOpen}
                 style={{
                   border: '1px solid var(--pill-edge)',
                   background: 'var(--wash-capsule)',
@@ -267,9 +280,11 @@ export function Reader({
                   flex: 'none',
                   boxShadow: 'var(--shadow-rest)',
                   padding: 0,
+                  color: 'var(--ink)',
+                  cursor: 'pointer',
                 }}
               >
-                <Wordmark layout="mark-only" markSize={22} />
+                <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
               </button>
               <ReaderPill
                 playing={transport.playing}
@@ -278,7 +293,7 @@ export function Reader({
                 onPlay={transport.toggle}
                 onPrev={onPrev}
                 onNext={onNext}
-                label={book.kind === 'chapter' && ch ? ch.title : book.title}
+                label={pillLabel}
                 progress={page.words.length > 1 ? transport.wordIdx / (page.words.length - 1) : null}
               />
             </div>
@@ -287,12 +302,8 @@ export function Reader({
       ) : null}
 
       <ChapterOpener
-        // Keyed on chapter so the fade-in restarts when the chapter
-        // changes. Only shows on page 0, when we've actually entered a
-        // new chapter — not on prev-page back into it.
+        visible={openerVisible}
         chapterIdx={state.chapterIdx}
-        pageIdx={state.pageIdx}
-        chapterCount={book.chapters.length}
         chapterTitle={ch?.title ?? ''}
       />
 
