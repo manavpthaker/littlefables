@@ -17,7 +17,7 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
 const BASE = process.env.LF_BASE ?? 'http://localhost:3000';
-const TOKEN = process.env.LF_TOKEN ?? 'LwqpyUrSllZubYbWmMCUgDwbaRL3vlWu06YuuYgx7fU';
+const TOKEN = process.env.LF_TOKEN ?? 'fAJeL9TuziaPt_3cvwNkc3vuKeNJ74yuz-zvhJEV27k';
 const BOOK = 'lantern-round-pond';
 const OUT = 'public/recordings';
 const TMP = '.capture-tmp';

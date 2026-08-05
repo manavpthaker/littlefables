@@ -5,7 +5,7 @@ const c = await b.newContext({ viewport: { width: 1194, height: 834 } });
 const p = await c.newPage();
 p.on('console', (m) => m.type() === 'error' && console.log('  console error:', m.text().slice(0, 120)));
 
-await p.goto('http://localhost:3000/f/LwqpyUrSllZubYbWmMCUgDwbaRL3vlWu06YuuYgx7fU', {
+await p.goto('http://localhost:3000/f/fAJeL9TuziaPt_3cvwNkc3vuKeNJ74yuz-zvhJEV27k', {
   waitUntil: 'networkidle',
 });
 console.log('landed on:', p.url());
