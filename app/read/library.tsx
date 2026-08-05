@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookCard } from '@ds/components/kid/BookCard.jsx';
 import { compareTitles } from '@/lib/util/sort-title';
-import { GridView, ListView } from './library-views';
+import { GridView, ListView, SingleView } from './library-views';
 
 export interface ShelfBook {
   id: string;
@@ -23,7 +23,7 @@ export interface ShelfBook {
 }
 
 type SortMode = 'title-asc' | 'title-desc' | 'added-new' | 'added-old';
-type ViewMode = 'grid' | 'list';
+type ViewMode = 'single' | 'grid' | 'list';
 
 const SORT_STORAGE = 'lf-library-sort';
 const VIEW_STORAGE = 'lf-library-view';
@@ -92,7 +92,7 @@ export function Library({ books }: { books: ShelfBook[] }) {
 
   useEffect(() => {
     setSort(readPref<SortMode>(SORT_STORAGE, ['title-asc', 'title-desc', 'added-new', 'added-old'], 'title-asc'));
-    setView(readPref<ViewMode>(VIEW_STORAGE, ['grid', 'list'], 'grid'));
+    setView(readPref<ViewMode>(VIEW_STORAGE, ['single', 'grid', 'list'], 'grid'));
   }, []);
 
   const q = normalizeForSearch(query);
@@ -140,6 +140,8 @@ export function Library({ books }: { books: ShelfBook[] }) {
       <Controls sort={sort} view={view} onSort={chooseSort} onView={chooseView} count={sorted.length} query={q} />
       {sorted.length === 0 ? (
         <p style={{ color: 'var(--ink-soft)', margin: 0 }}>No stories match “{query}”.</p>
+      ) : view === 'single' ? (
+        <SingleView books={sorted} />
       ) : view === 'grid' ? (
         <GridView books={sorted} />
       ) : (
@@ -346,43 +348,48 @@ function SortDropdown({ value, onChange }: { value: SortMode; onChange: (v: Sort
   );
 }
 
+const VIEWS: { id: ViewMode; label: string; glyph: string }[] = [
+  { id: 'single', label: 'One at a time', glyph: '❑' },
+  { id: 'grid', label: 'Grid', glyph: '▦' },
+  { id: 'list', label: 'List', glyph: '☰' },
+];
+
 function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (v: ViewMode) => void }) {
-  const base: React.CSSProperties = {
-    fontFamily: 'inherit',
-    fontSize: 13,
-    padding: '4px 10px',
-    border: '1px solid var(--paper-deep)',
-    cursor: 'pointer',
-    background: 'var(--wash-capsule)',
-    color: 'var(--ink-soft)',
-  };
   return (
-    <div role="group" aria-label="View" style={{ display: 'inline-flex', borderRadius: 'var(--radius-pill)', overflow: 'hidden' }}>
-      <button
-        type="button"
-        onClick={() => onChange('grid')}
-        aria-pressed={value === 'grid'}
-        style={{
-          ...base,
-          background: value === 'grid' ? 'var(--oxblood)' : base.background,
-          color: value === 'grid' ? 'var(--paper)' : base.color,
-          borderRight: 'none',
-        }}
-      >
-        ▦ Grid
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange('list')}
-        aria-pressed={value === 'list'}
-        style={{
-          ...base,
-          background: value === 'list' ? 'var(--oxblood)' : base.background,
-          color: value === 'list' ? 'var(--paper)' : base.color,
-        }}
-      >
-        ☰ List
-      </button>
+    <div
+      role="group"
+      aria-label="View"
+      style={{ display: 'inline-flex', borderRadius: 'var(--radius-pill)', overflow: 'hidden' }}
+    >
+      {VIEWS.map((v, i) => {
+        const on = value === v.id;
+        return (
+          <button
+            key={v.id}
+            type="button"
+            onClick={() => onChange(v.id)}
+            aria-pressed={on}
+            // The glyph is decorative; without a label the button announces as
+            // "❑" and is unusable with a screen reader.
+            aria-label={v.label}
+            title={v.label}
+            style={{
+              fontFamily: 'inherit',
+              fontSize: 13,
+              padding: '4px 10px',
+              border: '1px solid var(--paper-deep)',
+              borderRight: i < VIEWS.length - 1 ? 'none' : undefined,
+              cursor: 'pointer',
+              background: on ? 'var(--oxblood)' : 'var(--wash-capsule)',
+              // --on-oxblood, not --paper: night swaps --paper to the dark
+              // ground, which would paint the selected label dark on oxblood.
+              color: on ? 'var(--on-oxblood)' : 'var(--ink-soft)',
+            }}
+          >
+            {v.glyph}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -346,9 +346,12 @@ body,
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-6);
 }
-@media (min-width: 600px) {
+/* Four across rather than auto-fill: on a wide screen auto-fill kept adding
+   columns until the covers were too small to read a title on, and a shelf
+   wants a steady rhythm more than it wants to use every pixel. */
+@media (min-width: 640px) {
   .lf-covers {
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -358,7 +361,10 @@ body,
 .lf-cover {
   position: relative;
   display: grid;
-  grid-template-rows: 65% 1fr;
+  /* The band takes exactly the height its type needs and the art absorbs the
+     rest. A fixed split cannot work: the same three-line title that fits a
+     large card overflows a small one, and the card clips it. */
+  grid-template-rows: minmax(0, 1fr) auto;
   aspect-ratio: 5 / 8;
   border-radius: 8px;
   overflow: hidden;
@@ -408,6 +414,10 @@ body,
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  /* Reserve the full three lines the clamp allows, so every band on a row is
+     the same height and the art bottoms line up. Shorter titles centre in the
+     space rather than leaving a hole, because the band centres its content. */
+  min-height: calc(3 * 1.18em);
 }
 .lf-cover-sub {
   font-family: var(--font-body);

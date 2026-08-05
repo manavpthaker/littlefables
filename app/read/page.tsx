@@ -15,7 +15,9 @@ const KID_VISIBLE_STATUSES = ['complete', 'published'];
 
 export default async function ReadHome() {
   const ctx = await requireChildDevice();
-  if (ctx instanceof NextResponse) redirect('/parent');
+  // No kid cookie — let /api/enter figure it out (mint if a parent
+  // session exists, otherwise bounce to /login).
+  if (ctx instanceof NextResponse) redirect('/api/enter');
 
   const [{ data: bookRows }, { data: progressRows }, { data: childRow }] = await Promise.all([
     admin()

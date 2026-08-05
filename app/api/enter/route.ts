@@ -8,20 +8,20 @@ import {
   verifyChildToken,
 } from '@/lib/auth/child-token';
 
-// Auto-enter. Three cases:
+// Explicit reader-entry helper. NOT invoked by visiting `/` — root is
+// the landing page. This route only fires from:
+// - The parent surface's "Open storytime →" link (session-authed parent
+//   who wants to hand off to a kid iPad).
+// - The PWA's start_url (/read) chain when the child cookie is stale.
 //
-// 1. Valid child-device cookie → straight to /read. Kid iPad has been
-//    provisioned; no re-auth needed.
-// 2. No child cookie but valid parent session → mint a fresh child
-//    cookie for the first child of the parent's household, then /read.
-//    Covers the "parent logs in on a new device and hands it over."
-// 3. Neither → /login. The old auto-mint-off-first-household behavior
-//    is gone; there is no anonymous entry into a specific household
-//    anymore. Buyer/gift arrivals go through /f/<token> or /gift/<code>.
+// Three cases:
+// 1. Valid child-device cookie → straight to /read.
+// 2. No child cookie but valid parent session → mint a fresh child cookie
+//    for the first child of the parent's household, then /read.
+// 3. Neither → /login.
 //
-// Root / currently redirects here. In phase B it will render a landing
-// page instead, and this route only fires from explicit "open the reader"
-// links.
+// Buyer/gift arrivals never come through here — they go directly through
+// /f/<token> (soon /read/<slug>-<token>) or /gift/<code>.
 
 export async function GET(request: NextRequest) {
   const existing = request.cookies.get(CHILD_TOKEN_COOKIE)?.value;
