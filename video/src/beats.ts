@@ -27,10 +27,10 @@ export const BEATS = {
   comesTogether: { start: 32, end: 52 },
   arrives: { start: 52, end: 66 },
   payoff: { start: 66, end: 90 },
-  night: { start: 90, end: 98 },
-  range: { start: 98, end: 107 },
-  quiet: { start: 107, end: 115 },
-  close: { start: 115, end: 123 },
+  night: { start: 90, end: 102 },
+  range: { start: 102, end: 111 },
+  quiet: { start: 111, end: 119 },
+  close: { start: 119, end: 127 },
 } as const;
 
 /**
@@ -114,6 +114,23 @@ export const AUDIO = {
    */
   narration: 'audio/narration.mp3',
   narrationVolume: 0.92,
+  /** The bedtime voice is softly spoken by design, so it needs more gain than
+   *  the day voice to clear the bed by the same margin. */
+  narrationNightVolume: 1,
+  /**
+   * The same page in the bedtime voice. This is the only place in the film
+   * where the second voice is audible, and it is the one thing that proves
+   * night is a different reading rather than a palette swap — the caption
+   * claimed it and nothing demonstrated it.
+   *
+   * Played at 0.9, which is what the reader applies at bedtime
+   * (BEDTIME_VOICE.rate), so the film hears what a child hears: 9.9s of
+   * narration becomes about 11.
+   */
+  narrationNight: 'audio/narration-night.mp3',
+  narrationNightRate: 0.9,
+  /** Seconds into the night beat before the sleepy voice starts. */
+  narrationNightDelay: 0.6,
   /** Seconds into the payoff beat before she starts speaking. */
   /**
    * The beat joins just after play is pressed, so the voice starts almost at
@@ -132,8 +149,20 @@ export const AUDIO = {
    * about -29 dB with nothing over it, which reads as the audio dropping out
    * rather than as restraint.
    */
-  duckFrom: BEATS.payoff.start,
-  duckTo: BEATS.payoff.start + 0.3 + 9.9 + 1.2,
+  /**
+   * The bed steps down wherever a voice is speaking, and comes back when it
+   * stops. Two windows now, one per voice — the duck used to run from the
+   * first voice all the way to the end of night, which left twenty-two seconds
+   * at about -29 dB with nothing over it.
+   */
+  ducks: [
+    { from: BEATS.payoff.start, to: BEATS.payoff.start + 0.3 + 9.9 + 1.2 },
+    // The bedtime read is 9.9 dB quieter at source than the day one — it is
+    // genuinely hushed, which is the point of it. Gaining the file up would
+    // throw that away, so the bed steps further out of its way instead. Suits
+    // the beat: everything should be quieter here, not just the voice louder.
+    { from: BEATS.night.start, to: BEATS.night.start + 0.6 + 9.9 / 0.9 + 1.0, level: 0.05 },
+  ],
   fadeInSeconds: 1.5,
   fadeOutSeconds: 4,
 };

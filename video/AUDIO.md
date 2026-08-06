@@ -43,7 +43,8 @@ just far enough away not to be pastiche.
 | 0:00–0:01.5 | Fades up from silence |
 | 0:01.5–0:52 | Bed at 34% |
 | 0:52–0:53 | **Ducks to 12%** for the reading beat |
-| 0:53–1:15 | Stays down — the product's narration is the only voice here |
+| payoff | Steps down — the day narration is the only voice there |
+| night | Steps down again — the bedtime voice |
 | 1:15–1:16 | Back up to 34% |
 | 1:26–1:30 | Fades to silence |
 
@@ -70,9 +71,20 @@ about 13 dB above the ducked bed, which makes it unambiguously the focus.
 To refresh it after re-narrating:
 
 ```bash
-curl -o public/audio/narration.mp3 \
-  "https://fzcjwsxyaweqtvroycjm.supabase.co/storage/v1/object/public/page-audio/lantern-round-pond/day/0-0.mp3"
+BOOK=lantern-round-pond
+BASE=https://fzcjwsxyaweqtvroycjm.supabase.co/storage/v1/object/public/page-audio
+curl -o public/audio/narration.mp3       "$BASE/$BOOK/day/0-0.mp3"
+curl -o public/audio/narration-night.mp3 "$BASE/$BOOK/night/0-0.mp3"
 ```
+
+Both are page one. The night file is the same words in the bedtime voice, and
+the film plays it at 0.9 — the rate the reader applies at bedtime — so what you
+hear is what a child hears. It runs about eleven seconds as a result, which is
+why the night beat is twelve.
+
+The two voices are genuinely different recordings; page one happens to come out
+the same length in both, which is only a coincidence of MP3 frame counts. Page
+three differs by a quarter of a second.
 
 The book is already narrated. `pnpm content:narrate` skips everything unless you
 pass `--force`.

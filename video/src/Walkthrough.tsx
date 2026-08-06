@@ -176,31 +176,25 @@ const Close: React.FC = () => {
 /** Music bed, fading in and ducking under the narration beat. */
 const MusicBed: React.FC = () => {
   const { fps, durationInFrames } = useVideoConfig();
-  const duckIn = AUDIO.duckFrom * fps;
-  const duckOut = AUDIO.duckTo * fps;
   const fadeIn = AUDIO.fadeInSeconds * fps;
   const fadeOut = AUDIO.fadeOutSeconds * fps;
+
+  // One ramp pair per duck window, in order, so the bed drops for each voice
+  // and recovers between them.
+  const points: number[] = [0, fadeIn];
+  const levels: number[] = [0, AUDIO.volume];
+  for (const d of AUDIO.ducks) {
+    points.push(d.from * fps, d.from * fps + fps, d.to * fps, d.to * fps + fps);
+    const under = (d as { level?: number }).level ?? AUDIO.duckedVolume;
+    levels.push(AUDIO.volume, under, under, AUDIO.volume);
+  }
+  points.push(durationInFrames - fadeOut, durationInFrames);
+  levels.push(AUDIO.volume, 0);
 
   return (
     <Audio
       src={staticFile(AUDIO.bed)}
-      volume={(f) =>
-        interpolate(
-          f,
-          [0, fadeIn, duckIn, duckIn + fps, duckOut, duckOut + fps, durationInFrames - fadeOut, durationInFrames],
-          [
-            0,
-            AUDIO.volume,
-            AUDIO.volume,
-            AUDIO.duckedVolume,
-            AUDIO.duckedVolume,
-            AUDIO.volume,
-            AUDIO.volume,
-            0,
-          ],
-          { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
-        )
-      }
+      volume={(f) => interpolate(f, points, levels, { extrapolateRight: 'clamp' })}
     />
   );
 };
@@ -250,7 +244,15 @@ export const Walkthrough: React.FC = () => {
     <Sequence {...frames(BEATS.night)}>
       <AbsoluteFill>
         <DeviceFrame src={RECORDINGS.night} device="ipad" startFrom={4.2} />
-        <Caption text={COPY.night} delay={motion.settle} />
+        <Caption text={COPY.night} delay={motion.settle} hold={sec(5)} />
+        {/* The second voice, at the rate the reader actually uses at bedtime. */}
+        <Sequence from={Math.round(AUDIO.narrationNightDelay * FPS)}>
+          <Audio
+            src={staticFile(AUDIO.narrationNight)}
+            volume={AUDIO.narrationNightVolume}
+            playbackRate={AUDIO.narrationNightRate}
+          />
+        </Sequence>
       </AbsoluteFill>
     </Sequence>
 

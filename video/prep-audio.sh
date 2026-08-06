@@ -15,7 +15,8 @@ cd "$(dirname "$0")"
 SRC="${1:?usage: ./prep-audio.sh <track.mp3> [start-seconds] [gentle]}"
 START="${2:-50}"
 MODE="${3:-level}"   # "gentle" skips dynaudnorm for a track that is already flat
-LEN=116          # film is 114s; the tail needs somewhere to fade
+LEN="${4:-129}"  # must outlast the film — see check below, the bed running out
+                 # is silent in every sense
 OUT="public/audio/bed.mp3"
 
 mkdir -p public/audio
@@ -35,7 +36,10 @@ ffmpeg -y -loglevel error \
   -c:a libmp3lame -b:a 192k \
   "$OUT"
 
-echo "  → $OUT"
+FILM=$(node -e "const {TOTAL_FRAMES}=require('./src/registry.ts');" 2>/dev/null || echo "")
+echo "  → $OUT  (${LEN}s)"
+echo "  NB: the film is longer than this bed if it ends in silence — re-run"
+echo "      with a larger LEN as the 4th argument."
 echo ""
 echo "  levelled result:"
 node analyse-audio.mjs "$OUT" | tail -12

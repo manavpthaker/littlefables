@@ -149,7 +149,7 @@ const SHOTS = {
     await openBook(page);
     await pause(1600); // brief day-mode establish; the switch is the shot
     await page.getByLabel('Switch to bedtime reading').click();
-    await pause(9000); // long hold on night so the palette shift can breathe
+    await pause(14000); // the beat carries the bedtime voice now — about 11s of it
   },
 };
 
