@@ -20,6 +20,29 @@ export const dynamic = 'force-dynamic';
 // might have followed an old link, and the goal is to keep them from
 // panicking. They can always message via Etsy.
 
+function Message({ title, body, cta }: { title: string; body: string; cta?: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        flex: '1 1 auto',
+        display: 'grid',
+        placeItems: 'center',
+        padding: 'clamp(28px, 6vw, 72px) 24px',
+      }}
+    >
+      <div style={{ maxWidth: 520, textAlign: 'center', display: 'grid', gap: 'var(--space-4)' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, margin: 0, color: 'var(--ink)', lineHeight: 1.15 }}>
+          {title}
+        </h1>
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 17, lineHeight: 1.6 }}>
+          {body}
+        </p>
+        {cta}
+      </div>
+    </div>
+  );
+}
+
 export default async function IntakeByTokenPage({
   params,
 }: {
@@ -37,24 +60,10 @@ export default async function IntakeByTokenPage({
 
   if (!row) {
     return (
-      <main
-        data-density="outward"
-        style={{
-          minHeight: '100dvh',
-          background: 'var(--paper)',
-          padding: 'clamp(28px, 6vw, 72px) 24px',
-          display: 'grid',
-          placeItems: 'center',
-        }}
-      >
-        <div style={{ maxWidth: 520, textAlign: 'center', display: 'grid', gap: 'var(--space-4)' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 30, margin: 0, color: 'var(--ink)' }}>
-            This link doesn&rsquo;t look right.
-          </h1>
-          <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 16, lineHeight: 1.6 }}>
-            It may have been retired or copied incorrectly. Message us on Etsy and
-            we&rsquo;ll send a fresh link within a few hours.
-          </p>
+      <Message
+        title="This link doesn't look right."
+        body="It may have been retired or copied incorrectly. Message us on Etsy and we'll send a fresh link within a few hours."
+        cta={
           <div>
             <Link
               href="/"
@@ -69,55 +78,29 @@ export default async function IntakeByTokenPage({
               Back to the shop
             </Link>
           </div>
-        </div>
-      </main>
+        }
+      />
     );
   }
 
   if (row.status !== 'awaiting') {
     return (
-      <main
-        data-density="outward"
-        style={{
-          minHeight: '100dvh',
-          background: 'var(--paper)',
-          padding: 'clamp(28px, 6vw, 72px) 24px',
-          display: 'grid',
-          placeItems: 'center',
-        }}
-      >
-        <div style={{ maxWidth: 520, textAlign: 'center', display: 'grid', gap: 'var(--space-4)' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 30, margin: 0, color: 'var(--ink)' }}>
-            We already have your intake.
-          </h1>
-          <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 16, lineHeight: 1.6 }}>
-            Style previews will land in your inbox within 24 hours. If something
-            needs changing, reply to that email or message us on Etsy — we&rsquo;ll
-            sort it before we start the illustrations.
-          </p>
-        </div>
-      </main>
+      <Message
+        title="We already have your intake."
+        body="Style previews will land in your inbox within 24 hours. If something needs changing, reply to that email or message us on Etsy — we'll sort it before we start the illustrations."
+      />
     );
   }
 
   return (
-    <main
-      data-density="outward"
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--paper)',
-        padding: 'clamp(28px, 6vw, 72px) 24px',
-      }}
-    >
-      <IntakeForm
-        token={token}
-        buyerEmail={row.buyer_email}
-        buyerName={row.buyer_name ?? undefined}
-        childName={row.child_name ?? undefined}
-        etsyOrder={row.etsy_order ?? undefined}
-        isGift={Boolean(row.gift_from)}
-        giftFrom={row.gift_from ?? undefined}
-      />
-    </main>
+    <IntakeForm
+      token={token}
+      buyerEmail={row.buyer_email}
+      buyerName={row.buyer_name ?? undefined}
+      childName={row.child_name ?? undefined}
+      etsyOrder={row.etsy_order ?? undefined}
+      isGift={Boolean(row.gift_from)}
+      giftFrom={row.gift_from ?? undefined}
+    />
   );
 }

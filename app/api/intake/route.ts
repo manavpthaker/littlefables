@@ -47,8 +47,12 @@ export async function POST(request: Request) {
   const token = str(form.get('token')) || null;
   const childName = str(form.get('child_name'));
   const ageBand = str(form.get('age_band')) || null;
+  const ageYearsRaw = str(form.get('age_years'));
+  const ageYears = ageYearsRaw ? Number(ageYearsRaw) : null;
   const interests = list(form, 'interests').slice(0, 3);
   const traits = list(form, 'traits').slice(0, 2);
+  const interestsNote = str(form.get('interests_note')) || null;
+  const traitsNote = str(form.get('traits_note')) || null;
   const inspirations = str(form.get('inspirations')) || null;
   const look = str(form.get('look')) || null;
   const giftFrom = str(form.get('gift_from')) || null;
@@ -121,8 +125,11 @@ export async function POST(request: Request) {
         status: 'new',
         child_name: childName,
         age_band: ageBand,
+        age_years: Number.isFinite(ageYears) ? ageYears : null,
         interests,
         traits,
+        interests_note: interestsNote,
+        traits_note: traitsNote,
         inspirations,
         look,
         gift_from: giftFrom,
@@ -144,8 +151,11 @@ export async function POST(request: Request) {
         buyer_email: buyerEmail,
         child_name: childName,
         age_band: ageBand,
+        age_years: Number.isFinite(ageYears) ? ageYears : null,
         interests,
         traits,
+        interests_note: interestsNote,
+        traits_note: traitsNote,
         inspirations,
         look,
         gift_from: giftFrom,

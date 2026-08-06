@@ -19,8 +19,11 @@ export interface IntakeRowProps {
   buyerEmail: string;
   childName: string;
   ageBand: string | null;
+  ageYears: number | null;
   interests: string[];
+  interestsNote: string | null;
   traits: string[];
+  traitsNote: string | null;
   inspirations: string | null;
   look: string | null;
   giftFrom: string | null;
@@ -75,7 +78,13 @@ export function IntakeRow(props: IntakeRowProps) {
         <div style={{ display: 'grid', gap: 4 }}>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, color: 'var(--ink)' }}>
             {props.childName}
-            {props.ageBand ? <span style={{ color: 'var(--ink-faint)', fontSize: 15, marginLeft: 8 }}>· {props.ageBand}</span> : null}
+            {props.ageYears != null ? (
+              <span style={{ color: 'var(--ink-faint)', fontSize: 15, marginLeft: 8 }}>
+                · {props.ageYears} yrs{props.ageBand ? ` (${props.ageBand})` : ''}
+              </span>
+            ) : props.ageBand ? (
+              <span style={{ color: 'var(--ink-faint)', fontSize: 15, marginLeft: 8 }}>· {props.ageBand}</span>
+            ) : null}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-muted)' }}>
             <a href={`mailto:${props.buyerEmail}`} style={{ color: 'var(--oxblood)' }}>{props.buyerEmail}</a>
@@ -109,10 +118,24 @@ export function IntakeRow(props: IntakeRowProps) {
 
       <div style={{ display: 'grid', gap: 6, fontSize: 14, color: 'var(--ink-soft)' }}>
         {props.interests.length > 0 && (
-          <Row label="Loves">{props.interests.join(', ')}</Row>
+          <Row label="Loves">
+            {props.interests.join(', ')}
+            {props.interestsNote && (
+              <div style={{ color: 'var(--ink-faint)', fontStyle: 'italic', marginTop: 4 }}>
+                {props.interestsNote}
+              </div>
+            )}
+          </Row>
         )}
         {props.traits.length > 0 && (
-          <Row label="Traits">{props.traits.join(', ')}</Row>
+          <Row label="Traits">
+            {props.traits.join(', ')}
+            {props.traitsNote && (
+              <div style={{ color: 'var(--ink-faint)', fontStyle: 'italic', marginTop: 4 }}>
+                {props.traitsNote}
+              </div>
+            )}
+          </Row>
         )}
         {props.inspirations && <Row label="Inspiration">{props.inspirations}</Row>}
         {props.look && <Row label="Looks like">{props.look}</Row>}
