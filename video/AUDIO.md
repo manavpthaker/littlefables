@@ -89,6 +89,20 @@ three differs by a quarter of a second.
 The book is already narrated. `pnpm content:narrate` skips everything unless you
 pass `--force`.
 
+## Delivery
+
+Use `./render.sh`. It renders, normalises, and then checks the result is 48 kHz
+stereo and actually carries signal.
+
+That script exists because the normalise step was retyped by hand each time and
+a flag went missing. Without an explicit `-ar`, loudnorm's internal upsampling
+leaves the output at **96 kHz AAC**. ffmpeg and ffprobe decode that without
+complaint — every level measurement reads correctly — but most players will
+not, so the file is silent while every check says it has audio.
+
+Measuring proves the samples are there. It does not prove anything can hear
+them. Play the file.
+
 ## Loudness
 
 Platforms normalise anyway, but exporting at broadcast level avoids surprises:
