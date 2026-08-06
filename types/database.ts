@@ -410,6 +410,7 @@ export type Database = {
           interests_note: string | null
           look: string | null
           notes: string | null
+          parent_lastname: string | null
           photo_path: string | null
           status: string
           token: string | null
@@ -434,6 +435,7 @@ export type Database = {
           interests_note?: string | null
           look?: string | null
           notes?: string | null
+          parent_lastname?: string | null
           photo_path?: string | null
           status?: string
           token?: string | null
@@ -458,6 +460,7 @@ export type Database = {
           interests_note?: string | null
           look?: string | null
           notes?: string | null
+          parent_lastname?: string | null
           photo_path?: string | null
           status?: string
           token?: string | null

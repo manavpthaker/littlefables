@@ -51,6 +51,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
   const [buyerEmail, setBuyerEmail] = useState(props.buyerEmail ?? '');
   const [etsyOrder, setEtsyOrder] = useState(props.etsyOrder ?? '');
+  const [lastname, setLastname] = useState('');
   const [name, setName] = useState(props.childName ?? '');
   const [age, setAge] = useState<number>(5);
   const [ageTouched, setAgeTouched] = useState(false);
@@ -155,6 +156,29 @@ export function IntakeForm(props: IntakeFormProps) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Rosa"
             aria-label="Child's name"
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'lastname',
+      isValid: () => true,
+      hint: 'Optional — for organizing your book files',
+      render: () => (
+        <StepCard
+          eyebrow="Your family name"
+          question="What surname should we file this under?"
+          body="We label each family's books by surname (Patel, Okafor, Kim-Tanaka). Skip if you'd rather not share — we'll pick a label from your child's name."
+        >
+          <input
+            className="lf-intake-input"
+            autoFocus
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            placeholder="Patel"
+            aria-label="Family surname"
+            autoComplete="family-name"
           />
         </StepCard>
       ),
@@ -399,7 +423,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     return s;
   }, [
-    hasToken, greeting, buyerEmail, etsyOrder, name, age, ageTouched, kid,
+    hasToken, greeting, buyerEmail, etsyOrder, lastname, name, age, ageTouched, kid,
     interests, interestsNote, traits, traitsNote, inspirations, look,
     photoFile, photoPreview, companions, isGift, giftFrom, props.isGift, props.buyerEmail,
   ]);
@@ -445,6 +469,7 @@ export function IntakeForm(props: IntakeFormProps) {
       if (!hasToken) body.set('buyer_email', buyerEmail.trim());
       if (!hasToken && etsyOrder.trim()) body.set('etsy_order', etsyOrder.trim());
       body.set('child_name', name.trim());
+      if (lastname.trim()) body.set('parent_lastname', lastname.trim());
       body.set('age_years', String(age));
       body.set('age_band', ageToBand(age));
       interests.forEach((v) => body.append('interests', v));

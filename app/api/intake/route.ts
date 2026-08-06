@@ -46,6 +46,7 @@ export async function POST(request: Request) {
 
   const token = str(form.get('token')) || null;
   const childName = str(form.get('child_name'));
+  const parentLastname = str(form.get('parent_lastname')) || null;
   const ageBand = str(form.get('age_band')) || null;
   const ageYearsRaw = str(form.get('age_years'));
   const ageYears = ageYearsRaw ? Number(ageYearsRaw) : null;
@@ -134,6 +135,7 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        parent_lastname: parentLastname,
         gift_from: giftFrom,
         photo_path: photoPath,
         updated_at: new Date().toISOString(),
@@ -161,6 +163,7 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        parent_lastname: parentLastname,
         gift_from: giftFrom,
         etsy_order: etsyOrder,
         photo_path: photoPath,
@@ -193,6 +196,7 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        parentLastname,
         giftFrom,
         etsyOrder,
         photoUrl,
