@@ -29,8 +29,10 @@ export const BEATS = {
   payoff: { start: 66, end: 90 },
   night: { start: 90, end: 102 },
   range: { start: 102, end: 111 },
-  quiet: { start: 111, end: 119 },
-  close: { start: 119, end: 127 },
+  /** A room, a grandmother, one of the family's own books on the screen. */
+  room: { start: 111, end: 118 },
+  quiet: { start: 118, end: 126 },
+  close: { start: 126, end: 134 },
 } as const;
 
 /**
@@ -60,6 +62,18 @@ export const frames = (b: { start: number; end: number }) => ({
 export const TOTAL_FRAMES = sec(BEATS.close.end);
 
 /** Book art. Paths are relative to video/public. */
+/**
+ * Lifestyle plate. Muted deliberately — its own audio is a generated voice
+ * that does not match the mouth, and the film already has two real voices in
+ * it. The picture is the whole contribution.
+ *
+ * The screen is genuine: Mikey the Moto, one of the family's own books, in the
+ * reader's landscape layout.
+ */
+export const BROLL = {
+  room: 'broll/grandmother-and-grandson.mp4',
+};
+
 export const BOOK = {
   cover: 'book/cover.png',
   /** The real delivery email, rendered from the design system's EmailShell. */

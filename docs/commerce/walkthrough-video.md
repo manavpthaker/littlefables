@@ -38,20 +38,21 @@ feature we do not have.
 
 ## Structure
 
-Ten beats, 123 seconds, as of the current cut.
+11 beats, 134 seconds, as of the current cut.
 
 | # | Beat | Time | Source |
 |---|---|---|---|
-| 1 | The question | 0:00–0:09 | Type, appearing as typed |
-| 2 | The promise | 0:09–0:16 | Real cover, slow push |
-| 3 | Tell us about your child | 0:16–0:34 | Screen recording of `/intake` |
-| 4 | **It comes together** | 0:34–0:54 | Motion graphics, real art |
-| 5 | It arrives | 0:54–1:08 | Rendered email + screen recording |
-| 6 | The payoff | 1:08–1:32 | One continuous screen recording |
-| 7 | Night | 1:32–1:40 | Screen recording |
-| 8 | The range | 1:40–1:49 | Six style samples |
-| 9 | The quiet part | 1:49–1:57 | Type only |
-| 10 | Close | 1:57–2:05 | Logomark draw-on |
+| 1 | The question | 0:00–0:11 | Type, appearing as typed |
+| 2 | The mark | 0:11–0:14 | Logomark draw-on |
+| 3 | Tell us about your child | 0:14–0:32 | Screen recording of `/intake` |
+| 4 | **It comes together** | 0:32–0:52 | Motion graphics, real art |
+| 5 | It arrives | 0:52–1:06 | Rendered email + screen recording |
+| 6 | The payoff | 1:06–1:30 | One continuous screen recording |
+| 7 | Night | 1:30–1:42 | Screen recording, bedtime voice |
+| 8 | The range | 1:42–1:51 | Six style samples |
+| 9 | In a room | 1:51–1:58 | Lifestyle plate, muted |
+| 10 | The quiet part | 1:58–2:06 | Type only |
+| 11 | Close | 2:06–2:14 | Logomark draw-on |
 
 **There is no cold open.** An earlier cut spent five seconds on an animated
 logo before showing anything. A logo is not what earns a stranger's next five
@@ -179,7 +180,7 @@ rule draws around the edge. The book exists.
   caption times derived from those. A re-capture that shifts the actions has
   to shift those too.
 
-### 7 · Night — 1:30–1:38
+### 7 · Night — 1:30–1:42
 
 - **Source:** screen recording, one continuous take.
 - **What happens:** the same book in day mode, the mode switch, then night —
@@ -187,7 +188,7 @@ rule draws around the edge. The book exists.
 - **Overlay:** none. The transition is the point.
 - **Type:** `And a quieter one for bedtime`
 
-### 8 · The range — 1:38–1:47
+### 8 · The range — 1:42–1:51
 
 - **Source:** six samples from `assets/listing/custom-story-page/`, sharing the
   figcaptions the listing page uses so the film and the shop speak one
@@ -204,7 +205,25 @@ rule draws around the edge. The book exists.
 - **Placement:** after night, not before. The product demo finishes — day, then
   bedtime — and only then does the range open up.
 
-### 9 · The quiet part — 1:47–1:55
+### 9 · In a room — 1:51–1:58
+
+- **Source:** `assets/listing/lifestyle/grandmother-and-grandson.mp4`, muted.
+- **What happens:** a grandmother and a grandson over a tablet, the boy's back
+  to camera, her face in profile. Seven seconds, no caption.
+- **Why here:** the only human moment in a film otherwise made of software, and
+  it sits immediately before the values beat on purpose — showing what the
+  thing is for earns "No ads. No algorithm. No autoplay." better than stating
+  it cold.
+- **No caption.** The beats either side are both type, and the picture does not
+  need explaining.
+- **Muted deliberately.** Its own audio is a generated voice that does not match
+  the mouth. The film already carries two real voices; this one contributes a
+  picture.
+- **The screen is genuine** — Mikey the Moto, one of the family's own books, in
+  the reader's landscape layout. Worth stating, because it is the obvious thing
+  to doubt.
+
+### 10 · The quiet part — 1:58–2:06
 
 - **Source:** type only, full frame on aged ivory.
 - **What happens:** three lines in sequence on `--motion-tick`, a small fleuron
@@ -217,7 +236,7 @@ rule draws around the edge. The book exists.
   only place we say what we *don't* do, and it earns that because everything
   before it was product.
 
-### 10 · Close — 1:55–2:03
+### 11 · Close — 2:06–2:14
 
 - **Source:** motion graphics.
 - **What happens:** the logomark draws itself on — trunk, roots, branches,

@@ -28,7 +28,7 @@ const seconds = (file) =>
 
 // The music bed has to outlast the film. It ran out eleven seconds early once
 // and the close played in silence — nothing in the render reports that either.
-const FILM_SECONDS = Number(process.env.FILM_SECONDS ?? 127);
+const FILM_SECONDS = Number(process.env.FILM_SECONDS ?? 134);
 let bad = 0;
 try {
   const bed = seconds('../audio/bed.mp3');

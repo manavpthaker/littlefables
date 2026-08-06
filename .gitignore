@@ -79,3 +79,7 @@ video/public/audio/
 video/public/mark/
 # Copies of content/marketing/style-samples/ — re-copy, don't commit twice.
 video/public/styles/
+# Copy of assets/listing/lifestyle/ — same.
+video/public/broll/
+.vercel
+.env*

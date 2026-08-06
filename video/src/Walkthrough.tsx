@@ -2,6 +2,7 @@ import React from 'react';
 import {
   AbsoluteFill,
   Audio,
+  OffthreadVideo,
   Sequence,
   staticFile,
   interpolate,
@@ -10,7 +11,7 @@ import {
 } from 'remotion';
 import { existsSync } from './hasAudio';
 
-import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
+import { AUDIO, BEATS, BROLL, COPY, BOOK, RECORDINGS, frames } from './beats';
 import { font, ink, paper, pigment, motion, FPS } from './theme';
 
 import { CornerMark } from './components/CornerMark';
@@ -258,6 +259,22 @@ export const Walkthrough: React.FC = () => {
 
     <Sequence {...frames(BEATS.range)}>
       <StyleRange />
+    </Sequence>
+
+    {/* The one human moment in a film otherwise made of software, and it sits
+        immediately before the values beat on purpose: showing what the product
+        is for earns "No ads. No algorithm. No autoplay." better than stating
+        it cold. No caption — the picture does not need explaining, and the
+        beat either side of it is already type. */}
+    <Sequence {...frames(BEATS.room)}>
+      <AbsoluteFill style={{ background: paper.base }}>
+        <OffthreadVideo
+          src={staticFile(BROLL.room)}
+          startFrom={Math.round(1.5 * FPS)}
+          muted
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </AbsoluteFill>
     </Sequence>
 
     <Sequence {...frames(BEATS.quiet)}>
