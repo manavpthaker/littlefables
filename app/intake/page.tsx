@@ -14,33 +14,5 @@ export const metadata: Metadata = {
 // email + Etsy order so Manav can reconcile in /parent/intakes.
 
 export default function IntakePage() {
-  return (
-    <main
-      data-density="outward"
-      style={{
-        minHeight: '100dvh',
-        background: 'var(--paper)',
-        padding: 'clamp(28px, 6vw, 72px) 24px',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 660,
-          margin: '0 auto var(--space-6)',
-          padding: 'var(--space-3) var(--space-4)',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--pill-edge)',
-          background: 'var(--paper-warm)',
-          color: 'var(--ink-soft)',
-          fontSize: 14,
-          lineHeight: 1.5,
-        }}
-      >
-        If you bought on Etsy, look for a personal link in your Etsy messages —
-        it saves you re-typing your email. No link? Fill this in and we&rsquo;ll
-        match it to your order.
-      </div>
-      <IntakeForm />
-    </main>
-  );
+  return <IntakeForm />;
 }

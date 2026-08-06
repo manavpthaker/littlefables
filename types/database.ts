@@ -395,6 +395,7 @@ export type Database = {
       intakes: {
         Row: {
           age_band: string | null
+          age_years: number | null
           buyer_email: string
           buyer_name: string | null
           child_name: string
@@ -405,16 +406,19 @@ export type Database = {
           id: string
           inspirations: string | null
           interests: string[]
+          interests_note: string | null
           look: string | null
           notes: string | null
           photo_path: string | null
           status: string
           token: string | null
           traits: string[]
+          traits_note: string | null
           updated_at: string
         }
         Insert: {
           age_band?: string | null
+          age_years?: number | null
           buyer_email: string
           buyer_name?: string | null
           child_name: string
@@ -425,16 +429,19 @@ export type Database = {
           id?: string
           inspirations?: string | null
           interests?: string[]
+          interests_note?: string | null
           look?: string | null
           notes?: string | null
           photo_path?: string | null
           status?: string
           token?: string | null
           traits?: string[]
+          traits_note?: string | null
           updated_at?: string
         }
         Update: {
           age_band?: string | null
+          age_years?: number | null
           buyer_email?: string
           buyer_name?: string | null
           child_name?: string
@@ -445,12 +452,14 @@ export type Database = {
           id?: string
           inspirations?: string | null
           interests?: string[]
+          interests_note?: string | null
           look?: string | null
           notes?: string | null
           photo_path?: string | null
           status?: string
           token?: string | null
           traits?: string[]
+          traits_note?: string | null
           updated_at?: string
         }
         Relationships: [

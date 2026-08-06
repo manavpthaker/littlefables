@@ -20,11 +20,9 @@ export default async function IntakeThanksPage({
   const kid = name?.trim();
 
   return (
-    <main
-      data-density="outward"
+    <div
       style={{
-        minHeight: '100dvh',
-        background: 'var(--paper)',
+        flex: '1 1 auto',
         padding: 'clamp(28px, 6vw, 72px) 24px',
         display: 'grid',
         placeItems: 'center',
@@ -85,6 +83,6 @@ export default async function IntakeThanksPage({
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

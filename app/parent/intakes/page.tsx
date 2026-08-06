@@ -127,8 +127,11 @@ export default async function IntakesPage({
             buyerEmail={row.buyer_email}
             childName={row.child_name}
             ageBand={row.age_band}
+            ageYears={row.age_years != null ? Number(row.age_years) : null}
             interests={row.interests ?? []}
+            interestsNote={row.interests_note}
             traits={row.traits ?? []}
+            traitsNote={row.traits_note}
             inspirations={row.inspirations}
             look={row.look}
             giftFrom={row.gift_from}

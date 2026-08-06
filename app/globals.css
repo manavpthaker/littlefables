@@ -735,3 +735,117 @@ body,
   justify-self: start;
   box-shadow: var(--shadow-card);
 }
+
+/* Step-based intake — larger, roomier inputs to sit under a
+   clamp(28,5vw,38)px question. The default .lf-input targets are too
+   small next to a 34px display heading. */
+.lf-intake-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 18px;
+  font-family: var(--font-body);
+  font-size: clamp(17px, 2vw, 19px);
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--paper-warm);
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: var(--radius-md);
+}
+.lf-intake-input::placeholder {
+  color: var(--ink-faint);
+}
+.lf-intake-input:focus-visible {
+  outline: none;
+  border-color: var(--oxblood);
+  box-shadow: 0 0 0 3px var(--oxblood-wash);
+}
+.lf-intake-textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+.lf-intake-upload {
+  display: block;
+  padding: 18px;
+  border: 1px dashed color-mix(in srgb, var(--ink) 24%, transparent);
+  border-radius: var(--radius-md);
+  background: var(--paper-warm);
+  cursor: pointer;
+  transition: border-color var(--motion-tick) var(--ease-mechanical);
+}
+.lf-intake-upload:hover {
+  border-color: color-mix(in srgb, var(--oxblood) 44%, transparent);
+}
+.lf-intake-upload-empty,
+.lf-intake-upload-done {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lf-intake-upload-empty span,
+.lf-intake-upload-done span {
+  display: grid;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+.lf-intake-upload strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.lf-intake-upload em {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.lf-intake-upload-plus {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  color: var(--brass);
+  border: 1px solid color-mix(in srgb, var(--brass) 40%, transparent);
+  border-radius: var(--radius-sm);
+}
+.lf-intake-upload-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+/* Age slider — full-width, oxblood accent, roomier thumb than the browser default. */
+.lf-intake-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: rgba(138, 113, 86, 0.24);
+  border-radius: 3px;
+  outline: none;
+}
+.lf-intake-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  background: var(--oxblood);
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(28, 19, 14, 0.24);
+}
+.lf-intake-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  background: var(--oxblood);
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(28, 19, 14, 0.24);
+}
+.lf-intake-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px var(--oxblood-wash), 0 2px 6px rgba(28, 19, 14, 0.24);
+}
+.lf-intake-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px var(--oxblood-wash), 0 2px 6px rgba(28, 19, 14, 0.24);
+}
