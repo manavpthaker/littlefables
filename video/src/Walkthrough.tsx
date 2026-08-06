@@ -18,7 +18,6 @@ import { Typed } from './components/Typed';
 import { StyleRange } from './components/StyleRange';
 import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
-import { CoverReveal } from './components/CoverReveal';
 import { Develop } from './components/Develop';
 import { PageFan } from './components/PageFan';
 import { Bind } from './components/Bind';
@@ -216,10 +215,14 @@ export const Walkthrough: React.FC = () => {
       <Typed lines={COPY.ask} />
     </Sequence>
 
-    <Sequence {...frames(BEATS.promise)}>
-      <AbsoluteFill>
-        <CoverReveal src={staticFile(BOOK.cover)} />
-        <Caption text={COPY.promise} delay={motion.wind} />
+    {/* The mark answers the question, and hands over to the form. No
+        illustration yet — the art is held back so the assembly beat is the
+        first sight of it, which is what makes that beat a reveal. */}
+    <Sequence {...frames(BEATS.mark)}>
+      <AbsoluteFill
+        style={{ background: paper.base, alignItems: 'center', justifyContent: 'center' }}
+      >
+        <MarkAnim size={230} mode="grow" />
       </AbsoluteFill>
     </Sequence>
 
@@ -263,9 +266,8 @@ export const Walkthrough: React.FC = () => {
         and everything after it is paper. Splitting it keeps the tone an
         explicit statement about each beat instead of a frame-number guess
         buried inside the component. */}
-    <Sequence {...frames(BEATS.promise)}>
-      <CornerMark tone="art" />
-    </Sequence>
+{/* Starts once the mark has introduced itself, and stays. Everything from
+        there sits on paper, so a single ink pass covers it. */}
     <Sequence from={sec(BEATS.intake.start)} durationInFrames={sec(BEATS.quiet.end - BEATS.intake.start)}>
       <CornerMark tone="ink" fadeInAt={0} />
     </Sequence>

@@ -20,16 +20,17 @@ export interface Beat {
  * the close, where a signature belongs.
  */
 export const BEATS = {
-  ask: { start: 0, end: 9 },
-  promise: { start: 9, end: 16 },
-  intake: { start: 16, end: 34 },
-  comesTogether: { start: 34, end: 54 },
-  arrives: { start: 54, end: 68 },
-  payoff: { start: 68, end: 92 },
-  night: { start: 92, end: 100 },
-  range: { start: 100, end: 109 },
-  quiet: { start: 109, end: 117 },
-  close: { start: 117, end: 125 },
+  ask: { start: 0, end: 11 },
+  /** The mark drawing on — who answers the question. */
+  mark: { start: 11, end: 14 },
+  intake: { start: 14, end: 32 },
+  comesTogether: { start: 32, end: 52 },
+  arrives: { start: 52, end: 66 },
+  payoff: { start: 66, end: 90 },
+  night: { start: 90, end: 98 },
+  range: { start: 98, end: 107 },
+  quiet: { start: 107, end: 115 },
+  close: { start: 115, end: 123 },
 } as const;
 
 /**
@@ -153,13 +154,16 @@ export const COPY = {
    * It also sets up the beat at the far end: "No ads. No algorithm. No
    * autoplay."
    */
-  ask: ['Rosa is five, and she cannot wait for anything.', 'Anything for her that isn’t YouTube?'],
-  promise: 'Your kid, in their own storybook.',
+  ask: [
+    'Rosa is five. She wants everything to happen now —',
+    'the cake, the bus, her own birthday.',
+    'Is there anything for her that isn’t YouTube?',
+  ],
   intake: 'This is everything we ask.',
   intakeSub: 'A photo helps, but words are enough',
   child: ['Rosa.', 'Five.', 'Loves ponds, geese, and waiting for things.'],
   childCoda: 'That was all we asked for.',
-  assembled: 'Written, illustrated, and read aloud — in three days.',
+  assembled: 'Your kid, in their own storybook.',
   arrives: 'Delivered in days',
   arrivesSub: 'saved to their iPad like a favourite app',
   payoff: ['Read aloud, warmly', 'Their book, their pace', 'Tap any word to hear it'],

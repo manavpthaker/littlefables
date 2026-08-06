@@ -38,7 +38,7 @@ feature we do not have.
 
 ## Structure
 
-Ten beats, 125 seconds, as of the current cut.
+Ten beats, 123 seconds, as of the current cut.
 
 | # | Beat | Time | Source |
 |---|---|---|---|
@@ -71,13 +71,16 @@ reports it.
 
 ## Shot list
 
-### 1 · The question — 0:00–0:09
+### 1 · The question — 0:00–0:11
 
 - **Source:** type only, appearing as it is typed.
 - **What happens:** two lines arrive at human typing speed, a caret blinking
   after them.
-- **Type:** `Rosa is five, and she cannot wait for anything.` then
-  `Anything for her that isn't YouTube?`
+- **Type, in sequence:**
+  `Rosa is five. She wants everything to happen now —`
+  `the cake, the bus, her own birthday.`
+  `Is there anything for her that isn't YouTube?`
+  The three specifics are what make it a person rather than a persona.
 - **Why it opens here:** the film used to open on the product. This opens on
   the reason anyone goes looking for it — a specific child, a specific evening,
   and the answer the parent does not want. It also sets up the beat at the far
@@ -94,19 +97,18 @@ reports it.
   Set as type on paper it reads as a thought. The caret alone carries the sense
   that someone is typing it.
 
-### 2 · The promise — 0:09–0:16
+### 2 · The mark — 0:11–0:14
 
-- **Source:** `cover.png` from the real book.
-- **What happens:** the whole cover, held for two and a half seconds, then a
-  push in that is still moving when the film cuts to the intake. The art is
-  square and the frame is 16:9, so an object-fit:cover push threw away about
-  forty-four percent of it and opened the film on a crop of pond weeds — you
-  could not tell it was a book. It is fitted now, margins and all, so the
-  viewer reads "book" before anything moves. The corner mark fades in here and
-  stays for the rest of the film.
-- **Type:** `Your kid, in their own storybook.`
+- **Source:** motion graphics.
+- **What happens:** the logomark draws itself on, three seconds, then the film
+  cuts to the form.
+- **Why it is here:** it answers the question — this is who does that — and it
+  buys the structural thing the film needed. There is no illustration before
+  this point. The art used to open the film on a held cover, spending the
+  reveal before anything had been asked for. Holding it back until the assembly
+  beat makes the first sight of the art the moment it is being made.
 
-### 2 · Tell us about your child — 0:07–0:25
+### 3 · Tell us about your child — 0:14–0:32
 
 - **Source:** screen recording of the real `/intake` page, in an iPad frame.
 - **What happens:** a name typed, an age tapped, interest and trait chips
@@ -119,7 +121,7 @@ reports it.
   which was faster but asked the viewer to take our word for it. Watching the
   form get filled proves how little we ask.
 
-### 3 · It comes together — 0:25–0:45
+### 4 · It comes together — 0:32–0:52
 
 **The centrepiece.** Twenty seconds. Built entirely from the book's nine images
 plus motion — no recording required.
@@ -146,7 +148,7 @@ rule draws around the edge. The book exists.
 - **Note:** movement (b) is the anti-slop argument made visually. It looks
   *painted*, not generated. Do not speed it up.
 
-### 4 · It arrives — 0:45–0:59
+### 5 · It arrives — 0:52–1:06
 
 - **Source:** screen recording, three quick cuts.
   - (a) the delivery email on a phone
@@ -159,7 +161,7 @@ rule draws around the edge. The book exists.
 - **This is the shot that sells grandparents.** It answers "but is it
   complicated" without a word.
 
-### 5 · The payoff — 0:59–1:23
+### 6 · The payoff — 1:06–1:30
 
 - **Source:** one continuous screen recording — `06-payoff.mp4`.
 - **What happens:** play is pressed, the page is read to the end, the page
@@ -177,7 +179,7 @@ rule draws around the edge. The book exists.
   caption times derived from those. A re-capture that shifts the actions has
   to shift those too.
 
-### 6 · Night — 1:23–1:31
+### 7 · Night — 1:30–1:38
 
 - **Source:** screen recording, one continuous take.
 - **What happens:** the same book in day mode, the mode switch, then night —
@@ -185,7 +187,7 @@ rule draws around the edge. The book exists.
 - **Overlay:** none. The transition is the point.
 - **Type:** `And a quieter one for bedtime`
 
-### 7 · The range — 1:31–1:38
+### 8 · The range — 1:38–1:47
 
 - **Source:** six samples from `assets/listing/custom-story-page/`, sharing the
   figcaptions the listing page uses so the film and the shop speak one
@@ -202,7 +204,7 @@ rule draws around the edge. The book exists.
 - **Placement:** after night, not before. The product demo finishes — day, then
   bedtime — and only then does the range open up.
 
-### 8 · The quiet part — 1:38–1:46
+### 9 · The quiet part — 1:47–1:55
 
 - **Source:** type only, full frame on aged ivory.
 - **What happens:** three lines in sequence on `--motion-tick`, a small fleuron
@@ -215,7 +217,7 @@ rule draws around the edge. The book exists.
   only place we say what we *don't* do, and it earns that because everything
   before it was product.
 
-### 9 · Close — 1:46–1:54
+### 10 · Close — 1:55–2:03
 
 - **Source:** motion graphics.
 - **What happens:** the logomark draws itself on — trunk, roots, branches,
