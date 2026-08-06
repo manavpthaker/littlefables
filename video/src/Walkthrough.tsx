@@ -14,6 +14,7 @@ import { AUDIO, BEATS, COPY, BOOK, RECORDINGS, frames } from './beats';
 import { font, ink, paper, pigment, motion, FPS } from './theme';
 
 import { CornerMark } from './components/CornerMark';
+import { Typed } from './components/Typed';
 import { StyleRange } from './components/StyleRange';
 import { MarkAnim } from './components/MarkAnim';
 import { TitleCard } from './components/TitleCard';
@@ -211,6 +212,10 @@ export const Walkthrough: React.FC = () => {
   return (
   <AbsoluteFill style={{ background: paper.base }}>
     {existsSync && <MusicBed />}
+    <Sequence {...frames(BEATS.ask)}>
+      <Typed lines={COPY.ask} />
+    </Sequence>
+
     <Sequence {...frames(BEATS.promise)}>
       <AbsoluteFill>
         <CoverReveal src={staticFile(BOOK.cover)} />

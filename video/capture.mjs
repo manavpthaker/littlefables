@@ -66,15 +66,17 @@ const SHOTS = {
     await age.click();
     await pause(700);
 
-    await reveal(page.getByRole('button', { name: 'horses', exact: true }));
-    for (const v of ['horses', 'animals', 'magic']) {
+    // These have to produce the book the film goes on to deliver — geese over
+    // the pond, a lantern nobody admits to lighting.
+    await reveal(page.getByRole('button', { name: 'animals', exact: true }));
+    for (const v of ['animals', 'ocean', 'magic']) {
       await page.getByRole('button', { name: v, exact: true }).click();
       await pause(500);
     }
     await pause(600);
 
     await reveal(page.getByRole('button', { name: 'curious', exact: true }));
-    for (const v of ['curious', 'gentle']) {
+    for (const v of ['curious', 'stubborn']) {
       await page.getByRole('button', { name: v, exact: true }).click();
       await pause(500);
     }
@@ -166,6 +168,7 @@ async function main() {
   mkdirSync(OUT, { recursive: true });
   rmSync(TMP, { recursive: true, force: true });
 
+  const failed = [];
   const browser = await chromium.launch();
 
   for (const name of names) {
@@ -201,6 +204,7 @@ async function main() {
     } catch (err) {
       await ctx.close().catch(() => {});
       console.error(`  ✗ ${name}: ${err.message.split('\n')[0]}`);
+      failed.push(name);
     }
   }
 
@@ -211,6 +215,16 @@ async function main() {
   console.log('  Still needed from a phone — neither is our software:');
   console.log('    01-email.mov        the delivery email');
   console.log('    03-add-to-home.mov  the iOS share sheet');
+
+  // A failed shot used to exit 0. The previous recording stays on disk, the
+  // render picks it up, and the film quietly ships footage of a UI that no
+  // longer exists — which is exactly how this went wrong before. Fail loudly.
+  if (failed.length) {
+    console.error('');
+    console.error(`  ${failed.length} shot(s) failed: ${failed.join(', ')}`);
+    console.error('  The previous recordings are still on disk and WILL be used.');
+    process.exit(1);
+  }
 }
 
 main().catch((e) => {

@@ -20,15 +20,16 @@ export interface Beat {
  * the close, where a signature belongs.
  */
 export const BEATS = {
-  promise: { start: 0, end: 7 },
-  intake: { start: 7, end: 25 },
-  comesTogether: { start: 25, end: 45 },
-  arrives: { start: 45, end: 59 },
-  payoff: { start: 59, end: 83 },
-  night: { start: 83, end: 91 },
-  range: { start: 91, end: 100 },
-  quiet: { start: 100, end: 108 },
-  close: { start: 108, end: 116 },
+  ask: { start: 0, end: 9 },
+  promise: { start: 9, end: 16 },
+  intake: { start: 16, end: 34 },
+  comesTogether: { start: 34, end: 54 },
+  arrives: { start: 54, end: 68 },
+  payoff: { start: 68, end: 92 },
+  night: { start: 92, end: 100 },
+  range: { start: 100, end: 109 },
+  quiet: { start: 109, end: 117 },
+  close: { start: 117, end: 125 },
 } as const;
 
 /**
@@ -137,6 +138,22 @@ export const AUDIO = {
 };
 
 export const COPY = {
+  /**
+   * The film opens on the question, not the product. This is the sentence a
+   * parent writes at eight in the evening — a specific child, a specific
+   * problem, and the answer they do not want.
+   *
+   * The problem has to be the one the delivered book answers. This said "she
+   * loves horses" first, and then the film handed over a book about a pond, a
+   * lantern and a grandmother — breaking the only promise the film makes, that
+   * these words become that book. Impatience is what the book is actually
+   * about: Rosa waiting to see who lights the lantern, and Grandma June
+   * telling her that waiting is the whole of it.
+   *
+   * It also sets up the beat at the far end: "No ads. No algorithm. No
+   * autoplay."
+   */
+  ask: ['Rosa is five, and she cannot wait for anything.', 'Anything for her that isn’t YouTube?'],
   promise: 'Your kid, in their own storybook.',
   intake: 'This is everything we ask.',
   intakeSub: 'A photo helps, but words are enough',

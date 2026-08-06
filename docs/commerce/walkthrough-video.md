@@ -38,19 +38,20 @@ feature we do not have.
 
 ## Structure
 
-Nine beats, 116 seconds, as of the current cut.
+Ten beats, 125 seconds, as of the current cut.
 
 | # | Beat | Time | Source |
 |---|---|---|---|
-| 1 | The promise | 0:00–0:07 | Real cover, slow push |
-| 2 | Tell us about your child | 0:07–0:25 | Screen recording of `/intake` |
-| 3 | **It comes together** | 0:25–0:45 | Motion graphics, real art |
-| 4 | It arrives | 0:45–0:59 | Rendered email + screen recording |
-| 5 | The payoff | 0:59–1:23 | Screen recording |
-| 6 | Night | 1:23–1:31 | Screen recording |
-| 7 | The range | 1:31–1:40 | Six style samples |
-| 8 | The quiet part | 1:40–1:48 | Type only |
-| 9 | Close | 1:48–1:56 | Logomark draw-on |
+| 1 | The question | 0:00–0:09 | Type, appearing as typed |
+| 2 | The promise | 0:09–0:16 | Real cover, slow push |
+| 3 | Tell us about your child | 0:16–0:34 | Screen recording of `/intake` |
+| 4 | **It comes together** | 0:34–0:54 | Motion graphics, real art |
+| 5 | It arrives | 0:54–1:08 | Rendered email + screen recording |
+| 6 | The payoff | 1:08–1:32 | One continuous screen recording |
+| 7 | Night | 1:32–1:40 | Screen recording |
+| 8 | The range | 1:40–1:49 | Six style samples |
+| 9 | The quiet part | 1:49–1:57 | Type only |
+| 10 | Close | 1:57–2:05 | Logomark draw-on |
 
 **There is no cold open.** An earlier cut spent five seconds on an animated
 logo before showing anything. A logo is not what earns a stranger's next five
@@ -70,7 +71,30 @@ reports it.
 
 ## Shot list
 
-### 1 · The promise — 0:00–0:07
+### 1 · The question — 0:00–0:09
+
+- **Source:** type only, appearing as it is typed.
+- **What happens:** two lines arrive at human typing speed, a caret blinking
+  after them.
+- **Type:** `Rosa is five, and she cannot wait for anything.` then
+  `Anything for her that isn't YouTube?`
+- **Why it opens here:** the film used to open on the product. This opens on
+  the reason anyone goes looking for it — a specific child, a specific evening,
+  and the answer the parent does not want. It also sets up the beat at the far
+  end: `No ads. No algorithm. No autoplay.` The film becomes a question and its
+  answer.
+- **The problem must be the one the book answers.** This first said "she loves
+  horses", and the film then handed over a book about a pond, a lantern and a
+  grandmother — breaking the only promise it makes, that these words become
+  that book. Impatience is what the story is actually about. The intake beat
+  picks accordingly: animals, ocean, magic; curious, stubborn.
+- **Deliberately not a chat window.** Framing the words in a ChatGPT or Claude
+  bubble would say the book was generated, which is the single claim this
+  product exists to deny and the accusation every competitor on Etsy attracts.
+  Set as type on paper it reads as a thought. The caret alone carries the sense
+  that someone is typing it.
+
+### 2 · The promise — 0:09–0:16
 
 - **Source:** `cover.png` from the real book.
 - **What happens:** the whole cover, held for two and a half seconds, then a
