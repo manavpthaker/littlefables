@@ -15,13 +15,21 @@ Etsy's own listing editor, on this shop, states plainly:
 So add-ons **cannot be dropdowns on the base listing**. They have to be separate
 listings, a bundled higher tier, or sold at a different moment.
 
-**One thing to re-check.** That message appeared while the listing was configured as
-an *instant download* with files attached. The 7-day-case fix requires
-reconfiguring to **made-to-order digital**, which attaches nothing at listing time —
-so variations may become available once that change is made. Re-test it immediately
-after, because if variations do appear, every add-on below becomes a checkbox on the
-base listing and the attach rate roughly triples. **Check this before building nine
-separate listings.**
+**Settled 2026-08-06 — no re-test needed.** The hypothesis was that this restriction
+came from the listing being an *instant download*, and that switching to made-to-order
+digital might unlock variations. It doesn't. The listing is already categorised
+**Children's Books · Digital files • Made To Order**, and the notice is still there
+verbatim. The restriction is on digital listings as such. **Separate listings are the
+only route.**
+
+What the listing *does* have is Etsy's newer **Custom options** — up to five buyer
+input fields, four currently in use. They collect information and, in Etsy's own
+words, "won't affect your available inventory" — meaning they cannot charge for
+anything. **Do not sell add-ons through them.** A buyer who ticks "rush" at checkout
+and is then asked for another $25 has a legitimate complaint, and that is a case
+waiting to happen. Use the free fifth slot for the **dedication line** instead: it
+costs nothing, so there is no charging problem, and it is exactly the sort of thing
+that belongs at checkout rather than in a follow-up email.
 
 ## Where add-ons actually live
 
@@ -209,8 +217,8 @@ Add-ons stay at full price throughout. Discount the entry, never the attach.
 
 | When | Do |
 |---|---|
-| Before anything | Reconfigure to made-to-order digital, then **re-test whether variations unlock**. |
-| Launch | Rush $25 · Dedication free · Printable PDF $12. Add-on price card as a listing image. |
+| Done | Made-to-order digital is already set. Variations confirmed unavailable — build separate listings. |
+| Launch | Rush $25 · Dedication free · Printable PDF $12. Add-on price card as a listing image. Dedication goes in custom-option slot 5. |
 | Order 1 onward | One add-on line at the bottom of every preview-approval message. |
 | After ~10 orders | Art print $15 · MP3 pack $9 · second voice $15. Deluxe bundle at $109. |
 | After forced alignment ships | **Parent-recorded narration, $39.** The one that matters. |
