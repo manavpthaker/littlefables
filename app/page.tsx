@@ -576,14 +576,14 @@ export default async function LandingPage() {
               Kids listen differently when the story is about them.
             </h2>
             <p style={aboutP}>
-              My son Azi was three when I first noticed it. He was struggling with the kind of big
+              My son was three when I first noticed it. He was struggling with the kind of big
               feelings that make an afternoon fall apart over the wrong-colored cup. Nothing I said
               helped. So one night I made up a story where a boy with his name — and his dog, and
               the pond behind our house — met an old moose who taught him a small secret about big
               feelings. He held onto that secret for weeks.
             </p>
             <p style={aboutP}>
-              It wasn’t the moose. It was that Azi was in the story. He wasn’t being told what to
+              It wasn’t the moose. It was that he was in the story. He wasn’t being told what to
               do; he was watching himself figure it out. When a kid hears their own name in a story,
               their brain treats it a little like memory. The lesson doesn’t feel like a lesson — it
               feels like something they already knew about themselves.
