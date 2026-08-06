@@ -33,7 +33,7 @@ should feel like a family reading ritual, not an isolated kid with a device.
 | 0:50 | Delivery email · *"Rosa's book is ready. Twenty pages, illustrated and narrated."* |
 | 1:10 | Reader, day mode · illustrated spread, audio controls, *The Lantern of Round Pond* |
 | 1:30 | Night mode · text-only, dark, centered |
-| 1:52 | End card · $29 · previews in 24h · book in 3–4 days · littlefables.app · Etsy shop URL |
+| 1:52 | End card · $69 · previews in 24h · book in 3–4 days · littlefables.app · Etsy shop URL |
 
 ## The thumbnail — A/B it, don't agonize
 

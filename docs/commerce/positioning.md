@@ -20,7 +20,7 @@ services. The unifying trait isn't ideology, it's the *intention* to hand-select
 enters their kid's life.
 
 **Secondary — grandparents.** 80% cite "gifts for special occasions" as a top spending
-category (~$805/yr average). A $29 personalized book fits comfortably. Needs a gift
+category (~$805/yr average). A $69 personalized book still fits comfortably. Needs a gift
 certificate flow so the tech doesn't scare them.
 
 ## Three-line pitch
@@ -33,8 +33,8 @@ certificate flow so the tech doesn't scare them.
 
 | SKU | Price | Notes |
 |---|---|---|
-| First book | **$29** | Matches Wonderbly / I See Me anchor. Digital margin ~89% after Etsy fees. |
-| Second book | **$17** | Requires opted-in saved profile. No competitor offers this. |
+| First book | **$69** | Above the Wonderbly / I See Me anchor on purpose — they sell a name swap, this is an authored book. Digital margin ~90% after Etsy fees ($7.01 on $69). |
+| Second book | *not priced yet* | The mechanic works — a saved profile skips the preview stage — but it is deliberately absent from buyer-facing copy until it has a number. $17 was set against a $29 first book and no longer holds at $69. |
 | Rush | **+$12** | Year-round. 72h total turnaround. |
 | Rush (December) | **+$22** | Seasonal lift. Late-shopper desperation pricing. |
 | Printable PDF | **+$5** | Optional. For buyers who want something tangible. |

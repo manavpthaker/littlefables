@@ -232,9 +232,12 @@ previews. Pick the one you love — or ask us to iterate.
 > We delete your intake once your book is delivered. Not saved. Not stored. Not used
 > to train anything.
 >
-> But — if you'd like your next book to be one click and half price ($17 instead of
-> $29), we can hold onto `{name}`'s profile until you're ready. You can delete it
+> But — if you'd like your next book to be one click instead of this form again,
+> we can hold onto `{name}`'s profile until you're ready. You can delete it
 > anytime. Your call.
+
+*No price is quoted here on purpose: the second book is not priced yet, and a
+number in the intake is a number a buyer will hold us to.*
 
 **Input:** Yes/No, **default No**
 - Yes, save `{name}`'s profile for future books

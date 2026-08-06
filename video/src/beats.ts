@@ -225,7 +225,7 @@ export const COPY = {
     'It ends when the story ends.',
     'We delete what you told us once the book is delivered.',
   ],
-  close: '$29 · previews in 24 hours · book in 3–4 days',
+  close: '$69 · previews in 24 hours · book in 3–4 days',
   url: 'littlefables.app',
   etsy: 'etsy.com/shop/LittleFablesStories',
 };

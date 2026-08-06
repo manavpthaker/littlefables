@@ -166,8 +166,6 @@ Hi {buyer_first_name},
 We still have {kid}'s profile saved — their character, the art style you picked, all
 of it. That means the next book skips the preview stage entirely.
 
-Second book is $17 instead of $29.
-
 All we need is what it's for. A birthday. Starting school. A new sibling. Losing a
 tooth. Missing someone. Or nothing at all — sometimes the best ones are just a
 Tuesday.

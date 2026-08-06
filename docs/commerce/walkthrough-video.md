@@ -242,7 +242,7 @@ rule draws around the edge. The book exists.
 - **What happens:** the logomark draws itself on — trunk, roots, branches,
   leaves, then the halo. This is the only place the brand animation plays; the
   film opened on the product instead. Details settle beneath once it lands.
-- **Type:** `$29 · previews in 24 hours · book in 3–4 days` → `littlefables.app`
+- **Type:** `$69 · previews in 24 hours · book in 3–4 days` → `littlefables.app`
   → `etsy.com/shop/LittleFablesStories` in brass small caps beneath
 - **Audio:** piano resolves.
 

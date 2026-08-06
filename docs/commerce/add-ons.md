@@ -171,7 +171,7 @@ Split it properly:
 |---|---:|---|
 | **Sibling book** | $45 | New story, new child, same world and art style. Character sheet is new; style is not. |
 | **Same-child second story** | $39 | New story, existing character sheet. The cheapest real book you can make. |
-| **Reprint / re-theme** | $17 | Same story, new occasion framing or dedication. Minutes of work. Say so plainly. |
+| **Reprint / re-theme** | *not priced yet* | Same story, new occasion framing or dedication. Minutes of work. Was $17 against a $29 book; needs revisiting at $69. |
 
 All three are repeat-purchase, which is the only thing that fixes customer
 acquisition cost. Offer the second one in the delivery email, not the listing.

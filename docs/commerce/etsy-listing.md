@@ -126,8 +126,7 @@ next book is one click away.
 
 PRICING
 
-First book · $29
-Second book · $17 — if you've asked us to keep your child's profile
+First book · $69
 Rush (72 hours, start to finish) · +$12
 Printable PDF version · +$5
 
@@ -253,7 +252,7 @@ All blocked on the Heritage DS.
 | 5 | The gift certificate, printed, on a table with a ribbon | Grandparent conversion |
 | 6 | Side-by-side: intake question → resulting book page | Shows the personalization is real |
 | 7 | Text-overlay: "No ads. No algorithm. No autoplay." on warm paper | Screen-time defuser |
-| 8 | Second-book offer card: "Second book $17" | Repeat-purchase seed |
+| 8 | *(was a second-book offer card — pulled until that price is decided)* | — |
 | 9 | Close-up of an illustrated page, showing craft/detail | Anti-slop proof |
 | 10 | Christmas cutoff graphic: "Order through Dec 22" | Seasonal urgency (swap in Nov) |
 
@@ -283,15 +282,15 @@ page isn't legible at that size, reframe tighter.
 
 ## Etsy economics
 
-On a $29 sale:
+On a $69 sale:
 
 | Line | Amount |
 |---|---|
 | Listing fee | $0.20 |
-| Transaction fee (6.5%) | $1.89 |
-| Payment processing (3% + $0.25) | $1.12 |
-| **Total fees** | **$3.21** |
-| **Net** | **$25.79** (~89%) |
+| Transaction fee (6.5%) | $4.49 |
+| Payment processing (3% + $0.25) | $2.32 |
+| **Total fees** | **$7.01** |
+| **Net** | **$61.99** (~90%) |
 
 Offsite Ads are pay-on-sale at ~15% and become non-optional above $10k/12mo. Onsite
 Etsy Ads run $0.10–$1.50 CPC, averaging $0.25–$0.50; competitive gift niches push

@@ -96,7 +96,7 @@ This is your guaranteed-usable take.
 
 Place it **immediately before the end card.** Everything else in the film is
 mechanism — intake, delivery email, reader, night mode. This is the only shot that
-is the *result*, and putting it against "$29 · previews in 24 hours" makes the price
+is the *result*, and putting it against "$69 · previews in 24 hours" makes the price
 land on a feeling rather than a feature list.
 
 Opening on it instead is the stronger hook but spends your best emotional beat
