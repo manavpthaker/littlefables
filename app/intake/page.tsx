@@ -5,14 +5,13 @@ export const metadata: Metadata = {
   title: 'Tell us about your child',
 };
 
-// Buyer intake. Today this is the surface the walkthrough film records and a
-// place to pressure-test the questions; it is deliberately the same shape as
-// the Typeform in docs/commerce/intake-typeform.md so the two can be compared
-// before we commit to self-hosting.
+// Walk-up intake surface. The primary intake path is /intake/[token] —
+// Manav pre-creates a row from every Etsy sale and messages the buyer
+// their personal link, so most buyers never touch this page.
 //
-// Nothing is persisted yet — submitting logs to the console. Wiring it to
-// Postgres is what would let us retire Typeform, keep the privacy promise
-// literally true, and make the saved-profile flow real.
+// This page is the safety net: someone who lost their link, an in-person
+// friend / family order, or a soft-launched non-Etsy buyer. It asks for
+// email + Etsy order so Manav can reconcile in /parent/intakes.
 
 export default function IntakePage() {
   return (
@@ -24,6 +23,23 @@ export default function IntakePage() {
         padding: 'clamp(28px, 6vw, 72px) 24px',
       }}
     >
+      <div
+        style={{
+          maxWidth: 660,
+          margin: '0 auto var(--space-6)',
+          padding: 'var(--space-3) var(--space-4)',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--pill-edge)',
+          background: 'var(--paper-warm)',
+          color: 'var(--ink-soft)',
+          fontSize: 14,
+          lineHeight: 1.5,
+        }}
+      >
+        If you bought on Etsy, look for a personal link in your Etsy messages —
+        it saves you re-typing your email. No link? Fill this in and we&rsquo;ll
+        match it to your order.
+      </div>
       <IntakeForm />
     </main>
   );

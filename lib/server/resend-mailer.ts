@@ -167,3 +167,77 @@ export async function sendOtpEmail(params: {
 
   return sendEmail({ to, subject, html, text });
 }
+
+/** Plain-text-first shop notification when a new /intake row lands.
+ *  This email is for Manav, not the buyer — no design polish, just the
+ *  fields he needs to open the admin page and start building. */
+export async function sendIntakeNotification(params: {
+  to: string;
+  intakeId: string;
+  buyerEmail: string;
+  childName: string;
+  ageBand: string | null;
+  interests: string[];
+  traits: string[];
+  inspirations: string | null;
+  look: string | null;
+  giftFrom: string | null;
+  etsyOrder: string | null;
+  photoUrl: string | null;
+  adminUrl: string;
+}): Promise<string> {
+  const {
+    to, intakeId, buyerEmail, childName, ageBand, interests, traits,
+    inspirations, look, giftFrom, etsyOrder, photoUrl, adminUrl,
+  } = params;
+
+  const subject = giftFrom
+    ? `New gift intake — ${childName} (from ${giftFrom})`
+    : `New intake — ${childName}`;
+
+  const rows: [string, string | null][] = [
+    ['Buyer', buyerEmail],
+    ['Etsy order', etsyOrder],
+    ['Gift from', giftFrom],
+    ['Child', childName],
+    ['Age band', ageBand],
+    ['Interests', interests.length ? interests.join(', ') : null],
+    ['Traits', traits.length ? traits.join(', ') : null],
+    ['Inspirations', inspirations],
+    ['Look', look],
+    ['Photo', photoUrl],
+    ['Admin', adminUrl],
+    ['Intake id', intakeId],
+  ];
+
+  const text = rows
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('\n');
+
+  const htmlRows = rows
+    .filter(([, v]) => v)
+    .map(([k, v]) => {
+      const value = k === 'Photo' || k === 'Admin'
+        ? `<a href="${v}">${v}</a>`
+        : escapeHtml(String(v));
+      return `<tr><td style="padding:4px 12px 4px 0;color:#8A7156;font-family:Georgia,serif;font-size:14px;vertical-align:top;">${k}</td><td style="padding:4px 0;font-family:Georgia,serif;font-size:15px;color:#2A1D12;">${value}</td></tr>`;
+    })
+    .join('');
+
+  const html = `<!DOCTYPE html><html><body style="margin:0;padding:24px;background:#EDE3CE;font-family:Georgia,serif;">
+<table role="presentation" cellpadding="0" cellspacing="0" style="max-width:640px;margin:0 auto;background:#F3EBD8;border:1px solid #B89154;border-radius:12px;padding:24px;">
+<tr><td style="font-size:20px;color:#2A1D12;padding-bottom:12px;">${escapeHtml(subject)}</td></tr>
+<tr><td><table role="presentation" cellpadding="0" cellspacing="0">${htmlRows}</table></td></tr>
+</table></body></html>`;
+
+  return sendEmail({ to, subject, html, text });
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}

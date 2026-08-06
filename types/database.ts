@@ -392,6 +392,77 @@ export type Database = {
         }
         Relationships: []
       }
+      intakes: {
+        Row: {
+          age_band: string | null
+          buyer_email: string
+          buyer_name: string | null
+          child_name: string
+          created_at: string
+          etsy_order: string | null
+          gift_from: string | null
+          household_id: string | null
+          id: string
+          inspirations: string | null
+          interests: string[]
+          look: string | null
+          notes: string | null
+          photo_path: string | null
+          status: string
+          token: string | null
+          traits: string[]
+          updated_at: string
+        }
+        Insert: {
+          age_band?: string | null
+          buyer_email: string
+          buyer_name?: string | null
+          child_name: string
+          created_at?: string
+          etsy_order?: string | null
+          gift_from?: string | null
+          household_id?: string | null
+          id?: string
+          inspirations?: string | null
+          interests?: string[]
+          look?: string | null
+          notes?: string | null
+          photo_path?: string | null
+          status?: string
+          token?: string | null
+          traits?: string[]
+          updated_at?: string
+        }
+        Update: {
+          age_band?: string | null
+          buyer_email?: string
+          buyer_name?: string | null
+          child_name?: string
+          created_at?: string
+          etsy_order?: string | null
+          gift_from?: string | null
+          household_id?: string | null
+          id?: string
+          inspirations?: string | null
+          interests?: string[]
+          look?: string | null
+          notes?: string | null
+          photo_path?: string | null
+          status?: string
+          token?: string | null
+          traits?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intakes_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       parents: {
         Row: {
           auth_user_id: string | null

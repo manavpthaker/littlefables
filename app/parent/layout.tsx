@@ -82,6 +82,16 @@ export default async function ParentLayout({ children }: { children: React.React
             {who}
           </span>
           <Link
+            href="/parent/intakes"
+            style={{
+              color: 'var(--ink-soft)',
+              textDecoration: 'none',
+              fontSize: 'var(--text-body-size)',
+            }}
+          >
+            Orders
+          </Link>
+          <Link
             href="/read"
             style={{
               color: 'var(--oxblood)',
