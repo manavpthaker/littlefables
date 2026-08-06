@@ -62,6 +62,7 @@ export function IntakeForm(props: IntakeFormProps) {
   const [look, setLook] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [companions, setCompanions] = useState('');
   const [isGift, setIsGift] = useState(props.isGift ?? false);
   const [giftFrom, setGiftFrom] = useState(props.giftFrom ?? '');
 
@@ -304,6 +305,29 @@ export function IntakeForm(props: IntakeFormProps) {
       ),
     });
 
+    s.push({
+      key: 'companions',
+      isValid: () => true,
+      hint: 'Optional — leave blank if it\'s just them',
+      render: () => (
+        <StepCard
+          eyebrow="Who else is in the story"
+          question={`Anyone else who should appear alongside ${kid}?`}
+          body="We only draw people you tell us about — no invented parents, coaches, or siblings. Name them and describe how they look. Leave blank if the book stars only your child (that's a common choice; mentor voices become the ball, the moon, a favourite toy)."
+        >
+          <textarea
+            className="lf-intake-input lf-intake-textarea"
+            autoFocus
+            rows={3}
+            value={companions}
+            onChange={(e) => setCompanions(e.target.value)}
+            placeholder="e.g. Papa — tall, glasses, warm beard. Big sister Priya — 6, straight hair to shoulders, always in pink. Or leave blank."
+            aria-label="Who else appears"
+          />
+        </StepCard>
+      ),
+    });
+
     if (!props.isGift) {
       s.push({
         key: 'gift',
@@ -365,6 +389,7 @@ export function IntakeForm(props: IntakeFormProps) {
             <Row label="Loves">{interests.join(', ') || '—'}</Row>
             <Row label="Traits">{traits.join(', ') || '—'}</Row>
             <Row label="Inspiration">{inspirations || '—'}</Row>
+            <Row label="Cast">{companions.trim() ? companions : `Just ${name || 'the child'}`}</Row>
             {isGift && giftFrom && <Row label="Gift from">{giftFrom}</Row>}
             <Row label="Sent to">{buyerEmail || props.buyerEmail || '—'}</Row>
           </ul>
@@ -376,7 +401,7 @@ export function IntakeForm(props: IntakeFormProps) {
   }, [
     hasToken, greeting, buyerEmail, etsyOrder, name, age, ageTouched, kid,
     interests, interestsNote, traits, traitsNote, inspirations, look,
-    photoFile, photoPreview, isGift, giftFrom, props.isGift, props.buyerEmail,
+    photoFile, photoPreview, companions, isGift, giftFrom, props.isGift, props.buyerEmail,
   ]);
 
   const totalSteps = steps.length;
@@ -428,6 +453,7 @@ export function IntakeForm(props: IntakeFormProps) {
       if (traitsNote.trim()) body.set('traits_note', traitsNote.trim());
       if (inspirations.trim()) body.set('inspirations', inspirations.trim());
       if (look.trim()) body.set('look', look.trim());
+      if (companions.trim()) body.set('companions', companions.trim());
       if (isGift && giftFrom.trim()) body.set('gift_from', giftFrom.trim());
       if (photoFile) body.set('photo', photoFile);
 

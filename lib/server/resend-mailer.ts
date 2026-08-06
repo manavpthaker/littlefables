@@ -181,6 +181,7 @@ export async function sendIntakeNotification(params: {
   traits: string[];
   inspirations: string | null;
   look: string | null;
+  companions: string | null;
   giftFrom: string | null;
   etsyOrder: string | null;
   photoUrl: string | null;
@@ -188,7 +189,7 @@ export async function sendIntakeNotification(params: {
 }): Promise<string> {
   const {
     to, intakeId, buyerEmail, childName, ageBand, interests, traits,
-    inspirations, look, giftFrom, etsyOrder, photoUrl, adminUrl,
+    inspirations, look, companions, giftFrom, etsyOrder, photoUrl, adminUrl,
   } = params;
 
   const subject = giftFrom
@@ -205,6 +206,7 @@ export async function sendIntakeNotification(params: {
     ['Traits', traits.length ? traits.join(', ') : null],
     ['Inspirations', inspirations],
     ['Look', look],
+    ['Cast', companions ?? `Just ${childName}`],
     ['Photo', photoUrl],
     ['Admin', adminUrl],
     ['Intake id', intakeId],

@@ -399,6 +399,7 @@ export type Database = {
           buyer_email: string
           buyer_name: string | null
           child_name: string
+          companions: string | null
           created_at: string
           etsy_order: string | null
           gift_from: string | null
@@ -422,6 +423,7 @@ export type Database = {
           buyer_email: string
           buyer_name?: string | null
           child_name: string
+          companions?: string | null
           created_at?: string
           etsy_order?: string | null
           gift_from?: string | null
@@ -445,6 +447,7 @@ export type Database = {
           buyer_email?: string
           buyer_name?: string | null
           child_name?: string
+          companions?: string | null
           created_at?: string
           etsy_order?: string | null
           gift_from?: string | null
