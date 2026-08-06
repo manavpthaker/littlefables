@@ -55,6 +55,7 @@ export async function POST(request: Request) {
   const traitsNote = str(form.get('traits_note')) || null;
   const inspirations = str(form.get('inspirations')) || null;
   const look = str(form.get('look')) || null;
+  const companions = str(form.get('companions')) || null;
   const giftFrom = str(form.get('gift_from')) || null;
 
   if (!childName) {
@@ -132,6 +133,7 @@ export async function POST(request: Request) {
         traits_note: traitsNote,
         inspirations,
         look,
+        companions,
         gift_from: giftFrom,
         photo_path: photoPath,
         updated_at: new Date().toISOString(),
@@ -158,6 +160,7 @@ export async function POST(request: Request) {
         traits_note: traitsNote,
         inspirations,
         look,
+        companions,
         gift_from: giftFrom,
         etsy_order: etsyOrder,
         photo_path: photoPath,
@@ -189,6 +192,7 @@ export async function POST(request: Request) {
         traits,
         inspirations,
         look,
+        companions,
         giftFrom,
         etsyOrder,
         photoUrl,

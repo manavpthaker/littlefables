@@ -26,6 +26,7 @@ export interface IntakeRowProps {
   traitsNote: string | null;
   inspirations: string | null;
   look: string | null;
+  companions: string | null;
   giftFrom: string | null;
   etsyOrder: string | null;
   photoUrl: string | null;
@@ -139,6 +140,7 @@ export function IntakeRow(props: IntakeRowProps) {
         )}
         {props.inspirations && <Row label="Inspiration">{props.inspirations}</Row>}
         {props.look && <Row label="Looks like">{props.look}</Row>}
+        <Row label="Cast">{props.companions ?? `Just ${props.childName}`}</Row>
       </div>
 
       {props.photoUrl && (
