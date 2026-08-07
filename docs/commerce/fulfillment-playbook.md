@@ -199,12 +199,19 @@ hood — useful when something fails or you need to run a step by hand.
     Pages are numbered globally across chapters: `01` = ch1p1, `02` = ch1p2,
     `03` = ch2p1 if chapter 1 has two pages.
 
-24. **Narration:** skip for orders 1–10. The reader falls back to browser speech
-    synthesis, which is decent. If narration is ever sold as an upsell:
-    ```bash
-    pnpm content:narrate content/households/<slug>/books/<book-slug>
-    ```
-    Requires `ELEVENLABS_API_KEY`, `DAY_VOICE_ID`, `NIGHT_VOICE_ID` in `.env.local`.
+24. **Narration:** day voice runs automatically as part of `pnpm order:publish`
+    — the reader otherwise falls to browser speechSynth, which sounds
+    robotic on desktop and is not acceptable for a paid custom book. Cost
+    is negligible (~$0.10 per book at ElevenLabs pricing).
+    Requires `ELEVENLABS_API_KEY` + `DAY_VOICE_ID` in `.env.local` (already
+    set for local dev; must also be set as Vercel env vars for prod, but
+    prod only needs them if the reader hits `/api/child/tts` live — the
+    pre-generated MP3s in Supabase Storage serve without a live TTS call).
+    Night voice ships only when the buyer paid for the night-narration
+    upsell — pass `--night` to `order:publish`. Night falls back to day
+    audio gracefully so a missing night recording never breaks a story.
+    To skip narration on a re-publish (e.g. art changed, text didn't):
+    `pnpm order:publish <intake-id> --skip-narrate`.
 
 ---
 

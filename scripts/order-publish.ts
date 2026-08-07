@@ -102,6 +102,27 @@ async function main(): Promise<void> {
     process.exit(importRes.status ?? 1);
   }
 
+  // Narrate day voice — the reader otherwise falls to browser speechSynth,
+  // which sounds robotic on desktop. For a paid custom book that's not
+  // acceptable. Skip via --skip-narrate for a re-publish where art changed
+  // but text didn't (existing narration in Storage still matches).
+  //
+  // Night voice is deliberately skipped by default: overnight cost, and
+  // night mode falls back to day audio gracefully (see page-audio-source.ts).
+  // Add --night when the buyer paid for the night narration upsell.
+  const skipNarrate = process.argv.includes('--skip-narrate');
+  const includeNight = process.argv.includes('--night');
+  if (!skipNarrate) {
+    const narrateArgs = ['content:narrate', bookDir, '--voice', includeNight ? 'both' : 'day'];
+    console.log(`\n🎙  Narrating (${includeNight ? 'day + night' : 'day'})…`);
+    const narrateRes = spawnSync('pnpm', narrateArgs, { stdio: 'inherit' });
+    if (narrateRes.status !== 0) {
+      console.warn(`\n⚠  content:narrate failed (${narrateRes.status}). Book is published, but reader will use browser TTS. Re-run: pnpm content:narrate ${bookDir} --voice day`);
+    }
+  } else {
+    console.log(`\n   · --skip-narrate — reader will use existing Storage audio (or browser TTS if none)`);
+  }
+
   updateOrdersCsv(intake, householdSlug, bookSlug, provisioned);
 
   console.log(`\n✅ Published.`);
