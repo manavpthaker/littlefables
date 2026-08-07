@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Little Fables' },
   formatDetection: { telephone: false },
   icons: { icon: '/icons/icon.svg', apple: '/icons/apple-touch-icon.png' },
+  // Pinterest domain claim for littlefables.app (business account @littlefables)
+  verification: {
+    other: {
+      'p:domain_verify': 'c72d5e830316ff781409a9a0e853e59f',
+    },
+  },
 };
 
 // PRD F2: userScalable stays enabled at the root. Only the /read (kid) subtree
