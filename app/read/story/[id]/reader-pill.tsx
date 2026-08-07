@@ -88,12 +88,20 @@ export function ReaderPill({
           color: 'var(--on-oxblood)',
           display: 'grid',
           placeItems: 'center',
-          fontSize: 15,
           flex: 'none',
           boxShadow: 'var(--shadow-rest)',
         }}
       >
-        {playing ? '❙❙' : '▶'}
+        {playing ? (
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden focusable="false">
+            <rect x="2" y="1.5" width="3" height="11" rx="0.5" fill="currentColor" />
+            <rect x="9" y="1.5" width="3" height="11" rx="0.5" fill="currentColor" />
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden focusable="false" style={{ marginLeft: 1.5 }}>
+            <path d="M3 1.5 L12 7 L3 12.5 Z" fill="currentColor" />
+          </svg>
+        )}
       </button>
 
       <button

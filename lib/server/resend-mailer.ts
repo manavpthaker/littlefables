@@ -243,6 +243,176 @@ export async function sendIntakeNotification(params: {
   return sendEmail({ to, subject, html, text });
 }
 
+/** Welcome email sent when Manav runs `pnpm order:new --send-email`.
+ *  Mirrors LF-welcome-letter.pdf: the same voice, three-step scaffold,
+ *  and STEP ONE card — except in email the CTA is a live button to the
+ *  buyer's personal intake URL, so they never have to hunt for it.
+ *
+ *  Visual system matches sendOtpEmail (wordmark, double-rule, oxblood
+ *  button) so buyers see one coherent studio across every touch. Hex-
+ *  baked palette, inline styles — email clients strip <style> and
+ *  don't honour CSS variables. */
+export async function sendWelcomeEmail(params: {
+  to: string;
+  buyerName: string | null;
+  intakeUrl: string;
+}): Promise<string> {
+  const { to, buyerName, intakeUrl } = params;
+  const firstName = buyerName?.trim().split(/\s+/)[0] || null;
+
+  const subject = 'The book is on its way.';
+  const preheader = 'One five-minute intake and we\'ll have style previews in your inbox within 24 hours.';
+
+  const greeting = firstName ? `Hi ${firstName} — a note before we begin.` : 'A note before we begin —';
+
+  const text = [
+    subject,
+    '',
+    greeting,
+    '',
+    'Thank you for trusting us with something as small and specific as your child. Every book we make is written, illustrated, and narrated for one reader — never templated, never shared. Here\'s how we\'ll do it.',
+    '',
+    'WHAT HAPPENS NEXT',
+    '',
+    '1. Tell us about your child.   (today, 5 min)',
+    '   Five minutes, one page. Their name, the things they love, and a picture book you love the look of.',
+    '',
+    '2. We send you style previews.   (within 24 hours)',
+    '   Two to four cover treatments in the art style we drew from your inspirations. You pick the one you love.',
+    '',
+    '3. The book lands on your device.   (3–4 days after approval)',
+    '   A full picture book with narration, delivered by link. Opens on any iPad or phone. No app, no login.',
+    '',
+    'STEP ONE — Open your intake',
+    intakeUrl,
+    '',
+    'IF ANYTHING FEELS OFF',
+    'Reply to this email or message us on Etsy — a real person answers, usually within a few hours. We\'re one household making these; the person who reads your note is the person making the book.',
+    '',
+    'Little Fables — a picture book made for one child.',
+  ].join('\n');
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>${escapeHtml(subject)}</title>
+</head>
+<body style="margin:0;padding:0;background:#EDE3CE;">
+<span style="display:none;font-size:1px;line-height:1px;color:#EDE3CE;max-height:0;max-width:0;opacity:0;overflow:hidden;">${escapeHtml(preheader)}</span>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EDE3CE;padding:24px 0;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:100%;background:#EDE3CE;">
+        <tr>
+          <td style="padding:18px 32px 8px;font-family:'IM Fell English',Georgia,serif;font-size:19px;color:#2A1D12;">Little Fables</td>
+        </tr>
+        <tr>
+          <td style="padding:0 32px;">
+            <div style="border-top:1px solid #8A7156;height:3px;font-size:0;line-height:0;">&nbsp;</div>
+            <div style="border-top:2px solid #8A7156;font-size:0;line-height:0;">&nbsp;</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:26px 32px 6px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:14px;color:#57432E;font-style:italic;">${escapeHtml(greeting)}</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 32px 10px;font-family:'IM Fell English',Georgia,serif;font-size:34px;line-height:40px;mso-line-height-rule:exactly;color:#2A1D12;">The book is on its way.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 32px 14px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:17px;line-height:26px;mso-line-height-rule:exactly;color:#57432E;">
+            Thank you for trusting us with something as small and specific as your child. Every book we make is written, illustrated, and narrated for one reader — never templated, never shared. Here&rsquo;s how we&rsquo;ll do it.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 32px 4px;font-family:'IM Fell English SC',Georgia,serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A7156;">What happens next</td>
+        </tr>
+        ${stepRow('1', 'Tell us about your child.', 'today, 5 min', 'Five minutes, one page. Their name, the things they love, and a picture book you love the look of.')}
+        ${stepRow('2', 'We send you style previews.', 'within 24 hours', 'Two to four cover treatments in the art style we drew from your inspirations. You pick the one you love.')}
+        ${stepRow('3', 'The book lands on your device.', '3–4 days after approval', 'A full picture book with narration, delivered by link. Opens on any iPad or phone. No app, no login.')}
+        <tr>
+          <td style="padding:24px 32px 8px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F3EBD8;border:1px solid #B89154;border-radius:12px;">
+              <tr>
+                <td align="center" style="padding:22px 24px 6px;font-family:'IM Fell English SC',Georgia,serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#8A7156;">Step one</td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:2px 24px 8px;font-family:'IM Fell English',Georgia,serif;font-size:24px;color:#2A1D12;">Open your intake.</td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:0 32px 14px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:15px;line-height:23px;mso-line-height-rule:exactly;color:#57432E;">
+                  Five minutes, and it&rsquo;s the only thing standing between you and a book made for your kid.
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:0 24px 22px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td bgcolor="#7D2E2B" style="background:#7D2E2B;border-radius:10px;">
+                        <a href="${intakeUrl}" style="display:inline-block;padding:14px 28px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:17px;color:#F3EBD8;text-decoration:none;">Start your intake</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:0 24px 20px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:12px;color:#8A7156;word-break:break-all;">
+                  or paste this link into your browser:<br>
+                  <span style="color:#57432E;">${escapeHtml(intakeUrl)}</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:22px 32px 4px;font-family:'IM Fell English SC',Georgia,serif;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8A7156;">If anything feels off</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 32px 18px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:16px;line-height:25px;mso-line-height-rule:exactly;color:#57432E;">
+            Reply to this email or message us on Etsy — a real person answers, usually within a few hours. We&rsquo;re one household making these; the person who reads your note is the person making the book.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 32px 6px;">
+            <div style="border-top:1px solid #8A7156;height:3px;font-size:0;line-height:0;">&nbsp;</div>
+            <div style="border-top:2px solid #8A7156;font-size:0;line-height:0;">&nbsp;</div>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:12px 32px 28px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:13px;line-height:19px;mso-line-height-rule:exactly;color:#8A7156;font-style:italic;">
+            Little Fables — a picture book made for one child.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`;
+
+  return sendEmail({ to, subject, html, text });
+}
+
+/** One row of the "what happens next" list — display number, bold title,
+ *  right-aligned timing tag on wide screens, body underneath. */
+function stepRow(num: string, title: string, timing: string, body: string): string {
+  return `<tr>
+    <td style="padding:10px 32px 0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td style="font-family:'IM Fell English',Georgia,serif;font-size:19px;color:#2A1D12;">${num}. ${escapeHtml(title)}</td>
+          <td align="right" style="font-family:'EB Garamond',Georgia,Cambria,serif;font-size:13px;font-style:italic;color:#8A7156;white-space:nowrap;padding-left:12px;">${escapeHtml(timing)}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:2px 32px 4px;font-family:'EB Garamond',Georgia,Cambria,serif;font-size:15px;line-height:23px;mso-line-height-rule:exactly;color:#57432E;">${escapeHtml(body)}</td>
+  </tr>`;
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
