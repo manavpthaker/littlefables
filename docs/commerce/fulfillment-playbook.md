@@ -11,6 +11,24 @@ Human-in-the-loop everywhere; automate later once the shape is proven.
 > end of the book. Once the code changes land, this playbook will be edited to
 > match; for now the spec is the source of truth for those three steps.
 
+## The three commands
+
+Everything below folds into three `pnpm` commands run from the repo root.
+Story authoring stays with Claude in chat — everything else is scripted.
+
+| Command | When to run | What it does |
+|---|---|---|
+| `pnpm order:preview <intake-id>` | After story.json + character-notes.md are drafted with Claude | Downloads photo, scaffolds working folder + book folder, emits `art-prompts-preview.md` (paste into ChatGPT) and `buyer-preview.md` (edit + paste to buyer) |
+| `pnpm order:full-book <intake-id>` | After buyer approves a cover and you've pinned it to `previews/APPROVED-cover.png` + `previews/APPROVED-prompt.txt` | Emits `art-prompts-full.md` — per-page prompts reusing the approved style anchor verbatim |
+| `pnpm order:publish <intake-id>` | After `cover.png` + `pages/NN.png` are dropped into the book folder | Provisions the household on hosted Supabase, writes `household.yaml`, imports the book, appends to `orders.csv`, prints the magic URL |
+
+Each command derives the household slug from the intake's `parent_lastname`
+(or falls back to `<child>-<order>`). Override with `--household-slug <slug>`.
+Book slug defaults to `<child>-book-a`; override with `--book <slug>`.
+
+The narrative steps below still describe what each command does under the
+hood — useful when something fails or you need to run a step by hand.
+
 ## At your desk
 
 - Chrome: Gmail, Etsy Seller dashboard, ChatGPT (with `fable-art-custom` skill),
