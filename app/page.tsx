@@ -333,9 +333,6 @@ export default async function LandingPage() {
               >
                 Read a sample book
               </a>
-              <a className="lf-btn lf-btn--quiet" href="#how" style={{ textDecoration: 'none' }}>
-                See how it’s made
-              </a>
             </div>
             <p
               style={{
