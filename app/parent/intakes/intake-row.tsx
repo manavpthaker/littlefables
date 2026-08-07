@@ -27,6 +27,8 @@ export interface IntakeRowProps {
   inspirations: string | null;
   look: string | null;
   companions: string | null;
+  stickyMoment: string | null;
+  hopedLesson: string | null;
   parentLastname: string | null;
   giftFrom: string | null;
   etsyOrder: string | null;
@@ -142,6 +144,8 @@ export function IntakeRow(props: IntakeRowProps) {
         {props.inspirations && <Row label="Inspiration">{props.inspirations}</Row>}
         {props.look && <Row label="Looks like">{props.look}</Row>}
         <Row label="Cast">{props.companions ?? `Just ${props.childName}`}</Row>
+        {props.stickyMoment && <Row label="Sticky">{props.stickyMoment}</Row>}
+        {props.hopedLesson && <Row label="Hoped lesson">{props.hopedLesson}</Row>}
         {props.parentLastname && <Row label="Family">{props.parentLastname}</Row>}
       </div>
 

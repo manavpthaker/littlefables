@@ -173,6 +173,39 @@ async function main(): Promise<void> {
   const story = readStory(args.folder);
   console.log(`\n📖 ${story.title} (${story.id}) · ${story.chapters.length} chapter${story.chapters.length === 1 ? '' : 's'}`);
 
+  // Custom-order gate. A book authored for a paid custom order (source:
+  // 'family-original' in story.json — the intake pipeline stamps this)
+  // must ship with (a) a completed rubric self-score of 90+, and
+  // (b) a parent-guide.md in the folder. See content/authoring-doctrine.md.
+  // Legacy 'family' / 'starter' / 'generated' books are exempt.
+  const rawStoryForGate = JSON.parse(readFileSync(join(args.folder, 'story.json'), 'utf8')) as {
+    source?: string;
+    rubric?: { total?: number };
+  };
+  if (rawStoryForGate.source === 'family-original') {
+    const rubricTotal = rawStoryForGate.rubric?.total;
+    if (typeof rubricTotal !== 'number') {
+      throw new Error(
+        'custom-order book (source: family-original) is missing `rubric` block in story.json.\n' +
+          'See content/authoring-doctrine.md §6 — self-score all five dimensions before import.',
+      );
+    }
+    if (rubricTotal < 90) {
+      throw new Error(
+        `custom-order rubric total is ${rubricTotal}. Ship gate is 90. Revise the story.\n` +
+          'See content/authoring-doctrine.md §7 for the walkthrough.',
+      );
+    }
+    const guidePath = join(args.folder, 'parent-guide.md');
+    if (!existsSync(guidePath)) {
+      throw new Error(
+        'custom-order book is missing parent-guide.md.\n' +
+          'The parent guide is the product, not an extra. See content/parent-guide-template.md.',
+      );
+    }
+    console.log(`  ✓ rubric ${rubricTotal}/100, parent-guide.md present`);
+  }
+
   const client = createClient<Database>(url, secret, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

@@ -108,6 +108,23 @@ export const characterVoiceSchema = z.object({
 });
 export type CharacterVoice = z.infer<typeof characterVoiceSchema>;
 
+/** Per-book quality self-score. Required on custom-order books (author
+ *  fills in during authoring; the import script blocks below 90).
+ *  Optional on legacy / home books that predate the doctrine.
+ *  See content/authoring-doctrine.md §6 for what each dimension means
+ *  and content/story-patterns.md for the pattern taxonomy. */
+export const rubricSchema = z.object({
+  story_core: z.object({ score: z.number().min(0).max(20), notes: z.string() }),
+  age_fit: z.object({ score: z.number().min(0).max(20), notes: z.string() }),
+  personalization: z.object({ score: z.number().min(0).max(20), notes: z.string() }),
+  craft: z.object({ score: z.number().min(0).max(20), notes: z.string() }),
+  family_tool: z.object({ score: z.number().min(0).max(20), notes: z.string() }),
+  total: z.number().min(0).max(100),
+  pattern_used: z.string(),
+  notes: z.string().optional(),
+});
+export type Rubric = z.infer<typeof rubricSchema>;
+
 export const bookSchema = z
   .object({
     id: z.string().min(1),
@@ -128,6 +145,10 @@ export const bookSchema = z
     /** Per-book pronunciation overrides. Merges with the global
      *  content/pronunciations.json; per-book wins on conflicts. */
     pronunciations: z.record(z.string(), z.string().max(80)).optional(),
+    /** Self-score against the custom-book rubric. Optional on legacy
+     *  books; required on custom orders (see content/authoring-doctrine.md).
+     *  content:add enforces total >= 90 when source === 'family-original'. */
+    rubric: rubricSchema.optional(),
     chapters: z.array(chapterSchema).min(1),
   })
   .passthrough();

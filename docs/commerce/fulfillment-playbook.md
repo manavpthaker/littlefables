@@ -63,50 +63,61 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## B · Story spine (2–6h)
 
+> **📚 Read the doctrine first.** Custom-book authoring is governed by
+> `content/authoring-doctrine.md`. It maps intake → research-backed pattern →
+> multi-layer arc → age-band shape → rubric self-score → required
+> `parent-guide.md`. The steps below are the operational choreography;
+> the doctrine is what makes the story worth paying for. **A book without
+> a matched pattern from `content/story-patterns.md` and a rubric of 90+
+> will not pass `pnpm content:add` at Run B.**
+
 > **⚠ Cast rule — non-negotiable.** The only real humans in the book are ones the
 > buyer named in the `companions` field at intake. If `companions` is blank, the
 > book stars the child alone and mentor voices belong to objects, animals, or
-> nature (the ball, the moto, the moon, the wind). Never invent a Papa, Mama,
-> coach, grandparent, sibling, or friend because the story shape suggests one.
-> Adult presence may be *implied* — a hand off-frame, a shadow on the grass — but
-> no face, no distinguishing features. This rule was added after an early test
-> shipped fabricated parents; it is a product-integrity requirement, not a style
-> preference. See the "no fabricated humans" note in memory.
+> nature. Never invent a Papa, Mama, coach, grandparent, sibling, or friend
+> because the story shape suggests one. See "no fabricated humans" memory.
 
-7. **Read the intake's `companions` field first.** It answers "who besides the
-   child appears in the art?" — either a list of named people with descriptions
-   (and ideally photos, chased by email if missing) or blank. Blank = solo book.
-   Everything in step 8 downstream depends on this choice, so decide it before
-   you start writing.
+7. **Read the intake in full.** Especially `sticky_moment` — the developmental
+   thing the buyer is actually living with. This is the story's spine, not the
+   `interests` field. Also confirm `companions` (who besides the child appears
+   in the art, if anyone). Both are enforced downstream — sticky drives the
+   pattern; companions gate the cast.
 
-8. **Author the story.** Open ChatGPT or Claude. Paste the intake and ask for a
-   `story.json` following the schema in `lib/models/book.ts`. Attach an existing book's
-   `story.json` as a shape reference.
+8. **Match the sticky moment to a pattern.** Open `content/story-patterns.md`
+   and find the entry that best matches. Read the *template book* named by
+   that entry in full (usually one of the files in `content/originals/`) — you
+   need to feel what the pattern lands like, not just know its name. If no
+   pattern matches cleanly, pick the closest neighbour and note the adaptation
+   in the story's `rubric.notes` field at authoring time.
 
-   Prompt shape:
-   > Author a Little Fables story.json. `kind: "quick"`, 1 chapter, 6–10 pages, each
-   > page 1–3 sentences, gentle arc addressing `{help_with}`. Include the kid's name
-   > and the occasion. **Cast rule:** the only human characters are `{companions
-   > or "just the child"}` — do not invent parents, coaches, siblings, or any
-   > other people. If the story needs a mentor voice, give it to an object,
-   > animal, or piece of nature (Little Blue Truck's trucks, Tabitha Paige's
-   > moon, etc.). Return JSON only.
+9. **Author the story in a Claude session.** Paste the intake, paste the
+   matched pattern entry from `story-patterns.md`, and paste
+   `content/authoring-doctrine.md` in full. Claude drafts a `story.json`
+   that:
+     - follows the multi-layer arc (surface / skills / values / systems / future)
+     - uses the pattern's structural requirements (externalization character,
+       named tool with sensory scaffolding, three specific callbacks to intake
+       specifics, sensory-grounded emotional beats, bedtime-safe ending)
+     - stamps `source: "family-original"` so the rubric gate applies at import
+     - includes a filled-in `rubric` self-score block (all five dimensions,
+       total ≥ 90) — see doctrine §6
 
-9. **Read it yourself.** Fix names. Remove any modern tech or screens. **Sweep
-   for fabricated humans** — every named or described person must trace back to
-   the intake. If a scene calls for an adult that wasn't supplied, rewrite the
-   beat so the child interacts with an object, animal, or setting instead. Make
-   sure the "help with" resolves warmly rather than didactically. Set
-   `by: "Little Fables, for {kid}"`.
+10. **Read it yourself.** Read aloud. Sweep for fabricated humans (§cast rule).
+    Sweep for compliment loops — anything that reads as a cheer-line without
+    specific evidence gets rewritten. Confirm the tool the story teaches is
+    named and has sensory anchors. Set `by: "Little Fables, for {kid}"`.
 
-10. **Save and validate:**
+11. **Save and validate:**
     ```bash
     # save to content/households/<slug>/books/<book-slug>/story.json
     pnpm content:add content/households/<slug>/books/<book-slug> --check
     ```
-    Must pass `bookSchema.parse` before any art work starts.
+    Must pass `bookSchema.parse` before any art work starts. The rubric
+    gate + parent-guide.md requirement fire at real import (Run B), not at
+    `--check` — but if you're smart you catch them here by peeking at
+    doctrine §7.
 
-11. **Write `character-notes.md`** in the same folder. Start with a **cast rule
+12. **Write `character-notes.md`** in the same folder. Start with a **cast rule
     block** ("The only real human in this book is `{kid}`. Any other person shown
     was supplied by the buyer: `{companions or "none"}`."), then per-character
     likeness blocks (15–25 words each, per the `fable-art-custom` skill) for
@@ -120,7 +131,7 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## C · Preview generation (6–24h)
 
-12. **Open ChatGPT with the `fable-art-custom` skill.** Upload `story.json`,
+13. **Open ChatGPT with the `fable-art-custom` skill.** Upload `story.json`,
     `character-notes.md`, and `typeform.json`.
 
     Ask for **preview mode**: one character block plus three cover prompts (Style A,
@@ -128,35 +139,35 @@ hood — useful when something fails or you need to run a step by hand.
     prompt itself** — the skill will otherwise infer a stock family from the
     scene ("kid at soccer" → hallucinated Papa on the sideline).
 
-13. **Generate the three covers** in your image tab. Reject anything with text
+14. **Generate the three covers** in your image tab. Reject anything with text
     artifacts, photorealism, content-policy issues, **or any human face beyond
     the child and the buyer-supplied companions**. If a hand or arm sneaks in
     from off-frame, that's fine; a face is not. Regenerate as needed.
 
-14. **Save previews:**
+15. **Save previews:**
     ```
     ~/fables-orders/<slug>/previews/v1-cover-A.png
     ~/fables-orders/<slug>/previews/v1-cover-B.png
     ~/fables-orders/<slug>/previews/v1-cover-C.png
     ```
 
-15. **Send email 2** (preview delivery) with the three images attached and a one-line
+16. **Send email 2** (preview delivery) with the three images attached and a one-line
     description of each style.
 
 ---
 
 ## D · Approval and revisions
 
-16. **Buyer replies with a letter.** Log the choice in `orders.csv`, move stage to
+17. **Buyer replies with a letter.** Log the choice in `orders.csv`, move stage to
     `STYLE_LOCKED`. Save:
     - `previews/APPROVED-cover.png`
     - `previews/APPROVED-prompt.txt` ← the exact style anchor, reused for every page
 
-17. **Revision requested?** Update `character-notes.md` with the correction,
+18. **Revision requested?** Update `character-notes.md` with the correction,
     regenerate all three variations, resend. **Soft cap: 3 rounds.** The listing
     promises unlimited; operationally, past round 3 the fit usually isn't there.
 
-18. **Refund triggers:**
+19. **Refund triggers:**
     - Buyer still unhappy after round 3
     - Buyer non-responsive for 5 days after one gentle nudge
     - Buyer wants something outside the content policy
@@ -167,20 +178,20 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## E · Full book art (24–72h after approval)
 
-19. **Back to `fable-art-custom`, full-book mode.** Feed it `story.json`,
+20. **Back to `fable-art-custom`, full-book mode.** Feed it `story.json`,
     `character-notes.md`, and `APPROVED-prompt.txt`. Ask for one prompt per page in
     reading order, each ending with the character block and style anchor verbatim.
     Re-state the cast rule in the prompt — the skill will otherwise regress and
     invent a stock family across an 8-page book.
 
-20. **Generate every page in the same tab and model as the approved cover.** Switching
+21. **Generate every page in the same tab and model as the approved cover.** Switching
     generators mid-book causes visible style drift.
 
-21. **Check consistency every 3 pages** — hair silhouette, palette, props, lighting
+22. **Check consistency every 3 pages** — hair silhouette, palette, props, lighting
     continuity within a scene, **and no fabricated faces have crept in**.
     Regenerate anything off-model before moving on.
 
-22. **Save into the book folder:**
+23. **Save into the book folder:**
     ```
     content/households/<slug>/books/<book-slug>/cover.png
     content/households/<slug>/books/<book-slug>/pages/01.png … NN.png
@@ -188,7 +199,7 @@ hood — useful when something fails or you need to run a step by hand.
     Pages are numbered globally across chapters: `01` = ch1p1, `02` = ch1p2,
     `03` = ch2p1 if chapter 1 has two pages.
 
-23. **Narration:** skip for orders 1–10. The reader falls back to browser speech
+24. **Narration:** skip for orders 1–10. The reader falls back to browser speech
     synthesis, which is decent. If narration is ever sold as an upsell:
     ```bash
     pnpm content:narrate content/households/<slug>/books/<book-slug>
@@ -199,7 +210,7 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## F · Assembly
 
-24. **Confirm folder shape:**
+25. **Confirm folder shape:**
 
     | File | Required |
     |---|---|
@@ -209,7 +220,7 @@ hood — useful when something fails or you need to run a step by hand.
     | `character-notes.md` | authoring only, ignored by import |
     | `reference/` | gitignored, buyer photos |
 
-25. **Provision the household.** For a **normal order** (buyer = parent):
+26. **Provision the household.** For a **normal order** (buyer = parent):
     ```bash
     pnpm exec tsx scripts/new-household.ts \
       --name "{Kid} Family" \
@@ -238,7 +249,7 @@ hood — useful when something fails or you need to run a step by hand.
     Save the household uuid, child uuid, magic URL, and (if gift) the gift URL + code
     into `orders.csv`. The raw device token is only shown once.
 
-26. **Fill in `content/households/<slug>/household.yaml`** with the uuids the
+27. **Fill in `content/households/<slug>/household.yaml`** with the uuids the
     provisioning script printed (copy `_TEMPLATE.yaml` if you haven't yet).
     Then **import the book:**
     ```bash
@@ -247,7 +258,7 @@ hood — useful when something fails or you need to run a step by hand.
     The household is inferred from the folder path via `household.yaml`. Pass
     `--household <uuid>` only if you deliberately want to override.
 
-27. **Smoke test.** Open the magic URL in a private window. Confirm: cover appears on
+28. **Smoke test.** Open the magic URL in a private window. Confirm: cover appears on
     the shelf, the book opens, every page renders, day mode shows art, night mode
     shows text-only. Fix anything broken and re-run `content:add` — it's idempotent.
 
@@ -255,13 +266,13 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## G · Delivery
 
-28. **Send email 3** (delivery). Normal orders: the **magic URL** from step 25
+29. **Send email 3** (delivery). Normal orders: the **magic URL** from step 26
     (`/read/<story-slug>/<token>`). Gift orders: no delivery email to the recipient
     directly — instead the buyer gets an email with the printable **gift certificate
-    PDF** (see step 29). Install instructions are handled inside the reader (end-of-
+    PDF** (see step 30). Install instructions are handled inside the reader (end-of-
     book prompt), so the email itself is short — "here's the book" and nothing else.
 
-29. **Gift orders — the certificate.** The PDF carries the **gift URL** and a QR of
+30. **Gift orders — the certificate.** The PDF carries the **gift URL** and a QR of
     the same, the child's name, "A gift from {buyer name}", the shop name, and the
     Etsy shop URL (`etsy.com/shop/LittleFablesStories`) as an anti-phishing anchor.
     See [`delivery-flow.md`](delivery-flow.md) for the full spec. **Never** put the
@@ -269,7 +280,7 @@ hood — useful when something fails or you need to run a step by hand.
     a lost/photographed certificate can be revoked and reissued. *(PDF layout is
     blocked on Heritage DS; the underlying `/gift/<code>` flow is live.)*
 
-30. **Profile save:** if the buyer opted in on screen 17, archive `typeform.json` and
+31. **Profile save:** if the buyer opted in on screen 17, archive `typeform.json` and
     `character-notes.md` to `~/fables-profiles/{buyer_email}/`. If they didn't,
     **delete the intake** — we promised.
 
@@ -277,10 +288,10 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## H · Post-delivery
 
-31. **Day +3** — email 4, soft check-in.
-32. **Day +7** — email 5, review request. Attach the coloring page. Also click Etsy's
+32. **Day +3** — email 4, soft check-in.
+33. **Day +7** — email 5, review request. Attach the coloring page. Also click Etsy's
     "request a review" button.
-33. **Day +30** — email 6, second-book offer. Opted-in buyers only.
+34. **Day +30** — email 6, second-book offer. Opted-in buyers only.
 
 **Coloring page:** ask ChatGPT to redraw the approved cover as black line art, no
 shading, printable. One prompt, near-zero cost, real perceived value.
