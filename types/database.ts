@@ -403,6 +403,7 @@ export type Database = {
           created_at: string
           etsy_order: string | null
           gift_from: string | null
+          hoped_lesson: string | null
           household_id: string | null
           id: string
           inspirations: string | null
@@ -413,6 +414,7 @@ export type Database = {
           parent_lastname: string | null
           photo_path: string | null
           status: string
+          sticky_moment: string | null
           token: string | null
           traits: string[]
           traits_note: string | null
@@ -428,6 +430,7 @@ export type Database = {
           created_at?: string
           etsy_order?: string | null
           gift_from?: string | null
+          hoped_lesson?: string | null
           household_id?: string | null
           id?: string
           inspirations?: string | null
@@ -438,6 +441,7 @@ export type Database = {
           parent_lastname?: string | null
           photo_path?: string | null
           status?: string
+          sticky_moment?: string | null
           token?: string | null
           traits?: string[]
           traits_note?: string | null
@@ -453,6 +457,7 @@ export type Database = {
           created_at?: string
           etsy_order?: string | null
           gift_from?: string | null
+          hoped_lesson?: string | null
           household_id?: string | null
           id?: string
           inspirations?: string | null
@@ -463,6 +468,7 @@ export type Database = {
           parent_lastname?: string | null
           photo_path?: string | null
           status?: string
+          sticky_moment?: string | null
           token?: string | null
           traits?: string[]
           traits_note?: string | null

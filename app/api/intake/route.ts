@@ -57,6 +57,8 @@ export async function POST(request: Request) {
   const inspirations = str(form.get('inspirations')) || null;
   const look = str(form.get('look')) || null;
   const companions = str(form.get('companions')) || null;
+  const stickyMoment = str(form.get('sticky_moment')) || null;
+  const hopedLesson = str(form.get('hoped_lesson')) || null;
   const giftFrom = str(form.get('gift_from')) || null;
 
   if (!childName) {
@@ -135,6 +137,8 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        sticky_moment: stickyMoment,
+        hoped_lesson: hopedLesson,
         parent_lastname: parentLastname,
         gift_from: giftFrom,
         photo_path: photoPath,
@@ -163,6 +167,8 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        sticky_moment: stickyMoment,
+        hoped_lesson: hopedLesson,
         parent_lastname: parentLastname,
         gift_from: giftFrom,
         etsy_order: etsyOrder,
@@ -196,6 +202,8 @@ export async function POST(request: Request) {
         inspirations,
         look,
         companions,
+        stickyMoment,
+        hopedLesson,
         parentLastname,
         giftFrom,
         etsyOrder,

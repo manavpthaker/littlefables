@@ -115,15 +115,22 @@ async function main(): Promise<void> {
   }
 
   // 3. Check the creative files exist. If not, print a clear next step.
+  //    parent-guide.md is required alongside story.json and character-notes.md —
+  //    it's the product, not an extra. See content/authoring-doctrine.md §5.
   const storyPath = join(bookDir, 'story.json');
   const notesPath = join(bookDir, 'character-notes.md');
+  const guidePath = join(bookDir, 'parent-guide.md');
   const missing: string[] = [];
   if (!existsSync(storyPath)) missing.push('story.json');
   if (!existsSync(notesPath)) missing.push('character-notes.md');
+  if (!existsSync(guidePath)) missing.push('parent-guide.md');
   if (missing.length > 0) {
     console.log(`\n⚠  Missing in ${bookDir}: ${missing.join(', ')}`);
-    console.log('   Author these with Claude first (see docs/commerce/fulfillment-playbook.md §B),');
-    console.log('   then re-run this command.');
+    console.log('   Author these with Claude first — draft against:');
+    console.log('     content/authoring-doctrine.md   (the doctrine)');
+    console.log('     content/story-patterns.md       (match the sticky moment to a pattern)');
+    console.log('     content/parent-guide-template.md (parent guide shape)');
+    console.log('   Then re-run this command.');
     process.exit(2);
   }
 
@@ -191,10 +198,12 @@ ${intake.gift_from ? `- Gift from: ${intake.gift_from}\n` : ''}
 function renderBuyerPacket(intake: Intake, bookSlug: string, storyPath: string): string {
   const child = intake.child_name ?? 'your child';
   let storyText = '';
+  let patternUsed = '';
   try {
     const story = JSON.parse(readFileSync(storyPath, 'utf8')) as {
       title?: string;
       chapters?: Array<{ pages: Array<{ text: string }> }>;
+      rubric?: { pattern_used?: string; notes?: string };
     };
     if (story.title) storyText += `**${story.title}**\n\n`;
     for (const ch of story.chapters ?? []) {
@@ -202,9 +211,15 @@ function renderBuyerPacket(intake: Intake, bookSlug: string, storyPath: string):
         storyText += `_Page ${i + 1}._ ${ch.pages[i]!.text}\n\n`;
       }
     }
+    patternUsed = story.rubric?.pattern_used ?? '';
   } catch {
     storyText = '_(story.json failed to parse — paste the story by hand below)_\n\n';
   }
+
+  const sticky = intake.sticky_moment?.trim();
+  const stickyBlock = sticky
+    ? `You mentioned that this has been sticky lately:\n\n> ${sticky}\n\nThat's the seed I built the story around. ${patternUsed ? `The pattern I used comes from research on ${patternDescription(patternUsed)} — you can see it in how [name of mentor/metaphor] shows up and in the small tool the book teaches at the end.` : '[Describe the pattern in one sentence — see content/story-patterns.md for the matched pattern.]'}\n\nThe book also comes with a short **parent guide** (attached) that spells out the tool the story teaches, gives you a few key phrases to invoke in the actual next moment, and offers in-the-moment / preventive / after-the-storm scripts. That's the part of the product that keeps working after the first read.`
+    : `[No sticky moment on the intake. Add a one-line hook about what makes this book specifically for ${child}.]`;
 
   return `# Buyer preview email — ${child} · ${bookSlug}
 
@@ -217,6 +232,10 @@ _Edit in place, then paste into Etsy message or Gmail. Attach v1-cover-A.png, v1
 Hi${intake.gift_from ? '' : ''},
 
 Thank you for trusting me with this. Here's what I've drafted for ${child}.
+
+## What this book is trying to do
+
+${stickyBlock}
 
 ## The story
 
@@ -232,12 +251,20 @@ change and I'll try again — as many rounds as it takes.
 - **Style B** — [one-line description of B]
 - **Style C** — [one-line description of C]
 
-If any word in the story doesn't sound right for ${child}, just say — I can
-change any line.
+If any word in the story doesn't sound right for ${child}, or if the pattern
+I picked isn't the sticky moment you're actually living with right now, just
+say — I can change any line, or start over on a different arc.
 
 Warmly,
 [your name]
 `;
+}
+
+/** Turn "story-patterns.md §1 — Big feelings that come out as hitting"
+ *  into a short human phrase suitable for the buyer email. */
+function patternDescription(patternUsed: string): string {
+  const m = patternUsed.match(/§\d+\s*[—-]\s*(.+)$/);
+  return (m?.[1] ?? patternUsed).toLowerCase();
 }
 
 void main().catch((err: unknown) => {

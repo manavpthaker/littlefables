@@ -182,6 +182,8 @@ export async function sendIntakeNotification(params: {
   inspirations: string | null;
   look: string | null;
   companions: string | null;
+  stickyMoment: string | null;
+  hopedLesson: string | null;
   parentLastname: string | null;
   giftFrom: string | null;
   etsyOrder: string | null;
@@ -190,7 +192,8 @@ export async function sendIntakeNotification(params: {
 }): Promise<string> {
   const {
     to, intakeId, buyerEmail, childName, ageBand, interests, traits,
-    inspirations, look, companions, parentLastname, giftFrom, etsyOrder, photoUrl, adminUrl,
+    inspirations, look, companions, stickyMoment, hopedLesson,
+    parentLastname, giftFrom, etsyOrder, photoUrl, adminUrl,
   } = params;
 
   const subject = giftFrom
@@ -209,6 +212,8 @@ export async function sendIntakeNotification(params: {
     ['Inspirations', inspirations],
     ['Look', look],
     ['Cast', companions ?? `Just ${childName}`],
+    ['Sticky', stickyMoment],
+    ['Hoped lesson', hopedLesson],
     ['Photo', photoUrl],
     ['Admin', adminUrl],
     ['Intake id', intakeId],

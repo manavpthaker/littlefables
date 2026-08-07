@@ -135,6 +135,8 @@ export default async function IntakesPage({
             inspirations={row.inspirations}
             look={row.look}
             companions={row.companions}
+            stickyMoment={row.sticky_moment}
+            hopedLesson={row.hoped_lesson}
             parentLastname={row.parent_lastname}
             giftFrom={row.gift_from}
             etsyOrder={row.etsy_order}

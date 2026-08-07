@@ -1,12 +1,20 @@
 # Authoring prompt
 
-Paste this into Claude.ai / ChatGPT / any LLM, then attach or paste your
-source story. The model returns a `story.json` you can drop straight into a
-`content/households/<household>/books/<slug>/` folder and upload with `pnpm content:add`.
+**Two different jobs — pick the right one:**
+
+- **Formatting an existing hand-written source story into `story.json`** — use
+  the prompt below. This is the legacy job: someone already wrote a story
+  (Papa, Mama, an adaptation of a classic) and you want it on the shelf.
+- **Authoring a new custom book from a buyer intake** — do NOT use the
+  prompt below. Read `content/authoring-doctrine.md` instead. Custom
+  orders have a doctrine, a research-backed pattern taxonomy in
+  `content/story-patterns.md`, a required `parent-guide.md` artifact,
+  and a 90+ rubric self-score gate at import. The prompt below produces
+  a highlight reel; the doctrine produces a book worth paying for.
 
 ---
 
-## Prompt
+## Prompt (formatting job only)
 
 > You are formatting a children's story for a bedtime storytelling app called
 > Little Fables. Take the source story I'll paste after this prompt and

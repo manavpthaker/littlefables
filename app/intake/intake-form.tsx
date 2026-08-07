@@ -64,6 +64,8 @@ export function IntakeForm(props: IntakeFormProps) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [companions, setCompanions] = useState('');
+  const [stickyMoment, setStickyMoment] = useState('');
+  const [hopedLesson, setHopedLesson] = useState('');
   const [isGift, setIsGift] = useState(props.isGift ?? false);
   const [giftFrom, setGiftFrom] = useState(props.giftFrom ?? '');
 
@@ -330,6 +332,52 @@ export function IntakeForm(props: IntakeFormProps) {
     });
 
     s.push({
+      key: 'sticky-moment',
+      isValid: () => stickyMoment.trim().length > 0,
+      hint: 'This shapes the whole story',
+      render: () => (
+        <StepCard
+          eyebrow={`What ${kid} is working on right now`}
+          question={`What's ONE thing that's been sticky for ${kid} lately?`}
+          body={`A bedtime struggle, big feelings, a new sibling, screen transitions, fear of the dark, sharing, adjusting to school — whatever comes up most days. The book that helps is the book that meets your child where they actually are. One sentence is enough.`}
+        >
+          <textarea
+            className="lf-intake-input lf-intake-textarea"
+            autoFocus
+            rows={3}
+            value={stickyMoment}
+            onChange={(e) => setStickyMoment(e.target.value)}
+            placeholder={`e.g. Big feelings when it's time to leave the playground. Hitting when overwhelmed. Won't go to sleep without one of us in the room.`}
+            aria-label="Sticky moment"
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'hoped-lesson',
+      isValid: () => true,
+      hint: 'Optional — helps us pick the tool the book teaches',
+      render: () => (
+        <StepCard
+          eyebrow={`What ${kid} might carry forward`}
+          question={`What's one thing you hope ${kid} learns from this book?`}
+          body={`Not a lecture — a phrase, a tool, a memory. Something you'd love to be able to say later ("remember what the moose taught us?") when the sticky moment shows up again. Skip if you're not sure; I'll pick a fit from what you've told me.`}
+        >
+          <textarea
+            className="lf-intake-input lf-intake-textarea"
+            autoFocus
+            rows={3}
+            value={hopedLesson}
+            onChange={(e) => setHopedLesson(e.target.value)}
+            placeholder={`e.g. That big feelings pass and don't make him bad. That going to bed doesn't mean love goes away. That she can be brave and scared at the same time.`}
+            aria-label="Hoped lesson"
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
       key: 'companions',
       isValid: () => true,
       hint: 'Optional — leave blank if it\'s just them',
@@ -414,6 +462,8 @@ export function IntakeForm(props: IntakeFormProps) {
             <Row label="Traits">{traits.join(', ') || '—'}</Row>
             <Row label="Inspiration">{inspirations || '—'}</Row>
             <Row label="Cast">{companions.trim() ? companions : `Just ${name || 'the child'}`}</Row>
+            <Row label="Sticky">{stickyMoment || '—'}</Row>
+            {hopedLesson && <Row label="Hoped lesson">{hopedLesson}</Row>}
             {isGift && giftFrom && <Row label="Gift from">{giftFrom}</Row>}
             <Row label="Sent to">{buyerEmail || props.buyerEmail || '—'}</Row>
           </ul>
@@ -425,7 +475,8 @@ export function IntakeForm(props: IntakeFormProps) {
   }, [
     hasToken, greeting, buyerEmail, etsyOrder, lastname, name, age, ageTouched, kid,
     interests, interestsNote, traits, traitsNote, inspirations, look,
-    photoFile, photoPreview, companions, isGift, giftFrom, props.isGift, props.buyerEmail,
+    photoFile, photoPreview, companions, stickyMoment, hopedLesson,
+    isGift, giftFrom, props.isGift, props.buyerEmail,
   ]);
 
   const totalSteps = steps.length;
@@ -479,6 +530,8 @@ export function IntakeForm(props: IntakeFormProps) {
       if (inspirations.trim()) body.set('inspirations', inspirations.trim());
       if (look.trim()) body.set('look', look.trim());
       if (companions.trim()) body.set('companions', companions.trim());
+      if (stickyMoment.trim()) body.set('sticky_moment', stickyMoment.trim());
+      if (hopedLesson.trim()) body.set('hoped_lesson', hopedLesson.trim());
       if (isGift && giftFrom.trim()) body.set('gift_from', giftFrom.trim());
       if (photoFile) body.set('photo', photoFile);
 
