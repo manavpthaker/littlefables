@@ -1,6 +1,6 @@
 # Story Concepting
 
-How to get a real story out of ten data points. Sits between `intake-typeform.md`
+How to get a real story out of ten data points. Sits between [`intake-flow.md`](intake-flow.md)
 and the `fable` skill — the intake collects, this decides what the story *is*, and
 `fable` formats the draft.
 

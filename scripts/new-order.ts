@@ -15,6 +15,9 @@
 // Optional:
 //   --child "Emma"      # if Etsy personalization captured a name
 //   --gift-from "Kate"  # if the listing is a gift order
+//   --send-email        # also send the welcome email via Resend
+//                       # (default off — use for friend/direct orders;
+//                       # for Etsy, paste into Etsy Messages instead)
 //   --base-url https://littlefables.app
 //
 // Output:
@@ -28,6 +31,7 @@ import { randomBytes } from 'node:crypto';
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
+import { sendWelcomeEmail } from '../lib/server/resend-mailer';
 
 config({ path: '.env.local' });
 
@@ -44,6 +48,10 @@ function required(name: string): string {
     process.exit(1);
   }
   return v;
+}
+
+function hasFlag(name: string): boolean {
+  return process.argv.includes(`--${name}`);
 }
 
 /** URL-safe token, 128 bits of entropy. Base64url without padding, no
@@ -63,6 +71,7 @@ async function main(): Promise<void> {
   const buyerName = required('name');
   const childName = arg('child') ?? '';
   const giftFrom = arg('gift-from') ?? null;
+  const shouldSendEmail = hasFlag('send-email');
   const baseUrl = (arg('base-url') ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'https://littlefables.app').replace(/\/$/, '');
 
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -116,14 +125,33 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  const intakeUrl = `${baseUrl}/intake/${token}`;
+
   console.log('New order created.');
   console.log(`  Intake id: ${insert.data.id}`);
   console.log(`  Buyer:     ${buyerName} <${buyerEmail}>`);
   console.log(`  Etsy #:    ${etsyOrder}`);
   console.log('');
-  console.log(`  Magic URL: ${baseUrl}/intake/${token}`);
+  console.log(`  Magic URL: ${intakeUrl}`);
   console.log('');
-  console.log('Paste the magic URL into the Etsy "message to buyer" box.');
+
+  if (shouldSendEmail) {
+    try {
+      const messageId = await sendWelcomeEmail({
+        to: buyerEmail,
+        buyerName,
+        intakeUrl,
+      });
+      console.log(`Welcome email sent (Resend id: ${messageId}).`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`Welcome email failed: ${msg}`);
+      console.error('Row is still saved; paste the magic URL into Etsy Messages as a fallback.');
+    }
+  } else {
+    console.log('Paste the magic URL into the Etsy "message to buyer" box.');
+    console.log('(Or add --send-email to email the buyer directly.)');
+  }
 }
 
 main().catch((err) => {

@@ -18,7 +18,6 @@ Target: first listing live **October 2026**, Christmas 2026 as the volume season
 | [`positioning.md`](positioning.md) | Audience, promise, price, differentiators, voice. **Source of truth for all copy.** |
 | [`etsy-listing.md`](etsy-listing.md) | Listing title, tags, description, personalization fields, SKUs, photo shot list |
 | [`intake-flow.md`](intake-flow.md) | **How the self-hosted intake works today** — per-order magic links, `pnpm order:new`, admin at `/parent/intakes`. Start here. |
-| [`intake-typeform.md`](intake-typeform.md) | Superseded question spec (kept as reference for wording) |
 | [`fulfillment-playbook.md`](fulfillment-playbook.md) | Per-order runbook, intake → delivery |
 | [`delivery-flow.md`](delivery-flow.md) | Landing / `/read/<slug>-<token>` / `/gift/<code>` — the three arrival states, and why gift orders get their own route. Supersedes steps 24/27/28 of the playbook. |
 | [`email-templates.md`](email-templates.md) | Six canned emails covering the whole order lifecycle |
