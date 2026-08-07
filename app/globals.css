@@ -36,6 +36,71 @@
 .lf-cover-frame--photo::before {
   content: none;
 }
+/* Landing "How your book is made" — muted loops per step + opt-in film row.
+   The loops autoplay client-side (see app/landing/how-loops.tsx); the box is
+   reserved with aspect-ratio so the section never CLSes when a video swaps in
+   or a reduced-motion visitor sees a still. */
+.lf-how-loop {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px;
+  background: var(--paper);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 6px 18px rgba(46, 33, 22, 0.10);
+  object-fit: cover;
+}
+.lf-how-watch {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 10px 4px;
+  font-family: var(--font-sc);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color var(--motion-tick) var(--ease-mechanical);
+}
+.lf-how-watch:hover {
+  color: var(--oxblood);
+}
+.lf-film-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 15, 10, 0.86);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.lf-film-frame {
+  position: relative;
+  width: min(100%, 1100px);
+}
+.lf-film-frame > video {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  background: black;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.lf-film-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
 /* Mobile-only bottom CTA bar on the landing page. Hidden by default so
    desktop stays clean; the landing page also nudges its main padding on
    mobile so content isn't hidden under the fixed bar. */

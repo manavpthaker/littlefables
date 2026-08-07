@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 import { admin } from '@/lib/supabase/admin';
@@ -5,6 +6,7 @@ import { requireChildDevice } from '@/lib/server/require-auth';
 import { bookSchema } from '@/lib/models/book';
 import { toReaderBook } from '@/lib/reader/state';
 import { loadChildProfile } from '@/lib/server/child-settings';
+import { SAMPLE_COOKIE } from '@/app/sample/route';
 import type { ProgressRecord } from '@/lib/models/progress';
 import { Reader } from './reader';
 
@@ -47,12 +49,14 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
 
   const profile = await loadChildProfile(ctx.childId);
   const readerBook = toReaderBook(parsed.data);
+  const sample = (await cookies()).get(SAMPLE_COOKIE)?.value === '1';
 
   return (
     <Reader
       book={readerBook}
       initialProgress={initialProgress}
       bedtimeWindow={profile.settings.bedtime}
+      sample={sample}
     />
   );
 }

@@ -7,6 +7,7 @@ import { BuyerFooter } from '@ds/components/outward/BuyerFooter.jsx';
 import { Ornament } from '@ds/components/core/Ornament.jsx';
 import { getParentSession } from '@/lib/server/parent-session';
 import { CoverBuilder } from './landing/cover-builder';
+import { FullFilmRow, StepLoop } from './landing/how-loops';
 
 // Bare-domain landing. Rendered for anyone hitting `/` — no auto-redirect,
 // ever. The reader entry is /f/<token> (soon /read/<slug>-<token>) and
@@ -19,7 +20,7 @@ import { CoverBuilder } from './landing/cover-builder';
 // component; every other section is server-rendered.
 
 const ETSY_SHOP = 'https://www.etsy.com/shop/LittleFablesStories';
-const PRICE_LINE = '$48, one-time · nothing to renew';
+const PRICE_LINE = '$69';
 
 function utm(base: string, campaign: string): string {
   const sep = base.includes('?') ? '&' : '?';
@@ -39,32 +40,50 @@ export const metadata: Metadata = {
   },
 };
 
+// The four steps double as loop captions: each step's copy carries the words,
+// and its loop carries the motion. So the order and headings follow the film's
+// beats — intake, previews, making, arrival — rather than the older "write,
+// approve, deliver" framing.
 const HOW_STEPS = [
   {
     label: 'step one',
-    heading: 'Tell us about your child',
+    heading: 'Tell us about your kid',
     body:
       'After checkout, a short intake asks their name, age, and the things they love — the dog, the pond, the yellow boots.',
+    video: '/landing/motion/loop-step-1.mp4',
+    poster: '/landing/motion/loop-step-1-poster.png',
+    alt: 'A short intake page in an iPad frame, a child’s name being typed.',
   },
   {
     label: 'step two',
-    heading: 'We write their story',
+    heading: 'Previews in 24 hours',
     body:
-      'Your child becomes the main character. The story bends around what they love and what they’re working through — so it lands like a memory, not a lesson.',
+      'You pick a style at intake. Within a day we send the sketch, then the colour rough, then the finished scene. Nothing is finalized until you say yes.',
+    video: '/landing/motion/loop-step-2.mp4',
+    poster: '/landing/motion/loop-step-2-poster.png',
+    alt: 'Three revision panels: a graphite sketch, a colour rough, a finished night scene.',
   },
   {
     label: 'step three',
-    heading: 'You approve the art',
+    heading: 'We write, paint, narrate',
     body:
-      'You pick the illustration style at intake, and we send the look for your approval before the final book is finished. Nothing is finalized until you say yes.',
+      'Your kid becomes the main character. The story bends around what they love and what they’re working through. Every page is painted and read aloud in a warm voice — never generated, never rushed.',
+    video: '/landing/motion/loop-step-3.mp4',
+    poster: '/landing/motion/loop-step-3-poster.jpg',
+    alt: 'A page of the book developing from a desaturated wash to a finished painted scene, then the cover binding.',
   },
   {
     label: 'step four',
-    heading: 'Delivered in days',
+    heading: 'It arrives on their iPad',
     body:
-      'We send you a link the moment their book is ready. Open it once, save it to the home screen, and it lives on their iPad like a favorite app.',
+      'We send a link the moment their book is ready. Open it once, save it to the home screen, and it lives on their iPad like a favourite app.',
+    video: '/landing/motion/loop-step-4.mp4',
+    poster: '/landing/motion/loop-step-4-poster.png',
+    alt: 'The delivery email in an iPad frame, then the book opening in the reader.',
+    /** The funnel line under this step — links into the /sample route. */
+    funnel: 'or just read one →',
   },
-];
+] as const;
 
 const REVIEWS = [
   {
@@ -305,6 +324,15 @@ export default async function LandingPage() {
               >
                 Start your book
               </a>
+              <a
+                className="lf-btn lf-btn--secondary"
+                href="/sample"
+                title="A real book we made for one kid — takes about two minutes."
+                aria-label="Read a sample book — a real book we made for one kid, takes about two minutes"
+                style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
+              >
+                Read a sample book
+              </a>
               <a className="lf-btn lf-btn--quiet" href="#how" style={{ textDecoration: 'none' }}>
                 See how it’s made
               </a>
@@ -422,12 +450,13 @@ export default async function LandingPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: 32,
             }}
           >
             {HOW_STEPS.map((s) => (
-              <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <StepLoop src={s.video} poster={s.poster} alt={s.alt} />
                 <span
                   style={{
                     fontFamily: 'var(--font-sc)',
@@ -444,8 +473,40 @@ export default async function LandingPage() {
                 <p style={{ margin: 0, color: 'var(--ink-soft)', lineHeight: 'var(--text-body-lh)' }}>
                   {s.body}
                 </p>
+                {'funnel' in s && s.funnel ? (
+                  <Link
+                    href="/sample"
+                    style={{
+                      marginTop: 2,
+                      fontFamily: 'var(--font-sc)',
+                      fontSize: 14,
+                      letterSpacing: '0.1em',
+                      color: 'var(--oxblood)',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {s.funnel}
+                  </Link>
+                ) : null}
               </div>
             ))}
+          </div>
+          {/* The high-intent minority who want the film get it, quietly, after
+              the loops have done the mass-appeal job. Audio and controls are
+              on because the click is opt-in. */}
+          <div
+            style={{
+              marginTop: 40,
+              paddingTop: 20,
+              borderTop: '1px solid var(--border-soft)',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <FullFilmRow
+              src="/landing/motion/walkthrough.mp4"
+              poster="/landing/motion/walkthrough-poster.png"
+            />
           </div>
         </div>
       </section>

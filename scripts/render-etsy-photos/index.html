@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../design-system/styles.css">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  body {
+    width: var(--shot-w, 2700px);
+    height: var(--shot-h, 2025px);
+    font-family: var(--font-body);
+  }
+
+  .shot {
+    position: relative;
+    width: var(--shot-w, 2700px);
+    height: var(--shot-h, 2025px);
+    overflow: hidden;
+    background: var(--paper);
+    --safe-x: 380px;
+  }
+
+  .paper {
+    position: absolute;
+    inset: 56px;
+    border: 3px solid rgba(42, 29, 18, 0.2);
+    outline: 6px solid rgba(42, 29, 18, 0.16);
+    outline-offset: -20px;
+    pointer-events: none;
+  }
+
+  .mark {
+    position: absolute;
+    left: 88px;
+    bottom: 70px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--ink);
+    z-index: 10;
+  }
+
+  .mark img {
+    width: 66px;
+    height: 70px;
+    display: block;
+  }
+
+  .mark span {
+    font-family: var(--font-display);
+    font-size: 54px;
+    line-height: 1;
+  }
+
+  .full-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 48%;
+    display: block;
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .smallcaps {
+    font-family: var(--font-sc);
+    letter-spacing: 0.12em;
+    color: var(--brass);
+    text-transform: lowercase;
+  }
+
+  .ox {
+    color: var(--oxblood);
+  }
+
+  .stage {
+    position: absolute;
+    inset: 150px 170px 160px;
+  }
+
+  .style-grid {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .style-caption {
+    position: absolute;
+    left: var(--safe-x);
+    right: var(--safe-x);
+    bottom: 90px;
+    padding: 40px 54px 44px;
+    background: rgba(237, 227, 206, 0.94);
+    border-left: 18px solid var(--oxblood);
+  }
+
+  .style-caption .title {
+    font-size: 102px;
+  }
+
+  .split {
+    position: absolute;
+    inset: 150px var(--safe-x);
+    display: grid;
+    grid-template-columns: 0.78fr 1.22fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .prompt-card {
+    background: var(--paper-warm);
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    box-shadow: 0 30px 80px rgba(42, 29, 18, 0.12);
+    padding: 66px 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .prompt-card .smallcaps {
+    font-size: 35px;
+  }
+
+  .prompt-card h1 {
+    margin: 38px 0 0;
+    font-family: var(--font-display);
+    font-size: 76px;
+    line-height: 1.04;
+    font-weight: 400;
+  }
+
+  .prompt-card p {
+    margin: 46px 0 0;
+    font-size: 48px;
+    line-height: 1.17;
+    color: var(--ink-soft);
+  }
+
+  .prompt-card .answer {
+    font-size: 52px;
+  }
+
+  .result-art {
+    height: 100%;
+    overflow: hidden;
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    box-shadow: 0 30px 80px rgba(42, 29, 18, 0.12);
+    background: var(--paper-warm);
+  }
+
+  .result-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .taste-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 46px;
+    font-family: var(--font-display);
+    font-size: 45px;
+    line-height: 1.08;
+    color: var(--ink);
+  }
+
+  .taste-list span + span:before {
+    content: "·";
+    margin: 0 24px;
+    color: var(--brass);
+  }
+
+  .revision-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .revision-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .revision-caption {
+    position: absolute;
+    left: var(--safe-x);
+    right: var(--safe-x);
+    bottom: 72px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 42px;
+  }
+
+  .revision-caption span {
+    background: rgba(237, 227, 206, 0.94);
+    border-top: 12px solid rgba(42, 29, 18, 0.16);
+    padding: 28px 32px 34px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 64px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .revision-caption span:last-child {
+    border-top-color: var(--oxblood);
+  }
+
+  .revision-head {
+    position: absolute;
+    left: var(--safe-x);
+    right: var(--safe-x);
+    top: 78px;
+    padding: 34px 44px 42px;
+    background: rgba(237, 227, 206, 0.94);
+    border-left: 16px solid var(--oxblood);
+    font-family: var(--font-display);
+    font-size: 74px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .revision-board {
+    position: absolute;
+    left: var(--safe-x);
+    right: var(--safe-x);
+    top: 320px;
+    bottom: 210px;
+    display: grid;
+    grid-template-columns: 0.9fr 0.9fr 1.24fr;
+    gap: 34px;
+  }
+
+  .revision-panel {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper-warm);
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    box-shadow: 0 30px 80px rgba(42, 29, 18, 0.12);
+  }
+
+  .revision-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .revision-panel.round-1 img {
+    object-position: 0% 50%;
+  }
+
+  .revision-panel.round-2 img {
+    object-position: 50% 50%;
+  }
+
+  .revision-panel.final img {
+    object-position: 100% 50%;
+  }
+
+  .revision-label {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 28px;
+    background: rgba(237, 227, 206, 0.95);
+    border-top: 10px solid rgba(42, 29, 18, 0.16);
+    padding: 26px 22px 32px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 60px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .revision-panel.final .revision-label {
+    border-top-color: var(--oxblood);
+    font-size: 68px;
+  }
+
+  .device-wrap {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .device {
+    background: #221B16;
+    border: 6px solid rgba(42, 29, 18, 0.55);
+    border-radius: 74px;
+    padding: 38px;
+    box-shadow: 0 42px 90px rgba(42, 29, 18, 0.24);
+  }
+
+  .device.landscape {
+    width: 2180px;
+    height: 1250px;
+  }
+
+  .device.portrait {
+    width: 1120px;
+    height: 1660px;
+    border-radius: 84px;
+    padding: 46px;
+  }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--paper-warm);
+    border-radius: 42px;
+    position: relative;
+  }
+
+  .screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-source {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .source-compose {
+    position: absolute;
+    overflow: hidden;
+    background: var(--paper-warm);
+    color: var(--ink);
+  }
+
+  .source-compose img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-reader-compose {
+    left: 970px;
+    top: 740px;
+    width: 606px;
+    height: 436px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px rgba(42, 29, 18, 0.08);
+  }
+
+  .family-reader-compose {
+    left: 1348px;
+    top: 750px;
+    width: 545px;
+    height: 405px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 2px rgba(42, 29, 18, 0.08);
+  }
+
+  .phone-reader-compose {
+    left: 824px;
+    top: 594px;
+    width: 526px;
+    height: 1068px;
+    border-radius: 54px;
+    box-shadow: inset 0 0 0 2px rgba(42, 29, 18, 0.08);
+  }
+
+  .phone-reader {
+    position: absolute;
+    inset: 0;
+    background: var(--paper-warm);
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  .phone-reader img {
+    width: 100%;
+    height: 58%;
+    object-fit: cover;
+    object-position: 50% 38%;
+    display: block;
+  }
+
+  .phone-reader-copy {
+    padding: 42px 48px 0;
+    font-size: 33px;
+    line-height: 1.28;
+    color: var(--ink);
+  }
+
+  .phone-reader-bar {
+    position: absolute;
+    left: 90px;
+    right: 90px;
+    bottom: 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    color: rgba(36, 27, 18, 0.72);
+    font-family: var(--font-display);
+    font-size: 32px;
+  }
+
+  .phone-reader-play {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--oxblood);
+    color: var(--paper-warm);
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .home-photo-compose {
+    left: 646px;
+    top: 308px;
+    width: 1608px;
+    height: 1318px;
+    border-radius: 42px;
+    transform: rotate(4deg) skewX(0.4deg);
+  }
+
+  .night-photo-compose {
+    left: 1049px;
+    top: 1388px;
+    width: 899px;
+    height: 276px;
+    border-radius: 16px;
+  }
+
+  .night-photo-compose .night-screen {
+    font-size: 0.58em;
+  }
+
+  .night-photo-compose .night-text {
+    max-width: 720px;
+    font-size: 34px;
+    line-height: 1.24;
+  }
+
+  .certificate-compose {
+    left: 638px;
+    top: 540px;
+    width: 1658px;
+    height: 954px;
+    padding: 70px 92px;
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(244, 235, 218, 0.9);
+    border: 5px solid rgba(110, 86, 48, 0.62);
+    outline: 3px solid rgba(110, 86, 48, 0.46);
+    outline-offset: -24px;
+    color: var(--ink);
+  }
+
+  .certificate-compose .smallcaps {
+    font-size: 36px;
+  }
+
+  .certificate-compose h1 {
+    margin: 52px 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 118px;
+    line-height: 0.95;
+  }
+
+  .certificate-compose p {
+    margin: 42px auto 0;
+    max-width: 1160px;
+    font-size: 52px;
+    line-height: 1.16;
+    color: var(--ink-soft);
+  }
+
+  .certificate-compose .certificate-url {
+    margin-top: 56px;
+    font-family: var(--font-sc);
+    letter-spacing: 0.08em;
+    font-size: 31px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .certificate-compose .certificate-url span {
+    display: block;
+    color: var(--brass);
+  }
+
+  .handoff-compose {
+    left: 918px;
+    top: 802px;
+    width: 1050px;
+    height: 454px;
+    padding: 46px 58px;
+    box-sizing: border-box;
+    text-align: center;
+    background: rgba(244, 235, 218, 0.9);
+    transform: rotate(5deg) skewX(-2deg);
+    color: var(--ink);
+  }
+
+  .handoff-compose .smallcaps {
+    font-size: 24px;
+  }
+
+  .handoff-compose h1 {
+    margin: 26px 0 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 1;
+  }
+
+  .handoff-compose p {
+    margin: 24px auto 0;
+    max-width: 760px;
+    font-size: 29px;
+    line-height: 1.18;
+    color: var(--ink-soft);
+  }
+
+  .home-screen {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 20% 16%, rgba(246, 235, 207, 0.88), transparent 34%),
+      radial-gradient(circle at 86% 9%, rgba(125, 46, 43, 0.6), transparent 29%),
+      radial-gradient(circle at 62% 78%, rgba(184, 134, 55, 0.62), transparent 36%),
+      linear-gradient(145deg, #324f47 0%, #b78641 52%, #6c2b28 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .ios-status {
+    position: absolute;
+    left: 46px;
+    right: 46px;
+    top: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 28px;
+    font-weight: 650;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  }
+
+  .ios-indicators {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .ios-battery {
+    width: 42px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.92);
+    border-radius: 6px;
+    position: relative;
+  }
+
+  .ios-battery:before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    bottom: 3px;
+    width: 28px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  .ios-battery:after {
+    content: "";
+    position: absolute;
+    right: -7px;
+    top: 5px;
+    width: 4px;
+    height: 8px;
+    border-radius: 0 3px 3px 0;
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .ios-layout {
+    position: absolute;
+    left: 58px;
+    right: 58px;
+    top: 92px;
+    bottom: 170px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 44px;
+  }
+
+  .ios-widgets {
+    display: grid;
+    gap: 28px;
+    align-content: start;
+  }
+
+  .ios-widget {
+    min-height: 208px;
+    padding: 24px 26px;
+    border-radius: 34px;
+    background: rgba(246, 241, 230, 0.58);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 18px 42px rgba(20, 14, 9, 0.18);
+    color: #201711;
+    box-sizing: border-box;
+  }
+
+  .ios-widget .widget-label {
+    font-size: 24px;
+    font-weight: 700;
+    opacity: 0.72;
+  }
+
+  .ios-widget .widget-main {
+    margin-top: 18px;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.02;
+  }
+
+  .ios-widget .widget-sub {
+    margin-top: 14px;
+    font-size: 23px;
+    line-height: 1.16;
+    opacity: 0.72;
+  }
+
+  .ios-app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 34px 34px;
+    align-content: start;
+  }
+
+  .ios-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ios-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 12px 26px rgba(12, 8, 5, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  .ios-icon.lf {
+    background: #EDE3CE;
+    box-shadow: 0 0 0 3px rgba(237, 227, 206, 0.45), 0 12px 26px rgba(12, 8, 5, 0.28);
+  }
+
+  .ios-icon.lf img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ios-label {
+    max-width: 130px;
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 20px;
+    font-weight: 520;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.38);
+  }
+
+  .ios-icon.calendar {
+    background: #fff;
+    color: #1d1711;
+    align-content: start;
+    font-weight: 700;
+  }
+
+  .ios-icon.calendar .month {
+    width: 100%;
+    padding-top: 10px;
+    height: 28px;
+    background: #c8372f;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.08em;
+  }
+
+  .ios-icon.calendar .day {
+    font-size: 46px;
+    margin-top: 8px;
+  }
+
+  .ios-icon.photos {
+    background: #fff;
+  }
+
+  .ios-icon.photos:before {
+    content: "";
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: conic-gradient(#dc4941, #e6b642, #3ca268, #3c7fd8, #9756b8, #dc4941);
+    opacity: 0.92;
+  }
+
+  .ios-icon.notes {
+    background:
+      linear-gradient(#f3cf56 0 22%, #fff 22%),
+      repeating-linear-gradient(0deg, transparent 0 18px, rgba(67, 51, 34, 0.15) 18px 20px);
+  }
+
+  .ios-icon.books {
+    background: linear-gradient(90deg, #bb513f 0 25%, #d8a13f 25% 50%, #355f54 50% 75%, #724a82 75%);
+  }
+
+  .ios-icon.mail {
+    background: linear-gradient(160deg, #55a6f1, #1f6ed8);
+  }
+
+  .ios-icon.mail:before {
+    content: "";
+    width: 56px;
+    height: 38px;
+    border: 5px solid #fff;
+    border-radius: 6px;
+    transform: skewY(-8deg);
+  }
+
+  .ios-icon.music {
+    background: linear-gradient(160deg, #f56a7a, #d52051);
+    color: #fff;
+    font-size: 56px;
+    font-weight: 700;
+  }
+
+  .ios-icon.safari {
+    background: linear-gradient(160deg, #55c2ef, #1d68ca);
+  }
+
+  .ios-icon.safari:before {
+    content: "";
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.92);
+  }
+
+  .ios-icon.settings {
+    background: linear-gradient(160deg, #d7dce2, #8f98a4);
+  }
+
+  .ios-icon.settings:before {
+    content: "";
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 10px solid #fff;
+    box-shadow: 0 0 0 8px rgba(80, 86, 92, 0.45);
+  }
+
+  .ios-icon.messages {
+    background: linear-gradient(160deg, #71d969, #18a833);
+  }
+
+  .ios-icon.messages:before {
+    content: "";
+    width: 58px;
+    height: 42px;
+    border-radius: 26px;
+    background: #fff;
+  }
+
+  .ios-icon.weather {
+    background: linear-gradient(160deg, #79c4f2, #276ed0);
+  }
+
+  .ios-icon.weather:before {
+    content: "";
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #ffd45b;
+    box-shadow: 24px 20px 0 8px rgba(255, 255, 255, 0.92);
+  }
+
+  .ios-icon.files {
+    background: linear-gradient(#fff 0 32%, #7cb4f2 32% 100%);
+  }
+
+  .ios-dock {
+    position: absolute;
+    left: 90px;
+    right: 90px;
+    bottom: 34px;
+    height: 112px;
+    border-radius: 42px;
+    background: rgba(246, 241, 230, 0.32);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42), 0 18px 42px rgba(20, 14, 9, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+  }
+
+  .ios-dock .ios-icon {
+    width: 82px;
+    height: 82px;
+    border-radius: 22px;
+  }
+
+  .home-caption {
+    position: absolute;
+    left: var(--safe-x);
+    top: 210px;
+    width: 650px;
+  }
+
+  .home-caption .title {
+    font-size: 96px;
+  }
+
+  .home-caption p {
+    margin: 28px 0 0;
+    font-size: 42px;
+    line-height: 1.25;
+    color: var(--ink-soft);
+  }
+
+  .intake {
+    position: absolute;
+    left: var(--safe-x);
+    top: 210px;
+    bottom: 210px;
+    width: 830px;
+    padding: 66px 70px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--paper-warm);
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    box-shadow: 0 30px 80px rgba(42, 29, 18, 0.12);
+  }
+
+  .intake .smallcaps {
+    font-size: 36px;
+  }
+
+  .intake .prompt {
+    margin: 42px 0 18px;
+    font-family: var(--font-display);
+    font-size: 66px;
+    line-height: 1.05;
+  }
+
+  .answer {
+    margin-top: 48px;
+    padding: 42px 46px;
+    border-left: 14px solid var(--oxblood);
+    background: rgba(255, 255, 255, 0.28);
+    font-size: 52px;
+    line-height: 1.16;
+    color: var(--ink);
+  }
+
+  .character-payoff {
+    position: absolute;
+    right: var(--safe-x);
+    top: 210px;
+    bottom: 210px;
+    width: 960px;
+    overflow: hidden;
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    box-shadow: 0 30px 80px rgba(42, 29, 18, 0.12);
+  }
+
+  .character-payoff img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 50% 50%;
+    background: var(--paper-warm);
+  }
+
+  .timeline {
+    position: absolute;
+    left: var(--safe-x);
+    right: var(--safe-x);
+    top: 230px;
+    bottom: 230px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 70px;
+    align-items: stretch;
+  }
+
+  .turn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--paper-warm);
+    border: 3px solid rgba(42, 29, 18, 0.18);
+    padding: 72px 54px;
+    text-align: center;
+  }
+
+  .turn strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 148px;
+    font-weight: 400;
+    line-height: 0.9;
+    color: var(--ink);
+  }
+
+  .turn:first-child strong {
+    color: var(--oxblood);
+  }
+
+  .turn span {
+    display: block;
+    margin-top: 38px;
+    font-size: 58px;
+    line-height: 1.08;
+    color: var(--ink-soft);
+  }
+
+  .turnaround-title {
+    position: absolute;
+    left: var(--safe-x);
+    top: 115px;
+    font-family: var(--font-display);
+    font-size: 92px;
+    line-height: 1;
+  }
+
+  .night-screen {
+    position: absolute;
+    inset: 0;
+    background: #120F0D;
+    color: #F3EBD8;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .night-text {
+    max-width: 1400px;
+    font-size: 78px;
+    line-height: 1.34;
+  }
+
+  .night-caption {
+    position: absolute;
+    left: var(--safe-x);
+    bottom: 110px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 32px 44px;
+    border-left: 14px solid var(--oxblood);
+    font-family: var(--font-display);
+    font-size: 68px;
+  }
+
+  .table {
+    position: absolute;
+    inset: 0;
+    background: #D9C7A2;
+  }
+
+  .table:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(42, 29, 18, 0.035) 0 2px, transparent 2px 34px);
+    opacity: 0.45;
+  }
+
+  .certificate-photo {
+    position: absolute;
+    left: 690px;
+    top: 125px;
+    width: 1220px;
+    transform: rotate(-3deg);
+    box-shadow: 0 46px 90px rgba(42, 29, 18, 0.22);
+  }
+
+  .ribbon {
+    position: absolute;
+    left: 440px;
+    top: 0;
+    width: 110px;
+    height: 2025px;
+    background: var(--oxblood);
+    transform: rotate(7deg);
+    opacity: 0.95;
+  }
+
+  .certificate-lockup {
+    position: absolute;
+    right: var(--safe-x);
+    bottom: 145px;
+    padding: 24px 34px 30px;
+    background: rgba(237, 227, 206, 0.88);
+    border-left: 10px solid var(--oxblood);
+    font-family: var(--font-sc);
+    letter-spacing: 0.1em;
+    font-size: 31px;
+    line-height: 1.28;
+    color: var(--ink);
+  }
+
+  .certificate-lockup span {
+    display: block;
+    color: var(--brass);
+  }
+
+  .gift-email-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .gift-screen-compose {
+    position: absolute;
+    left: 1010px;
+    top: 590px;
+    width: 1080px;
+    height: 730px;
+    transform: perspective(1800px) rotateX(0.4deg) rotateZ(3.9deg) skewX(0.15deg);
+    transform-origin: 0 0;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    mix-blend-mode: multiply;
+    opacity: 0.94;
+  }
+
+  .gift-email-subject {
+    font-size: 47px;
+    line-height: 1.08;
+    font-weight: 650;
+    letter-spacing: 0;
+    color: #221B13;
+  }
+
+  .gift-email-meta {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 24px;
+    line-height: 1.2;
+    color: rgba(36, 27, 18, 0.64);
+  }
+
+  .gift-email-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--oxblood);
+    color: var(--paper-warm);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 26px;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+
+  .gift-email-rule {
+    margin-top: 25px;
+    height: 2px;
+    background: rgba(36, 27, 18, 0.1);
+  }
+
+  .gift-email-body {
+    margin-top: 35px;
+    width: 885px;
+    padding: 38px 46px 42px;
+    box-sizing: border-box;
+    background: rgba(251, 246, 235, 0.34);
+    border: 2px solid rgba(42, 29, 18, 0.12);
+    border-top: 9px solid var(--oxblood);
+    text-align: center;
+  }
+
+  .gift-email-body .smallcaps {
+    font-size: 20px;
+    letter-spacing: 0.11em;
+  }
+
+  .gift-email-body h1 {
+    margin: 24px auto 0;
+    max-width: 700px;
+    font-family: var(--font-display);
+    font-size: 58px;
+    font-weight: 400;
+    line-height: 1.03;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+
+  .gift-email-body p {
+    margin: 22px auto 0;
+    max-width: 720px;
+    font-family: var(--font-body);
+    font-size: 27px;
+    line-height: 1.22;
+    color: var(--ink-soft);
+  }
+
+  .gift-email-links {
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .gift-cta {
+    display: inline-block;
+    padding: 15px 30px 18px;
+    background: var(--oxblood);
+    color: var(--paper-warm);
+    font-family: var(--font-display);
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .gift-mail-lockup {
+    margin-top: 24px;
+    font-family: var(--font-sc);
+    letter-spacing: 0.08em;
+    font-size: 17px;
+    line-height: 1.34;
+    color: var(--ink);
+  }
+
+  .gift-mail-lockup span {
+    display: block;
+    color: var(--brass);
+  }
+
+  .text-card {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 200px;
+  }
+
+  .text-card .title {
+    max-width: 1900px;
+    font-size: 150px;
+  }
+
+  .text-card p {
+    margin: 42px 0 0;
+    max-width: 1280px;
+    font-size: 58px;
+    line-height: 1.24;
+    color: var(--ink-soft);
+  }
+
+  .xmas-date {
+    display: inline-block;
+    margin-top: 52px;
+    padding: 34px 64px 42px;
+    background: var(--oxblood);
+    color: var(--paper-warm);
+    font-family: var(--font-display);
+    font-size: 132px;
+    line-height: 1;
+  }
+
+  .process-sheet {
+    position: absolute;
+    left: 190px;
+    right: 190px;
+    top: 150px;
+    bottom: 150px;
+    background: #F6F1E7;
+    box-shadow: 0 34px 90px rgba(42, 29, 18, 0.18);
+    overflow: hidden;
+    transform: rotate(-1.2deg);
+  }
+
+  .process-sheet img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rough-final {
+    position: absolute;
+    inset: 150px 160px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+  }
+
+  .process-page {
+    background: #F6F1E7;
+    box-shadow: 0 34px 90px rgba(42, 29, 18, 0.18);
+    overflow: hidden;
+  }
+
+  .process-page:first-child {
+    transform: rotate(-1.6deg);
+  }
+
+  .process-page:last-child {
+    transform: rotate(1.1deg);
+  }
+
+  .process-page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .coloring-paper {
+    position: absolute;
+    left: 720px;
+    top: 90px;
+    width: 980px;
+    height: 1840px;
+    background: #fff;
+    box-shadow: 0 36px 84px rgba(42, 29, 18, 0.18);
+    transform: rotate(-2deg);
+    padding: 54px;
+    box-sizing: border-box;
+  }
+
+  .coloring-paper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .crayon {
+    position: absolute;
+    width: 74px;
+    height: 620px;
+    border-radius: 38px;
+    box-shadow: 0 18px 32px rgba(42, 29, 18, 0.16);
+  }
+
+  .crayon.green {
+    left: 430px;
+    top: 930px;
+    background: var(--forest);
+    transform: rotate(64deg);
+  }
+
+  .crayon.red {
+    right: 420px;
+    top: 920px;
+    background: var(--oxblood);
+    transform: rotate(-58deg);
+  }
+
+  .crayon.brass {
+    right: 515px;
+    bottom: 210px;
+    background: var(--brass);
+    transform: rotate(76deg);
+  }
+
+  .thumbs {
+    width: 2000px;
+    height: 360px;
+    padding: 36px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(10, 170px);
+    gap: 20px;
+    background: var(--paper);
+  }
+
+  .thumb {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .thumb img {
+    width: 170px;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid rgba(42, 29, 18, 0.18);
+  }
+
+  .thumb span {
+    font-family: var(--font-sc);
+    font-size: 24px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const A = {
+  cover: '../../video/public/book/cover.png',
+  spread: '../../assets/listing/custom-story-page/lantern-round-pond-lp-spread.png',
+  page1: '../../video/public/book/01.png',
+  range: '../../assets/listing/etsy-photos/_sources/four-children-four-styles.png',
+  styles: '../../assets/listing/etsy-photos/_sources/same-child-four-styles.png',
+  styleFromTaste: '../../assets/listing/etsy-photos/_sources/style-from-taste-pond-duck-watercolor.png',
+  revisions: '../../assets/listing/etsy-photos/_sources/preview-revision-sequence.png',
+  characterSheet: '../../assets/listing/etsy-photos/_sources/rosa-character-sheet.png',
+  renderedCharacter: '../../assets/listing/etsy-photos/_sources/south-asian-boy-watercolor.png',
+  rough: '../../assets/listing/etsy-photos/_sources/rosa-rough-sketch.png',
+  coloring: '../../assets/listing/etsy-photos/_sources/rosa-coloring-line-art.png',
+  certificate: '../../assets/listing/gift-certificate.png',
+  giftEmailBase: '../../assets/listing/etsy-photos/_sources/gift-email-tablet-blank-email.png',
+  heroBedtime: '../../assets/listing/etsy-photos/_sources/hero-ipad-bedtime-blank.png',
+  phoneCounter: '../../assets/listing/etsy-photos/_sources/phone-counter-blank.png',
+  nightBlank: '../../assets/listing/etsy-photos/_sources/night-mode-blank.png',
+  homeBlank: '../../assets/listing/etsy-photos/_sources/home-screen-blank.png',
+  giftCertificateBlank: '../../assets/listing/etsy-photos/_sources/gift-certificate-table-blank.png',
+  giftHandoffBlank: '../../assets/listing/etsy-photos/_sources/gift-handoff-blank.png',
+  familyReading: '../../assets/listing/etsy-photos/_sources/family-reading-blank.png',
+  coloringReal: '../../assets/listing/etsy-photos/_sources/coloring-page-with-crayons.png',
+  quietMinutes: '../../assets/listing/etsy-photos/_sources/quiet-minutes-bedtime.png',
+  icon: '../../public/icons/icon.svg',
+  mark: '../../public/icons/mark-ink.svg'
+};
+
+const mark = () => `<div class="mark"><img src="${A.mark}" alt=""><span>Little Fables</span></div>`;
+const frame = () => `<div class="paper"></div>`;
+
+function phoneReader() {
+  return `<div class="phone-reader">
+    <img src="${A.cover}" alt="">
+    <div class="phone-reader-copy">Rosa was not a patient girl, and she knew it.<br><br>Grandma June said patience was something you grew, like a bean.</div>
+    <div class="phone-reader-bar"><span>‹</span><span class="phone-reader-play">▶</span><span>›</span></div>
+  </div>`;
+}
+
+function photo01() {
+  return `<section class="shot">
+    <img class="photo-source" src="${A.familyReading}" alt="">
+    <div class="source-compose family-reader-compose"><img src="${A.spread}" alt=""></div>
+    ${mark()}
+  </section>`;
+}
+
+function photo01b() {
+  return `<section class="shot"><img class="full-art" style="object-position:50% 50%;" src="${A.range}" alt=""></section>`;
+}
+
+function photo02() {
+  return `<section class="shot">
+    <img class="style-grid" src="${A.range}" alt="">
+    <div class="style-caption"><h1 class="title">Your taste, <span class="ox">not</span> our dropdown.</h1></div>
+  </section>`;
+}
+
+function photo03() {
+  return `<section class="shot">
+    ${frame()}
+    <div class="intake">
+      <div class="smallcaps">intake answer</div>
+      <div class="prompt">What should we know about your child?</div>
+      <div class="answer">Thick curly hair,<br>gap in his front teeth,<br>that red dinosaur shirt he refuses to take off.</div>
+    </div>
+    <div class="character-payoff"><img src="${A.renderedCharacter}" alt=""></div>
+    ${mark()}
+  </section>`;
+}
+
+function photo04() {
+  return `<section class="shot">
+    ${frame()}
+    <div class="split">
+      <div class="prompt-card">
+        <div class="smallcaps">style answer</div>
+        <h1>You name the books you love.</h1>
+        <div class="taste-list"><span>The Snowy Day</span><span>Julia Denos</span><span>loose watercolor</span></div>
+        <p>We build from the taste, not a preset menu.</p>
+      </div>
+      <div class="result-art"><img src="${A.styleFromTaste}" alt=""></div>
+    </div>
+    ${mark()}
+  </section>`;
+}
+
+function photo05() {
+  return `<section class="shot">
+    <div class="revision-head">Preview rounds are part of the product.</div>
+    <div class="revision-board">
+      <div class="revision-panel round-1"><img src="${A.revisions}" alt=""><div class="revision-label">Round 1</div></div>
+      <div class="revision-panel round-2"><img src="${A.revisions}" alt=""><div class="revision-label">Round 2</div></div>
+      <div class="revision-panel final"><img src="${A.revisions}" alt=""><div class="revision-label">Final</div></div>
+    </div>
+  </section>`;
+}
+
+function photo06() {
+  return `<section class="shot">
+    <img class="photo-source" src="${A.heroBedtime}" alt="">
+    <div class="source-compose hero-reader-compose"><img src="${A.spread}" alt=""></div>
+    ${mark()}
+  </section>`;
+}
+
+function photo07() {
+  const apps = [
+    ['calendar', 'Calendar', '<span class="month">AUG</span><span class="day">5</span>'],
+    ['photos', 'Photos', ''],
+    ['notes', 'Notes', ''],
+    ['books', 'Books', ''],
+    ['mail', 'Mail', ''],
+    ['safari', 'Safari', ''],
+    ['messages', 'Messages', ''],
+    ['weather', 'Weather', ''],
+    ['lf', 'Little Fables', `<img src="${A.icon}" alt="">`],
+    ['settings', 'Settings', ''],
+    ['files', 'Files', ''],
+    ['music', 'Music', 'M']
+  ];
+  const dock = [
+    ['messages', 'Messages', ''],
+    ['mail', 'Mail', ''],
+    ['safari', 'Safari', ''],
+    ['lf', 'Little Fables', `<img src="${A.icon}" alt="">`]
+  ];
+  return `<section class="shot">
+    <img class="photo-source" src="${A.homeBlank}" alt="">
+    <div class="home-caption"><h1 class="title">Save it like an app.</h1><p>No app store, no account, no shipping.</p></div>
+    <div class="source-compose home-photo-compose"><div class="home-screen">
+      <div class="ios-status"><span>9:41</span><span class="ios-indicators">Wi-Fi <span class="ios-battery"></span></span></div>
+      <div class="ios-layout">
+        <div class="ios-widgets">
+          <div class="ios-widget"><div class="widget-label">Today</div><div class="widget-main">Rosa's book</div><div class="widget-sub">Ready for bedtime reading</div></div>
+          <div class="ios-widget"><div class="widget-label">Stories</div><div class="widget-main">Little Fables</div><div class="widget-sub">Saved to Home Screen</div></div>
+        </div>
+        <div class="ios-app-grid">${apps.map(([kind,label,inner]) => `<div class="ios-app"><div class="ios-icon ${kind}">${inner}</div><div class="ios-label">${label}</div></div>`).join('')}</div>
+      </div>
+      <div class="ios-dock">${dock.map(([kind,label,inner]) => `<div class="ios-icon ${kind}" aria-label="${label}">${inner}</div>`).join('')}</div>
+    </div></div>
+    ${mark()}
+  </section>`;
+}
+
+function photo07b() {
+  return `<section class="shot">
+    <img class="photo-source" src="${A.phoneCounter}" alt="">
+    <div class="source-compose phone-reader-compose">${phoneReader()}</div>
+    ${mark()}
+  </section>`;
+}
+
+function photo08() {
+  return `<section class="shot">
+    ${frame()}
+    <div class="turnaround-title">Custom, without the shipping wait.</div>
+    <div class="timeline">
+      <div class="turn"><strong>24h</strong><span>Style previews</span></div>
+      <div class="turn"><strong>3-4</strong><span>days to your book</span></div>
+      <div class="turn"><strong>No</strong><span>shipping, ever</span></div>
+    </div>
+    ${mark()}
+  </section>`;
+}
+
+function photo09() {
+  return `<section class="shot">
+    <img class="photo-source" src="${A.nightBlank}" alt="">
+    <div class="source-compose night-photo-compose"><div class="night-screen">
+      <div class="night-text">Rosa was not a patient girl, and she knew it.<br><br>Grandma June said patience was something you grew, like a bean.</div>
+    </div></div>
+    <div class="night-caption">And a quieter one for bedtime.</div>
+  </section>`;
+}
+
+function photo10a() {
+  return `<section class="shot">
+    <img class="gift-email-photo" src="${A.giftEmailBase}" alt="">
+    <div class="gift-screen-compose">
+      <div class="gift-email-subject">A storybook gift for Rosa</div>
+      <div class="gift-email-meta"><span class="gift-email-avatar">L</span><span>Little Fables · Gift invitation</span></div>
+      <div class="gift-email-rule"></div>
+      <div class="gift-email-body">
+        <div class="smallcaps">digital gift email</div>
+        <h1>Rosa has a story waiting.</h1>
+        <p>A custom storybook is being made just for her, with previews first and the finished book delivered online.</p>
+        <div class="gift-email-links"><div class="gift-cta">Open the invitation</div></div>
+        <div class="gift-mail-lockup">littlefables.app<span>etsy.com/shop/LittleFablesStories</span></div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function photo10c() {
+  return `<section class="shot">
+    <img class="photo-source" src="${A.giftHandoffBlank}" alt="">
+    <div class="source-compose handoff-compose">
+      <div class="smallcaps">gift invitation</div>
+      <h1>For the child who has everything.</h1>
+      <p>A custom storybook, made online and delivered in days.</p>
+    </div>
+  </section>`;
+}
+
+function photo11() {
+  return `<section class="shot"><img class="photo-source" src="${A.quietMinutes}" alt=""></section>`;
+}
+
+function extraNoAds() {
+  return `<section class="shot">
+    ${frame()}
+    <div class="text-card"><div><h1 class="title">No ads.<br>No algorithm.<br><span class="ox">No autoplay.</span></h1><p>Just one private storybook, made for one child, then it ends.</p></div></div>
+    ${mark()}
+  </section>`;
+}
+
+function photo10b() {
+  return `<section class="shot">
+    ${frame()}
+    <div class="text-card"><div><div class="smallcaps" style="font-size:46px;">christmas orders</div><h1 class="title" style="font-size:142px;margin-top:34px;">Order through</h1><div class="xmas-date">Dec 22</div><p>Digital delivery means there is no shipping cutoff to beat.</p></div></div>
+    ${mark()}
+  </section>`;
+}
+
+function featured01() {
+  return `<section class="shot"><div class="table"></div><div class="process-sheet"><img src="${A.characterSheet}" alt=""></div></section>`;
+}
+
+function featured02() {
+  return `<section class="shot"><div class="table"></div><div class="rough-final"><div class="process-page"><img src="${A.rough}" alt=""></div><div class="process-page"><img src="${A.cover}" alt=""></div></div></section>`;
+}
+
+function featured03() {
+  return `<section class="shot"><img class="photo-source" src="${A.coloringReal}" alt=""></section>`;
+}
+
+function thumbnailTest() {
+  const files = [
+    ['01A-thumbnail-illustration.png', '1A'],
+    ['01B-thumbnail-range-grid.png', '1B'],
+    ['02-four-children-four-styles.png', '02'],
+    ['03-intake-to-character.png', '03'],
+    ['04-reference-books-to-style.png', '04'],
+    ['05-preview-revisions.png', '05'],
+    ['06-reader-day-mode-device.png', '06'],
+    ['07-home-screen-icon.png', '07'],
+    ['07B-phone-on-counter.png', '07B'],
+    ['08-turnaround-card.png', '08'],
+    ['09-night-mode.png', '09'],
+    ['10A-gift-certificate-table.png', '10A'],
+    ['10B-christmas-cutoff.png', '10B'],
+    ['10C-gift-handoff.png', '10C'],
+    ['11-twenty-quiet-minutes.png', '11']
+  ];
+  document.documentElement.style.setProperty('--shot-w', '2900px');
+  document.documentElement.style.setProperty('--shot-h', '360px');
+  return `<section class="thumbs" style="width:2900px;grid-template-columns:repeat(14,170px);">${files.map(([file, label]) => `<div class="thumb"><img src="../../assets/listing/etsy-photos/${file}" alt=""><span>${label}</span></div>`).join('')}</section>`;
+}
+
+const routes = {
+  '01': photo01,
+  '01b': photo01b,
+  '02': photo02,
+  '03': photo03,
+  '04': photo04,
+  '05': photo05,
+  '06': photo06,
+  '07': photo07,
+  '07b': photo07b,
+  '08': photo08,
+  '09': photo09,
+  '10a': photo10a,
+  '10b': photo10b,
+  '10c': photo10c,
+  '11': photo11,
+  'extra-no-ads': extraNoAds,
+  'featured-01': featured01,
+  'featured-02': featured02,
+  'featured-03': featured03,
+  'thumbnail-test': thumbnailTest
+};
+
+const key = new URLSearchParams(location.search).get('photo') || '01';
+document.getElementById('root').innerHTML = (routes[key] || routes['01'])();
+document.fonts.ready.then(() => requestAnimationFrame(() => { document.title = 'READY'; }));
+</script>
+</body>
+</html>

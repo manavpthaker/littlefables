@@ -20,6 +20,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // The landing "How your book is made" loops and the walkthrough film are
+  // self-hosted mp4/png assets under /landing/motion — a fresh render replaces
+  // the file in place, so cache them immutably at the CDN and rely on renames
+  // (or a cache purge) when we actually need to invalidate.
+  async headers() {
+    return [
+      {
+        source: '/landing/motion/:file*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

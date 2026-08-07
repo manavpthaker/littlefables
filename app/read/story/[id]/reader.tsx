@@ -16,6 +16,7 @@ import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { PageSpread } from './page-spread';
 import { InstallPrompt } from './install-prompt';
+import { SampleClosingCard } from './sample-closing-card';
 import { ChapterOpener, useChapterOpenerVisible } from './chapter-opener';
 import type { ReaderMenuChapter } from './reader-menu';
 import {
@@ -41,10 +42,15 @@ export function Reader({
   book,
   initialProgress,
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
+  sample = false,
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
   bedtimeWindow?: BedtimeWindow;
+  // True when the reader was opened via /sample. The story plays exactly
+  // the same; only the end-of-book surface changes (closing card instead
+  // of the install prompt).
+  sample?: boolean;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -307,7 +313,11 @@ export function Reader({
         chapterTitle={ch?.title ?? ''}
       />
 
-      <InstallPrompt visible={lastPage} />
+      {sample ? (
+        <SampleClosingCard visible={lastPage} />
+      ) : (
+        <InstallPrompt visible={lastPage} />
+      )}
 
       <ReaderMenu
         open={menuOpen}
