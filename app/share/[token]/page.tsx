@@ -79,9 +79,14 @@ export async function generateMetadata({
   // regardless of which branch below produces the title.
   const base: Metadata = { robots: { index: false, follow: false } };
 
+  // Dead or revoked links render the not-found page, but note they answer
+  // 200, not 404: this route streams, so the status is committed before
+  // either this function or the body can call notFound(). Measured, not
+  // assumed — moving the call here doesn't change it. Harmless today (the
+  // page leaks nothing and every share is noindex) but it is a soft 404.
   const { token } = await params;
   const share = await getShare(token);
-  if (!share) return { ...base, title: 'Little Fables' };
+  if (!share) notFound();
 
   // A password-gated link previews before anyone types the password, so the
   // preview must not reveal what's behind it.
@@ -115,10 +120,8 @@ export async function generateMetadata({
   const bookId = share.bookId ?? (await searchParams).book ?? null;
   if (bookId) {
     const row = await getBookRow(bookId, share.householdId);
-    if (row) {
-      return describe(row.title, 'A storybook from Little Fables, shared with you.', coverOf(row));
-    }
-    return { ...base, title: 'Little Fables' };
+    if (!row) notFound();
+    return describe(row.title, 'A storybook from Little Fables, shared with you.', coverOf(row));
   }
 
   const shelf = await getShelfRows(share.householdId);
