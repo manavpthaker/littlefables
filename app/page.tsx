@@ -85,24 +85,6 @@ const HOW_STEPS = [
   },
 ] as const;
 
-const REVIEWS = [
-  {
-    quote:
-      '“She asks for ‘her book’ every night now. Hearing her own name in the story stopped her cold the first time.”',
-    who: 'mother of three · maine',
-  },
-  {
-    quote:
-      '“I sent it for my grandson’s fourth birthday from three states away. His mom says he shows everyone his shelf.”',
-    who: 'grandmother · ohio',
-  },
-  {
-    quote:
-      '“The narration is what surprised me — calm, unhurried, no cartoon voices. It feels like a real book.”',
-    who: 'father, first-time buyer · nyc',
-  },
-];
-
 const FAQS = [
   {
     q: 'How long until it’s delivered?',
@@ -183,7 +165,6 @@ export default async function LandingPage() {
   const heroHref = utm(ETSY_SHOP, 'hero');
   const aboutHref = utm(ETSY_SHOP, 'about');
   const giftHref = utm(ETSY_SHOP, 'gift');
-  const reviewsHref = utm(ETSY_SHOP, 'reviews');
   const includedHref = utm(ETSY_SHOP, 'included');
   const contactHref = utm(ETSY_SHOP, 'contact');
 
@@ -805,91 +786,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      <section id="reviews" style={{ padding: '64px 24px 0' }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-sc)',
-              fontSize: 'var(--text-label-size)',
-              letterSpacing: 'var(--track-label)',
-              color: 'var(--brass)',
-            }}
-          >
-            parents and grandparents
-          </span>
-          <h2
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'var(--text-title-size)',
-              lineHeight: 'var(--text-title-lh)',
-              margin: '10px 0 28px',
-            }}
-          >
-            Notes from families
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 24,
-            }}
-          >
-            {REVIEWS.map((r) => (
-              <figure
-                key={r.who}
-                style={{
-                  margin: 0,
-                  background: 'var(--paper-warm)',
-                  border: '1px solid var(--border-card)',
-                  borderRadius: 12,
-                  boxShadow: 'var(--shadow-card)',
-                  padding: '26px 24px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 14,
-                }}
-              >
-                <FiveStars />
-                <blockquote
-                  style={{
-                    margin: 0,
-                    fontSize: 'calc(var(--text-body-size)*1.05)',
-                    lineHeight: 1.55,
-                    color: 'var(--ink)',
-                  }}
-                >
-                  {r.quote}
-                </blockquote>
-                <figcaption
-                  style={{
-                    fontFamily: 'var(--font-sc)',
-                    fontSize: 13,
-                    letterSpacing: '0.08em',
-                    color: 'var(--ink-faint)',
-                  }}
-                >
-                  {r.who}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-          <p style={{ textAlign: 'center', margin: '26px 0 0' }}>
-            <a
-              href={reviewsHref}
-              style={{
-                fontFamily: 'var(--font-sc)',
-                fontSize: 14,
-                letterSpacing: '0.08em',
-                color: 'var(--ink-soft)',
-              }}
-            >
-              Every book on our shelf has real reviews on Etsy →
-            </a>
-          </p>
-          <Ornament kind="rule-and-dot" style={{ width: 220, margin: '48px auto 0' }} />
-        </div>
-      </section>
-
       <section id="gift" style={{ padding: '64px 24px 0' }}>
         <div
           style={{
@@ -1280,14 +1176,3 @@ const aboutP: React.CSSProperties = {
   maxWidth: '32em',
 };
 
-function FiveStars() {
-  return (
-    <svg width="110" height="20" viewBox="0 0 110 20" fill="var(--brass)" role="img" aria-label="five stars">
-      <path d="M10 1.5 12.4 7l6 .5-4.6 4 1.4 5.9L10 14.2 4.8 17.4 6.2 11.5 1.6 7.5l6-.5Z" />
-      <path d="M32 1.5 34.4 7l6 .5-4.6 4 1.4 5.9L32 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
-      <path d="M54 1.5 56.4 7l6 .5-4.6 4 1.4 5.9L54 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
-      <path d="M76 1.5 78.4 7l6 .5-4.6 4 1.4 5.9L76 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
-      <path d="M98 1.5 100.4 7l6 .5-4.6 4 1.4 5.9L98 14.2l-5.2 3.2 1.4-5.9-4.6-4 6-.5Z" />
-    </svg>
-  );
-}
