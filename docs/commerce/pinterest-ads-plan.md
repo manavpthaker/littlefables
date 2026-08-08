@@ -1,16 +1,23 @@
 # Pinterest Ads Plan — Little Fables
 
-Operational extension of `pinterest-playbook.md` §9. Written 2026-08-08, before any
-spend. The playbook says *whether and when*; this file says *exactly what, with which
-dollars, judged by which numbers*.
+Operational extension of `pinterest-playbook.md` §9. Written 2026-08-08. Revised
+same day: Manav has prioritized **awareness now, margins later** — the plan runs in
+two layers. Layer A (awareness, starts immediately) buys distribution and is
+explicitly allowed to lose money. Layer B (performance, Oct 15 window) buys orders
+and stays behind the gate. The distinction matters because the two layers risk
+different things: Layer A risks *cash*, Layer B risks *hours*.
 
 ## The two rules that govern everything
 
-**1 · The gate (already decided, `gtm-decision.md` #1).** No paid spend until one
-complete order — previews, revision round, book — is timed **under 1.5 attended
-hours** and logged in `orders.csv`. Today's measured range is 2.2–4.3 hr. The gate
-is *continuous*: if attended time creeps back above 1.5 hr mid-flight, ads pause
-that day. Paid volume on manual fulfilment doesn't scale revenue, it scales burnout.
+**1 · The gate (already decided, `gtm-decision.md` #1) — scoped to performance
+spend.** No *order-buying* spend until one complete order — previews, revision
+round, book — is timed **under 1.5 attended hours** and logged in `orders.csv`.
+Today's measured range is 2.2–4.3 hr. The gate is *continuous*: if attended time
+creeps back above 1.5 hr mid-flight, Flight 1/2 pause that day. Paid order volume
+on manual fulfilment doesn't scale revenue, it scales burnout. **The awareness
+layer (Flight 0) sits outside this gate** — it is CPM-billed reach that produces
+saves and audience signal, not order volume, so it threatens the wallet, not the
+calendar. It gets its own cap instead.
 
 **2 · The sale and the ads budget compete for the same margin.** This is the new
 finding. At $69 list with a 20% site-wide sale live, effective price is $55.20 and
@@ -31,7 +38,50 @@ at the earliest. What remains is the **consideration (traffic) objective**: bill
 per click, no tag required, judged by promo-code redemptions + Etsy's own traffic
 stats. This matches the practitioner playbook for digital products on Etsy.
 
-## Readiness scorecard — all five green before the first dollar
+## Flight 0 — Awareness layer (approved 2026-08-08, Manav's call: reach > margin)
+
+**What the money buys.** A brand-new account normally waits 2–6 weeks per pin for
+Pinterest to learn who it's for. Paid impressions compress that: promoted pins keep
+their organic identity (Ad-only toggle OFF), so every save bought with ad dollars
+is a *permanent* distribution asset — it feeds the same engagement signals the
+organic algorithm reads, and it lands during Aug–Sept, exactly when Pinterest's
+Christmas-planning audience starts searching (gift pinning leads purchase by 45–60
+days). This is the correct use of "short-term margin hit": not subsidizing orders,
+but paying to make the organic engine spin up faster and to put the brand in
+front of holiday planners early.
+
+**What the money cannot buy — said once, plainly:** conversions from a 0-review
+listing. Awareness dollars now make October's performance test *more likely to
+pass*; they do not replace the reviews, the attended-time cut, or the listing CVR.
+Those still decide whether Q4 makes money.
+
+**Setup (once ads billing exists — Manav adds the card):**
+
+- **Objective:** Brand awareness (CPM-billed). One campaign, **$8/day, Aug 15 →
+  Sept 30 ≈ $370 cap**, all placements, US.
+- **Two ad groups:** *Gift-intent* (christmas gifts for kids / gifts for
+  grandchildren / meaningful gifts for kids + interests: Christmas, gift ideas,
+  grandparents) and *Category/bedtime* (personalized childrens book / custom name
+  book / bedtime stories for kids + interests: kids books, bedtime routine).
+- **Creative:** 4–5 strongest-designed pins per group (start p01, p05, p07, p09,
+  p16; swap by CTR/save-rate after 2 weeks — this doubles as the creative audition
+  for Flight 1).
+- **Destination** still the Etsy listing with `utm_medium=paid-awareness` — clicks
+  are a bonus, not the goal. FABLEPIN15 stays in descriptions (awareness layer
+  doesn't need clean attribution, so the organic code is fine; FABLEADS15 stays
+  reserved for Flight 1). Site-wide sale MAY coexist with Flight 0 — no CAC is
+  being measured — but must still end before Flight 1.
+
+**Judged by (weekly, 5 min):** CPM ≤ $5 · save rate ≥ 0.4% · earned-to-paid
+impression ratio trending up on promoted pins · Pinterest audience/branded-search
+lift in analytics. **Kill switch:** save rate < 0.2% across both groups after
+$100 → creative problem; pause, redesign, don't pour.
+
+**Hard cap:** $370. It renews monthly only by an explicit yes from Manav, never by
+default. Combined with Flight 1 this keeps total Q4 exposure ≤ ~$700 pre-scale.
+
+## Readiness scorecard — all five green before the first *performance* dollar
+(gates Flights 1–2 only; Flight 0 is exempt by design)
 
 | # | Check | Bar | Where measured | Owner |
 |---|---|---|---|---|
@@ -125,8 +175,11 @@ convert into January refund risk, not gifts.
 ## Prep checklist (now → Oct 1, all zero-spend)
 
 1. ~~Boards public, batch-01 live~~ ✓ Aug 7.
+1b. **Ads billing (Manav, ~3 min):** ads.pinterest.com → Billing → add card. This
+   is the only blocker Claude can't clear for Flight 0.
 2. Domain claim: **Manav adds DNS TXT** `@ → pinterest-site-verification=
    c72d5e830316ff781409a9a0e853e59f` in Vercel → Claude re-runs claim (TXT method).
+   Do before Flight 0 — claimed-domain accounts get attribution + better ad trust.
 3. Manav: 2–3 friends/family orders → honest reviews (also produces the timed
    order for gate #1).
 4. Manav: time one full order per-stage into `orders.csv` after the writing/art
@@ -147,9 +200,15 @@ convert into January refund risk, not gifts.
 
 | Date | Event |
 |---|---|
+| ~Aug 15 | **Flight 0 (awareness) launches** — blocked only on ads billing + domain claim |
 | Sept 1 | Christmas organic ramp (already in playbook §7) |
-| Sept 30 | Scorecard review #1 — five checks, written verdict |
+| Sept 15 | Flight 0 mid-read: creative swap by save rate |
+| Sept 30 | Flight 0 ends + scorecard review #1 — five checks, written verdict |
 | Oct 15 | Go/no-go. Green → Flight 1 launches. Red → organic-only Q4, next review Feb 1 (Mother's Day window Mar–Apr) |
 | Nov 5 | Flight 1 verdict |
 | Dec 10 | All paid dark |
 | Jan | Post-mortem → fold learnings into 90-day review (§8 gates) |
+
+Budget picture, worst case all layers run: Flight 0 ~$370 + Flight 1 $315 +
+Flight 2 (only on a win) — awareness money is spent expecting zero direct return;
+performance money must defend itself every week it runs.
