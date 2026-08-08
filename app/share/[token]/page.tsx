@@ -1,3 +1,5 @@
+import { cache } from 'react';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { admin } from '@/lib/supabase/admin';
@@ -16,11 +18,119 @@ import { SharedLibrary, type SharedShelfBook } from './shared-library';
 // Two share shapes: book_id set → straight into that book's reader;
 // book_id null → the household's whole shelf, where ?book=<id> opens one
 // of its books and "Choose another story" leads back to the shelf.
+//
+// generateMetadata gives the link its own title and cover art, so a share
+// pasted into Messages previews as the actual book rather than as the site.
+// The loaders below are cache()d because metadata and the page render in
+// the same request and would otherwise each hit the database.
 
 const COOKIE_PREFIX = 'lf_share_';
 const KID_VISIBLE_STATUSES = ['complete', 'published'];
 
 export const dynamic = 'force-dynamic';
+
+const getShare = cache(async (token: string) => loadShare(token));
+
+const getBookRow = cache(async (bookId: string, householdId: string) => {
+  const { data } = await admin()
+    .from('books')
+    .select('id, title, book, status, cover_bg')
+    .eq('id', bookId)
+    .eq('household_id', householdId)
+    .in('status', KID_VISIBLE_STATUSES)
+    .maybeSingle();
+  return data ?? null;
+});
+
+const getShelfRows = cache(async (householdId: string) => {
+  const { data } = await admin()
+    .from('books')
+    .select('id, title, book, status, cover_bg')
+    .eq('household_id', householdId)
+    .eq('shelf_enabled', true)
+    .in('status', KID_VISIBLE_STATUSES);
+  return data ?? [];
+});
+
+/** Cover art for a book row, absolute so it survives being pasted into a
+ *  messaging app. Falls back to the first illustrated page. */
+function coverOf(row: { book: unknown; cover_bg: string | null }): string | undefined {
+  const parsed = bookSchema.safeParse(row.book);
+  if (!parsed.success) return undefined;
+  if (parsed.data.coverImage) return parsed.data.coverImage;
+  if (row.cover_bg?.startsWith('http')) return row.cover_bg;
+  for (const c of parsed.data.chapters) {
+    for (const p of c.pages) {
+      const img = (p as { img?: string }).img;
+      if (img?.startsWith('http')) return img;
+    }
+  }
+  return undefined;
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ token: string }>;
+  searchParams: Promise<{ book?: string }>;
+}): Promise<Metadata> {
+  // Share links are private by design — keep them out of search results
+  // regardless of which branch below produces the title.
+  const base: Metadata = { robots: { index: false, follow: false } };
+
+  const { token } = await params;
+  const share = await getShare(token);
+  if (!share) return { ...base, title: 'Little Fables' };
+
+  // A password-gated link previews before anyone types the password, so the
+  // preview must not reveal what's behind it.
+  if (share.requiresPassword) {
+    return {
+      ...base,
+      title: 'A story is waiting for you',
+      description: 'Someone shared a Little Fables storybook with you. The link asks for a password.',
+    };
+  }
+
+  const describe = (title: string, description: string, image?: string): Metadata => ({
+    ...base,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName: 'Little Fables',
+      ...(image ? { images: [{ url: image, width: 1254, height: 1254, alt: title }] } : {}),
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
+  });
+
+  const bookId = share.bookId ?? (await searchParams).book ?? null;
+  if (bookId) {
+    const row = await getBookRow(bookId, share.householdId);
+    if (row) {
+      return describe(row.title, 'A storybook from Little Fables, shared with you.', coverOf(row));
+    }
+    return { ...base, title: 'Little Fables' };
+  }
+
+  const shelf = await getShelfRows(share.householdId);
+  const count = shelf.length;
+  return describe(
+    'A shelf, shared with you',
+    count === 1
+      ? 'One storybook from Little Fables.'
+      : `${count} storybooks from Little Fables.`,
+    shelf.map(coverOf).find(Boolean),
+  );
+}
 
 export default async function SharePage({
   params,
@@ -30,7 +140,7 @@ export default async function SharePage({
   searchParams: Promise<{ book?: string }>;
 }) {
   const { token } = await params;
-  const share = await loadShare(token);
+  const share = await getShare(token);
   if (!share) notFound();
 
   // Password-gated? Check the unlock cookie; prompt if not set.
@@ -54,14 +164,7 @@ export default async function SharePage({
       return <ShareReader book={readerBook} libraryHref={`/share/${token}`} />;
     }
 
-    const { data } = await admin()
-      .from('books')
-      .select('id, title, book, status, cover_bg')
-      .eq('household_id', share.householdId)
-      .eq('shelf_enabled', true)
-      .in('status', KID_VISIBLE_STATUSES);
-
-    const shelf: SharedShelfBook[] = (data ?? []).flatMap((row) => {
+    const shelf: SharedShelfBook[] = (await getShelfRows(share.householdId)).flatMap((row) => {
       const parsed = bookSchema.safeParse(row.book);
       if (!parsed.success) return [];
       const coverImage =
@@ -81,14 +184,7 @@ export default async function SharePage({
 }
 
 async function loadShareBook(bookId: string, householdId: string) {
-  const { data } = await admin()
-    .from('books')
-    .select('id, title, book, status, cover_bg')
-    .eq('id', bookId)
-    .eq('household_id', householdId)
-    .in('status', KID_VISIBLE_STATUSES)
-    .maybeSingle();
-
+  const data = await getBookRow(bookId, householdId);
   if (!data?.book) return null;
 
   const parsed = bookSchema.safeParse(data.book);

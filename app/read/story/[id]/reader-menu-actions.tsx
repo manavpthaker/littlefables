@@ -7,15 +7,34 @@ import { InstallSteps, useAddToHomeScreen } from './install-prompt';
 // under the module size limit. Label lives here because both sections and
 // the menu itself set their headings the same way.
 
-// Share actions. Each tap mints a fresh /share link via the child-device
-// session (POST /api/child/share) and hands it to the OS share sheet where
-// one exists, otherwise the clipboard. "This story" grants one book;
-// "All stories" grants the household's whole shelf.
+// Share actions. A tap mints a /share link via the child-device session
+// (POST /api/child/share); "This story" grants one book, "All stories" the
+// whole shelf.
+//
+// Handing that link to the OS is the fiddly part. Safari only allows
+// navigator.share() while a user gesture is still "live", and awaiting the
+// mint spends it — so sharing straight after the fetch throws
+// NotAllowedError even though the link is perfectly good. The first version
+// of this reported that as "couldn't make a share link", which was wrong
+// twice over: the link existed, and every retry minted another orphan token.
+//
+// So the mint and the handoff are now separate. Tapping mints and shows the
+// link; Share and Copy sit on the result and run inside their own gesture,
+// where both APIs are allowed. The link is kept per scope, so tapping twice
+// reuses it rather than minting again.
 export function ShareSection({ bookId, bookTitle }: { bookId: string; bookTitle: string }) {
   const [busy, setBusy] = useState<'book' | 'library' | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  const [link, setLink] = useState<{ scope: 'book' | 'library'; url: string } | null>(null);
 
-  async function share(scope: 'book' | 'library') {
+  const titleFor = (scope: 'book' | 'library') =>
+    scope === 'book' ? bookTitle : 'Our Little Fables stories';
+
+  async function makeLink(scope: 'book' | 'library') {
+    if (link?.scope === scope) {
+      setNote(null);
+      return;
+    }
     setBusy(scope);
     setNote(null);
     try {
@@ -26,21 +45,29 @@ export function ShareSection({ bookId, bookTitle }: { bookId: string; bookTitle:
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const { path } = (await res.json()) as { path: string };
-      const url = `${window.location.origin}${path}`;
-      const title = scope === 'book' ? bookTitle : 'Our Little Fables stories';
-      if (typeof navigator.share === 'function') {
-        await navigator.share({ title, url });
-        setNote('Shared');
-      } else {
-        await navigator.clipboard.writeText(url);
-        setNote('Link copied — send it to anyone');
-      }
-    } catch (err) {
-      // Closing the OS share sheet is a choice, not a failure.
-      if ((err as Error).name === 'AbortError') setNote(null);
-      else setNote("Couldn't make a share link — try again");
+      setLink({ scope, url: `${window.location.origin}${path}` });
+    } catch {
+      setNote("Couldn't make a share link — try again");
     } finally {
       setBusy(null);
+    }
+  }
+
+  // Called straight from a tap, with the URL already in hand.
+  async function handOff(kind: 'share' | 'copy') {
+    if (!link) return;
+    try {
+      if (kind === 'share' && typeof navigator.share === 'function') {
+        await navigator.share({ title: titleFor(link.scope), url: link.url });
+        setNote(null);
+        return;
+      }
+      await navigator.clipboard.writeText(link.url);
+      setNote('Link copied');
+    } catch (err) {
+      // Dismissing the OS sheet is a choice, not a failure. Anything else
+      // still leaves the link on screen to copy by hand.
+      if ((err as Error).name !== 'AbortError') setNote('Copy the link below');
     }
   }
 
@@ -56,17 +83,59 @@ export function ShareSection({ bookId, bookTitle }: { bookId: string; bookTitle:
     cursor: 'pointer',
   };
 
+  const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
   return (
     <>
       <Label>Share</Label>
-      <div style={{ display: 'flex', gap: 8, marginBottom: note ? 6 : 'var(--space-4)' }}>
-        <button type="button" onClick={() => void share('book')} disabled={busy !== null} style={pill}>
-          {busy === 'book' ? 'Making a link…' : 'This story'}
-        </button>
-        <button type="button" onClick={() => void share('library')} disabled={busy !== null} style={pill}>
-          {busy === 'library' ? 'Making a link…' : 'All stories'}
-        </button>
+      <div style={{ display: 'flex', gap: 8, marginBottom: link || note ? 8 : 'var(--space-4)' }}>
+        {(['book', 'library'] as const).map((scope) => (
+          <button
+            key={scope}
+            type="button"
+            onClick={() => void makeLink(scope)}
+            disabled={busy !== null}
+            aria-pressed={link?.scope === scope}
+            style={{
+              ...pill,
+              background: link?.scope === scope ? 'var(--oxblood-wash)' : 'transparent',
+              color: link?.scope === scope ? 'var(--oxblood-text)' : 'var(--ink-soft)',
+            }}
+          >
+            {busy === scope ? 'Making a link…' : scope === 'book' ? 'This story' : 'All stories'}
+          </button>
+        ))}
       </div>
+
+      {link && (
+        <div style={{ display: 'grid', gap: 8, marginBottom: 'var(--space-4)' }}>
+          <code
+            style={{
+              fontSize: 12,
+              color: 'var(--ink-soft)',
+              background: 'var(--paper-warm)',
+              border: '1px solid var(--pill-edge)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '8px 10px',
+              overflowWrap: 'anywhere',
+              userSelect: 'all',
+            }}
+          >
+            {link.url}
+          </code>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {canShare && (
+              <button type="button" onClick={() => void handOff('share')} style={pill}>
+                Share…
+              </button>
+            )}
+            <button type="button" onClick={() => void handOff('copy')} style={pill}>
+              Copy link
+            </button>
+          </div>
+        </div>
+      )}
+
       {note && (
         <p
           role="status"

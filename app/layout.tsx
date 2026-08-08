@@ -3,6 +3,9 @@ import './globals.css';
 import { RegisterSW } from './register-sw';
 
 export const metadata: Metadata = {
+  // Without this, relative og:image paths resolve against localhost and the
+  // preview image silently fails to load wherever the link is pasted.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://littlefables.app'),
   title: {
     default: 'Little Fables',
     template: '%s · Little Fables',
