@@ -57,6 +57,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
       initialProgress={initialProgress}
       bedtimeWindow={profile.settings.bedtime}
       sample={sample}
+      shareable={!sample}
     />
   );
 }

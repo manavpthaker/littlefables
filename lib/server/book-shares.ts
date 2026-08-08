@@ -12,14 +12,16 @@ import { admin } from '@/lib/supabase/admin';
 
 export interface ShareContext {
   shareId: string;
-  bookId: string;
+  /** Null = library share: the token grants the household's whole shelf. */
+  bookId: string | null;
   householdId: string;
   requiresPassword: boolean;
   passwordHash: string | null;
 }
 
 export interface MintShareInput {
-  bookId: string;
+  /** Null mints a library share (book_id null → whole shelf). */
+  bookId: string | null;
   householdId: string;
   password?: string | null;
   expiresAt?: string | null;
@@ -34,7 +36,7 @@ export interface MintedShare {
 
 interface BookShareRow {
   id: string;
-  book_id: string;
+  book_id: string | null;
   household_id: string;
   token_hash: string;
   password_hash: string | null;
@@ -46,7 +48,7 @@ interface BookShareRow {
 }
 
 interface BookShareInsert {
-  book_id: string;
+  book_id: string | null;
   household_id: string;
   token_hash: string;
   password_hash?: string | null;

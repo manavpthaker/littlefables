@@ -15,6 +15,7 @@ import { ReaderMenu, type PlaybackRate } from './reader-menu';
 import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { PageSpread } from './page-spread';
+import { CoverPage, EndPage } from './book-ends';
 import { InstallPrompt } from './install-prompt';
 import { SampleClosingCard } from './sample-closing-card';
 import { ChapterOpener, useChapterOpenerVisible } from './chapter-opener';
@@ -43,6 +44,8 @@ export function Reader({
   initialProgress,
   bedtimeWindow = { enabled: false, startHour: 19, endHour: 6 },
   sample = false,
+  shareable = false,
+  libraryHref = '/read',
 }: {
   book: ReaderBook;
   initialProgress: ProgressRecord | null;
@@ -51,6 +54,13 @@ export function Reader({
   // the same; only the end-of-book surface changes (closing card instead
   // of the install prompt).
   sample?: boolean;
+  // Household surface only: enables the menu's share actions, which mint
+  // /share links via the child-device session. Share/sample visitors have
+  // no such session, so the section is hidden for them.
+  shareable?: boolean;
+  // Where "Choose another story" goes. Null hides the button (a single-book
+  // share has no shelf to return to).
+  libraryHref?: string | null;
 }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -59,6 +69,15 @@ export function Reader({
       ? { chapterIdx: initialProgress.chapterIdx, pageIdx: initialProgress.pageIdx }
       : initialState(book),
   );
+
+  // The book's boards. Every open starts at the cover (a shared link lands a
+  // stranger straight in a story — the cover introduces it as a book first);
+  // past the last page sits the closing leaf with the mark. Saved progress
+  // still applies: turning past the cover resumes wherever the child left off.
+  const [surface, setSurface] = useState<'cover' | 'story' | 'end'>('cover');
+  // Set when a play press should carry across a surface change (play on the
+  // cover = open the book and start reading).
+  const [pendingPlay, setPendingPlay] = useState(false);
 
   // Debounced progress write on every state change (skip on the chapter map).
   useEffect(() => {
@@ -156,7 +175,7 @@ export function Reader({
   }, [book.id, page, state.chapterIdx, state.pageIdx, voiceMode]);
 
   const transportPage = useMemo(() => {
-    if (!page || state.chapterIdx === null) return null;
+    if (!page || state.chapterIdx === null || surface !== 'story') return null;
     return {
       text: page.text,
       source: pageAudioSource({
@@ -167,11 +186,11 @@ export function Reader({
       }),
       timestamps: pageTimestamps ?? undefined,
     };
-  }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps, voiceMode]);
+  }, [book.id, page, state.chapterIdx, state.pageIdx, pageTimestamps, voiceMode, surface]);
 
-  // Post-chapter advancement. Chapter books return to their map; quick books
-  // exit to Home. In night mode on the final page we hold instead of pushing
-  // — the story ends where it ends, no navigation while a kid drifts.
+  // Post-chapter advancement. Mid-book, roll into the next chapter; after the
+  // final chapter, turn onto the closing leaf. In night mode we hold instead —
+  // the story ends where it ends, no navigation while a kid drifts.
   const advanceAfterChapter = useCallback(() => {
     if (state.chapterIdx === null) return;
     const isLastChapter = state.chapterIdx >= book.chapters.length - 1;
@@ -180,12 +199,8 @@ export function Reader({
       return;
     }
     if (isNight) return; // rest, don't push
-    if (book.kind === 'chapter') {
-      dispatch({ type: 'exitChapter' });
-    } else {
-      router.push('/read');
-    }
-  }, [book.chapters.length, book.kind, isNight, router, state.chapterIdx]);
+    setSurface('end');
+  }, [book.chapters.length, isNight, state.chapterIdx]);
 
   // Page-turn direction, drives the flip animation in PageSpread.
   const onAutoNext = useCallback(() => {
@@ -209,15 +224,80 @@ export function Reader({
         : undefined,
   });
 
+  // Carry a play press across a surface change: play on the cover (or "play
+  // again" on the closing leaf) opens the book and starts reading once the
+  // page's transport is live.
+  useEffect(() => {
+    if (surface !== 'story' || !pendingPlay || !transportPage) return;
+    setPendingPlay(false);
+    transport.play();
+  }, [surface, pendingPlay, transportPage, transport]);
+
+  const onPlayPress = useCallback(() => {
+    if (surface === 'cover') {
+      setSurface('story');
+      setPendingPlay(true);
+      return;
+    }
+    if (surface === 'end') {
+      dispatch({ type: 'goToPage', chapterIdx: 0, pageIdx: 0 });
+      setSurface('story');
+      setPendingPlay(true);
+      return;
+    }
+    transport.toggle();
+  }, [surface, transport]);
+
   const onPickChapter = useCallback((i: number) => {
     dispatch({ type: 'enterChapter', chapterIdx: i });
+    setSurface('story'); // a chapter pick from the cover or closing leaf opens the book
   }, []);
+  const onFirstBookPage = isFirstPage(state) && (state.chapterIdx ?? 0) === 0;
+  const onLastBookPage =
+    lastPage && (state.chapterIdx === null || state.chapterIdx >= book.chapters.length - 1);
+
+  // Manual paging runs cover → every page of every chapter → closing leaf,
+  // in both directions. Chapter boundaries don't stop the arrows: the last
+  // page's › lands on the next chapter's first page (where the opener
+  // caption announces the break), and page one's ‹ steps back onto the
+  // previous chapter's final page.
   const onPrev = useCallback(() => {
+    if (surface === 'cover') return;
+    if (surface === 'end') {
+      setSurface('story');
+      return;
+    }
+    if (onFirstBookPage) {
+      setSurface('cover');
+      return;
+    }
+    if (state.chapterIdx !== null && state.chapterIdx > 0 && state.pageIdx === 0) {
+      const prevCh = book.chapters[state.chapterIdx - 1];
+      dispatch({
+        type: 'goToPage',
+        chapterIdx: state.chapterIdx - 1,
+        pageIdx: Math.max(0, (prevCh?.pages.length ?? 1) - 1),
+      });
+      return;
+    }
     dispatch({ type: 'prevPage' });
-  }, []);
+  }, [book.chapters, onFirstBookPage, state.chapterIdx, state.pageIdx, surface]);
   const onNext = useCallback(() => {
+    if (surface === 'cover') {
+      setSurface('story');
+      return;
+    }
+    if (surface === 'end') return;
+    if (onLastBookPage) {
+      setSurface('end');
+      return;
+    }
+    if (lastPage && state.chapterIdx !== null && state.chapterIdx < book.chapters.length - 1) {
+      dispatch({ type: 'enterChapter', chapterIdx: state.chapterIdx + 1 });
+      return;
+    }
     dispatch({ type: 'nextPage' });
-  }, []);
+  }, [book.chapters.length, lastPage, onLastBookPage, state.chapterIdx, surface]);
 
   // Word interactions:
   //   playing → seek to the tapped word and continue narrating from there
@@ -258,16 +338,8 @@ export function Reader({
       <ReaderChip isNight={isNight} onToggle={toggleBedtime} />
 
       {ch && page ? (
-        <PageSpread
-          page={page}
-          pageKey={`${state.chapterIdx}-${state.pageIdx}`}
-          useWashFallback={Boolean(useWashFallback)}
-          currentIndex={transport.wordIdx}
-          narrating={transport.playing}
-          coverImage={book.coverImage}
-          hideArt={isNight}
-          onHearWord={onHearWord}
-          controls={
+        (() => {
+          const controls = (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
               <button
                 type="button"
@@ -293,30 +365,69 @@ export function Reader({
                 <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
               </button>
               <ReaderPill
-                playing={transport.playing}
-                canPrev={!isFirstPage(state)}
-                canNext={!lastPage}
-                onPlay={transport.toggle}
+                playing={surface === 'story' && transport.playing}
+                canPrev={surface !== 'cover'}
+                canNext={surface !== 'end'}
+                onPlay={onPlayPress}
                 onPrev={onPrev}
                 onNext={onNext}
-                label={pillLabel}
-                progress={page.words.length > 1 ? transport.wordIdx / (page.words.length - 1) : null}
+                label={surface === 'story' ? pillLabel : book.title}
+                progress={
+                  surface === 'story' && page.words.length > 1
+                    ? transport.wordIdx / (page.words.length - 1)
+                    : null
+                }
               />
             </div>
+          );
+          if (surface === 'cover') {
+            return (
+              <CoverPage
+                title={book.title}
+                art={book.coverImage ?? book.chapters[0]?.pages.find((p) => p.img)?.img}
+                isNight={isNight}
+                onOpen={() => setSurface('story')}
+                controls={controls}
+              />
+            );
           }
-        />
+          if (surface === 'end') {
+            return (
+              <EndPage
+                onReadAgain={() => {
+                  dispatch({ type: 'goToPage', chapterIdx: 0, pageIdx: 0 });
+                  setSurface('cover');
+                }}
+                controls={controls}
+              />
+            );
+          }
+          return (
+            <PageSpread
+              page={page}
+              pageKey={`${state.chapterIdx}-${state.pageIdx}`}
+              useWashFallback={Boolean(useWashFallback)}
+              currentIndex={transport.wordIdx}
+              narrating={transport.playing}
+              coverImage={book.coverImage}
+              hideArt={isNight}
+              onHearWord={onHearWord}
+              controls={controls}
+            />
+          );
+        })()
       ) : null}
 
       <ChapterOpener
-        visible={openerVisible}
+        visible={openerVisible && surface === 'story'}
         chapterIdx={state.chapterIdx}
         chapterTitle={ch?.title ?? ''}
       />
 
       {sample ? (
-        <SampleClosingCard visible={lastPage} />
+        <SampleClosingCard visible={surface === 'end'} />
       ) : (
-        <InstallPrompt visible={lastPage} />
+        <InstallPrompt visible={surface === 'end'} />
       )}
 
       <ReaderMenu
@@ -327,10 +438,15 @@ export function Reader({
         rate={rate}
         onRate={chooseRate}
         onPickChapter={onPickChapter}
-        onLibrary={() => {
-          transport.stop();
-          router.push('/read');
-        }}
+        shareBookId={shareable ? book.id : null}
+        onLibrary={
+          libraryHref
+            ? () => {
+                transport.stop();
+                router.push(libraryHref);
+              }
+            : null
+        }
         onClose={() => setMenuOpen(false)}
       />
     </div>
