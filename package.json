@@ -20,6 +20,7 @@
     "db:types": "supabase gen types typescript --linked --schema public 2>/dev/null | sed '/^A new version of Supabase CLI/,$d' > types/database.ts",
     "content:add": "tsx scripts/import-book.ts",
     "content:narrate": "tsx scripts/narrate-book.ts",
+    "content:audit-narration": "tsx scripts/audit-narration.ts",
     "content:publish": "tsx scripts/publish-books.ts",
     "order:new": "tsx scripts/new-order.ts",
     "order:preview": "tsx scripts/order-preview.ts",
