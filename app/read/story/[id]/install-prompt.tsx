@@ -1,24 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-// End-of-book install prompt. Renders only when:
-//   - the reader signals `visible` (i.e. lastPage reached)
-//   - the app is not already installed (display-mode: standalone / iOS)
-//   - the parent hasn't recently dismissed it
+// Add-to-home-screen, offered rather than announced.
 //
-// Two rendering paths:
-//   Android/Chrome — beforeinstallprompt fires; we cache the event and let
-//     the parent tap "Add to home screen" to trigger the native chooser.
-//   iOS Safari — no such event. We render a compact set of steps
-//     ("Tap Share → Add to Home Screen") since iOS has no programmatic
-//     install API. Same posture as every PWA on iOS.
+// This used to surface itself as a panel the moment the last page arrived,
+// which landed install instructions on top of the end of a story — the one
+// beat in the whole app that should be left alone. It's opt-in now: the
+// reader shows a button, and nothing appears until a parent asks for it.
 //
-// Dismissal is remembered per-device for DISMISS_TTL_DAYS. Not synced across
-// devices — this is a per-iPad UX choice, not household state.
-
-const DISMISS_KEY = 'lf_install_dismissed_at';
-const DISMISS_TTL_DAYS = 30;
+// Two install paths, unchanged:
+//   Android/Chrome — beforeinstallprompt fires; we cache the event and the
+//     button triggers the native chooser directly.
+//   iOS Safari — no programmatic install API exists, so the button reveals
+//     the manual steps instead. Same posture as every PWA on iOS.
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -39,34 +34,29 @@ function isIOSDevice(): boolean {
   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
 }
 
-function recentlyDismissed(): boolean {
-  if (typeof window === 'undefined') return false;
-  const raw = window.localStorage.getItem(DISMISS_KEY);
-  if (!raw) return false;
-  const at = Number.parseInt(raw, 10);
-  if (Number.isNaN(at)) return false;
-  return Date.now() - at < DISMISS_TTL_DAYS * 24 * 60 * 60 * 1000;
+export interface AddToHomeScreen {
+  /** True when there's an install path worth offering a button for. */
+  available: boolean;
+  /** iOS has no install API — the caller should reveal <InstallSteps/>. */
+  needsManualSteps: boolean;
+  /** Android/Chrome native chooser. No-op on iOS. */
+  promptNative: () => Promise<void>;
 }
 
-export function InstallPrompt({ visible }: { visible: boolean }) {
-  const [ready, setReady] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+export function useAddToHomeScreen(): AddToHomeScreen {
   const [ios, setIos] = useState(false);
-  const [standalone, setStandalone] = useState(false);
+  const [standalone, setStandalone] = useState(true); // assume installed until we know
   const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
     setIos(isIOSDevice());
     setStandalone(isStandaloneNow());
-    setDismissed(recentlyDismissed());
-    setReady(true);
 
     const onBIP = (e: Event) => {
       e.preventDefault();
       setPromptEvent(e as BeforeInstallPromptEvent);
     };
     window.addEventListener('beforeinstallprompt', onBIP);
-    // If the app is installed mid-session, remove the prompt.
     const onInstalled = () => setStandalone(true);
     window.addEventListener('appinstalled', onInstalled);
 
@@ -76,119 +66,47 @@ export function InstallPrompt({ visible }: { visible: boolean }) {
     };
   }, []);
 
-  if (!ready || !visible || standalone || dismissed) return null;
-
-  const androidCanPrompt = Boolean(promptEvent);
-
-  async function install() {
+  const promptNative = useCallback(async () => {
     if (!promptEvent) return;
     await promptEvent.prompt();
     const { outcome } = await promptEvent.userChoice;
-    if (outcome === 'accepted') {
-      setStandalone(true);
-    } else {
-      dismiss();
-    }
+    if (outcome === 'accepted') setStandalone(true);
     setPromptEvent(null);
-  }
+  }, [promptEvent]);
 
-  function dismiss() {
-    window.localStorage.setItem(DISMISS_KEY, String(Date.now()));
-    setDismissed(true);
-  }
+  // Browsers that never fire beforeinstallprompt and aren't iOS (desktop
+  // Firefox, Chrome without the criteria met) have nothing to offer and no
+  // steps worth hand-holding through. Offer nothing.
+  const available = !standalone && (ios || Boolean(promptEvent));
 
-  // On non-iOS browsers that never fire beforeinstallprompt (Firefox on
-  // desktop, Chrome without the criteria met, DuckDuckGo, etc.) there's
-  // nothing to prompt for and no useful steps to hand-hold on. Hide.
-  if (!ios && !androidCanPrompt) return null;
+  return { available, needsManualSteps: ios && !promptEvent, promptNative };
+}
 
+/** The iOS steps. Named literally, because the parent's kid may be watching
+ *  them do it. */
+export function InstallSteps() {
   return (
-    <aside
-      role="dialog"
-      aria-live="polite"
-      aria-label="Save this book to the home screen"
+    <ol
       style={{
-        position: 'absolute',
-        left: 'clamp(12px, 3vw, 24px)',
-        right: 'clamp(12px, 3vw, 24px)',
-        bottom: 'clamp(12px, 3vw, 24px)',
-        maxWidth: 460,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        background: 'var(--paper-warm)',
-        border: 'var(--border-soft)',
-        borderRadius: 'var(--radius-md)',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.16)',
-        padding: 'clamp(14px, 3vw, 20px)',
+        margin: 0,
+        paddingLeft: '1.25em',
+        textAlign: 'left',
+        color: 'var(--ink-soft)',
         fontFamily: 'var(--font-body)',
-        color: 'var(--ink)',
-        display: 'grid',
-        gap: 'var(--space-2)',
-        zIndex: 20,
+        fontSize: 14,
+        lineHeight: 1.7,
+        maxWidth: 320,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
-        <strong style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem' }}>
-          Save this book to the home screen
-        </strong>
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Not now"
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--ink-muted)',
-            cursor: 'pointer',
-            fontSize: '1.4rem',
-            lineHeight: 1,
-            padding: 0,
-          }}
-        >
-          ×
-        </button>
-      </div>
-      <p style={{ margin: 0, color: 'var(--ink-muted)', fontSize: 'var(--text-small-size)', lineHeight: 1.5 }}>
-        Opens like a book on the shelf — one tap, no app store.
-      </p>
-
-      {androidCanPrompt ? (
-        <button
-          type="button"
-          onClick={install}
-          style={{
-            marginTop: 'var(--space-2)',
-            padding: 'var(--space-2) var(--space-4)',
-            background: 'var(--oxblood)',
-            color: 'var(--paper)',
-            border: 'none',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: 'var(--text-body-size)',
-            fontWeight: 600,
-            fontFamily: 'var(--font-body)',
-            cursor: 'pointer',
-            justifySelf: 'start',
-          }}
-        >
-          Add to home screen
-        </button>
-      ) : (
-        // iOS steps. Referred to by name because iOS names the icons literally
-        // and the parent's kid may be watching them do it.
-        <ol
-          style={{
-            margin: 'var(--space-2) 0 0',
-            paddingLeft: '1.25em',
-            color: 'var(--ink)',
-            fontSize: 'var(--text-small-size)',
-            lineHeight: 1.6,
-          }}
-        >
-          <li>Tap <strong>Share</strong> (the square with an up arrow).</li>
-          <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
-          <li>Tap <strong>Add</strong>. It opens like an app after that.</li>
-        </ol>
-      )}
-    </aside>
+      <li>
+        Tap <strong>Share</strong> (the square with an up arrow).
+      </li>
+      <li>
+        Scroll down and tap <strong>Add to Home Screen</strong>.
+      </li>
+      <li>
+        Tap <strong>Add</strong>. It opens like a book after that.
+      </li>
+    </ol>
   );
 }

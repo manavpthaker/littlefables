@@ -16,7 +16,6 @@ import { useSwipeTurn } from '@/lib/reader/use-swipe-turn';
 import type { BedtimeWindow } from '@/lib/models/settings';
 import { PageSpread } from './page-spread';
 import { CoverPage, EndPage } from './book-ends';
-import { InstallPrompt } from './install-prompt';
 import { SampleClosingCard } from './sample-closing-card';
 import { ChapterOpener, useChapterOpenerVisible } from './chapter-opener';
 import type { ReaderMenuChapter } from './reader-menu';
@@ -424,11 +423,7 @@ export function Reader({
         chapterTitle={ch?.title ?? ''}
       />
 
-      {sample ? (
-        <SampleClosingCard visible={surface === 'end'} />
-      ) : (
-        <InstallPrompt visible={surface === 'end'} />
-      )}
+      {sample && <SampleClosingCard visible={surface === 'end'} />}
 
       <ReaderMenu
         open={menuOpen}

@@ -1,6 +1,8 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import { Wordmark } from '@ds/components/core/Wordmark.jsx';
+import { InstallSteps, useAddToHomeScreen } from './install-prompt';
 
 // The book's front and back boards.
 //
@@ -130,6 +132,17 @@ export function CoverPage({
   );
 }
 
+const endButton: React.CSSProperties = {
+  border: '1px solid var(--pill-edge)',
+  borderRadius: 'var(--radius-pill)',
+  background: 'transparent',
+  color: 'var(--oxblood-text)',
+  fontFamily: 'var(--font-body)',
+  fontSize: 15,
+  padding: '10px 22px',
+  cursor: 'pointer',
+};
+
 export function EndPage({
   onReadAgain,
   controls,
@@ -137,6 +150,18 @@ export function EndPage({
   onReadAgain: () => void;
   controls?: React.ReactNode;
 }) {
+  const install = useAddToHomeScreen();
+  const [showSteps, setShowSteps] = useState(false);
+
+  // Held in a stable element so React never reconciles the mark's subtree.
+  // drawIn is a mount-time CSS animation: without this, revealing the
+  // install steps re-ran the whole 1.5s redraw of the logo, which is its
+  // own small jolt at exactly the moment that should be still.
+  const mark = useMemo(
+    () => <Wordmark layout="mark-only" markSize={104} drawIn animated />,
+    [],
+  );
+
   return (
     <main
       style={{
@@ -159,9 +184,7 @@ export function EndPage({
         }}
       >
         <span style={{ fontFamily: 'var(--font-display)', fontSize: 32 }}>The End</span>
-        {/* drawIn re-runs on every mount — the mark redraws itself each time
-            the back board is reached, which is the moment being marked. */}
-        <Wordmark layout="mark-only" markSize={104} drawIn animated />
+        {mark}
         <a
           href="https://littlefables.app"
           style={{
@@ -175,23 +198,32 @@ export function EndPage({
         >
           littlefables.app
         </a>
-        <button
-          type="button"
-          onClick={onReadAgain}
+        <div
           style={{
             marginTop: 'var(--space-2)',
-            border: '1px solid var(--pill-edge)',
-            borderRadius: 'var(--radius-pill)',
-            background: 'transparent',
-            color: 'var(--oxblood-text)',
-            fontFamily: 'var(--font-body)',
-            fontSize: 15,
-            padding: '10px 22px',
-            cursor: 'pointer',
+            display: 'grid',
+            gap: 'var(--space-2)',
+            justifyItems: 'center',
           }}
         >
-          Read it again
-        </button>
+          <button type="button" onClick={onReadAgain} style={endButton}>
+            Read it again
+          </button>
+          {install.available && (
+            <button
+              type="button"
+              onClick={() => {
+                if (install.needsManualSteps) setShowSteps((s) => !s);
+                else void install.promptNative();
+              }}
+              aria-expanded={install.needsManualSteps ? showSteps : undefined}
+              style={endButton}
+            >
+              Keep it on the home screen
+            </button>
+          )}
+          {showSteps && install.needsManualSteps && <InstallSteps />}
+        </div>
       </div>
 
       <div
