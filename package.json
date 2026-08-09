@@ -25,7 +25,8 @@
     "order:new": "tsx scripts/new-order.ts",
     "order:preview": "tsx scripts/order-preview.ts",
     "order:full-book": "tsx scripts/order-full-book.ts",
-    "order:publish": "tsx scripts/order-publish.ts"
+    "order:publish": "tsx scripts/order-publish.ts",
+    "art:bakeoff": "tsx scripts/art-bakeoff/run.ts"
   },
   "dependencies": {
     "@supabase/server": "^1.4.0",

@@ -1,0 +1,95 @@
+{
+  "id": "bakeoff-lamplighter",
+  "title": "Nila and the Last Lamp",
+  "kind": "quick",
+  "_bakeoff": "Net-new sample story written 2026-08-09 for the art-provider bake-off. Not a shipping book. `_composition` is sent to the model; `_stressTest` is scoring notes and is never sent — see content/bakeoff/README.md.",
+  "theme": {
+    "paper": "#f0e6d2",
+    "ink": "#2e2a3d",
+    "accent": "#d08a3a",
+    "hush": "#6c6480"
+  },
+  "chapters": [
+    {
+      "title": "Nila and the Last Lamp",
+      "pages": [
+        {
+          "text": "At the bottom of Marigold Hill, where the road gave up and turned into grass, there lived a girl named Nila who was in charge of exactly one thing.",
+          "_composition": "Wide establishing shot, full body, daylight. Baseline reference for every later page.",
+          "_stressTest": "Wide establishing shot, full body, daylight. Baseline reference for every later page."
+        },
+        {
+          "text": "Every evening she carried the brass key down the hill and wound the old lamp at the crossing, so that anyone walking home in the dark would know which way was home.",
+          "_composition": "Full body in motion, walking, side view, late afternoon.",
+          "_stressTest": "does the character survive a profile view."
+        },
+        {
+          "text": "The key was heavier than it looked. Nila's grandmother had carried it before her, and her grandmother's grandmother before that, and none of them had ever once been late.",
+          "_composition": "Close-up on face and hands holding the key.",
+          "_stressTest": "does the face hold at close range after two wide shots."
+        },
+        {
+          "text": "But on the evening this story is about, Nila reached the crossing and found the lamp already lit — and a small grey fox sitting underneath it, looking very pleased with himself.",
+          "_composition": "Two characters, first appearance of Pim.",
+          "_stressTest": "does adding a second character destabilise the first."
+        },
+        {
+          "text": "\"You cannot light the lamp,\" said Nila. \"You do not have the key.\" The fox looked at the key. The fox looked at Nila. The fox did not appear to think the key was the important part.",
+          "_composition": "Both characters, eye level, dusk.",
+          "_stressTest": "two-character consistency in changed light."
+        },
+        {
+          "text": "His name was Pim, and he had been lighting the lamp for eleven nights, ever since the evening Nila's grandmother stopped coming down the hill.",
+          "_composition": "Fox alone, close, warm lamplight from above.",
+          "_stressTest": "the second character alone, under coloured light."
+        },
+        {
+          "text": "Nila sat down on the cold step, because that was a thing she had not let herself think about for eleven nights.",
+          "_composition": "Character alone, seated, back three-quarter, night.",
+          "_stressTest": "the hardest pose — seated, from behind, in the dark."
+        },
+        {
+          "text": "\"She showed me how,\" said Pim. \"She said someone ought to know, in case there was ever an evening when nobody came.\"",
+          "_composition": "Two characters, night, strong lamp backlight.",
+          "_stressTest": "silhouette legibility when rim-lit."
+        },
+        {
+          "text": "So they wound it together, the girl and the fox, one turn each, until the light went out across the fields the way it was supposed to.",
+          "_composition": "Two characters mid-action, hands and paws on the lamp, night.",
+          "_stressTest": "interaction without limb errors."
+        },
+        {
+          "text": "And in the morning Nila climbed back up Marigold Hill with the brass key swinging at her neck and a grey fox trotting a little way behind her, pretending not to follow.",
+          "_composition": "Wide shot, morning daylight, both characters.",
+          "_stressTest": "return to page-1 conditions — the drift check. Compare directly against page 1."
+        }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "crossing",
+      "syllables": [
+        "cross",
+        "ing"
+      ],
+      "kidDefinition": "the place where two roads meet"
+    },
+    {
+      "word": "lamplighter",
+      "syllables": [
+        "lamp",
+        "light",
+        "er"
+      ],
+      "kidDefinition": "someone whose job is to light the lamps at night"
+    },
+    {
+      "word": "brass",
+      "syllables": [
+        "brass"
+      ],
+      "kidDefinition": "a shiny yellow metal, like a gold-coloured key"
+    }
+  ]
+}

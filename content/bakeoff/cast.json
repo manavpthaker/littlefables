@@ -1,0 +1,48 @@
+{
+  "_note": "Cast + style anchor for the art-provider bake-off. The visualAnchors and persistentProps are deliberately specific: vague anchors let every provider look equally good, which would make the test useless. persistentProps are the sharpest signal — a prop that vanishes on page 6 is the exact failure the manual 'check consistency every 3 pages' step exists to catch.",
+  "style": {
+    "anchor": "Style: warm hand-drawn watercolour with ink linework, visible textured paper grain, soft edges, no digital gloss. Picture-book illustration, not photorealism, not 3D render, not anime.",
+    "paletteHint": "paper cream, warm ink brown, marigold, sage, dusk violet"
+  },
+  "cast": [
+    {
+      "id": "nila",
+      "name": "Nila",
+      "role": "the lamplighter's granddaughter",
+      "species": "a girl of about seven, warm brown skin, South Asian",
+      "visualAnchors": [
+        "black hair in two short braids that stick out slightly at the ends",
+        "round face, thick eyebrows, a small gap between her front teeth",
+        "mustard-yellow wool coat, too big at the shoulders, three wooden buttons",
+        "dark green boots"
+      ],
+      "persistentProps": [
+        "a large brass key on a loop of red string around her neck"
+      ]
+    },
+    {
+      "id": "pim",
+      "name": "Pim",
+      "role": "the fox who learned the lamp",
+      "species": "a small grey fox",
+      "visualAnchors": [
+        "dusty grey coat with a cream chest and cream tail tip",
+        "one ear permanently folded over at the tip, the left one",
+        "narrow amber eyes, small for a fox, terrier-sized"
+      ],
+      "persistentProps": []
+    }
+  ],
+  "pageCast": {
+    "0": ["nila"],
+    "1": ["nila"],
+    "2": ["nila"],
+    "3": ["nila", "pim"],
+    "4": ["nila", "pim"],
+    "5": ["pim"],
+    "6": ["nila"],
+    "7": ["nila", "pim"],
+    "8": ["nila", "pim"],
+    "9": ["nila", "pim"]
+  }
+}

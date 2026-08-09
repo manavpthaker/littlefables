@@ -83,3 +83,7 @@ video/public/styles/
 video/public/broll/
 .vercel
 .env*
+
+# Art bake-off output — generated images, regenerate with `pnpm art:bakeoff`.
+bakeoff-out/
+content/bakeoff/style-refs/
