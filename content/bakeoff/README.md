@@ -23,16 +23,39 @@ saving money it wouldn't be worth running.
 ```bash
 pnpm art:bakeoff --dry-run      # writes every prompt, zero API calls, zero spend
 pnpm art:bakeoff                # every provider whose key is set
-pnpm art:bakeoff --providers fal:nano-banana-pro,gemini
+pnpm art:bakeoff --providers fal:nano-banana-pro,fal:seedream-v4
 pnpm art:bakeoff --pages 0-3    # cheap smoke test before committing to all ten
 ```
 
 Keys go in `.env.local` (gitignored). Set only the ones you want to race:
-`FAL_KEY`, `GEMINI_API_KEY`, `OPENAI_API_KEY`. A provider with no key is skipped
-**loudly** — a silent skip would read as a loss.
+`FAL_KEY`, `OPENAI_API_KEY`. A provider with no key is skipped **loudly** — a
+silent skip would read as a loss.
+
+**Gemini is out** (2026-08-09, Manav's call — not worth the integration).
+`providers/gemini.ts` stays in the tree unwired: it carries the model-cascade
+and `candidateCount` quirks already paid for in debugging, so deleting it would
+just mean rediscovering them if Google ever comes back up for discussion.
 
 Output lands in `bakeoff-out/<timestamp>/` (gitignored). Start at
 `contact-sheet.html`.
+
+**Run it on the Mac, not in a cloud session.** Claude Code's remote container
+enforces an egress allowlist and `fal.run` is not on it (HTTP 403 "Host not in
+allowlist"), so the harness cannot reach any provider from there. The MacBook
+or the mini both work.
+
+### First run
+
+The fal request shapes were written from the API docs, not against a live
+endpoint. Smoke-test one page before committing to ten:
+
+```bash
+pnpm art:bakeoff --pages 0     # 1 sheet + 1 page per model, ~$0.46
+```
+
+A **422** means an input field name is wrong for that model family; the error
+names the exact function to fix (`FAL_MODELS[...].buildInput`) and the model's
+API page. Everything else should be a real result.
 
 ## Method
 

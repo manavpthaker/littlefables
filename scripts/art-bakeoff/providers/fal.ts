@@ -150,7 +150,15 @@ export function falProvider(key: keyof typeof FAL_MODELS | string): Provider {
         }
         if (!resp.ok) {
           const body = await resp.text().catch(() => '');
-          throw new Error(`fal ${def.modelId} HTTP ${resp.status}: ${body.slice(0, 400)}`);
+          // 422 is fal's schema-validation error: an input field name is wrong
+          // for this model. Field names vary across model families, so say
+          // where the fix goes instead of leaving a raw body to interpret.
+          const hint =
+            resp.status === 422
+              ? `\n  → input schema mismatch. Fix FAL_MODELS['${key}'].buildInput in scripts/art-bakeoff/providers/fal.ts;` +
+                `\n    the accepted fields are on https://fal.ai/models/${def.modelId}/api`
+              : '';
+          throw new Error(`fal ${def.modelId} HTTP ${resp.status}: ${body.slice(0, 400)}${hint}`);
         }
 
         const json = (await resp.json()) as FalResponse;

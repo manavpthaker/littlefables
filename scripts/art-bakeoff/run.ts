@@ -23,18 +23,22 @@
  * Usage:
  *   pnpm art:bakeoff --dry-run                     plumbing check, zero API calls
  *   pnpm art:bakeoff                               all providers with keys present
- *   pnpm art:bakeoff --providers fal:nano-banana-pro,gemini
+ *   pnpm art:bakeoff --providers fal:nano-banana-pro,fal:seedream-v4
  *   pnpm art:bakeoff --pages 0-3                   just the first four pages
  *
  * Env (only the providers you want need keys):
- *   FAL_KEY  GEMINI_API_KEY  OPENAI_API_KEY
+ *   FAL_KEY  OPENAI_API_KEY
+ *
+ * Gemini was dropped 2026-08-09 (Manav's call — not worth the integration).
+ * providers/gemini.ts is kept unwired: it carries the model-cascade and
+ * candidateCount quirks that were already paid for in debugging, and deleting
+ * it would mean rediscovering them if Google is ever reconsidered.
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { config } from 'dotenv';
 import { falProvider, FAL_MODELS } from './providers/fal';
-import { geminiProvider } from './providers/gemini';
 import { openaiProvider } from './providers/openai';
 import type { Provider, RefImage } from './providers/types';
 import { characterSheetPrompt, pagePrompt, type CastMember, type StyleAnchor } from './prompts';
@@ -108,7 +112,6 @@ function loadStyleRefs(): RefImage[] {
 function allProviders(): Provider[] {
   return [
     ...Object.keys(FAL_MODELS).map((k) => falProvider(k)),
-    geminiProvider(),
     openaiProvider(),
   ];
 }
@@ -135,7 +138,7 @@ function selectProviders(): Provider[] {
   }
 
   if (chosen.length === 0 && !DRY_RUN) {
-    throw new Error('No providers available. Set FAL_KEY / GEMINI_API_KEY / OPENAI_API_KEY, or pass --dry-run.');
+    throw new Error('No providers available. Set FAL_KEY / OPENAI_API_KEY, or pass --dry-run.');
   }
   return chosen;
 }
