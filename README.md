@@ -103,6 +103,7 @@ edit the folder and re-import to update.
 | `pnpm content:add <folder>` | Upload a book folder |
 | `pnpm db:reset` | Drop + recreate local Supabase + apply migrations |
 | `pnpm db:types` | Regenerate `types/database.ts` from linked hosted schema |
+| `pnpm art:bakeoff` | Art-provider bake-off (ops only, never shipped — `--dry-run` is free) |
 
 ## Repo layout
 
@@ -122,7 +123,13 @@ edit the folder and re-import to update.
   (uploaded via `pnpm content:add`). `home/` for us, `demo/` for the public
   demo, `<lastname>/` for buyers.
 - **`scripts/`** — `import-book.ts` (book uploader), `new-household.ts`
-  (provision a new household), `build-precache-manifest.ts` (SW stamp).
+  (provision a new household), `build-precache-manifest.ts` (SW stamp),
+  `art-bakeoff/` (fulfillment tooling — see below).
+- **`content/bakeoff/`** + **`scripts/art-bakeoff/`** — the art-provider
+  bake-off: can an image API hold one character across a whole book without a
+  human checking every third page? Answered 2026-08-09 — GPT Image 2 via fal
+  held twenty pages unattended. Start at `content/bakeoff/README.md`. These are
+  ops scripts for making books; nothing here is imported by the app.
 
 ## The shape
 
@@ -135,3 +142,8 @@ question generation, no on-tap word definition. All text is authored;
 all narration is either pre-generated MP3 or a fallback to browser
 speech synthesis. ElevenLabs is called on-demand for word-tap speech
 only.
+
+Image and text models *are* used to **make** books, but only in `scripts/`,
+run by hand before a book is uploaded. Nothing in `lib/` or `app/` gains a
+provider dependency, and no generated asset reaches a reader without a human
+approving it first. Authoring tools and runtime are deliberately separate.

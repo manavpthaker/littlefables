@@ -44,6 +44,12 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
    browser speech synthesis. ElevenLabs is only hit for word-tap TTS
    (via `/api/child/tts`).
 
+   The rule is about **runtime**, not about the house. `scripts/art-bakeoff/`
+   calls fal, OpenAI and image models freely — it is ops tooling for *making*
+   books, run by hand, never imported by `app/` or `lib/`, and never in the
+   bundle. Adding a provider there is not a violation; adding one to `lib/`
+   is. If you are about to "fix" a provider import in `scripts/`, don't.
+
 2. **Books are files, not database records.** The source of truth for a
    book is its folder under `content/households/<household>/books/<slug>/`.
    The DB row is a deployment cache. Re-running `pnpm content:add` on an
@@ -116,7 +122,20 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
   delivered through `app/f/[token]/route.ts`. Every buyer gets a full
   household folder with `household.yaml` — see
   `content/households/README.md` and `_TEMPLATE.yaml`. Art prompts come
-  from the `fable-art-custom` skill at `~/.codex/skills/fable-art-custom/`.
+  from the `fable-art-custom` skill at `~/.codex/skills/fable-art-custom/` —
+  **note that skill is not on every machine.** It is absent on the Mini
+  (which has only `chronicle`, `use-spark`, `ux-ui-audit`), so check before
+  assuming you can read it; the prompt conventions it encodes are not
+  recorded anywhere in this repo.
+- **Art provider choice** → `content/bakeoff/README.md`. The bake-off asked
+  whether an image API can hold one character across a whole book without a
+  human checking every third page. Answered 2026-08-09: **GPT Image 2 via
+  fal**, twenty pages, zero regenerations, unattended. Two prompt-design
+  rules came out of it and now live in `docs/commerce/fulfillment-playbook.md`
+  step 22 — they are generator-agnostic, so they bind the manual ChatGPT path
+  too. **Likeness from a buyer's photo is untested and gated**; the bake-off
+  used a fictional character with no photograph. Do not point an API at a
+  buyer photo on the strength of that result.
 
 ## What's gone (don't ask to restore without checking with the user)
 
