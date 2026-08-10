@@ -21,6 +21,16 @@ Converted 7 of 8 stories into `content/packs/pack-000-family-originals.json` (12
 2. **Bedtime adaptation:** rather than rewriting bedtime stories for daytime, the pack tags them (`originNote`) so the app can shelve them under Quiet time / bedtime mode. Cozy Circle and Papa Gets the Moon's Rest chapter deliberately keep their sleepy pacing.
 3. **Art:** every page ships with a mood-gradient scene placeholder → "art still painting" in the UI. These 7 are the priority queue for the art-generation pass (style anchors: the existing ink-and-wash books + `style_analysis_framework.md`).
 4. **Spanish:** kept verbatim everywhere it appears (bus detour, Midnight Train glossary). The project-purpose doc had a truncated "Spanish removal" note — confirm whether that decision affects these.
+   - **Resolved 2026-08-01, meadow fables only.** All seven meadow fables
+     ended on the same line — "Y colorín colorado, este cuento se ha
+     acabado." — with no glossary or vocab entry behind it, unlike the
+     Midnight Train's Spanish, which ships pronunciations in its parent
+     guide. Household decision: drop it from those seven; each fable now
+     ends on its moral line. This does **not** change the pack-000
+     originals above, where Spanish stays verbatim and glossed.
+     (The edit itself is already applied — the seven books under
+     `content/households/home/books/meadow-fables/` carry no Spanish. Only
+     the reasoning was stranded, on a branch, until now.)
 5. **Page count sanity:** ~65 words/page targets the reader card. Moose/Coocoo/Midnight/Moon average 45–70 pages per book — right for multi-day chapter reading, too long for one sitting, which is exactly what the chapter map is for.
 
 ## Schema note (for the build)
