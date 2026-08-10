@@ -1,8 +1,13 @@
 {
   "_note": "Cast + style anchor for the art-provider bake-off. The visualAnchors and persistentProps are deliberately specific: vague anchors let every provider look equally good, which would make the test useless. persistentProps are the sharpest signal — a prop that vanishes on page 6 is the exact failure the manual 'check consistency every 3 pages' step exists to catch.",
+  "_revisedAfterRun": "2026-08-09T10-46-34. Three anchors were rewritten because that run's failures were prompt bugs, not model bugs, and leaving them in would have measured the prompt. (1) 'too big at the shoulders' was read literally — Seedream drew the coat sliding OFF her shoulders on four pages; it now says worn on and buttoned. (2) 'one ear permanently folded over at the tip, the left one' produced two folded ears plus an earring-shaped blob; naming both ears is more robust than naming one. (3) worldAnchor is new — see StyleAnchor in scripts/art-bakeoff/prompts.ts. Prompts are therefore NOT byte-comparable with that run; a rerun is v2, not another column.",
+  "_revisedAfterRun3": "2026-08-09T18-45-16. v3 fixed the teeth and the collar and produced the cleanest page-9-vs-page-0 match of any run, then hand-lettered 'THE CROSSING' into three pages — as sky lettering on 6, a roadside signboard on 8, and ground lettering on 7. Cause: the anchor said 'THE CROSSING is a bare earth junction' in capitals, mirroring 'THE LAMP'. 'THE LAMP' never did this across two runs and 'THE CROSSING' did it immediately, because a lamp is an object and a crossing is a PLACE, and places get signs. Emphasis capitals are not free in an image prompt — a capitalised noun phrase is indistinguishable from a request for a label. v4 drops the capitals and stops repeating the word 'crossing' at all (the page text already supplies it; the anchor was doubling the signal), describing the junction only by what is underfoot.",
+  "_revisedAfterRun4": "2026-08-09T19-02-17. v4's lettering fix held completely — zero text on all ten pages, so the capitals theory in _revisedAfterRun3 is confirmed. Two v4 defects were fixed here before freezing the fixture for the four-way run; a third was deliberately left in. (1) 'a small brass winding keyhole on the post at a child's reach' was drawn as a literal gold key hanging off the lamp post on pages 0, 1, 4, 5, 8 and 9. That is not cosmetic: the brass key on red string is the sharpest scoring signal in the whole test, and page 5 is fox-alone-without-Nila yet still had a brass key in frame — a false positive on the one anchor everything else is measured against. Naming a keyhole beside a story about a key duplicates the key. The post is now described as plain ironwork carrying nothing, with the negatives stacked behind that positive per the _revisedAfterRun2 rule. (2) The v3 teeth fix over-corrected: 'a friendly gap-toothed smile' pinned the expression, not the anatomy, and produced the identical open-mouth grin on all ten pages — including page 6, which is the grief beat. Both earlier phrasings failed in opposite directions (anatomical → metal studs in the close-up; expressive → frozen grin), so the gap is now anatomical but conditioned on smiling, with the expression explicitly freed. (3) NOT fixed: Pim renders as a wolf, chest-height to a seven-year-old, and his tail carries a dusk-violet band from the palette hint. Left in deliberately — it will hit all four providers identically, so it cannot change the ranking, and every edit to this file costs another calibration run. Note the violet tail propagated perfectly from sheet to all ten pages, which is direct evidence the reference conditioning works as theorised.",
+  "_revisedAfterRun2": "2026-08-09T18-32-58. The v2 wording fixed the lamp and the coat but bought two new failures, both from anchors that were precise about the wrong thing. (1) 'closed at the collar' grew a chunky ribbed roll-neck on all ten pages — consistently, which is the tell: Seedream held the anchor faithfully, the anchor was just wrong. Now 'buttoned up the front, plain flat collar'. (2) 'a small gap between her front teeth' survived every wide shot and then rendered as metal studs at the corners of her mouth in the page-2 close-up; softened to 'a gap-toothed smile', which asks for the expression rather than the anatomy. (3) The crossing clause was positive AND negative and still produced painted crosswalk stripes on pages 1, 6 and 7 — the story's own word 'crossing' outvotes a trailing 'never'. Rewritten as an emphatic positive (bare earth, rutted, no paving of any kind) with the negation dropped. The lamp's 'never' clauses are KEPT: they worked on all ten pages, because they sit behind a strong positive description. A negative alone does not hold; a negative behind a picture does.",
   "style": {
     "anchor": "Style: warm hand-drawn watercolour with ink linework, visible textured paper grain, soft edges, no digital gloss. Picture-book illustration, not photorealism, not 3D render, not anime.",
-    "paletteHint": "paper cream, warm ink brown, marigold, sage, dusk violet"
+    "paletteHint": "paper cream, warm ink brown, marigold, sage, dusk violet",
+    "worldAnchor": "Setting: open rolling farmland at the foot of a grassy hill. Two dirt farm tracks meet on bare rutted earth scattered with loose stones, edged with long grass and dry-stone walls; the tracks are plain soil their whole length, with grass growing up the middle. Standing alone where they meet is a tall cast-iron gas street lamp on a post, taller than a grown-up, with a four-sided glass lantern head. The post is plain smooth ironwork from the lantern down to its base, carrying nothing: no key, no keyhole, no hanging ornament, no bracket, no sign. This lamp is never an indoor lamp, never a table lamp or floor lamp, never has a fabric lampshade, and never has an electrical cord or plug."
   },
   "cast": [
     {
@@ -12,8 +17,8 @@
       "species": "a girl of about seven, warm brown skin, South Asian",
       "visualAnchors": [
         "black hair in two short braids that stick out slightly at the ends",
-        "round face, thick eyebrows, a small gap between her front teeth",
-        "mustard-yellow wool coat, too big at the shoulders, three wooden buttons",
+        "round face, thick eyebrows, a narrow gap between her two upper front teeth that is seen only when she smiles; her expression follows the scene and is not always a smile",
+        "a mustard-yellow wool coat a size too big, worn on and buttoned up the front with three round wooden buttons, plain flat collar, sleeves swallowing her hands",
         "dark green boots"
       ],
       "persistentProps": [
@@ -27,8 +32,8 @@
       "species": "a small grey fox",
       "visualAnchors": [
         "dusty grey coat with a cream chest and cream tail tip",
-        "one ear permanently folded over at the tip, the left one",
-        "narrow amber eyes, small for a fox, terrier-sized"
+        "his left ear flops over at the tip while his right ear stands straight up and pointed — exactly one folded ear, never both",
+        "narrow amber eyes, small for a fox, terrier-sized, nothing worn on the ears"
       ],
       "persistentProps": []
     }
@@ -43,6 +48,16 @@
     "6": ["nila"],
     "7": ["nila", "pim"],
     "8": ["nila", "pim"],
-    "9": ["nila", "pim"]
+    "9": ["nila", "pim"],
+    "10": ["nila"],
+    "11": [],
+    "12": ["nila"],
+    "13": ["nila", "pim"],
+    "14": ["nila", "pim"],
+    "15": ["pim"],
+    "16": ["pim"],
+    "17": ["nila", "pim"],
+    "18": ["nila", "pim"],
+    "19": ["nila", "pim"]
   }
 }

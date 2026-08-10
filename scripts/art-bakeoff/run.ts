@@ -75,7 +75,7 @@ function parsePageRange(spec: string | undefined, total: number): number[] {
 
 // ---------------------------------------------------------------- inputs
 
-interface StoryPage { text: string; _composition?: string; _stressTest?: string }
+interface StoryPage { text: string; _composition?: string; _stressTest?: string; _offWorld?: boolean }
 interface Story { id: string; title: string; chapters: Array<{ title: string; pages: StoryPage[] }> }
 interface CastFile { style: StyleAnchor; cast: CastMember[]; pageCast: Record<string, string[]> }
 
@@ -141,6 +141,15 @@ function selectProviders(): Provider[] {
     throw new Error('No providers available. Set FAL_KEY / OPENAI_API_KEY, or pass --dry-run.');
   }
   return chosen;
+}
+
+/**
+ * Is this failure about the account rather than the model? Billing locks and
+ * auth rejections say nothing about whether a provider can hold a character,
+ * so they must never be recorded as if they were a provider's score.
+ */
+function isInfraFailure(message: string): boolean {
+  return /HTTP (401|402|403)\b|Exhausted balance|TOP_UP|User is locked|is not set/i.test(message);
 }
 
 // ---------------------------------------------------------------- blinding
@@ -243,9 +252,24 @@ async function runProvider(
   } catch (err) {
     // No sheet means every page below is unconditioned — that IS the result for
     // this provider, so record it and keep going rather than aborting the run.
+    //
+    // UNLESS the sheet died on billing or auth, which is not a result about the
+    // provider at all. That distinction cost $4.50 on 2026-08-10: a balance 403
+    // killed the sheet, the run carried on, and eighteen pages were generated
+    // with no reference image — measuring nothing the bake-off exists to
+    // measure, because "every page conditioned on that provider's own sheet"
+    // IS the method. Fail loudly instead of producing plausible, worthless art.
     run.sheetError = err instanceof Error ? err.message : String(err);
     run.failures += 1;
     console.warn(`  [${blind}] character sheet FAILED: ${run.sheetError}`);
+    if (isInfraFailure(run.sheetError)) {
+      throw new Error(
+        `${provider.id}: character sheet failed for a billing/auth reason, so every page ` +
+          `would run unconditioned and the run would not measure consistency.\n` +
+          `  → ${run.sheetError}\n` +
+          `  Fix the account and re-run; nothing here is scoreable.`,
+      );
+    }
   }
 
   // ---- Phase 2: every page, conditioned on that one sheet.
@@ -263,6 +287,7 @@ async function runProvider(
       style: castFile.style,
       characterRefCount: characterRefs.length,
       direction: page._composition,
+      offWorld: page._offWorld,
     });
     writeFileSync(join(dir, `page-${String(idx).padStart(2, '0')}.prompt.txt`), prompt);
 
@@ -324,6 +349,7 @@ async function main(): Promise<void> {
           style: castFile.style,
           characterRefCount: 1,
           direction: pages[idx]?._composition,
+          offWorld: pages[idx]?._offWorld,
         }),
       );
     }

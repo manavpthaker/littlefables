@@ -178,6 +178,21 @@ hood — useful when something fails or you need to run a step by hand.
 
 ## E · Full book art (24–72h after approval)
 
+> **Status of the API path, 2026-08-09.** The bake-off
+> (`content/bakeoff/README.md`) settled the provider question: **GPT Image 2 via
+> fal** held a character across twenty pages with zero regenerations, $5.25 and
+> 40 minutes fully unattended. That is the candidate to replace steps 20–22.
+>
+> **It does not replace them yet.** The bake-off used a *fictional* character
+> with no photograph, and every order below conditions on a real child's face.
+> Likeness-from-photo is the harder problem and the one with policy exposure —
+> minors' likeness is the highest-scrutiny category in every provider's terms.
+> Until phase 2 runs (your own child's photo first, provider terms read before
+> any buyer photo goes near an API), **steps 20–22 stay manual as written.**
+>
+> The two authoring rules in step 22 came out of the bake-off and apply to the
+> manual path today.
+
 20. **Back to `fable-art-custom`, full-book mode.** Feed it `story.json`,
     `character-notes.md`, and `APPROVED-prompt.txt`. Ask for one prompt per page in
     reading order, each ending with the character block and style anchor verbatim.
@@ -190,6 +205,21 @@ hood — useful when something fails or you need to run a step by hand.
 22. **Check consistency every 3 pages** — hair silhouette, palette, props, lighting
     continuity within a scene, **and no fabricated faces have crept in**.
     Regenerate anything off-model before moving on.
+
+    Two failures here are **prompt-design faults, not generator faults** — they
+    reproduce on any generator, so fix the prompt rather than regenerating into
+    the same wall. Both were found by the art bake-off
+    (`content/bakeoff/README.md`) on pages a shorter test never reaches:
+
+    - **A page whose action removes a persistent prop renders it twice.** If the
+      character "always wears" a locket and the page has her *taking it off*,
+      you get two lockets — the anchor and the action both win. Drop the prop
+      from the persistent block for that page and describe it in the page's own
+      composition instead.
+    - **A prop drawn with no character in frame loses its details.** The prop is
+      anchored *through* the character; a close-up of just the object drifts on
+      colour, material and cord. On any object-only page, restate the prop's
+      full description in that page's prompt.
 
 23. **Save into the book folder:**
     ```

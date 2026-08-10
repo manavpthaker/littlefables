@@ -29,7 +29,33 @@ export interface StyleAnchor {
   /** The verbatim style block appended to every prompt, unchanged, all book. */
   anchor: string;
   paletteHint: string;
+  /**
+   * The verbatim SETTING block, appended to every page prompt (not the sheet,
+   * which is characters on plain paper). Same trick as the style anchor, aimed
+   * at the other thing that drifts: props the story names but never describes.
+   *
+   * Run 2026-08-09T10-46-34 is why this exists. Seedream read the story's
+   * "lamp" as a domestic one and drew a floor lamp with a power cord standing
+   * on a zebra crossing (page 3) and a table lamp with a trailing flex (page 8).
+   * Character anchors held on both pages — the object the plot turns on is what
+   * broke, because nothing in the prompt ever said what it looked like.
+   */
+  worldAnchor?: string;
 }
+
+/**
+ * Repeated verbatim in both builders. Not stylistic: a book with a word printed
+ * on the art is unshippable, so this is a hard gate, and the earlier
+ * "no text, no captions" wording did not hold. Seedream signed page 0 and
+ * page 6 and hand-lettered "Nila" and "Pim" into the corners of page 8 — none
+ * of which are captions, so none of which the old phrasing forbade. Enumerate
+ * the forms; a category name is not a constraint.
+ */
+const NOTHING_WRITTEN = [
+  'Nothing written anywhere in the image: no text, no captions, no speech',
+  'bubbles, no page numbers, no character name labels, no artist signature,',
+  'no monogram, no handwriting, no watermark, no logo, no borders, no frames.',
+].join('\n');
 
 /** Trademarked or filter-tripping names → safe substitutes. */
 const SAFE_NAMES: Record<string, string> = {};
@@ -66,7 +92,8 @@ export function characterSheetPrompt(cast: CastMember[], style: StyleAnchor): st
     'Lay them out side by side on one clean sheet, each shown in three poses:',
     '(1) standing three-quarter view, (2) leaning in / listening, (3) mid-motion.',
     '',
-    'Plain paper background. No text, no labels, no captions, no borders, no frames.',
+    'Plain paper background.',
+    NOTHING_WRITTEN,
     'The same character must be identical between its own three poses — same',
     'silhouette, same face, same colours, same props.',
   ].join('\n');
@@ -87,8 +114,17 @@ export function pagePrompt(opts: {
   characterRefCount: number;
   /** Scene direction from the story file — what makes this page a stress test. */
   direction?: string;
+  /**
+   * Suppress the world anchor for a page that leaves the anchored setting.
+   * The anchor is appended verbatim to every page precisely so props the story
+   * names but never describes cannot drift — but an anchor describing an
+   * outdoor crossing, injected under a composition that says "interior
+   * kitchen", is a contradiction the model has to resolve, and whichever way
+   * it resolves it we would be scoring the prompt rather than the model.
+   */
+  offWorld?: boolean;
 }): string {
-  const { pageText, prevText, present, style, characterRefCount, direction } = opts;
+  const { pageText, prevText, present, style, characterRefCount, direction, offWorld } = opts;
 
   const castLines = present.length
     ? present.map((c) => `  - ${safeName(c.name)} — ${anchorsFor(c)}`).join('\n')
@@ -113,9 +149,10 @@ export function pagePrompt(opts: {
     '',
     style.anchor,
     `Palette: ${style.paletteHint}`,
+    ...(style.worldAnchor && !offWorld ? ['', style.worldAnchor] : []),
     '',
-    'Render as a single scene. No text, no captions, no speech bubbles, no page',
-    'numbers, no borders, no frames. Do not add any human character who is not',
-    'listed above.',
+    'Render as a single scene. Do not add any human character who is not listed',
+    'above.',
+    NOTHING_WRITTEN,
   ].join('\n');
 }

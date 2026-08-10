@@ -3,6 +3,7 @@
   "title": "Nila and the Last Lamp",
   "kind": "quick",
   "_bakeoff": "Net-new sample story written 2026-08-09 for the art-provider bake-off. Not a shipping book. `_composition` is sent to the model; `_stressTest` is scoring notes and is never sent — see content/bakeoff/README.md.",
+  "_extendedTo20": "2026-08-09. Pages 10-19 added because the shipping book is ~20 pages and a ten-page test measures roughly half the real drift exposure — it can eliminate a provider but cannot certify one. The new pages deliberately do NOT repeat the first ten's axes. They test what only a long book breaks: an interior with no worldAnchor to lean on (10), the persistent prop rendered with no owner in frame (11), an occluded silhouette (12), a character returning after four pages of absence (13) — the single most important long-run axis and one a ten-page book cannot contain at all — extreme scale (14), the second character carrying pages alone late in the book (15, 16), a pose that hides the strongest identity cue (17), and both faces in one close-up at page 18. Page 19 repeats page 0's conditions exactly; the gap between page 9 and page 19 is the measurement that did not previously exist.",
   "theme": {
     "paper": "#f0e6d2",
     "ink": "#2e2a3d",
@@ -62,6 +63,58 @@
           "text": "And in the morning Nila climbed back up Marigold Hill with the brass key swinging at her neck and a grey fox trotting a little way behind her, pretending not to follow.",
           "_composition": "Wide shot, morning daylight, both characters.",
           "_stressTest": "return to page-1 conditions — the drift check. Compare directly against page 1."
+        },
+        {
+          "text": "Nila hung the key on its nail by the kitchen door, the way her grandmother always had, and ate her supper listening to the wind go around the house.",
+          "_composition": "Interior, small warm kitchen, character alone, evening lamplight through a window.",
+          "_offWorld": true,
+          "_stressTest": "the first interior in the book. The worldAnchor describes only the outdoor crossing, so this page has no setting anchor at all — does style and character hold when the anchor stops applying?"
+        },
+        {
+          "text": "The key waited on its nail all night, the way it had waited for a hundred years, and did not think about anything at all.",
+          "_composition": "Extreme close-up of the brass key on its nail. No characters in frame.",
+          "_offWorld": true,
+          "_stressTest": "the persistent prop rendered ALONE, with no character to anchor it. Compare the key directly against page 2's key — a prop with no owner in frame is where invented detail creeps in."
+        },
+        {
+          "text": "It rained for three days after that. Nila went down the hill anyway, with her hood up and her boots full of puddle, because the lamp did not care what the weather was doing.",
+          "_composition": "Full body walking in heavy rain, hood up covering the hair, grey daylight.",
+          "_stressTest": "changed weather AND an occluded head. The braids are the strongest silhouette cue — does identity survive when they are hidden?"
+        },
+        {
+          "text": "On the fourth evening the rain stopped, and there was Pim at the crossing, wet through to the skin and pretending he had not been waiting.",
+          "_composition": "Two characters, evening after rain, wet ground.",
+          "_stressTest": "THE long-run test. Pim has been absent for four pages. Does he come back correct — folded ear, cream tail tip, terrier scale — or does the model re-derive a fox from scratch?"
+        },
+        {
+          "text": "From the top of Marigold Hill the crossing looked very small, and the lamp looked smaller still, one bright pin in all that green.",
+          "_composition": "High bird's-eye view of the whole crossing, both characters tiny in frame, daylight.",
+          "_stressTest": "identity at very small scale from an unusual camera. Also re-tests the junction: at this angle a model that wants to draw a paved crossroads will finally do it."
+        },
+        {
+          "text": "Then came the night of the big storm, when the wind came off the fields sideways and Nila's mother would not let her past the gate.",
+          "_composition": "Fox alone at the lamp in a storm, night, wind, no second character.",
+          "_stressTest": "the second character carrying a page entirely alone, fifteen pages after his reference sheet."
+        },
+        {
+          "text": "So Pim went by himself. He put both front paws on the cold post and turned, and turned, and turned, until the light came on above him.",
+          "_composition": "Low camera angle from ground level, fox alone, paws on the lamp post, night.",
+          "_stressTest": "low unusual camera plus a single character mid-action — where limb and scale errors show up."
+        },
+        {
+          "text": "Nila found him in the morning, asleep at the foot of the lamp with his tail over his nose, and the lamp still burning above him in the daylight.",
+          "_composition": "Two characters, morning, one asleep curled at the base of the lamp.",
+          "_stressTest": "a sleeping pose. Closed eyes remove the strongest identity cue for Pim — amber eyes — leaving only ear, tail tip and scale."
+        },
+        {
+          "text": "\"You did not have the key,\" said Nila. \"No,\" said Pim, without opening his eyes. \"But somebody had to know the way home.\"",
+          "_composition": "Close-up of both faces together in one frame, morning light.",
+          "_stressTest": "BOTH characters in close-up in a single frame, eighteen pages after the sheet. The hardest identity test in the book."
+        },
+        {
+          "text": "After that there were two of them in charge of exactly one thing, at the bottom of Marigold Hill, where the road gave up and turned into grass.",
+          "_composition": "Wide establishing shot, full body, daylight, both characters at the crossing.",
+          "_stressTest": "THE long-run drift check. Deliberately identical conditions to page 0. Compare against page 0 AND against page 9 — the gap between 9 and 19 is the drift a ten-page test cannot see."
         }
       ]
     }
