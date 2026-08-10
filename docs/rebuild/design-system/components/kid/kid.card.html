@@ -1,0 +1,38 @@
+<!-- @dsCard group="Components" viewport="700x640" name="Kid: Shelf, Buddy, Continue, Transport, Mic" subtitle="Book cards + continue card + buddy states + transport + voice orb + word capsule" -->
+<!DOCTYPE html><html><head><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.462.0"></script>
+<script src="../../_ds_bundle.js"></script>
+</head><body style="margin:0;background:var(--paper)"><div id="root"></div>
+<script type="text/babel">
+const { BookCard, Shelf, Buddy, Transport, MicOrb, ContinueCard, WordCapsule } = window.LittleFablesDesignSystem_30c7a2;
+ReactDOM.createRoot(document.getElementById('root')).render(
+<div style={{padding:16,display:'flex',flexDirection:'column',gap:16}}>
+  <div style={{display:'flex',gap:24,alignItems:'flex-start'}}>
+    <Shelf label="Your books">
+      <BookCard width={110} title="Rosa and the River Star" progress={0.4} chapters="3 chapters" />
+      <BookCard width={110} title="The Car Wash Dragon" status="painting" chapters="painting…" />
+      <BookCard width={110} title="Mango Moon" status="new" />
+    </Shelf>
+    <Buddy name="Pip" color="var(--teal)" state="speaking" size={80} speech="Want to find out what Rosa saw?" />
+  </div>
+  <div style={{display:'flex',gap:24,alignItems:'flex-start'}}>
+    <div style={{width:340,display:'flex',flexDirection:'column',gap:12}}>
+      <ContinueCard title="Rosa and the River Star" chapter="Chapter 2 · The Little Round Door" progress={0.4} />
+      <div style={{display:'flex',gap:10,alignItems:'center'}}>
+        <WordCapsule word="lantern" justSaved />
+        <WordCapsule word="shimmer" />
+      </div>
+    </div>
+    <div style={{flex:1,display:'flex',flexDirection:'column',gap:14}}>
+      <Transport playing={false} onPlay={()=>{}} onPrev={()=>{}} onNext={()=>{}} />
+      <div style={{display:'flex',gap:20,alignItems:'flex-start'}}>
+        <MicOrb state="listening" />
+        <MicOrb state="heard" echo="A berry by the door! What a kind idea…" transcript="put a berry by the door" />
+      </div>
+    </div>
+  </div>
+</div>);
+</script></body></html>
