@@ -34,6 +34,7 @@ script.
 | `pnpm content:add <folder>` | Upload a book folder |
 | `pnpm db:reset` | Local Supabase reset + migrations |
 | `pnpm db:types` | Regenerate `types/database.ts` |
+| `pnpm photo:purge` | Delete buyer photos past retention (dry-run unless `--apply`) |
 
 Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
 
@@ -127,6 +128,15 @@ Hosted Supabase: `fzcjwsxyaweqtvroycjm.supabase.co`.
   (which has only `chronicle`, `use-spark`, `ux-ui-audit`), so check before
   assuming you can read it; the prompt conventions it encodes are not
   recorded anywhere in this repo.
+- **Buyer photo retention** → `docs/commerce/intake-flow.md` §Photo retention.
+  We collect photographs of children, so this is the one data lifecycle in the
+  repo that is actually promised in public — on the intake form, `/privacy`,
+  `/faq`, the home page, and in `market-research.md` as a competitive
+  differentiator. Consent is stamped at upload, the buyer chooses after
+  delivery via `/intake/<token>/photo`, and **silence deletes**
+  (`scripts/photo-purge.ts`). It was a marketing claim for weeks before it was
+  a feature; if you remove any part of the mechanism, remove the claim in the
+  same commit.
 - **Art provider choice** → `content/bakeoff/README.md`. The bake-off asked
   whether an image API can hold one character across a whole book without a
   human checking every third page. Answered 2026-08-09: **GPT Image 2 via

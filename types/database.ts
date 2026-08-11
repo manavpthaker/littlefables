@@ -401,6 +401,7 @@ export type Database = {
           child_name: string
           companions: string | null
           created_at: string
+          delivered_at: string | null
           etsy_order: string | null
           gift_from: string | null
           hoped_lesson: string | null
@@ -412,7 +413,11 @@ export type Database = {
           look: string | null
           notes: string | null
           parent_lastname: string | null
+          photo_choice_at: string | null
+          photo_consent_at: string | null
+          photo_deleted_at: string | null
           photo_path: string | null
+          photo_retention: string
           status: string
           sticky_moment: string | null
           token: string | null
@@ -428,6 +433,7 @@ export type Database = {
           child_name: string
           companions?: string | null
           created_at?: string
+          delivered_at?: string | null
           etsy_order?: string | null
           gift_from?: string | null
           hoped_lesson?: string | null
@@ -439,7 +445,11 @@ export type Database = {
           look?: string | null
           notes?: string | null
           parent_lastname?: string | null
+          photo_choice_at?: string | null
+          photo_consent_at?: string | null
+          photo_deleted_at?: string | null
           photo_path?: string | null
+          photo_retention?: string
           status?: string
           sticky_moment?: string | null
           token?: string | null
@@ -455,6 +465,7 @@ export type Database = {
           child_name?: string
           companions?: string | null
           created_at?: string
+          delivered_at?: string | null
           etsy_order?: string | null
           gift_from?: string | null
           hoped_lesson?: string | null
@@ -466,7 +477,11 @@ export type Database = {
           look?: string | null
           notes?: string | null
           parent_lastname?: string | null
+          photo_choice_at?: string | null
+          photo_consent_at?: string | null
+          photo_deleted_at?: string | null
           photo_path?: string | null
+          photo_retention?: string
           status?: string
           sticky_moment?: string | null
           token?: string | null

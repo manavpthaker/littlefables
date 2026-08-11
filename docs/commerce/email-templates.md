@@ -102,10 +102,28 @@ top right to flip it manually.
 
 Tapping any word plays it aloud. That's it for features. We kept it quiet on purpose.
 
+One last thing — the photo you sent us:
+
+{photo_choice_url}
+
+We don't need it any more. That link deletes it, or keeps it on file so a second
+book can use the same character without you sending it again. If you'd rather not
+decide, do nothing: we delete it either way.
+
 Hope {kid} loves it.
 
 Little Fables
 ```
+
+**`{photo_choice_url}` is `https://littlefables.app/intake/<token>/photo`** — the
+same per-order token as the intake form. Skip the whole paragraph if the buyer never
+uploaded a photo; offering to delete something they didn't send reads as a form
+letter.
+
+This paragraph is the mechanism behind the retention promise on the intake form and
+`/privacy`. If it stops going out, "we delete by default" quietly becomes "we delete
+whenever the sweep gets round to it, and we never asked you" — `scripts/photo-purge.ts`
+still catches it after the grace window, but the buyer was promised a choice.
 
 ---
 

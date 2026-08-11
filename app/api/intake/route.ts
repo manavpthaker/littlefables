@@ -102,7 +102,14 @@ export async function POST(request: Request) {
   }
 
   // Photo upload (both paths).
+  //
+  // `photoConsentAt` is stamped only when this submission actually carried a
+  // file. A buyer editing their intake later without re-attaching keeps the
+  // consent timestamp from the submission that did — we must not re-date
+  // consent they did not re-give, and must not invent consent for a row that
+  // merely inherited an older photo_path.
   let photoPath: string | null = existing?.photo_path ?? null;
+  let photoConsentAt: string | null = null;
   const photo = form.get('photo');
   if (photo && typeof photo !== 'string' && photo.size > 0) {
     if (photo.size > 10 * 1024 * 1024) {
@@ -119,6 +126,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `photo upload failed: ${up.error.message}` }, { status: 500 });
     }
     photoPath = key;
+    photoConsentAt = new Date().toISOString();
   }
 
   let intakeId: string;
@@ -142,6 +150,9 @@ export async function POST(request: Request) {
         parent_lastname: parentLastname,
         gift_from: giftFrom,
         photo_path: photoPath,
+        ...(photoConsentAt
+          ? { photo_consent_at: photoConsentAt, photo_retention: 'pending' }
+          : {}),
         updated_at: new Date().toISOString(),
       })
       .eq('id', existing.id)
@@ -173,6 +184,7 @@ export async function POST(request: Request) {
         gift_from: giftFrom,
         etsy_order: etsyOrder,
         photo_path: photoPath,
+        ...(photoConsentAt ? { photo_consent_at: photoConsentAt } : {}),
       })
       .select('id')
       .single();

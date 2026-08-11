@@ -107,7 +107,11 @@ Asked (step-per-screen, Typeform pattern):
   family's shared vocabulary.
 - **Art inspirations** — picture books the buyer loves the look of.
   Anchors the art-style previews.
-- **Look** — free text + optional photo upload.
+- **Look** — free text + optional photo upload. The upload carries the
+  consent copy: a drawing reference, used by us and by the illustration
+  tools we draw in, never published, kept until the book is delivered and
+  then deleted unless the buyer opts to keep it. **Silence deletes.** That
+  sentence is the whole retention model and it is load-bearing — see below.
 - **Gift context** — only asked if `--gift-from` wasn't set at order
   creation.
 
@@ -119,6 +123,35 @@ or supplied a photo for. If they only named the child, the cast is
 animals, not to invented parents / coaches / grandparents. This is a
 product-integrity failure if we get it wrong; buyers notice invented
 people and don't come back.
+
+### Photo retention
+
+The photo is the only thing we collect that would matter if it leaked, so it
+is the only thing with a lifecycle:
+
+1. **Upload** — `photo_consent_at` is stamped, but only on a submission that
+   actually carried a file. Editing an intake later without re-attaching does
+   not re-date consent, and a row that merely inherits an older `photo_path`
+   never gains consent it was not given.
+2. **Through the build** — the photo is needed, so it stays. `order:preview`
+   pulls it into the book's gitignored `reference/` folder.
+3. **Delivery** — moving a row to `delivered` in `/parent/intakes` stamps
+   `delivered_at`, which starts the clock. Only on the way in, so flipping a
+   row back and forth does not keep pushing deletion out. The delivery email
+   carries `/intake/<token>/photo`.
+4. **The buyer chooses** — delete (immediate, irreversible) or keep for a
+   future book (revocable from the same page, forever).
+5. **Silence** — `pnpm photo:purge` deletes anything still `pending` more than
+   30 days after delivery. Dry-run by default; `--apply` to act.
+
+`keep` is never swept. Rows whose photos predate the consent copy were
+backfilled to `delete` rather than `pending`, because `pending` would be
+waiting on an answer to a question those buyers were never asked.
+
+**If you remove any of this, remove the promise too.** The claim appears on the
+intake form, `/privacy`, `/faq`, the home page, and in `market-research.md` as
+a competitive differentiator. It was a claim before it was a feature; do not
+let it go back to being one.
 
 ## Data path
 
@@ -172,6 +205,7 @@ Applied to hosted Supabase in order:
 | 22 | `20260806000022_intakes_companions.sql` | `companions` (cast free-text) |
 | 23 | `20260806000023_intakes_lastname.sql` | `parent_lastname` (for folder slugs) |
 | 24 | `20260807000024_intakes_story_spine.sql` | `sticky_moment`, `hoped_lesson` |
+| 26 | `20260811000026_intakes_photo_retention.sql` | `photo_consent_at`, `photo_retention`, `photo_choice_at`, `photo_deleted_at`, `delivered_at` |
 
 ## Files
 
@@ -185,6 +219,10 @@ Applied to hosted Supabase in order:
 | Submission handler (dual-path) | `app/api/intake/route.ts` |
 | Thanks page | `app/intake/thanks/page.tsx` |
 | FAQ page (linked from shell) | `app/faq/page.tsx` |
+| Privacy policy | `app/privacy/page.tsx` |
+| Buyer photo keep/delete page | `app/intake/[token]/photo/page.tsx` + `photo-choice.tsx` |
+| Photo retention endpoint | `app/api/intake/photo/route.ts` |
+| Deletion sweep | `scripts/photo-purge.ts` (aliased `pnpm photo:purge`) |
 | Admin listing | `app/parent/intakes/page.tsx` |
 | Admin row + actions | `app/parent/intakes/intake-row.tsx`, `actions.ts` |
 | Welcome + notification emails | `lib/server/resend-mailer.ts` (`sendWelcomeEmail`, `sendIntakeNotification`) |

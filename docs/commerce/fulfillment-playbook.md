@@ -188,7 +188,23 @@ hood — useful when something fails or you need to run a step by hand.
 > Likeness-from-photo is the harder problem and the one with policy exposure —
 > minors' likeness is the highest-scrutiny category in every provider's terms.
 > Until phase 2 runs (your own child's photo first, provider terms read before
-> any buyer photo goes near an API), **steps 20–22 stay manual as written.**
+> a buyer photo is automated), **steps 20–22 stay manual as written.**
+>
+> **Correction, and read this before quoting the line above.** An earlier
+> version of this block said no buyer photo should "go near an API", which
+> implied none ever had. That was wrong. Step 20's own tooling hands buyer
+> photos to a third-party model today: `scripts/order-preview.ts` seeds
+> `reference/child-photo.jpg` and writes `photo-signed-url.txt` expressly so
+> the operator can pass it to ChatGPT. Operator-pasted rather than API-posted
+> is a real difference in *control* — a human decides each time — but it is not
+> a difference the provider's terms recognise. Phase 2 would not create this
+> exposure; it would industrialise it. Decide it on that basis, not on the
+> comfortable belief that photos are currently held back.
+>
+> What changed on 2026-08-11 is that the buyer is now actually asked. The
+> intake form carries consent copy, the photo is deleted after delivery unless
+> they opt to keep it, and silence deletes. See `app/privacy/page.tsx` and
+> `scripts/photo-purge.ts`.
 >
 > The two authoring rules in step 22 came out of the bake-off and apply to the
 > manual path today.

@@ -59,6 +59,16 @@ Source: [App Store](https://apps.apple.com/us/app/personalized-books-kidteller/i
 differentiators are craft, human QA, buyer-approved previews, PWA delivery, and the
 privacy stance (they store voice clones and photos; we delete by default).
 
+> **The "we delete by default" claim is real as of 2026-08-11, and was not
+> before.** It sat in this file for weeks with no deletion anywhere in the
+> repo — no purge script, not one `.remove()` call. If you are going to
+> differentiate on privacy, the claim has to be load-bearing: buyers who care
+> enough to compare privacy stances are exactly the ones who will check. It is
+> now implemented end to end — consent captured at upload, a buyer-controlled
+> choice page after delivery, immediate deletion on request, and a sweep for
+> everyone who never replies (`scripts/photo-purge.ts`). Before repeating the
+> claim in listing copy or ads, confirm those still exist.
+
 **SkazkaAI** — personalized audio stories, child as main character, name spoken
 naturally throughout. Also markets illustrated books with photo covers.
 Source: [skazka.ai](https://skazka.ai/us/audio-stories)

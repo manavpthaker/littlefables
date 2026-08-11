@@ -862,6 +862,20 @@ body,
   color: var(--ink-faint);
   font-style: italic;
 }
+/* The consent line under the photo upload. This is the surface where a buyer
+   agrees to what happens to a photograph of their child, so it is deliberately
+   legible rather than fine print — --ink-soft, not --ink-faint, and full size.
+   If it ever needs to shrink to fit a layout, shrink the layout. */
+.lf-intake-consent {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.lf-intake-consent strong {
+  color: var(--ink);
+  font-weight: 600;
+}
 .lf-intake-upload-plus {
   width: 48px;
   height: 48px;

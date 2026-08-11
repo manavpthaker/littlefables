@@ -314,7 +314,7 @@ export function IntakeForm(props: IntakeFormProps) {
                 <img src={photoPreview} alt="" className="lf-intake-upload-thumb" />
                 <span>
                   <strong>Photo added.</strong>
-                  <em>reference only — deleted with the rest of your intake</em>
+                  <em>kept until your book arrives &mdash; then you choose</em>
                 </span>
               </span>
             ) : (
@@ -322,11 +322,21 @@ export function IntakeForm(props: IntakeFormProps) {
                 <span className="lf-intake-upload-plus" aria-hidden>+</span>
                 <span>
                   <strong>Add a photo</strong>
-                  <em>optional · we work from it, we don&rsquo;t copy it</em>
+                  <em>optional &middot; a drawing reference, never published</em>
                 </span>
               </span>
             )}
           </label>
+          <p className="lf-intake-consent">
+            We use it as a drawing reference &mdash; by us, and by the
+            illustration tools we draw in. It is never published, never sold,
+            and never shared beyond making {kid}&rsquo;s book. We keep it until
+            your book arrives, then ask whether to keep it on file for a future
+            book or delete it. <strong>If you don&rsquo;t reply, we delete it.</strong>{' '}
+            <a href="/privacy" target="_blank" rel="noreferrer" style={{ color: 'var(--oxblood-text)' }}>
+              How we handle your data
+            </a>
+          </p>
         </StepCard>
       ),
     });

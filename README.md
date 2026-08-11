@@ -104,6 +104,7 @@ edit the folder and re-import to update.
 | `pnpm db:reset` | Drop + recreate local Supabase + apply migrations |
 | `pnpm db:types` | Regenerate `types/database.ts` from linked hosted schema |
 | `pnpm art:bakeoff` | Art-provider bake-off (ops only, never shipped — `--dry-run` is free) |
+| `pnpm photo:purge` | Delete buyer photos past retention (dry-run unless `--apply`) |
 
 ## Repo layout
 

@@ -112,7 +112,7 @@ const FAQS = [
   },
   {
     q: 'What happens to my child’s information?',
-    a: 'We use it only to make the book, and we delete your intake once your book is delivered — unless you say otherwise.',
+    a: 'We use it only to make the book. When it’s delivered we send you a link to delete your child’s photo or keep it on file for a second book — if you don’t reply, we delete it.',
   },
   {
     q: 'Can I gift it without spoiling the surprise?',
@@ -126,9 +126,9 @@ const FAQS = [
 
 const TRUST = [
   {
-    heading: 'Your intake is deleted',
+    heading: 'You decide what we keep',
     body:
-      'We delete what you told us about your child once the book is delivered — unless you say otherwise.',
+      'Once your book is delivered you choose — delete your child’s photo, or keep it on file for a second book. No reply means we delete it.',
   },
   {
     heading: 'Nothing pulls at them',

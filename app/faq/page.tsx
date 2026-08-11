@@ -68,10 +68,15 @@ const QAS: { q: string; a: React.ReactNode }[] = [
     q: 'What do you do with our photo / personal details?',
     a: (
       <>
-        The photo is reference only — we look at it, we don’t copy it into
-        the art. Your intake stays private and is deleted with the rest of
-        your data once the book is delivered, unless you ask us to keep it
-        for a second book.
+        The photo is a drawing reference — used by us and by the illustration
+        tools we draw in. What you get is an illustration inspired by your
+        child, not a photograph of them. When your book is delivered we send
+        you a link to delete it or keep it on file for a second book; if you
+        don’t reply, we delete it. Full detail on the{' '}
+        <Link href="/privacy" style={{ color: 'var(--oxblood-text)' }}>
+          privacy page
+        </Link>
+        .
       </>
     ),
   },
@@ -192,7 +197,12 @@ export default function FaqPage() {
           flexWrap: 'wrap',
         }}
       >
-        <span>Little Fables · a picture book made for one child</span>
+        <span>
+          Little Fables · a picture book made for one child ·{' '}
+          <Link href="/privacy" style={{ color: 'var(--ink-faint)' }}>
+            Privacy
+          </Link>
+        </span>
         <a href="mailto:hello@littlefables.app" style={{ color: 'var(--ink-faint)', textDecoration: 'none' }}>
           hello@littlefables.app
         </a>
