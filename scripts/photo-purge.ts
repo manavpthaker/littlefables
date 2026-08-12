@@ -46,17 +46,24 @@ async function main() {
 
   const { data: rows, error } = await supa
     .from('intakes')
-    .select('id, child_name, buyer_email, photo_path, photo_retention, delivered_at, photo_consent_at')
+    .select('id, child_name, buyer_email, photo_path, photo_retention, delivered_at, photo_consent_at, photo_choice_at')
     .not('photo_path', 'is', null)
     .is('photo_deleted_at', null);
   if (error) throw new Error(`could not read intakes: ${error.message}`);
 
   const due = (rows ?? []).filter((r) => {
     if (r.photo_retention === 'keep') return false;
-    if (r.photo_retention === 'delete') return true;
-    // 'pending': only once the book has actually been delivered and the grace
-    // window has passed. A row with no delivered_at has not shipped, and the
-    // photo is still doing its job.
+
+    // An explicit buyer 'delete' is honoured immediately, delivered or not —
+    // they asked, and the API route normally does it inline anyway.
+    if (r.photo_retention === 'delete' && r.photo_choice_at) return true;
+
+    // Everything else waits for delivery plus the grace window. That covers
+    // 'pending' (nobody replied) AND the pre-consent rows migration 26
+    // backfilled to 'delete' — those carry no photo_choice_at, and sweeping
+    // them on flag alone would delete the reference photo of an order still
+    // being built. The backfill means "do not keep this", not "destroy it
+    // mid-fulfilment".
     return !!r.delivered_at && r.delivered_at < cutoff;
   });
 
@@ -71,12 +78,11 @@ async function main() {
   }
 
   for (const r of due) {
-    const why =
-      r.photo_retention === 'delete'
-        ? r.photo_consent_at
-          ? 'buyer chose delete'
-          : 'collected before consent copy existed'
-        : `no reply ${GRACE_DAYS}d after delivery`;
+    const why = r.photo_choice_at
+      ? 'buyer chose delete'
+      : r.photo_consent_at
+        ? `no reply ${GRACE_DAYS}d after delivery`
+        : `collected before consent copy existed, delivered >${GRACE_DAYS}d ago`;
     console.log(`  ${APPLY ? '✂' : '·'} ${r.child_name} <${r.buyer_email}> — ${why}`);
   }
 
