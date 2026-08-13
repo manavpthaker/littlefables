@@ -7,6 +7,14 @@ start before phase 2 has run for a week.
 
 ## Which repo
 
+**Not under `~/Documents`.** The repo lived at `~/Documents/GitHub/littlefables`
+until 2026-08-13 and was moved out because reads failed intermittently —
+whole directory trees returning `Operation not permitted` for minutes at a
+time, `git` included, then recovering. That is what a sync client or an
+on-access scanner does to a folder, and `~/Documents` is synced by default on
+macOS. Sync clients also corrupt `.git` under concurrent writes. Keep repos
+out of synced folders.
+
 **This one — `littlefables`, no hyphen.** `little-fables` is the archived
 predecessor (the generative platform pared back on 2026-07-29) and is not
 promoted.
@@ -54,7 +62,7 @@ The Next.js app is not a mini service — it deploys to Vercel.
 
 ## Order of work when phase 3 starts
 
-1. Clone into `~/Documents/GitHub/littlefables`; uncomment it in
+1. Clone into `~/GitHub/littlefables`; uncomment it in
    `MOTION_REPOS` in `brownbot/scripts/sync-repos.sh`.
 2. `pnpm install` (pnpm 10.11.0, per `packageManager`).
 3. **Order watcher first** — it is the piece with real money attached. A launchd

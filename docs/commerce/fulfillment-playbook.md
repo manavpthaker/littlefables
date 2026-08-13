@@ -33,7 +33,7 @@ hood — useful when something fails or you need to run a step by hand.
 
 - Chrome: Gmail, Etsy Seller dashboard, ChatGPT (with `fable-art-custom` skill),
   image generation tab, Supabase console
-- Terminal at `~/Documents/GitHub/little-fables`
+- Terminal at `~/GitHub/littlefables`
 - Editor
 - Finder at `~/fables-orders/`
 
