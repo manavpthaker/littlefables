@@ -110,6 +110,14 @@ export async function POST(request: Request) {
   // merely inherited an older photo_path.
   let photoPath: string | null = existing?.photo_path ?? null;
   let photoConsentAt: string | null = null;
+  const relationship = str(form.get('relationship')) || null;
+  const occasion = str(form.get('occasion')) || null;
+  const occasionNote = str(form.get('occasion_note')) || null;
+  const namePronunciation = str(form.get('name_pronunciation')) || null;
+  const pronouns = str(form.get('pronouns')) || null;
+  const avoid = str(form.get('avoid')) || null;
+  const neededBy = str(form.get('needed_by')) || null;
+
   const photo = form.get('photo');
   if (photo && typeof photo !== 'string' && photo.size > 0) {
     if (photo.size > 10 * 1024 * 1024) {
@@ -147,6 +155,14 @@ export async function POST(request: Request) {
         companions,
         sticky_moment: stickyMoment,
         hoped_lesson: hopedLesson,
+        relationship,
+        occasion,
+        occasion_note: occasionNote,
+        name_pronunciation: namePronunciation,
+        pronouns,
+        avoid,
+        needed_by: neededBy || null,
+
         parent_lastname: parentLastname,
         gift_from: giftFrom,
         photo_path: photoPath,
@@ -180,6 +196,14 @@ export async function POST(request: Request) {
         companions,
         sticky_moment: stickyMoment,
         hoped_lesson: hopedLesson,
+        relationship,
+        occasion,
+        occasion_note: occasionNote,
+        name_pronunciation: namePronunciation,
+        pronouns,
+        avoid,
+        needed_by: neededBy || null,
+
         parent_lastname: parentLastname,
         gift_from: giftFrom,
         etsy_order: etsyOrder,

@@ -77,6 +77,60 @@ every buyer spending a minute correcting the same fields.
    each row is for slugs, provisioned URLs, and gotchas — persisted
    across sessions.
 
+## Three sections, and why the split exists
+
+The form is **gate → need → handoff → more**, in that order (`STEP_ORDER` in
+`app/intake/intake-form.tsx` is the single source of truth for sequence).
+
+- **gate** — who is buying, and what for. Asked first because both answers
+  change what gets asked afterwards.
+- **need** — the minimum to write and draw the book. Ends at a **handoff**
+  screen with a real submit, so a buyer who stops there has still left a
+  buildable brief.
+- **more** — makes the book better, explicitly skippable, entered by choice.
+
+**The split is to sequence, not to shorten.** `gtm-decision.md` puts fulfilment
+at 2.2–4.3 attended hours in configuration A with no paid spend, so the shop is
+capacity-constrained, not conversion-constrained. A thinner intake does not
+delete work — it moves it to Manav as extra preview rounds, which is the exact
+number gating whether ads can ever run.
+
+Two things sit in `need` despite feeling optional:
+
+1. **The spine question.** `authoring-doctrine.md` matches `sticky_moment` to a
+   pattern in `story-patterns.md`, and a book with no matched pattern does not
+   pass `pnpm content:add`. Make it optional and books stop importing.
+2. **`avoid`.** A dog on page four for a child bitten in June is not a revision
+   round, it is a refund and a review.
+
+### The spine question changes by relationship
+
+`positioning.md` names grandparents as the secondary segment, and
+`delivery-flow.md` confirms the **buyer** completes the intake — a gift
+recipient lands on `/gift/<code>` and gets "one orientation screen, then the
+book", so the book already exists at redemption. A grandparent who sees the
+child monthly cannot answer "what's been sticky lately", and answers with
+interests instead — the "highlight reel of interests dressed as a story" the
+doctrine warns about, arriving through the front door.
+
+So `relationship` routes it. Parents get the sticky question. Everyone else
+gets *"What have you noticed about {kid} that you'd want them to know you
+see?"* — answerable with authority by someone who sees the child from a little
+further back, and it still yields a spine, because the noticing is the story.
+Same column, same downstream pattern match.
+
+### Occasion
+
+Every date in `positioning.md` is Christmas — listing title, Pinterest, Ads
+Nov 1 to Dec 22, rush lifting to +$22. The form previously never asked what the
+book was **for**, so in the highest-volume month a Christmas buyer could not say
+so. `occasion` now gates a follow-up question per branch (`OCCASION_Q`).
+
+`harder` — grief, adoption, illness, a family changing shape — does **not** get
+a self-serve branch. It collects only what the buyer volunteers and tells them
+we will write first. These are the highest-value books and the highest-risk
+ones, and a chip field is the wrong instrument for a bereavement.
+
 ## What the buyer sees on the form
 
 Prefilled and locked (from `order:new`):
@@ -205,6 +259,7 @@ Applied to hosted Supabase in order:
 | 22 | `20260806000022_intakes_companions.sql` | `companions` (cast free-text) |
 | 23 | `20260806000023_intakes_lastname.sql` | `parent_lastname` (for folder slugs) |
 | 24 | `20260807000024_intakes_story_spine.sql` | `sticky_moment`, `hoped_lesson` |
+| 27 | `20260812000027_intakes_routing.sql` | `relationship`, `occasion`, `occasion_note`, `name_pronunciation`, `pronouns`, `avoid`, `needed_by` |
 | 26 | `20260811000026_intakes_photo_retention.sql` | `photo_consent_at`, `photo_retention`, `photo_choice_at`, `photo_deleted_at`, `delivered_at` |
 
 ## Files
@@ -214,7 +269,8 @@ Applied to hosted Supabase in order:
 | Per-order provisioning CLI | `scripts/new-order.ts` (aliased `pnpm order:new`) |
 | Token-scoped intake page | `app/intake/[token]/page.tsx` |
 | Walk-up intake page (safety net) | `app/intake/page.tsx` |
-| Step-per-screen form | `app/intake/intake-form.tsx` |
+| Step-per-screen form (state + questions) | `app/intake/intake-form.tsx` |
+| Form widgets (presentational only) | `app/intake/intake-ui.tsx` |
 | Intake shell (header + footer branding) | `app/intake/layout.tsx` |
 | Submission handler (dual-path) | `app/api/intake/route.ts` |
 | Thanks page | `app/intake/thanks/page.tsx` |

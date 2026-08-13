@@ -28,6 +28,13 @@ export interface IntakeRowProps {
   look: string | null;
   companions: string | null;
   stickyMoment: string | null;
+  relationship: string | null;
+  occasion: string | null;
+  occasionNote: string | null;
+  namePronunciation: string | null;
+  pronouns: string | null;
+  avoid: string | null;
+  neededBy: string | null;
   hopedLesson: string | null;
   parentLastname: string | null;
   giftFrom: string | null;
@@ -121,6 +128,11 @@ export function IntakeRow(props: IntakeRowProps) {
       </header>
 
       <div style={{ display: 'grid', gap: 6, fontSize: 14, color: 'var(--ink-soft)' }}>
+        {props.neededBy && (
+          <Row label="Needed by">
+            <strong style={{ color: 'var(--oxblood-text)' }}>{props.neededBy}</strong>
+          </Row>
+        )}
         {props.interests.length > 0 && (
           <Row label="Loves">
             {props.interests.join(', ')}
@@ -144,7 +156,20 @@ export function IntakeRow(props: IntakeRowProps) {
         {props.inspirations && <Row label="Inspiration">{props.inspirations}</Row>}
         {props.look && <Row label="Looks like">{props.look}</Row>}
         <Row label="Cast">{props.companions ?? `Just ${props.childName}`}</Row>
-        {props.stickyMoment && <Row label="Sticky">{props.stickyMoment}</Row>}
+        {props.namePronunciation && <Row label="Said as">{props.namePronunciation}</Row>}
+        {props.pronouns && <Row label="Pronouns">{props.pronouns}</Row>}
+        {props.occasion && (
+          <Row label="Occasion">
+            {props.occasion}
+            {props.occasionNote ? ` — ${props.occasionNote}` : ''}
+          </Row>
+        )}
+        {props.avoid && <Row label="⚠ Avoid">{props.avoid}</Row>}
+        {props.stickyMoment && (
+          <Row label={props.relationship === 'parent' || !props.relationship ? 'Sticky' : 'Noticed'}>
+            {props.stickyMoment}
+          </Row>
+        )}
         {props.hopedLesson && <Row label="Hoped lesson">{props.hopedLesson}</Row>}
         {props.parentLastname && <Row label="Family">{props.parentLastname}</Row>}
       </div>

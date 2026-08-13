@@ -396,6 +396,7 @@ export type Database = {
         Row: {
           age_band: string | null
           age_years: number | null
+          avoid: string | null
           buyer_email: string
           buyer_name: string | null
           child_name: string
@@ -411,13 +412,19 @@ export type Database = {
           interests: string[]
           interests_note: string | null
           look: string | null
+          name_pronunciation: string | null
+          needed_by: string | null
           notes: string | null
+          occasion: string | null
+          occasion_note: string | null
           parent_lastname: string | null
           photo_choice_at: string | null
           photo_consent_at: string | null
           photo_deleted_at: string | null
           photo_path: string | null
           photo_retention: string
+          pronouns: string | null
+          relationship: string | null
           status: string
           sticky_moment: string | null
           token: string | null
@@ -428,6 +435,7 @@ export type Database = {
         Insert: {
           age_band?: string | null
           age_years?: number | null
+          avoid?: string | null
           buyer_email: string
           buyer_name?: string | null
           child_name: string
@@ -443,13 +451,19 @@ export type Database = {
           interests?: string[]
           interests_note?: string | null
           look?: string | null
+          name_pronunciation?: string | null
+          needed_by?: string | null
           notes?: string | null
+          occasion?: string | null
+          occasion_note?: string | null
           parent_lastname?: string | null
           photo_choice_at?: string | null
           photo_consent_at?: string | null
           photo_deleted_at?: string | null
           photo_path?: string | null
           photo_retention?: string
+          pronouns?: string | null
+          relationship?: string | null
           status?: string
           sticky_moment?: string | null
           token?: string | null
@@ -460,6 +474,7 @@ export type Database = {
         Update: {
           age_band?: string | null
           age_years?: number | null
+          avoid?: string | null
           buyer_email?: string
           buyer_name?: string | null
           child_name?: string
@@ -475,13 +490,19 @@ export type Database = {
           interests?: string[]
           interests_note?: string | null
           look?: string | null
+          name_pronunciation?: string | null
+          needed_by?: string | null
           notes?: string | null
+          occasion?: string | null
+          occasion_note?: string | null
           parent_lastname?: string | null
           photo_choice_at?: string | null
           photo_consent_at?: string | null
           photo_deleted_at?: string | null
           photo_path?: string | null
           photo_retention?: string
+          pronouns?: string | null
+          relationship?: string | null
           status?: string
           sticky_moment?: string | null
           token?: string | null

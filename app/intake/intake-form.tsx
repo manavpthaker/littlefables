@@ -1,7 +1,18 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  AgeSlider,
+  ChoiceGrid,
+  Combobox,
+  MoreDetail,
+  ProgressBar,
+  Row,
+  StepCard,
+  ageToBand,
+} from './intake-ui';
+
 
 // Step-per-screen intake form. One question at a time, Typeform-style:
 // bigger question copy, roomy body text, and every multi-choice question
@@ -38,11 +49,91 @@ export interface IntakeFormProps {
   giftFrom?: string;
 }
 
+/**
+ * Which half of the form a step belongs to.
+ *
+ * 'gate'  — who is buying and what for. Asked first because both change what
+ *           gets asked afterwards.
+ * 'need'  — the minimum to write and draw the book. Ends in a handoff screen
+ *           with a real submit, so a buyer who stops there has still left a
+ *           buildable brief.
+ * 'more'  — makes the book better, explicitly skippable.
+ *
+ * The split is to SEQUENCE, not to shorten. gtm-decision.md puts fulfilment at
+ * 2.2–4.3 attended hours in configuration A with no paid spend, so the shop is
+ * capacity-constrained, not conversion-constrained: a thinner intake does not
+ * delete work, it moves it to Manav as extra preview rounds, which is the exact
+ * number gating whether ads can run at all.
+ */
+/**
+ * The order the buyer walks through. Gate first because those answers change
+ * what gets asked; then everything needed to build the book, ending at the
+ * handoff; then the optional half; review last.
+ *
+ * Two things deliberately sit in 'need' despite feeling like enrichment:
+ *   · sticky-moment — it is the story's spine and gates `pnpm content:add`.
+ *   · avoid — a dog on page four for a child bitten in June is not a revision
+ *     round, it is a refund and a review.
+ */
+const STEP_ORDER = [
+  'welcome',
+  'relationship',
+  'occasion',
+  'occasion-note',
+  'occasion-harder',
+  'email',
+  'etsy',
+  'name',
+  'pronunciation',
+  'pronouns',
+  'age',
+  'look',
+  'sticky-moment',
+  'companions',
+  'avoid',
+  'needed-by',
+  'handoff',
+  'interests',
+  'traits',
+  'inspirations',
+  'hoped-lesson',
+  'lastname',
+  'gift',
+  'review',
+];
+
+const OCCASION_LABEL: Record<string, string> = {
+  christmas: 'Christmas',
+  birthday: 'A birthday',
+  'new-sibling': 'A new baby coming',
+  'starting-school': 'Starting school',
+  'just-because': 'Just because',
+  harder: 'Something harder — we will write first',
+};
+
+const OCCASION_Q: Record<string, string> = {
+  christmas: 'Do you want Christmas in the story, or is it just when they open it?',
+  birthday: 'Which birthday is it, and how are they feeling about getting bigger?',
+  'new-sibling': "What's the baby's name, and when do they arrive?",
+  'starting-school': "Which school, and what's the bit they're chewing on?",
+};
+
+const OCCASION_PH: Record<string, string> = {
+  christmas: 'e.g. Christmas morning gift, but the story can be about anything.',
+  birthday: 'e.g. Turning five. Very proud, slightly nervous about the big class.',
+  'new-sibling': 'e.g. Baby Otis, due in March. She says she wants to hold him.',
+  'starting-school': 'e.g. Starts reception in September. Worried about lunch.',
+};
+
+type Section = 'gate' | 'need' | 'more';
+
 interface Step {
   key: string;
   render: () => React.ReactNode;
   isValid: () => boolean;
   hint?: string;
+  /** Defaults to 'need' — the safe side if someone forgets to tag a new step. */
+  section?: Section;
 }
 
 export function IntakeForm(props: IntakeFormProps) {
@@ -66,6 +157,14 @@ export function IntakeForm(props: IntakeFormProps) {
   const [companions, setCompanions] = useState('');
   const [stickyMoment, setStickyMoment] = useState('');
   const [hopedLesson, setHopedLesson] = useState('');
+  const [relationship, setRelationship] = useState('');
+  const [occasion, setOccasion] = useState('');
+  const [occasionNote, setOccasionNote] = useState('');
+  const [pronunciation, setPronunciation] = useState('');
+  const [pronouns, setPronouns] = useState('');
+  const [avoid, setAvoid] = useState('');
+  const [neededBy, setNeededBy] = useState('');
+  const [wantsMore, setWantsMore] = useState(false);
   const [isGift, setIsGift] = useState(props.isGift ?? false);
   const [giftFrom, setGiftFrom] = useState(props.giftFrom ?? '');
 
@@ -74,6 +173,15 @@ export function IntakeForm(props: IntakeFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const kid = name.trim() || 'your child';
+  // Whether the buyer has daily access to the child. sticky_moment is the
+  // story's spine (authoring-doctrine.md matches it to a pattern, and a book
+  // with no matched pattern fails `pnpm content:add`) — so it cannot be
+  // optional. But a grandparent buying for a grandchild they see monthly
+  // cannot answer "what's been sticky lately", and answers with interests
+  // instead, which is the "highlight reel dressed as a story" the doctrine
+  // warns about. Same field, same downstream match; a question they can
+  // actually answer with authority.
+  const isCloseIn = relationship !== 'grandparent' && relationship !== 'other';
   const greeting = props.buyerName?.trim().split(/\s+/)[0];
 
   // --- Steps ---------------------------------------------------------------
@@ -83,6 +191,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'welcome',
+      section: 'gate',
       isValid: () => true,
       render: () => (
         <StepCard
@@ -96,6 +205,7 @@ export function IntakeForm(props: IntakeFormProps) {
     if (!hasToken) {
       s.push({
         key: 'email',
+      section: 'need',
         isValid: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail.trim()),
         hint: 'Press Enter to continue',
         render: () => (
@@ -120,6 +230,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
       s.push({
         key: 'etsy',
+      section: 'need',
         isValid: () => true,
         hint: 'Optional',
         render: () => (
@@ -143,6 +254,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'name',
+      section: 'need',
       isValid: () => name.trim().length > 0,
       hint: 'Press Enter to continue',
       render: () => (
@@ -165,6 +277,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'lastname',
+      section: 'more',
       isValid: () => true,
       hint: 'Optional — for organizing your book files',
       render: () => (
@@ -188,6 +301,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'age',
+      section: 'need',
       isValid: () => ageTouched || age > 0,
       render: () => (
         <StepCard
@@ -208,6 +322,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'interests',
+      section: 'more',
       isValid: () => interests.length > 0,
       render: () => (
         <StepCard
@@ -234,6 +349,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'traits',
+      section: 'more',
       isValid: () => traits.length > 0,
       render: () => (
         <StepCard
@@ -260,6 +376,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'inspirations',
+      section: 'more',
       isValid: () => inspirations.trim().length > 0,
       render: () => (
         <StepCard
@@ -282,6 +399,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'look',
+      section: 'need',
       isValid: () => look.trim().length > 0 || photoFile !== null,
       render: () => (
         <StepCard
@@ -343,13 +461,22 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'sticky-moment',
+      section: 'need',
       isValid: () => stickyMoment.trim().length > 0,
       hint: 'This shapes the whole story',
       render: () => (
         <StepCard
-          eyebrow={`What ${kid} is working on right now`}
-          question={`What's ONE thing that's been sticky for ${kid} lately?`}
-          body={`A bedtime struggle, big feelings, a new sibling, screen transitions, fear of the dark, sharing, adjusting to school — whatever comes up most days. The book that helps is the book that meets your child where they actually are. One sentence is enough.`}
+          eyebrow={isCloseIn ? `What ${kid} is working on right now` : `What you see in ${kid}`}
+          question={
+            isCloseIn
+              ? `What's ONE thing that's been sticky for ${kid} lately?`
+              : `What have you noticed about ${kid} that you'd want them to know you see?`
+          }
+          body={
+            isCloseIn
+              ? `A bedtime struggle, big feelings, a new sibling, screen transitions, fear of the dark, sharing, adjusting to school — whatever comes up most days. The book that helps is the book that meets your child where they actually are. One sentence is enough.`
+              : `Something you've watched them do, or become, or try. You don't need to know what they're struggling with this week — you know something better, which is how they look from a little further back. The noticing is the story.`
+          }
         >
           <textarea
             className="lf-intake-input lf-intake-textarea"
@@ -357,7 +484,11 @@ export function IntakeForm(props: IntakeFormProps) {
             rows={3}
             value={stickyMoment}
             onChange={(e) => setStickyMoment(e.target.value)}
-            placeholder={`e.g. Big feelings when it's time to leave the playground. Hitting when overwhelmed. Won't go to sleep without one of us in the room.`}
+            placeholder={
+              isCloseIn
+                ? `e.g. Big feelings when it's time to leave the playground. Hitting when overwhelmed. Won't go to sleep without one of us in the room.`
+                : `e.g. She checks on the smallest kid in the room without being asked. He'd rather do a hard thing slowly than an easy thing fast.`
+            }
             aria-label="Sticky moment"
           />
         </StepCard>
@@ -366,6 +497,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'hoped-lesson',
+      section: 'more',
       isValid: () => true,
       hint: 'Optional — helps us pick the tool the book teaches',
       render: () => (
@@ -389,6 +521,7 @@ export function IntakeForm(props: IntakeFormProps) {
 
     s.push({
       key: 'companions',
+      section: 'need',
       isValid: () => true,
       hint: 'Optional — leave blank if it\'s just them',
       render: () => (
@@ -413,6 +546,7 @@ export function IntakeForm(props: IntakeFormProps) {
     if (!props.isGift) {
       s.push({
         key: 'gift',
+      section: 'more',
         isValid: () => !isGift || giftFrom.trim().length > 0,
         render: () => (
           <StepCard
@@ -457,8 +591,231 @@ export function IntakeForm(props: IntakeFormProps) {
       });
     }
 
+
+    s.push({
+      key: 'relationship',
+      section: 'gate',
+      isValid: () => relationship.length > 0,
+      hint: 'This changes what we ask next',
+      render: () => (
+        <StepCard
+          eyebrow="First, so we ask the right things"
+          question={`Who are you to ${name.trim() || 'them'}?`}
+          body="A parent knows what this week has been like. A grandparent knows something else, and we'd rather ask you that than ask you to guess."
+        >
+          <ChoiceGrid
+            value={relationship}
+            onChange={setRelationship}
+            options={[
+              { value: 'parent', label: 'Their parent' },
+              { value: 'grandparent', label: 'Their grandparent' },
+              { value: 'other', label: 'Someone else who loves them' },
+            ]}
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'occasion',
+      section: 'gate',
+      isValid: () => occasion.length > 0,
+      render: () => (
+        <StepCard
+          eyebrow="What it's for"
+          question="Is this book for an occasion?"
+          body="It changes the shape of the story, not just the card that comes with it."
+        >
+          <ChoiceGrid
+            value={occasion}
+            onChange={setOccasion}
+            options={[
+              { value: 'christmas', label: 'Christmas' },
+              { value: 'birthday', label: 'A birthday' },
+              { value: 'new-sibling', label: 'A new baby coming' },
+              { value: 'starting-school', label: 'Starting school' },
+              { value: 'just-because', label: 'No occasion — just because' },
+              { value: 'harder', label: 'Something harder' },
+            ]}
+          />
+        </StepCard>
+      ),
+    });
+
+    if (occasion === 'harder') {
+      s.push({
+        key: 'occasion-harder',
+        section: 'gate',
+        isValid: () => true,
+        render: () => (
+          <StepCard
+            eyebrow="Let's do this one properly"
+            question="We'd rather talk to you first."
+            body="Books about grief, adoption, illness, or a family changing shape are the ones that matter most, and they're the ones a form is worst at. Finish the rest of this and we'll read it, then write to you before we start — or message us on Etsy now if you'd rather begin there."
+          >
+            <textarea
+              className="lf-intake-input lf-intake-textarea"
+              autoFocus
+              rows={3}
+              value={occasionNote}
+              onChange={(e) => setOccasionNote(e.target.value)}
+              placeholder="Only as much as you want to put in writing."
+              aria-label="What's going on"
+            />
+          </StepCard>
+        ),
+      });
+    } else if (occasion && occasion !== 'just-because') {
+      s.push({
+        key: 'occasion-note',
+        section: 'gate',
+        isValid: () => true,
+        render: () => (
+          <StepCard
+            eyebrow="A little more about the occasion"
+            question={OCCASION_Q[occasion] ?? 'Anything we should know about it?'}
+            body="Optional, but it's usually the detail that makes them believe the book was written for them."
+          >
+            <textarea
+              className="lf-intake-input lf-intake-textarea"
+              autoFocus
+              rows={3}
+              value={occasionNote}
+              onChange={(e) => setOccasionNote(e.target.value)}
+              placeholder={OCCASION_PH[occasion] ?? ''}
+              aria-label="About the occasion"
+            />
+          </StepCard>
+        ),
+      });
+    }
+
+    s.push({
+      key: 'pronunciation',
+      section: 'need',
+      isValid: () => true,
+      render: () => (
+        <StepCard
+          eyebrow="So we say it right"
+          question={`How do you say ${name.trim() || 'their name'}?`}
+          body="Every book is narrated aloud. Write it how it sounds — this is the one mistake we can't hear for you."
+        >
+          <input
+            className="lf-intake-input"
+            autoFocus
+            value={pronunciation}
+            onChange={(e) => setPronunciation(e.target.value)}
+            placeholder="e.g. SEE-oh-ban · rhymes with Maya · like the month"
+            aria-label="Name pronunciation"
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'pronouns',
+      section: 'need',
+      isValid: () => pronouns.length > 0,
+      render: () => (
+        <StepCard
+          eyebrow="In the story"
+          question={`How should we refer to ${kid}?`}
+        >
+          <ChoiceGrid
+            value={pronouns}
+            onChange={setPronouns}
+            options={[
+              { value: 'she/her', label: 'She' },
+              { value: 'he/him', label: 'He' },
+              { value: 'they/them', label: 'They' },
+            ]}
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'avoid',
+      section: 'need',
+      isValid: () => true,
+      render: () => (
+        <StepCard
+          eyebrow="Worth knowing"
+          question="Anything we should steer clear of?"
+          body="A frightening animal, a recent loss, a person who shouldn't appear, a subject that's raw right now. We'd rather know than find out from your face when you read it."
+        >
+          <textarea
+            className="lf-intake-input lf-intake-textarea"
+            autoFocus
+            rows={2}
+            value={avoid}
+            onChange={(e) => setAvoid(e.target.value)}
+            placeholder="e.g. No dogs — she was bitten in June. Don't mention Grandpa."
+            aria-label="Things to avoid"
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'needed-by',
+      section: 'need',
+      isValid: () => true,
+      render: () => (
+        <StepCard
+          eyebrow="Timing"
+          question="Is there a date it has to land by?"
+          body="Previews come back within 24 hours and the finished book 3–4 days after you approve them. If it's tighter than that, tell us now and we'll say straight away whether we can do it."
+        >
+          <input
+            className="lf-intake-input"
+            type="date"
+            autoFocus
+            value={neededBy}
+            onChange={(e) => setNeededBy(e.target.value)}
+            aria-label="Needed by"
+            style={{ maxWidth: 260 }}
+          />
+        </StepCard>
+      ),
+    });
+
+    s.push({
+      key: 'handoff',
+      section: 'need',
+      isValid: () => true,
+      render: () => (
+        <StepCard
+          eyebrow="That's everything we need"
+          question={`We can start ${kid}'s book from here.`}
+          body="A few more questions make it sound more like them — favourite things, how they come across, picture books you love the look of. Two minutes, and you can stop at any point."
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setWantsMore(true);
+              setStepIndex((i) => i + 1);
+            }}
+            style={{
+              justifySelf: 'start',
+              padding: '12px 20px',
+              borderRadius: 'var(--radius-pill)',
+              border: '1px solid color-mix(in srgb, var(--ink) 28%, transparent)',
+              background: 'transparent',
+              color: 'var(--ink)',
+              font: '600 15px/1 var(--font-body)',
+              cursor: 'pointer',
+            }}
+          >
+            Tell you more first &rarr;
+          </button>
+        </StepCard>
+      ),
+    });
+
     s.push({
       key: 'review',
+      section: 'more',
       isValid: () => true,
       render: () => (
         <StepCard
@@ -472,7 +829,12 @@ export function IntakeForm(props: IntakeFormProps) {
             <Row label="Traits">{traits.join(', ') || '—'}</Row>
             <Row label="Inspiration">{inspirations || '—'}</Row>
             <Row label="Cast">{companions.trim() ? companions : `Just ${name || 'the child'}`}</Row>
-            <Row label="Sticky">{stickyMoment || '—'}</Row>
+            <Row label="Said as">{pronunciation || '—'}</Row>
+            <Row label="Referred to as">{pronouns || '—'}</Row>
+            {occasion && <Row label="Occasion">{OCCASION_LABEL[occasion] ?? occasion}</Row>}
+            {neededBy && <Row label="Needed by">{neededBy}</Row>}
+            {avoid.trim() && <Row label="Steer clear of">{avoid}</Row>}
+            <Row label={isCloseIn ? 'Sticky' : 'What you notice'}>{stickyMoment || '—'}</Row>
             {hopedLesson && <Row label="Hoped lesson">{hopedLesson}</Row>}
             {isGift && giftFrom && <Row label="Gift from">{giftFrom}</Row>}
             <Row label="Sent to">{buyerEmail || props.buyerEmail || '—'}</Row>
@@ -481,17 +843,28 @@ export function IntakeForm(props: IntakeFormProps) {
       ),
     });
 
-    return s;
+    // Sort into the canonical order, then by section. Push order above is
+    // whatever was convenient; this is what the buyer walks through.
+    const rank = (st: Step) => {
+      const i = STEP_ORDER.indexOf(st.key);
+      return i === -1 ? STEP_ORDER.length : i;
+    };
+    return [...s].sort((a, b) => rank(a) - rank(b));
   }, [
     hasToken, greeting, buyerEmail, etsyOrder, lastname, name, age, ageTouched, kid,
     interests, interestsNote, traits, traitsNote, inspirations, look,
     photoFile, photoPreview, companions, stickyMoment, hopedLesson,
     isGift, giftFrom, props.isGift, props.buyerEmail,
+    relationship, occasion, occasionNote, pronunciation, pronouns, avoid,
+    neededBy, isCloseIn,
   ]);
 
-  const totalSteps = steps.length;
+  // Until the buyer opts into the optional half, the progress bar should count
+  // to the handoff — not to a total they have not agreed to walk.
+  const handoffIdx = steps.findIndex((st) => st.key === 'handoff');
+  const totalSteps = !wantsMore && handoffIdx !== -1 ? handoffIdx + 1 : steps.length;
   const current: Step | undefined = steps[stepIndex];
-  const isLast = stepIndex === totalSteps - 1;
+  const isLast = stepIndex === steps.length - 1;
 
   function goNext() {
     setError(null);
@@ -499,7 +872,10 @@ export function IntakeForm(props: IntakeFormProps) {
       setError('This one needs an answer to continue.');
       return;
     }
-    if (isLast) {
+    // The handoff is a real submit point: everything needed to build the book
+    // has been asked, so a buyer who stops here has still left a buildable
+    // brief. Continuing past it is opt-in, via the button inside the card.
+    if (isLast || (current.key === 'handoff' && !wantsMore)) {
       void submit();
     } else {
       setStepIndex(stepIndex + 1);
@@ -542,6 +918,13 @@ export function IntakeForm(props: IntakeFormProps) {
       if (companions.trim()) body.set('companions', companions.trim());
       if (stickyMoment.trim()) body.set('sticky_moment', stickyMoment.trim());
       if (hopedLesson.trim()) body.set('hoped_lesson', hopedLesson.trim());
+      if (relationship) body.set('relationship', relationship);
+      if (occasion) body.set('occasion', occasion);
+      if (occasionNote.trim()) body.set('occasion_note', occasionNote.trim());
+      if (pronunciation.trim()) body.set('name_pronunciation', pronunciation.trim());
+      if (pronouns) body.set('pronouns', pronouns);
+      if (avoid.trim()) body.set('avoid', avoid.trim());
+      if (neededBy) body.set('needed_by', neededBy);
       if (isGift && giftFrom.trim()) body.set('gift_from', giftFrom.trim());
       if (photoFile) body.set('photo', photoFile);
 
@@ -643,461 +1026,13 @@ export function IntakeForm(props: IntakeFormProps) {
             minWidth: 140,
           }}
         >
-          {submitting ? 'Sending…' : isLast ? 'Send to the studio' : 'Continue →'}
+          {submitting
+            ? 'Sending…'
+            : isLast || (current?.key === 'handoff' && !wantsMore)
+              ? 'Send to the studio'
+              : 'Continue →'}
         </button>
       </nav>
     </div>
-  );
-}
-
-// --- Step card ------------------------------------------------------------
-
-function StepCard({
-  eyebrow,
-  question,
-  body,
-  children,
-}: {
-  eyebrow: string;
-  question: string;
-  body?: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
-      <span
-        style={{
-          fontFamily: 'var(--font-sc, var(--font-body))',
-          fontSize: 12,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-faint)',
-        }}
-      >
-        {eyebrow}
-      </span>
-      <h1
-        style={{
-          margin: 0,
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(28px, 5vw, 38px)',
-          lineHeight: 1.15,
-          color: 'var(--ink)',
-          fontWeight: 400,
-        }}
-      >
-        {question}
-      </h1>
-      {body && (
-        <p
-          style={{
-            margin: 0,
-            color: 'var(--ink-soft)',
-            fontSize: 'clamp(16px, 2vw, 18px)',
-            lineHeight: 1.55,
-            maxWidth: 560,
-          }}
-        >
-          {body}
-        </p>
-      )}
-      {children && <div style={{ marginTop: 'var(--space-2)', display: 'grid', gap: 'var(--space-3)' }}>{children}</div>}
-    </div>
-  );
-}
-
-// --- Progress bar ---------------------------------------------------------
-
-function ProgressBar({ step, total }: { step: number; total: number }) {
-  const pct = Math.round((step / total) * 100);
-  return (
-    <div style={{ display: 'grid', gap: 6, maxWidth: 640, width: '100%', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--ink-faint)', fontSize: 12, fontFamily: 'var(--font-sc, var(--font-body))', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-        <span>Question {step} of {total}</span>
-        <span>{pct}%</span>
-      </div>
-      <div
-        style={{
-          height: 3,
-          borderRadius: 3,
-          background: 'rgba(138, 113, 86, 0.18)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            width: `${pct}%`,
-            height: '100%',
-            background: 'var(--oxblood)',
-            transition: 'width 260ms ease-out',
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-// --- Age slider -----------------------------------------------------------
-
-function ageToBand(age: number): '3–4' | '5–6' | '7–8' | '9+' {
-  if (age < 5) return '3–4';
-  if (age < 7) return '5–6';
-  if (age < 9) return '7–8';
-  return '9+';
-}
-
-function ageToReadingHint(age: number): string {
-  if (age < 4) return 'lap-reading · lots of pictures, few words per page';
-  if (age < 6) return 'early reader · picture-book pacing, growing sentences';
-  if (age < 8) return 'confident reader · full picture book, chapter-like flow';
-  return 'independent reader · early chapter-book territory';
-}
-
-function formatAge(age: number): string {
-  if (Number.isInteger(age)) return `${age} years old`;
-  return `${age} years old`;
-}
-
-function AgeSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
-  const min = 2;
-  const max = 10;
-  const step = 0.5;
-
-  return (
-    <div style={{ display: 'grid', gap: 16, paddingTop: 8 }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'baseline',
-          gap: 12,
-        }}
-      >
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: 40, color: 'var(--ink)', lineHeight: 1 }}>
-          {formatAge(value)}
-        </span>
-      </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="lf-intake-slider"
-        aria-label="Age in years"
-      />
-      <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--ink-faint)', fontSize: 12 }}>
-        <span>2</span>
-        <span>4</span>
-        <span>6</span>
-        <span>8</span>
-        <span>10</span>
-      </div>
-      <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 15, fontStyle: 'italic' }}>
-        {ageToReadingHint(value)}
-      </p>
-    </div>
-  );
-}
-
-// --- Combobox (autocomplete) ---------------------------------------------
-
-function Combobox({
-  value,
-  onChange,
-  suggestions,
-  max,
-  placeholder,
-  ...rest
-}: {
-  value: string[];
-  onChange: (v: string[]) => void;
-  suggestions: string[];
-  max: number;
-  placeholder?: string;
-  'aria-label'?: string;
-}) {
-  const [query, setQuery] = useState('');
-  const [open, setOpen] = useState(false);
-  const [highlight, setHighlight] = useState(0);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const q = query.trim().toLowerCase();
-  const filtered = useMemo(() => {
-    const taken = new Set(value.map((v) => v.toLowerCase()));
-    const base = suggestions.filter((s) => !taken.has(s.toLowerCase()));
-    if (!q) return base.slice(0, 8);
-    const matches = base.filter((s) => s.toLowerCase().includes(q));
-    return matches.slice(0, 8);
-  }, [suggestions, value, q]);
-
-  const canAddCustom =
-    q.length > 0 &&
-    !filtered.some((s) => s.toLowerCase() === q) &&
-    !value.some((v) => v.toLowerCase() === q);
-
-  useEffect(() => {
-    setHighlight(0);
-  }, [q]);
-
-  function add(v: string) {
-    const clean = v.trim();
-    if (!clean) return;
-    if (value.length >= max) return;
-    if (value.some((x) => x.toLowerCase() === clean.toLowerCase())) return;
-    onChange([...value, clean]);
-    setQuery('');
-    inputRef.current?.focus();
-  }
-
-  function remove(v: string) {
-    onChange(value.filter((x) => x !== v));
-  }
-
-  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Backspace' && !query && value.length > 0) {
-      e.preventDefault();
-      const last = value[value.length - 1];
-      if (last) remove(last);
-      return;
-    }
-    if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-      setOpen(true);
-      return;
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      const total = filtered.length + (canAddCustom ? 1 : 0);
-      if (total > 0) setHighlight((highlight + 1) % total);
-      return;
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      const total = filtered.length + (canAddCustom ? 1 : 0);
-      if (total > 0) setHighlight((highlight - 1 + total) % total);
-      return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      e.stopPropagation();
-      const pick = filtered[highlight];
-      if (pick) {
-        add(pick);
-      } else if (canAddCustom) {
-        add(query);
-      }
-      return;
-    }
-    if (e.key === 'Escape') {
-      setOpen(false);
-    }
-  }
-
-  const atMax = value.length >= max;
-
-  return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      {value.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {value.map((v) => (
-            <span
-              key={v}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '8px 14px',
-                borderRadius: 'var(--radius-pill)',
-                border: '1px solid var(--oxblood)',
-                background: 'var(--oxblood-wash)',
-                color: 'var(--oxblood-text)',
-                fontSize: 15,
-              }}
-            >
-              {v}
-              <button
-                type="button"
-                onClick={() => remove(v)}
-                aria-label={`Remove ${v}`}
-                style={{
-                  border: 'none',
-                  background: 'transparent',
-                  color: 'var(--oxblood-text)',
-                  cursor: 'pointer',
-                  fontSize: 16,
-                  lineHeight: 1,
-                  padding: 0,
-                }}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
-
-      <div style={{ position: 'relative' }}>
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 120)}
-          onKeyDown={onKeyDown}
-          placeholder={atMax ? `Max ${max} chosen` : placeholder}
-          disabled={atMax}
-          aria-label={rest['aria-label']}
-          className="lf-intake-input"
-          autoFocus
-        />
-        {open && !atMax && (filtered.length > 0 || canAddCustom) && (
-          <ul
-            role="listbox"
-            style={{
-              position: 'absolute',
-              top: 'calc(100% + 6px)',
-              left: 0,
-              right: 0,
-              zIndex: 10,
-              margin: 0,
-              padding: 6,
-              listStyle: 'none',
-              background: 'var(--paper-warm)',
-              border: '1px solid var(--pill-edge)',
-              borderRadius: 'var(--radius-md)',
-              boxShadow: '0 8px 24px rgba(28,19,14,0.16)',
-              maxHeight: 260,
-              overflowY: 'auto',
-            }}
-          >
-            {filtered.map((s, i) => (
-              <li
-                key={s}
-                role="option"
-                aria-selected={i === highlight}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  add(s);
-                }}
-                onMouseEnter={() => setHighlight(i)}
-                style={{
-                  padding: '10px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  background: i === highlight ? 'var(--oxblood-wash)' : 'transparent',
-                  color: 'var(--ink)',
-                  cursor: 'pointer',
-                  fontSize: 16,
-                }}
-              >
-                {s}
-              </li>
-            ))}
-            {canAddCustom && (
-              <li
-                role="option"
-                aria-selected={highlight === filtered.length}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  add(query);
-                }}
-                onMouseEnter={() => setHighlight(filtered.length)}
-                style={{
-                  padding: '10px 14px',
-                  borderRadius: 'var(--radius-sm)',
-                  background: highlight === filtered.length ? 'var(--oxblood-wash)' : 'transparent',
-                  color: 'var(--ink-soft)',
-                  cursor: 'pointer',
-                  fontSize: 15,
-                  fontStyle: 'italic',
-                }}
-              >
-                Add &ldquo;{query.trim()}&rdquo;
-              </li>
-            )}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// --- MoreDetail: expandable "anything more?" field ------------------------
-
-function MoreDetail({
-  value,
-  onChange,
-  placeholder,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-}) {
-  const [open, setOpen] = useState(value.length > 0);
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        style={{
-          justifySelf: 'start',
-          padding: '8px 0',
-          border: 'none',
-          background: 'transparent',
-          color: 'var(--ink-soft)',
-          fontFamily: 'var(--font-body)',
-          fontSize: 14,
-          textDecoration: 'underline',
-          textDecorationColor: 'rgba(138, 113, 86, 0.5)',
-          cursor: 'pointer',
-        }}
-      >
-        Add a specific note
-      </button>
-    );
-  }
-  return (
-    <textarea
-      className="lf-intake-input lf-intake-textarea"
-      rows={2}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      aria-label="More detail"
-    />
-  );
-}
-
-// --- Review row -----------------------------------------------------------
-
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <li
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '120px 1fr',
-        gap: 12,
-        padding: '12px 0',
-        borderBottom: '1px solid rgba(138, 113, 86, 0.16)',
-        alignItems: 'baseline',
-      }}
-    >
-      <span
-        style={{
-          fontFamily: 'var(--font-sc, var(--font-body))',
-          fontSize: 12,
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-faint)',
-        }}
-      >
-        {label}
-      </span>
-      <span style={{ color: 'var(--ink)', fontSize: 16, lineHeight: 1.5 }}>{children}</span>
-    </li>
   );
 }
