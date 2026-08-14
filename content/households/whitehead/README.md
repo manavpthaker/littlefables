@@ -10,6 +10,27 @@ order number.
 |---|---|---|---|
 | `elijah-goes-first` | Elijah Goes First | Elijah's sixth birthday | Text complete, art not generated |
 
+## Art style — off-shelf on purpose
+
+This book does **not** use the shared watercolor anchor in
+`content/ART-PROMPT.md`. It is drawn as a vintage four-color superhero comic —
+1960s–70s newsprint, heavy black inks, Ben-Day halftone, off-register misprint,
+single full-bleed splash panels. The story is a superhero story, so the book
+looks like one.
+
+That means it will not match the rest of the shelf, which is a real trade the
+household chose. The `theme` block in `story.json` re-tints the reader chrome to
+newsprint cream, comic ink black and four-color red so the frame agrees with the
+art instead of fighting it.
+
+Two constraints that fall out of the style and are easy to lose:
+
+- **No lettering in any image** — no balloons, caption boxes, sound effects, or
+  logo on the cap. Baked-in text competes with the story text and breaks
+  tap-a-word.
+- **Pages 19–20 turn the idiom off** — level camera, flat calm colour, no motion
+  lines. A comic that keeps shouting through the coda is not a bedtime book.
+
 ## Status
 
 - [x] `story.json` — 20 pages, 3 chapters, rubric 92/100

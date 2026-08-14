@@ -115,13 +115,15 @@ eyebrows.
 ```
 
 ```text
-Kinley's beads: small colorful glass beads — red, yellow, white, turquoise —
-threaded onto the ends of her braids, four or five to a braid. They are the tell
-for her power. When her longsight comes, they hang dead still.
+Kinley's beads: small colorful glass beads — four-color red, gold-yellow,
+process blue, and newsprint cream — threaded onto the ends of her braids, four or
+five to a braid. They are the tell for her power. When her longsight comes, they
+hang dead still; the rest of the time they get small motion arcs.
 ```
 
-**No text on the cap.** It is the one object a generator will want to brand.
-Reject any output where the cap carries a letter, number, or logo.
+**No text on the cap.** It is the one object a generator will want to brand, and
+the comic idiom makes that pull stronger. Reject any output where the cap carries
+a letter, number, or logo.
 
 ---
 
@@ -135,22 +137,47 @@ wrapped presents anywhere in the book — not even on pages 1–6. The birthday 
 carried entirely by the text. The cap is the only present that matters and
 nobody gave it to him.
 
-| Page | When | Light |
+| Page | When | Inks in play |
 |---|---|---|
-| 1–2 | His birthday, late afternoon | Flat white heat, hard shadows |
-| 3–6 | Birthday dinner, indoors | Warm interior light, blue wall, wood ceiling |
-| 7–10 | Same evening, out back | Low gold sun, long shadows on asphalt |
-| 11–12 | The week after | Bright ordinary daylight |
-| 13 | Saturday, storm arriving | Plum-dark sky, last green light before rain |
-| 14 | The blackout | Everything going out; deep navy, no gold anywhere |
-| 15–17 | Full dark, raining | Only lightning and fireflies; navy and walnut |
-| 18 | Streetlights return | Sudden full gold, everything wet and shining |
-| 19–20 | Bedtime | One warm low lamp, soft rain on glass |
+| 1–2 | His birthday, late afternoon | All four. Blazing flat gold-yellow, hard black shadows |
+| 3–6 | Birthday dinner, indoors | All four. Flat process-blue wall, gold pool on the counter |
+| 7–10 | Same evening, out back | All four. Low gold sun, long black shadows on asphalt |
+| 11–12 | The week after | All four. Flat daylight, calm inking |
+| 13 | Saturday, storm arriving | All four, but blue and red overprint the sky into bruised purple |
+| 14 | The blackout | **Gold and red withdraw.** Yellow survives only in the blocks still lit |
+| 15–17 | Full dark, raining | **Process blue and black only**, newsprint cream for lightning and fireflies |
+| 18 | Streetlights return | **All four at full strength.** Brightest page in the book |
+| 19–20 | Bedtime | Gold-yellow returns, but low and flat. Comic vocabulary switched off |
 
-Pages 14 through 17 are the only pages in the book with **no gold light**. That
-darkness is what makes page 18 land — do not sneak a warm lamp into them.
+Pages 14 through 17 are the only pages that drop inks. That four-page drain is
+what makes page 18 land — do not sneak a warm lamp into them. Azi's yellow shirt
+reads as pale cream on page 17 and yellow again on page 18; that is the same
+rule, not a continuity error.
 
-Pages 1 and 2 are the same afternoon; keep their lighting identical.
+Pages 1 and 2 are the same afternoon; keep their lighting identical. Pages 4 and
+5 are the same worm's-eye framing one second apart; the only thing that may
+differ is the gap under Elijah's shoes.
+
+---
+
+## Style addendum for this book
+
+This book leaves the shared watercolor anchor in `content/ART-PROMPT.md` and is
+drawn as a **vintage four-color superhero comic** — 1960s–70s newsprint, heavy
+black contour inks, Ben-Day halftone screens, off-register misprint, single
+full-bleed splash panels. The full anchor block lives at the top of
+`page-art-prompts.md`; paste it from there rather than retyping it.
+
+Three consequences worth holding in mind while drawing:
+
+- **No lettering anywhere** — no balloons, caption boxes, sound effects, signage,
+  or logo on the cap. This is a reading app; baked-in text fights the story text
+  and breaks tap-a-word. Keep the shapes of comic energy, drop every glyph.
+- **Nobody wears a costume.** Everyone stays in the modern everyday clothes
+  described above. Elijah's entire costume is a plain black baseball cap.
+- **The last two pages turn the idiom off.** Level camera, flat calm colour, no
+  motion lines. A superhero comic that keeps shouting through the coda is not a
+  bedtime book.
 
 ---
 
