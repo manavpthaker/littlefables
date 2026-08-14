@@ -253,8 +253,10 @@ Three consequences worth holding in mind while drawing:
 - **Nobody wears a costume.** Everyone stays in the modern everyday clothes
   described above. Elijah's entire costume is a plain black baseball cap.
 - **The last page turns the idiom off.** Level camera, flat calm colour, no
-  motion lines, single splash. A superhero comic that keeps shouting through
-  the coda is not a bedtime book.
+  motion lines, minimal halftone. A superhero comic that keeps shouting through
+  the coda is not a bedtime book. Since the panel-only rule, page 20 is three
+  panels like every other interior page — the hush is carried by the inking,
+  not by handing the coda a splash to itself.
 
 ---
 

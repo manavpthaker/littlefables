@@ -28,13 +28,16 @@ Three constraints that fall out of the style and are easy to lose:
 - **No lettering in any image** — no balloons, caption boxes, sound effects, or
   logo on the cap. Baked-in text competes with the story text and breaks
   tap-a-word.
-- **1–3 panels per page** — new this pass, at the buyer's request. The earlier
-  "single splash per page" rule is reversed. Splashes are still used, but only
-  for the biggest emotional beats and the quietest final beats. Full rules in
-  `character-notes.md → Panel format`.
+- **Cover only may be a splash; every interior page is 2–3 panels** — at the
+  buyer's request, reversing the original "single splash per page" rule. Never
+  more than three; four-plus is unreadable confetti at phone size. Full rules in
+  `character-notes.md → Panel format`. All 20 page prompts declare their layout
+  inline.
 - **The last page turns the idiom off** — level camera, flat calm colour, no
-  motion lines, single splash. A comic that keeps shouting through the coda is
-  not a bedtime book.
+  motion lines, minimal halftone. A comic that keeps shouting through the coda
+  is not a bedtime book. Note this is now carried by the *inking*, not the
+  layout: page 20 is three panels like everything else, and the quiet comes
+  from how it is drawn rather than from giving it the page to itself.
 
 ## Status — v2 shipped
 
