@@ -32,7 +32,7 @@ hand up, one foot already lifting for the next thing. Compact and springy, easy
 in his body, ready.
 ```
 
-## Kinley (main character — appears on every page except 5 and 18)
+## Kinley (main character — appears on every page except 5)
 
 ```text
 Kinley, a nine-year-old Black girl with warm brown skin, a steady watchful face,
@@ -51,7 +51,7 @@ throat. She wears an olive utility jacket over a black top. Modern everyday
 clothes only.
 ```
 
-## Dada (page 19 only; referred to on page 10)
+## Dada (page 19 art only — never named in the story text)
 
 ```text
 Dada, a Black man in his late thirties with warm deep-brown skin, a cleanly
@@ -122,18 +122,30 @@ wet and shaking. Same collar, same coat, same cat both times.
 
 Neighborhood adults in Atlanta summer clothes — light t-shirts, sundresses,
 short-sleeve button-downs, one or two with phones already out to record. Read
-as ordinary passers-by, not stylised. **The cat's owner in Ch 1 is a
-worried-looking Black woman in her thirties in a sun-yellow sundress**; she is
-the same person who is *not* the cat's owner in Ch 3, so a different owner
-child is needed on page 15. Keep her out of Ch 3.
+as ordinary passers-by, not stylised. **The woman who takes the tabby back in
+Ch 1 is a worried-looking Black woman in her thirties in a sun-yellow
+sundress.**
+
+**One household owns the tabby.** An earlier draft of these notes had the Ch 1
+woman and the Ch 3 small girl as unrelated strangers, which quietly broke the
+book's best callback: page 15 insists it is "the same tabby, the same green
+collar", so if two unrelated people each own her, the callback contradicts
+itself. A nine-year-old listener catches that. **The small girl on page 15 is
+the Ch 1 woman's daughter** — same family, same cat. Nothing in `story.json`
+needed changing; only these notes were wrong.
+
+The woman may appear behind her daughter on page 15 or stay off-panel — either
+reads fine. If she appears, keep the sun-yellow sundress so the connection is
+legible without a line of text.
 
 ## The small girl (page 15)
 
 ```text
-The small girl, a child around three or four, of any background, in bright
-summer clothes damp from the rain, dark hair in two small pigtails or short
-loose curls, crying openly with both fists pressed under her chin. She is the
-tabby's owner in Ch 3 — not related to any other character in the book.
+The small girl, a child around three or four, in bright summer clothes damp
+from the rain, dark hair in two small pigtails, crying openly with both fists
+pressed under her chin. She is the daughter of the woman in the sun-yellow
+sundress who took the tabby back in Ch 1 — the tabby is their family cat, the
+same cat both times.
 ```
 
 ## Global human guardrail
