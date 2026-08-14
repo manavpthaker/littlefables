@@ -22,8 +22,9 @@ These text blocks are the whole input.
 Elijah, a six-year-old Black boy with warm deep-brown skin, a round open face,
 large dark eyes, and short dense black curls kept close to his head. He wears a
 navy short-sleeve shirt with a red collar band, olive-and-tan camouflage cargo
-pants, and navy sneakers with white soles. Small for six and aware of it;
-carries himself chin-up and ready.
+pants, and navy sneakers with white soles. The kid who goes first — chin up,
+hand up, one foot already lifting for the next thing. Compact and springy, easy
+in his body, ready.
 ```
 
 ## Kinley (main character — appears on every page except 17)
@@ -45,10 +46,10 @@ throat. She wears an olive utility jacket over a black top. Modern everyday
 clothes only.
 ```
 
-## Daddy (pages 18 only; referred to on page 9)
+## Dada (pages 18 only; referred to on page 9)
 
 ```text
-Daddy, a Black man in his late thirties with warm deep-brown skin, a cleanly
+Dada, a Black man in his late thirties with warm deep-brown skin, a cleanly
 shaved head, a neat full dark beard, and a wide open grin. He wears a dark
 navy button-down shirt with the sleeves pushed up. Modern everyday clothes only.
 ```
@@ -181,13 +182,8 @@ Three consequences worth holding in mind while drawing:
 
 ---
 
-## Names to confirm with the family
+## Names — resolved
 
-Two things in the story text are assumptions, not facts, and are trivial to
-find-and-replace in `story.json` before narration:
-
-- **"Uncle Manav" / "Auntie Indira"** — assumed forms of address for the
-  godparents. Change to whatever Elijah actually calls them.
-- **"Mama" / "Daddy"** — placeholders for whatever Elijah calls his parents.
-
-If either changes, update this file and `page-art-prompts.md` in the same pass.
+- **"Mama" / "Dada"** — confirmed by the buyer.
+- **"Uncle Manav" / "Auntie Indira"** — confirmed by the buyer (he is the
+  godfather himself, so the forms of address are his to set).

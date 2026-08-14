@@ -8,7 +8,7 @@ order number.
 
 | Slug | Title | Occasion | State |
 |---|---|---|---|
-| `elijah-goes-first` | Elijah Goes First | Elijah's sixth birthday | Text complete, art not generated |
+| `elijah-goes-first` | Elijah Goes First | Elijah's sixth birthday | Published to prod with art |
 
 ## Art style — off-shelf on purpose
 
@@ -37,11 +37,11 @@ Two constraints that fall out of the style and are easy to lose:
 - [x] `character-notes.md`
 - [x] `page-art-prompts.md`
 - [x] `parent-guide.md`
-- [ ] `cover.png` + `pages/01–20.png` — generate per `page-art-prompts.md`
-- [ ] Household provisioned (`scripts/new-household.ts`) — `household.yaml`
-      still has placeholder zeros
-- [ ] `pnpm content:add content/households/whitehead/books/elijah-goes-first`
-- [ ] Narrate + publish
+- [x] `cover.png` + `pages/01–20.png` — generated per `page-art-prompts.md`
+- [x] Household provisioned (`scripts/new-household.ts`) — `household.yaml`
+      has hosted Supabase IDs and magic URL
+- [x] `pnpm content:add content/households/whitehead/books/elijah-goes-first`
+- [ ] Narrate day voice (currently falls back to browser TTS)
 
 ## Open questions for the family
 

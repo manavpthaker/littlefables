@@ -104,27 +104,29 @@ Each prompt below is complete. Paste `[STYLE ANCHOR]` from the top of this file,
 then the prompt body.
 
 `pages/01.png`: [STYLE ANCHOR] A hot, still Atlanta street at the flattest hour
-of a June afternoon. Row houses and a tall old oak inked in heavy black contour,
-heat shimmer drawn as thin wavering ink lines, a fan turning in an open window.
-Elijah, a six-year-old Black boy with warm deep-brown skin, a round open face,
-large dark eyes, and short dense black curls kept close to his head, wearing a
-navy short-sleeve shirt with a red collar band and olive-and-tan camouflage cargo
-pants, sits alone on a concrete step with his chin in both hands. Blazing
+of an August afternoon. Row houses and a tall old oak inked in heavy black
+contour, heat shimmer drawn as thin wavering ink lines, a fan turning in an open
+window. Elijah, a six-year-old Black boy with warm deep-brown skin, a round open
+face, large dark eyes, and short dense black curls kept close to his head,
+wearing a navy short-sleeve shirt with a red collar band and olive-and-tan
+camouflage cargo pants, sits on a concrete step with his chin in both hands,
+already leaned forward like the next thing he sees will get him up. Blazing
 gold-yellow flat field for the sunlight, hard black cast shadows, minimal
-halftone. Composition: wide, Elijah small in a big bright quiet, lower third
-kept open. Mood: waiting, sticky, end-of-patience. No birthday decorations. No
-lettering.
+halftone. Composition: wide, Elijah alone in a big bright quiet, lower third
+kept open. Mood: waiting, sticky, coiled. No birthday decorations. No lettering.
 
-`pages/02.png`: [STYLE ANCHOR] Elijah, described exactly as above, stands beside
-his sister on the same front walk. Kinley, a nine-year-old Black girl with warm
-brown skin, a steady watchful face, and long dark box braids falling past her
-shoulders with small colorful beads threaded at the ends, wearing a pale pink
-t-shirt with a soft faded graphic, cream leggings with tiny multicolored dots,
-and white sneakers, reaches up easily to a high porch shelf while Elijah watches
-from below, clearly a head shorter. Her beads swing, drawn with small motion
-arcs. Identical gold-yellow light and hard black shadows to the previous page.
-Composition: medium, camera low so the height difference reads as the subject.
-Mood: fond, slightly outraged. No lettering.
+`pages/02.png`: [STYLE ANCHOR] Elijah, described exactly as above, is already up
+and moving — mid-stride down the front walk toward the sidewalk, chin up, one
+arm swinging, the classic small-boy-with-a-mission stance. Kinley, a
+nine-year-old Black girl with warm brown skin, a steady watchful face, and long
+dark box braids falling past her shoulders with small colorful beads threaded at
+the ends, wearing a pale pink t-shirt with a soft faded graphic, cream leggings
+with tiny multicolored dots, and white sneakers, sits on the top porch step with
+a book open on her knees, looking up from it to watch her brother go. Her beaded
+braids catch small motion arcs. Identical gold-yellow light and hard black
+shadows to the previous page. Composition: medium, Elijah in motion on the left,
+Kinley still on the right, both faces visible, camera at their level. Mood: the
+sibling engine already running — one goes, one watches. No lettering.
 
 `pages/03.png`: [STYLE ANCHOR] The interior of a small burrito restaurant in the
 evening: a flat process-blue painted wall, a wood-plank ceiling inked in dense
@@ -135,17 +137,19 @@ baseball cap with no text or logo. Composition: wide interior in one-point
 perspective, the cap small but the brightest shape in frame. Mood: ordinary
 evening with one odd detail. No birthday decorations. No lettering.
 
-`pages/04.png`: [STYLE ANCHOR] Extreme low angle on the stainless counter, the
-way it looks to somebody short — the counter edge cutting high across frame in
-heavy black. Elijah, described exactly as above, is up on his toes with one arm
-stretched as far as an arm goes, fingers spread in strong foreshortening, still
-well below the plain black baseball cap on the counter edge. Process-blue wall
-and inked wood ceiling behind. Composition: dramatic worm's-eye angle, the gap
-between hand and cap dead center. Mood: strain and stubbornness. No lettering.
+`pages/04.png`: [STYLE ANCHOR] Extreme low angle on the stainless counter, drawn
+from the height where a reaching hand actually lives — the counter edge cutting
+high across frame in heavy black. Elijah, described exactly as above, is up on
+his toes with one arm stretched as far as an arm goes, fingers spread in strong
+foreshortening, reaching up toward the plain black baseball cap on the counter
+edge; his face is set with the goes-first look, all commitment, no strain read
+as weakness. Process-blue wall and inked wood ceiling behind. Composition:
+dramatic worm's-eye angle, the gap between hand and cap dead center. Mood: he
+was the one who bothered to try. No lettering.
 
 `pages/05.png`: [STYLE ANCHOR] The identical low angle, counter, and reaching boy
-as the previous page — but Elijah's navy sneakers have left the floor by two
-inches, with a small hard black shadow under them where there should not be one,
+as the previous page — but Elijah's navy sneakers have left the floor by an inch
+or two, with a small hard black shadow under them where there should not be one,
 and three short speed ticks at his heels. Nothing else in the room has changed.
 Composition: identical framing to the previous page so the only difference the
 eye finds is the gap under his shoes. Mood: the held-breath second. No lettering.
@@ -212,7 +216,7 @@ heat in it. No lettering.
 storm. A picnic blanket on the grass with the whole family on it: Elijah and
 Kinley described exactly as above; Mama, a Black woman in her late thirties with
 warm brown skin, long dark wavy hair, an open bright smile, a fine gold chain,
-wearing an olive utility jacket over a black top; Daddy, a Black man in his late
+wearing an olive utility jacket over a black top; Dada, a Black man in his late
 thirties with warm deep-brown skin, a cleanly shaved head, a neat full dark
 beard, wearing a dark navy button-down with sleeves pushed up; Uncle Manav, a
 modern human father in his 40s of Indian/Gujarati heritage with warm medium-brown
@@ -271,7 +275,7 @@ once — full-strength gold-yellow and red flooding the frame after four dark
 pages, radiating from the lamps in hard-edged rays. Elijah, described exactly as
 above, has just landed on the picnic blanket with Azi held against his shoulder;
 Azi is holding on hard, his shirt yellow again. Auntie Indira is reaching for
-them; Daddy has sat straight down on the wet grass; Mama has one arm around
+them; Dada has sat straight down on the wet grass; Mama has one arm around
 Elijah and one around Kinley; Uncle Manav stands with both hands on his head. All
 adults described exactly as above. Everything wet and hard-edged, rain still
 falling through the light. Composition: medium-wide, the whole group collapsing

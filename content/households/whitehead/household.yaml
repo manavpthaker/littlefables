@@ -1,42 +1,33 @@
 # Household manifest — the Whitehead family, Atlanta.
 # Gift household (our godson), not an Etsy order. Metadata only — not read
 # at runtime.
+# Provisioned on hosted Supabase on 2026-08-14 using the family/dev path.
+# Parent email is the script's placeholder because no delivery email has been
+# recorded for this gift household yet.
 #
-# NOT YET PROVISIONED. The provisioned_id fields below are placeholder zeros
-# because scripts/new-household.ts has not been run for this family. Run it
-# first, then paste the printed IDs and magic URL in here — see
-# content/households/README.md "Adding a household".
-#
-#   pnpm exec tsx scripts/new-household.ts \
-#     --name "Whitehead Family" \
-#     --child "Elijah" \
-#     --band 6-8 \
-#     --email <parent email> \
-#     --parent "<parent name>" \
-#     --device-label "Elijah's iPad" \
-#     --base-url https://littlefables.app
-#
-# Until provisioned_id is filled in, `pnpm content:add` cannot infer the
-# household from the folder and needs an explicit --household <uuid>.
+# The magic URL that scripts/new-household.ts printed at provision time lives
+# LOCAL ONLY — it is a bearer token and does not belong in git. Keep it in a
+# password manager. To re-issue, run the script again.
 
 household:
   slug: whitehead
   name: "Whitehead Family"
-  provisioned_id: 00000000-0000-0000-0000-000000000000 # TODO: new-household.ts
+  provisioned_id: f2a43db8-48df-4cb7-b9b2-ad6d3286637d
 
 child:
   name: "Elijah"
   band: "6-8" # turned 6; Kinley (sister, 9/10) reads alongside
-  provisioned_id: 00000000-0000-0000-0000-000000000000 # TODO: new-household.ts
+  provisioned_id: dcac641a-9a1b-4155-bb9f-05fdf888c1be
 
 parent:
-  display_name: "" # TODO: confirm — story.json uses "Mama" / "Daddy" as placeholders
-  email: "" # TODO
-  provisioned_id: 00000000-0000-0000-0000-000000000000 # TODO: new-household.ts
+  display_name: "Whitehead Family"
+  email: "whitehead.family@example.local" # placeholder until a delivery email is recorded
+  provisioned_id: 818a5c29-ca5d-4e43-9b63-a30a9c9660ac
 
 device:
   label: "Elijah's iPad"
-  magic_url: null # TODO: printed by new-household.ts
+  magic_url: null # local-only — see header comment
+  expires_at: null
 
 books:
   - elijah-goes-first
@@ -46,4 +37,4 @@ order:
   etsy_order_id: null
   intake_at: null
   delivered_at: null
-  notes: "Gift book. No intake row — the brief came from Manav directly, with reference photos supplied out of band and deliberately not committed."
+  notes: "Gift book. No intake row — the brief came from Manav directly, with reference photos supplied out of band and deliberately not committed. Provisioned with placeholder parent email; update before delivery email workflows."
