@@ -31,30 +31,25 @@ Two constraints that fall out of the style and are easy to lose:
 - **Pages 19–20 turn the idiom off** — level camera, flat calm colour, no motion
   lines. A comic that keeps shouting through the coda is not a bedtime book.
 
-## Status
+## Status — shipped
 
 - [x] `story.json` — 20 pages, 3 chapters, rubric 92/100
 - [x] `character-notes.md`
 - [x] `page-art-prompts.md`
 - [x] `parent-guide.md`
 - [x] `cover.png` + `pages/01–20.png` — generated per `page-art-prompts.md`
-- [x] Household provisioned (`scripts/new-household.ts`) — `household.yaml`
-      has hosted Supabase IDs and magic URL
-- [x] `pnpm content:add content/households/whitehead/books/elijah-goes-first`
-- [ ] Narrate day voice (currently falls back to browser TTS)
+- [x] Household provisioned — hosted Supabase IDs in `household.yaml`;
+      magic URL kept local-only (bearer token, not in git)
+- [x] `pnpm content:add` — book row live, art in Storage
+- [x] `pnpm content:narrate` — 40/40 page × voice jobs succeeded
+- [x] `pnpm content:audit-narration` — every page has matching MP3 +
+      timestamps; no page falls back to browser TTS
 
-## Open questions for the family
+## Names — resolved
 
-Two things in the story text are assumptions and are a find-and-replace to fix.
-Settle them **before** narrating — audio is the expensive step to redo.
-
-1. **"Mama" / "Daddy"** — placeholders for whatever Elijah actually calls his
-   parents. Appear on pages 9 and 18.
-2. **"Uncle Manav" / "Auntie Indira"** — assumed forms of address for the
-   godparents. Appear on pages 13 and 18.
-
-If either changes, update `story.json`, `character-notes.md`, and
-`page-art-prompts.md` in the same pass.
+- **"Mama" / "Dada"** — confirmed by the buyer.
+- **"Uncle Manav" / "Auntie Indira"** — confirmed by the buyer (he is the
+  godfather himself).
 
 ## Reference photos
 
