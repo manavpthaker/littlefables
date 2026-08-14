@@ -1,73 +1,83 @@
 # Whitehead household
 
-Atlanta. Elijah (6) and his big sister Kinley (9/10). Our godson's family —
-this is a gift household, not an Etsy order, so there is no intake row and no
-order number.
+Atlanta. Elijah and his big sister Kinley (9). Our godson's family — this is a
+gift household, not an Etsy order, so there is no intake row and no order
+number. Elijah's exact age is deliberately unnamed in the book text at the
+buyer's request; the book calls him "the birthday kid".
 
 ## Books
 
 | Slug | Title | Occasion | State |
 |---|---|---|---|
-| `elijah-goes-first` | Elijah Goes First | Elijah's sixth birthday | Published to prod with art |
+| `elijah-goes-first` | Elijah Goes First | Elijah's August birthday | Text v2 committed; art + narration need regen |
 
 ## Art style — off-shelf on purpose
 
 This book does **not** use the shared watercolor anchor in
 `content/ART-PROMPT.md`. It is drawn as a vintage four-color superhero comic —
-1960s–70s newsprint, heavy black inks, Ben-Day halftone, off-register misprint,
-single full-bleed splash panels. The story is a superhero story, so the book
-looks like one.
+1960s–70s newsprint, heavy black inks, Ben-Day halftone, off-register misprint.
+The story is a superhero origin, so the book looks like one.
 
 That means it will not match the rest of the shelf, which is a real trade the
 household chose. The `theme` block in `story.json` re-tints the reader chrome to
 newsprint cream, comic ink black and four-color red so the frame agrees with the
 art instead of fighting it.
 
-Two constraints that fall out of the style and are easy to lose:
+Three constraints that fall out of the style and are easy to lose:
 
 - **No lettering in any image** — no balloons, caption boxes, sound effects, or
   logo on the cap. Baked-in text competes with the story text and breaks
   tap-a-word.
-- **Pages 19–20 turn the idiom off** — level camera, flat calm colour, no motion
-  lines. A comic that keeps shouting through the coda is not a bedtime book.
+- **1–3 panels per page** — new this pass, at the buyer's request. The earlier
+  "single splash per page" rule is reversed. Splashes are still used, but only
+  for the biggest emotional beats and the quietest final beats. Full rules in
+  `character-notes.md → Panel format`.
+- **The last page turns the idiom off** — level camera, flat calm colour, no
+  motion lines, single splash. A comic that keeps shouting through the coda is
+  not a bedtime book.
 
-## Status — shipped
+## Status — v2 in progress
 
-- [x] `story.json` — 20 pages, 3 chapters, rubric 91/100
-- [x] `character-notes.md`
-- [x] `page-art-prompts.md`
-- [x] `parent-guide.md`
-- [x] `cover.png` + `pages/01–20.png` — generated per `page-art-prompts.md`
+- [x] `story.json` — 20 pages, 3 chapters, ~915 words, rubric 93/100. Rewritten
+      as a proper superhero origin: Elijah earns the cap by climbing an oak
+      for a stranger's tabby cat while grownups call for a fire truck; Kinley
+      reveals her powers AFTER his; Ch 3 climax is deliberately low-stakes
+      (same tabby stuck in another tree during the blackout, Kinley stuck on
+      a low branch, Elijah lifts them both down). Page-1 opener split at
+      "August" so no sentence in the book runs over 20 words.
+- [x] `character-notes.md` — age dropped from Elijah's likeness block; the
+      tabby added as a recurring character; new panel-format section.
+- [x] `page-art-prompts.md` — all 20 page prompts rewritten for new arc AND
+      new panel format.
+- [x] `parent-guide.md` — unchanged. The Two-Part Power still applies; it
+      maps better now that Kinley is established rather than confessed.
+- [ ] **`cover.png` + `pages/01–20.png` — need regeneration** for the new arc
+      and new panel format. Existing files on disk are v1 (single splashes,
+      old scenes) and would not match the new text.
 - [x] Household provisioned — hosted Supabase IDs in `household.yaml`;
-      magic URL kept local-only (bearer token, not in git)
-- [x] `pnpm content:add` — book row live, art in Storage
-- [x] `pnpm content:narrate` — 40/40 page × voice jobs succeeded
-- [x] `pnpm content:audit-narration` — every page has matching MP3 +
-      timestamps; no page falls back to browser TTS
+      magic URL kept local-only (bearer token, not in git).
+- [ ] **`pnpm content:add` — needs re-run** after art regen, to push v2 text +
+      v2 art together (avoids a mixed-state window on the live URL).
+- [ ] **`pnpm content:narrate` — needs re-run.** Every page's text changed, so
+      the v1 audio on prod no longer matches. `content:audit-narration` will
+      report mismatch until this runs.
+- [ ] **`pnpm content:audit-narration`** — will pass again after re-narrate.
+
+## Regen order (once art is ready)
+
+```
+pnpm content:add     content/households/whitehead/books/elijah-goes-first
+pnpm content:narrate content/households/whitehead/books/elijah-goes-first
+pnpm content:audit-narration elijah-goes-first
+```
 
 ## Names — resolved
 
 - **"Mama" / "Dada"** — confirmed by the buyer.
 - **"Uncle Manav" / "Auntie Indira"** — confirmed by the buyer (he is the
   godfather himself).
-
-## Known nit — page 1 opener
-
-The go-first reframe re-merged the opening sentence to 26 words — the longest in
-the book, and the first line read aloud. The 6–8 band target is 8–14. An earlier
-pass had it split as 14+14. It splits cleanly again after "August":
-
-> Elijah turned six on a Friday in the middle of August. It was the kind of
-> afternoon when summer sits on Atlanta like a big warm dog.
-
-**This is no longer free.** Narration has shipped, so changing page 1 means
-re-running `content:narrate` for that page and re-auditing its timestamps. Given
-that, leaving it as written is a perfectly reasonable call — a 26-word opener is
-a wobble, not a defect, and the book averages 8.4.
-
-Logged here rather than silently fixed because the text is the author's. The
-rubric's `age_fit` is scored 17 rather than 18 while it stands, and names the
-reason.
+- **The tabby** — deliberately unnamed. She is "the tabby" both times she
+  appears; her collar has no visible name tag.
 
 ## Reference photos
 

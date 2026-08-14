@@ -14,12 +14,17 @@ rules under `content/households/**` cover images and `reference*/` folders).
 is untested and gated. Do not feed the family's photographs to an image API.
 These text blocks are the whole input.
 
+**Age deliberately unnamed.** The story text says "the birthday kid" rather
+than any specific age at the buyer's request. Character descriptions below
+drop the number too — the artist should draw a young Black boy consistent
+across pages, guided by the physical description alone.
+
 ---
 
 ## Elijah (main character — appears on every page)
 
 ```text
-Elijah, a six-year-old Black boy with warm deep-brown skin, a round open face,
+Elijah, a young Black boy with warm deep-brown skin, a round open face,
 large dark eyes, and short dense black curls kept close to his head. He wears a
 navy short-sleeve shirt with a red collar band, olive-and-tan camouflage cargo
 pants, and navy sneakers with white soles. The kid who goes first — chin up,
@@ -27,7 +32,7 @@ hand up, one foot already lifting for the next thing. Compact and springy, easy
 in his body, ready.
 ```
 
-## Kinley (main character — appears on every page except 17)
+## Kinley (main character — appears on every page except 5 and 18)
 
 ```text
 Kinley, a nine-year-old Black girl with warm brown skin, a steady watchful face,
@@ -37,7 +42,7 @@ cream leggings with tiny multicolored dots, and white sneakers with pink and
 silver at the heel. Taller than her brother by a clear head.
 ```
 
-## Mama (pages 18 only)
+## Mama (page 19 only)
 
 ```text
 Mama, a Black woman in her late thirties with warm brown skin, long dark wavy
@@ -46,7 +51,7 @@ throat. She wears an olive utility jacket over a black top. Modern everyday
 clothes only.
 ```
 
-## Dada (pages 18 only; referred to on page 9)
+## Dada (page 19 only; referred to on page 10)
 
 ```text
 Dada, a Black man in his late thirties with warm deep-brown skin, a cleanly
@@ -54,7 +59,7 @@ shaved head, a neat full dark beard, and a wide open grin. He wears a dark
 navy button-down shirt with the sleeves pushed up. Modern everyday clothes only.
 ```
 
-## Uncle Manav (pages 13 and 18)
+## Uncle Manav (pages 13 and 19)
 
 Verbatim from `content/art/recurring-human-character-references.md` — this is the
 same person who appears in the `home/` books as Papa. Keep him identical.
@@ -69,7 +74,7 @@ or white tee; never ethnic/traditional/costume clothing unless the page text
 explicitly calls for it. In this book he wears a lightweight denim shirt.
 ```
 
-## Auntie Indira (pages 13 and 18)
+## Auntie Indira (pages 13 and 19)
 
 Verbatim from the same file — the `home/` books' Mama.
 
@@ -82,10 +87,12 @@ everyday clothes, never ethnic/traditional/costume clothing unless the page text
 explicitly calls for it. In this book she wears a cream-and-charcoal striped top.
 ```
 
-## Azi (pages 13, 17, 18)
+## Azi (pages 13 and 19)
 
 Verbatim from the same file. He is a preschooler here, small enough to be
-carried — keep him visibly younger and smaller than Elijah.
+carried — keep him visibly younger and smaller than Elijah. **Azi is on the
+blanket both times he appears; he is not the child in danger. The child crying
+about the cat in Ch 3 is a stranger.**
 
 ```text
 Azi/Azad: preschool-age human boy with Colombian and Indian family heritage,
@@ -95,6 +102,38 @@ around his ears. Small red thread bracelet. Modern everyday child clothes only;
 never plush, animal-like, furry, monkey-like, muzzle-faced, or dressed in
 ethnic/traditional clothing unless the page text explicitly calls for it. In this
 book he wears a yellow play shirt.
+```
+
+## The tabby (pages 3–6 and 15–19) — recurring character
+
+The same cat both times she appears. She is a real domestic cat, not a
+stylised mascot — scale, weight, and terror all read as ordinary house-cat.
+
+```text
+The tabby: an ordinary domestic tabby cat with a warm ginger-and-brown striped
+coat, the classic soft dark M-shape on her forehead, pale cream chest and
+paws, amber-green eyes, and a small green fabric collar with a plain round
+brass tag (no visible name). About the size of two hands. In Ch 1 she is up
+in an oak, crying and shaking; in Ch 3 she is up another oak in the rain,
+wet and shaking. Same collar, same coat, same cat both times.
+```
+
+## Cast on the crowd (pages 3, 4, 6)
+
+Neighborhood adults in Atlanta summer clothes — light t-shirts, sundresses,
+short-sleeve button-downs, one or two with phones already out to record. Read
+as ordinary passers-by, not stylised. **The cat's owner in Ch 1 is a
+worried-looking Black woman in her thirties in a sun-yellow sundress**; she is
+the same person who is *not* the cat's owner in Ch 3, so a different owner
+child is needed on page 15. Keep her out of Ch 3.
+
+## The small girl (page 15)
+
+```text
+The small girl, a child around three or four, of any background, in bright
+summer clothes damp from the rain, dark hair in two small pigtails or short
+loose curls, crying openly with both fists pressed under her chin. She is the
+tabby's owner in Ch 3 — not related to any other character in the book.
 ```
 
 ## Global human guardrail
@@ -111,8 +150,9 @@ Two things anchor the book and must look identical every time they appear.
 
 ```text
 The cap: a plain black baseball cap, slightly curved brim, no visible text or
-logo of any kind, a little too big for a six-year-old so it sits down near his
-eyebrows.
+logo of any kind, a little too big for the birthday kid so it sits down near his
+eyebrows. In Ch 1 pages 5 and 6 it is dusty with oak leaves; from page 7
+onward it is clean.
 ```
 
 ```text
@@ -128,36 +168,61 @@ a letter, number, or logo.
 
 ---
 
-## Continuity
+## Continuity — the arc, the light, the inks
 
-The book opens on Elijah's sixth birthday, runs across the week after, and ends
-the following Saturday night. Light moves forward and never goes back.
+The book opens on Elijah's birthday, jumps forward to a week of practice, and
+ends the following Saturday night. Light moves forward and never goes back.
 
 **No birthday iconography.** No cake, candles, banners, balloons, party hats, or
-wrapped presents anywhere in the book — not even on pages 1–6. The birthday is
+wrapped presents anywhere in the book — not even on pages 1–7. The birthday is
 carried entirely by the text. The cap is the only present that matters and
 nobody gave it to him.
 
-| Page | When | Inks in play |
+| Pages | When | Inks in play |
 |---|---|---|
-| 1–2 | His birthday, late afternoon | All four. Blazing flat gold-yellow, hard black shadows |
-| 3–6 | Birthday dinner, indoors | All four. Flat process-blue wall, gold pool on the counter |
-| 7–10 | Same evening, out back | All four. Low gold sun, long black shadows on asphalt |
-| 11–12 | The week after | All four. Flat daylight, calm inking |
-| 13 | Saturday, storm arriving | All four, but blue and red overprint the sky into bruised purple |
+| 1–2 | His birthday, sticky mid-afternoon | All four. Blazing flat gold-yellow, hard black cast shadows |
+| 3–6 | Late-afternoon cat rescue up the oak | All four. Warm oak-leaf greens as blue-over-yellow, hard black shadows |
+| 7–9 | Same evening, out back and running to Kinley | All four. Low gold sun, long shadows |
+| 10–12 | Later that week, indoors and neighborhood | All four. Flat calm inking, muted halftone |
+| 13 | Saturday, storm arriving at Piedmont Park | All four, but blue and red overprint the sky into bruised purple |
 | 14 | The blackout | **Gold and red withdraw.** Yellow survives only in the blocks still lit |
-| 15–17 | Full dark, raining | **Process blue and black only**, newsprint cream for lightning and fireflies |
-| 18 | Streetlights return | **All four at full strength.** Brightest page in the book |
-| 19–20 | Bedtime | Gold-yellow returns, but low and flat. Comic vocabulary switched off |
+| 15–18 | Full dark, raining | **Process blue and black only**, newsprint cream for lightning and rain highlights |
+| 19 | Streetlights return | **All four at full strength.** Brightest page in the book |
+| 20 | Bedtime coda | Gold-yellow returns, but low and flat. Comic vocabulary switched off |
 
-Pages 14 through 17 are the only pages that drop inks. That four-page drain is
-what makes page 18 land — do not sneak a warm lamp into them. Azi's yellow shirt
-reads as pale cream on page 17 and yellow again on page 18; that is the same
-rule, not a continuity error.
+Pages 14 through 18 are the only pages that drop inks. That five-page drain is
+what makes page 19 land — do not sneak a warm lamp into them. The tabby's
+ginger coat reads as pale cream on pages 15–18 and ginger again on page 19;
+that is the same rule, not a continuity error.
 
-Pages 1 and 2 are the same afternoon; keep their lighting identical. Pages 4 and
-5 are the same worm's-eye framing one second apart; the only thing that may
-differ is the gap under Elijah's shoes.
+Pages 1 and 2 are the same afternoon; keep their lighting identical. Ch 1 pages
+5 and 6 are the same tree from the top and the sidewalk one moment later.
+
+---
+
+## Panel format — new rule this pass
+
+**This book breaks the earlier "single splash panel per page" rule at the
+buyer's explicit request.** The art now reads more like a comic book than a
+picture book, with the story text still under the art.
+
+- **1 to 3 panels per page.** Never more than three; four-plus is
+  unreadable-confetti at phone size.
+- **Big panels.** Every panel is at least a fist across on a phone.
+- **Real gutters and inked borders.** A thin newsprint-cream gutter and a
+  heavy black inked frame around each panel. Comic-book vocabulary.
+- **Reading order left-to-right, top-to-bottom.** Match the story text order
+  under the art.
+- **Layouts allowed:** single splash; two horizontal panels stacked; two
+  vertical panels side by side; splash with one small square inset in a
+  corner; three horizontal panels stacked (only used on the practice-montage
+  page). Nothing else.
+- **Still no lettering in art.** No speech balloons, no caption boxes, no
+  sound-effect text, no logo on the cap.
+- **Splashes for the biggest emotional beats and the quietest final beats.**
+  Panels are for sequences and reveals.
+
+Per-page counts are given inline in `page-art-prompts.md`.
 
 ---
 
@@ -165,9 +230,9 @@ differ is the gap under Elijah's shoes.
 
 This book leaves the shared watercolor anchor in `content/ART-PROMPT.md` and is
 drawn as a **vintage four-color superhero comic** — 1960s–70s newsprint, heavy
-black contour inks, Ben-Day halftone screens, off-register misprint, single
-full-bleed splash panels. The full anchor block lives at the top of
-`page-art-prompts.md`; paste it from there rather than retyping it.
+black contour inks, Ben-Day halftone screens, off-register misprint, panel-based
+layouts. The full anchor block lives at the top of `page-art-prompts.md`; paste
+it from there rather than retyping it.
 
 Three consequences worth holding in mind while drawing:
 
@@ -176,9 +241,9 @@ Three consequences worth holding in mind while drawing:
   and breaks tap-a-word. Keep the shapes of comic energy, drop every glyph.
 - **Nobody wears a costume.** Everyone stays in the modern everyday clothes
   described above. Elijah's entire costume is a plain black baseball cap.
-- **The last two pages turn the idiom off.** Level camera, flat calm colour, no
-  motion lines. A superhero comic that keeps shouting through the coda is not a
-  bedtime book.
+- **The last page turns the idiom off.** Level camera, flat calm colour, no
+  motion lines, single splash. A superhero comic that keeps shouting through
+  the coda is not a bedtime book.
 
 ---
 
@@ -186,4 +251,6 @@ Three consequences worth holding in mind while drawing:
 
 - **"Mama" / "Dada"** — confirmed by the buyer.
 - **"Uncle Manav" / "Auntie Indira"** — confirmed by the buyer (he is the
-  godfather himself, so the forms of address are his to set).
+  godfather himself).
+- **The tabby** — deliberately unnamed. She is "the tabby" both times she
+  appears; the collar has no visible name tag.
