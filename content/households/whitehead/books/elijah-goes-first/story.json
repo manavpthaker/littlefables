@@ -122,11 +122,11 @@
   "rubric": {
     "story_core": {
       "score": 18,
-      "notes": "Celebration/witnessing spine per doctrine's 'pure celebration' note, structured on pattern §10's evidence logic rather than its self-doubt arc. Elijah's power is real from page 5; the book's work is showing that it is one half of a pair, not a lesser version of Kinley's. Act 3 resolves imperfectly on purpose — 'about as high as a porch roof, which is not very high for a superhero, and was exactly high enough.'"
+      "notes": "Celebration/witnessing spine per doctrine's 'pure celebration' note, structured on pattern §10's evidence logic rather than its self-doubt arc. Elijah's power is real from page 5; the book's work is showing that it is one half of a pair, not a lesser version of Kinley's. Act 3 resolves imperfectly on purpose — 'He went up about as high as a porch roof. That is not very high for a superhero. It was exactly high enough.'"
     },
     "age_fit": {
-      "score": 18,
-      "notes": "Measured, not estimated: ~825 words, 20 pages, 3 chapters — inside the 6-8 band (500-900 / 14-22 / 1-3). ~99 sentences, average ~8.3 words, band target 8-14. The go-first reframe added ~16 words across pages 1, 2, 4, and 5; every added sentence is short and stays inside the band average. One sentence runs to 22 words (the page-17 line about finding Azi, kept because breaking it breaks the beat). Kinley is 9/10 and sits above the band — she is written as a character, not as the reader."
+      "score": 17,
+      "notes": "Measured after the go-first reframe, not estimated: 825 words, 20 pages, 3 chapters — inside the 6-8 band (500-900 / 14-22 / 1-3). 98 sentences, average 8.4 words against a band target of 8-14. Thirteen run over 14 and two run over 20. Docked a point for one real regression: page 1 now opens at 26 words ('Elijah turned six on a Friday in the middle of August, on the kind of afternoon when summer sits on Atlanta like a big warm dog'), which is the longest sentence in the book and the first thing said out loud. An earlier pass had split that same sentence into 14+14 for exactly this reason and the reframe re-merged it; it splits cleanly again after 'August' if the author wants the point back. The other long one is the 22-word page-17 line about finding Azi, kept because breaking it breaks the beat. Kinley is 9/10 and sits above the band — she is written as a character, not as the reader."
     },
     "personalization": {
       "score": 20,
@@ -140,7 +140,7 @@
       "score": 18,
       "notes": "parent-guide.md complete with all five required sections. The tool is The Two-Part Power (say what you see / say who goes / name it after), which is a coordination and mutual-witnessing practice for a 6-and-9 sibling pair rather than a regulation tool — honest scoring: it is genuinely usable at 7pm, but it does not do the work a §1 body-based tool does, because this book was not commissioned against a sticky moment."
     },
-    "total": 92,
+    "total": 91,
     "pattern_used": "authoring-doctrine.md 'When in doubt → buyer wants pure celebration' (witnessing spine, hoped_lesson as spine), structured with story-patterns.md §10's specific-evidence logic",
     "notes": "Sixth-birthday gift book for the author's godson, not a paid Etsy order — authored to the custom-order doctrine anyway. Adaptation: §10 normally runs on a child who says 'I can't'; Elijah never does. The evidence beat is relocated from a mentor's speech to a week of practiced small saves, so the proof is something he did rather than something he was told. Character read chosen to be celebratory rather than compensatory — Elijah is the kid who goes first (the trait pre-existed the cap; turning six just gave it a name), not the kid who is small for his age. Names confirmed by the buyer (Mama, Dada, Uncle Manav, Auntie Indira). Remaining authored inference: the go-first characterization is drawn from the brief and would be easy to swap if the family reads him another way."
   }
