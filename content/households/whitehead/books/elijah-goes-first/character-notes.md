@@ -218,21 +218,20 @@ Pages 1 and 2 are the same afternoon; keep their lighting identical. Ch 1 pages
 buyer's explicit request.** The art now reads more like a comic book than a
 picture book, with the story text still under the art.
 
-- **1 to 3 panels per page.** Never more than three; four-plus is
-  unreadable-confetti at phone size.
+- **Cover only may be a single splash. Every interior page has 2 to 3 panels.**
+  Never more than three; four-plus is unreadable-confetti at phone size.
 - **Big panels.** Every panel is at least a fist across on a phone.
 - **Real gutters and inked borders.** A thin newsprint-cream gutter and a
   heavy black inked frame around each panel. Comic-book vocabulary.
 - **Reading order left-to-right, top-to-bottom.** Match the story text order
   under the art.
-- **Layouts allowed:** single splash; two horizontal panels stacked; two
-  vertical panels side by side; splash with one small square inset in a
-  corner; three horizontal panels stacked (only used on the practice-montage
-  page). Nothing else.
+- **Layouts allowed:** two horizontal panels stacked; two vertical panels side
+  by side; one wide panel over two smaller panels; three horizontal panels
+  stacked. Nothing else.
 - **Still no lettering in art.** No speech balloons, no caption boxes, no
   sound-effect text, no logo on the cap.
-- **Splashes for the biggest emotional beats and the quietest final beats.**
-  Panels are for sequences and reveals.
+- **No interior splashes.** Big emotional beats should use one dominant panel
+  paired with one or two smaller supporting panels.
 
 Per-page counts are given inline in `page-art-prompts.md`.
 

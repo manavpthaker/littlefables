@@ -8,11 +8,10 @@ a deliberate per-book style addendum. It will not match the rest of the shelf.
 That is the intent: the story is a superhero origin, so the book looks like one.
 
 **Panel format changed this pass.** The earlier "single splash panel per page"
-rule is reversed at the buyer's request. Pages now carry **1 to 3 real comic
-panels** with hard black borders and thin cream gutters. Splashes are still
-used, but only for the biggest emotional beats and the quietest final beats.
-Full rules in `character-notes.md` → "Panel format". Per-page layout is called
-out inline in each prompt below.
+rule is reversed at the buyer's request. The cover may stay a splash, but every
+interior page now carries **2 to 3 real comic panels** with hard black borders
+and thin cream gutters. Full rules in `character-notes.md` -> "Panel format".
+Per-page layout is called out inline in each prompt below.
 
 ---
 
@@ -27,9 +26,11 @@ heavy black ink contour lines with bold brush-inked shadows and crosshatch
 modeling, flat limited-palette color separations with visible Ben-Day halftone
 dot screens in the mid-tones, slight off-register color misprint at the edges,
 aged yellowed newsprint paper grain, dramatic low camera angles and honest
-foreshortening, no lettering of any kind, no speech balloons, no caption boxes,
-no sound-effect text, no logos, no watermarks, no photorealism, no modern
-digital gloss, no airbrush gradients
+foreshortening, paneled kids' graphic-novel composition when the page layout
+calls for it, hard black inked panel borders with thin newsprint-cream gutters,
+clear left-to-right and top-to-bottom reading flow, no lettering of any kind, no
+speech balloons, no caption boxes, no sound-effect text, no logos, no
+watermarks, no photorealism, no modern digital gloss, no airbrush gradients
 
 Limited ink palette only: newsprint cream #F0E2C0, comic ink black #1B1A1F,
 four-color red #B5211C, process blue #2C5FA8, gold-yellow #E8A22B. Every other
@@ -45,11 +46,11 @@ process.
    baked-in text fights the story text under the illustration and breaks
    tap-a-word. Keep the *shapes* of comic energy (radial impact lines,
    starbursts, motion streaks, speed ghosts) and drop every glyph.
-2. **Panel layouts follow this pass's rules.** 1–3 panels per page, hard black
-   inked borders, thin cream gutters between. Layouts allowed: single splash,
-   two horizontal panels stacked, two vertical panels side by side, splash
-   with one small square inset, three horizontal panels stacked (only on the
-   practice-montage page). Nothing else — no irregular grids.
+2. **Panel layouts follow this pass's rules.** Cover only may be a single
+   splash. Every interior page has 2-3 panels, hard black inked borders, and
+   thin cream gutters between. Layouts allowed: two horizontal panels stacked,
+   two vertical panels side by side, one wide panel over two smaller panels, and
+   three horizontal panels stacked. Nothing else — no irregular grids.
 3. **Four inks only.** If an output has a colour that could not come off a
    1968 newsprint press, reject it.
 4. **Keep the lower third quiet.** The reader sets the story text and the pill
@@ -76,10 +77,11 @@ muzzle-faced. The tabby is a real domestic cat, not a mascot. Heritage is
 context, not costume; all clothing stays modern and everyday. Nobody wears a
 superhero costume at any point.
 
-**Reject and regenerate** any output with: lettering of any kind, a logo on the
-cap, a panel count outside 1–3, irregular panel grids, a fifth ink, a different
-Elijah or Kinley, birthday iconography (cake, candles, balloons, banners, party
-hats, wrapped presents), or warm inks on pages 14–18.
+**Reject and regenerate** any interior-page output with: lettering of any kind,
+a logo on the cap, fewer than 2 panels, more than 3 panels, irregular panel
+grids, a fifth ink, a different Elijah or Kinley, birthday iconography (cake,
+candles, balloons, banners, party hats, wrapped presents), or warm inks on
+pages 15–18.
 
 Save as `cover.png` and `pages/01.png` … `pages/20.png` in this folder. These
 stay local — `.gitignore` keeps PNGs out of the repo; `pnpm content:add` pushes
@@ -117,50 +119,49 @@ simple. Mood: joyful, secret, airborne, sibling. No lettering.
 Each prompt below is complete. Paste `[STYLE ANCHOR]` from the top of this file,
 then the panel-layout note, then the prompt body.
 
-`pages/01.png`: **Layout: single splash.** [STYLE ANCHOR] A hot, still Atlanta
-street at the flattest hour of an August afternoon. Row houses and a tall old
-oak inked in heavy black contour, heat shimmer drawn as thin wavering ink
-lines, a fan turning in an open window. Elijah, a young Black boy with warm
-deep-brown skin, a round open face, large dark eyes, and short dense black
-curls kept close to his head, wearing a navy short-sleeve shirt with a red
-collar band and olive-and-tan camouflage cargo pants, sits on a concrete step
-with his chin in both hands, already leaned forward like the next thing he
-sees will get him up. Blazing gold-yellow flat field for the sunlight, hard
-black cast shadows, minimal halftone. Composition: wide, Elijah alone in a big
-bright quiet, lower third kept open. Mood: waiting, sticky, coiled. No
-birthday decorations. No lettering.
+`pages/01.png`: **Layout: two horizontal panels stacked, equal height, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: A hot, still
+Atlanta street at the flattest hour of an August afternoon. Row houses, a tall
+old oak inked in heavy black contour, heat shimmer drawn as thin wavering ink
+lines, and a fan turning in an open window. Blazing gold-yellow flat field for
+the sunlight, hard black cast shadows, minimal halftone. BOTTOM PANEL: Elijah,
+a young Black boy with warm deep-brown skin, a round open face, large dark eyes,
+and short dense black curls kept close to his head, wearing a navy short-sleeve
+shirt with a red collar band and olive-and-tan camouflage cargo pants, sits on
+a concrete step with his chin in both hands, already leaned forward like the
+next thing he sees will get him up. Composition: top panel establishes the hot
+quiet street; bottom panel tightens to Elijah's waiting body. Mood: waiting,
+sticky, coiled. No birthday decorations. No lettering.
 
-`pages/02.png`: **Layout: single splash.** [STYLE ANCHOR] Elijah, described
-exactly as above, is already up and moving — mid-stride down the front walk
-toward the sidewalk, chin up, one arm swinging, the classic small-boy-with-a-
-mission stance. Kinley, a nine-year-old Black girl with warm brown skin, a
-steady watchful face, and long dark box braids falling past her shoulders with
-small colorful beads threaded at the ends, wearing a pale pink t-shirt with a
-soft faded graphic, cream leggings with tiny multicolored dots, and white
-sneakers, sits on the top porch step with a book open on her knees, looking up
-from it to watch her brother go. Her beaded braids catch small motion arcs.
-Identical gold-yellow light and hard black shadows to the previous page.
-Composition: medium, Elijah in motion on the left, Kinley still on the right,
-both faces visible, camera at their level. Mood: the sibling engine already
-running — one goes, one watches. No lettering.
+`pages/02.png`: **Layout: two vertical panels side by side, equal width, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] LEFT PANEL: Elijah,
+described exactly as above, bare-headed with no cap yet, is already up and
+moving — mid-stride down the front walk toward the sidewalk, chin up, one arm
+swinging, the classic small-boy-with-a-mission stance. RIGHT PANEL: Kinley, a
+nine-year-old Black girl with warm brown skin, a steady watchful face, and long
+dark box braids falling past her shoulders with small colorful beads threaded
+at the ends, wearing a pale pink t-shirt with a soft faded graphic, cream
+leggings with tiny multicolored dots, and white sneakers, sits on the top porch
+step with a plain open book on her knees, looking up from it to watch her
+brother go. Her beaded braids catch small motion arcs. Identical gold-yellow
+light and hard black shadows to the previous page. Mood: the sibling engine
+already running — one goes, one watches. No lettering.
 
-`pages/03.png`: **Layout: single splash with one small square inset in the
-top-right corner.** [STYLE ANCHOR] Main image: a wide shot of a residential
-Atlanta street corner where a big old oak leans over the sidewalk. A small
-crowd of five or six neighborhood adults in Atlanta summer clothes — light
-t-shirts, sundresses, short-sleeve button-downs, one holding up a phone — is
-looking up into the oak and pointing. A worried-looking Black woman in her
-thirties in a sun-yellow sundress stands closest to the trunk with her hands
+`pages/03.png`: **Layout: two horizontal panels stacked, top panel larger than
+bottom, thin cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: A
+wide shot of a residential Atlanta street corner where a big old oak leans over
+the sidewalk. A small crowd of five or six neighborhood adults in Atlanta summer
+clothes — light t-shirts, sundresses, short-sleeve button-downs, one holding up
+a phone — looks up into the oak and points. A worried-looking Black woman in
+her thirties in a sun-yellow sundress stands closest to the trunk with her hands
 pressed together at her mouth. Elijah and Kinley, described exactly as above,
-approach from the right, small in the crowd. All four inks, low golden-hour
-sun, long hard black shadows across the sidewalk. Inset panel top-right,
-smaller square, thin cream gutter, hard black border: a tight up-angle view of
-the tabby — an ordinary domestic tabby cat with a warm ginger-and-brown
-striped coat, the classic soft dark M-shape on her forehead, pale cream chest
-and paws, amber-green eyes, and a small green fabric collar with a plain
-round brass tag — crouched on the highest branch of the oak, ears back, mouth
-open crying. Composition: wide street with the inset zooming in on what the
-crowd is looking at. Mood: neighborhood commotion. No lettering.
+approach from the right, small in the crowd; Elijah is bare-headed with no cap
+yet. BOTTOM PANEL: A tight up-angle view of the tabby — an ordinary domestic
+tabby cat with a warm ginger-and-brown striped coat, the classic soft dark
+M-shape on her forehead, pale cream chest and paws, amber-green eyes, and a
+small green fabric collar with a plain round brass tag — crouched on the highest
+branch of the oak, ears back, mouth open crying. All four inks, low golden-hour
+sun, long hard black shadows. Mood: neighborhood commotion. No lettering.
 
 `pages/04.png`: **Layout: two vertical panels side by side, equal width, thin
 cream gutter, hard black borders.** [STYLE ANCHOR] LEFT PANEL: Low camera on
@@ -176,18 +177,18 @@ crosshatch. Same warm greens, same hard shadows. Composition of both panels:
 Elijah on the vertical axis, growing higher in frame from left to right. Mood:
 he was already going while everyone else was still talking. No lettering.
 
-`pages/05.png`: **Layout: single splash.** [STYLE ANCHOR] High up in the oak,
-worm's-eye view from just above Elijah's shoulder looking outward. Elijah,
-described exactly as above, is balanced on a high branch with one hand
-gripping the trunk. He is holding the tabby — described exactly as above —
-against his shoulder with his other arm; her small green collar shows, her
-face is pressed into his neck, one paw over his shoulder. Just beside them,
-wedged deep into a branch fork within reach, sits the plain black baseball
-cap with no text or logo, dusty with dry oak leaves, clearly older than a day.
-Sunlight cuts through the canopy in hard-edged gold-yellow shafts; the
-world below is small, hazy, and process-blue with distance. Composition: big
-frame full of leaves, boy and cat and cap held in a triangle at the centre,
-sky visible at the top edge. Mood: the moment he sees the second thing. No
+`pages/05.png`: **Layout: one wide top panel over two smaller bottom panels,
+thin cream gutters, hard black borders.** [STYLE ANCHOR] TOP PANEL: High up in
+the oak, Elijah, described exactly as above and still bare-headed, balances on a
+high branch with one hand gripping the trunk while holding the tabby — described
+exactly as above — against his shoulder with his other arm. Her small green
+collar shows, her face is pressed into his neck, one paw over his shoulder.
+BOTTOM LEFT PANEL: A close view of Elijah turning his head and noticing
+something tucked deeper in the branch fork. BOTTOM RIGHT PANEL: The plain black
+baseball cap with no text or logo, dusty with dry oak leaves, wedged deep in
+the branch fork and clearly older than a day. Sunlight cuts through the canopy
+in hard-edged gold-yellow shafts; the world below is small, hazy, and
+process-blue with distance. Mood: the moment he sees the second thing. No
 lettering.
 
 `pages/06.png`: **Layout: two horizontal panels stacked, equal height, thin
@@ -205,23 +206,24 @@ late-afternoon light, hard black shadows. Composition: medium two-shot,
 neither figure central — the cap between them is the true focal object. Mood:
 one thing returned, another kept. No lettering.
 
-`pages/07.png`: **Layout: single splash.** [STYLE ANCHOR] Backyard by a
+`pages/07.png`: **Layout: two horizontal panels stacked, equal height, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: Backyard by a
 wooden fence at low sun — patchy grass, one folded lawn chair, a garden hose
-coiled on a hook. Elijah, described exactly as above, stands with feet apart
-and knees just bending, the plain black baseball cap now clean and settled
-down over his eyebrows, both hands slightly out for balance, face expectant.
-Long hard black shadow across the grass behind him. Composition: medium,
-Elijah centred, camera at his level, the fence line quiet across the middle
-distance. Mood: the second before something new. No lettering.
+coiled on a hook. Elijah, described exactly as above, lifts the now-clean plain
+black baseball cap toward his head, face expectant. BOTTOM PANEL: Elijah stands
+with feet apart and knees just bending, the cap settled down over his eyebrows,
+both hands slightly out for balance, the long hard black shadow across the grass
+behind him. Mood: the second before something new. No lettering.
 
-`pages/08.png`: **Layout: single splash.** [STYLE ANCHOR] Same backyard, low
-sun. Elijah, described exactly as above, is in the air about as high as a
-mailbox — feet clearly above the fence line — laughing openly, arms out,
-the cap sitting down over his eyebrows. Radial gold-yellow speed lines
-burst behind him; a faint speed-ghost of his own outline shows below him.
-Long hard black shadow directly under him on the grass. Composition:
-medium-wide, Elijah lifted centre-frame, plenty of sky, bottom third quiet.
-Mood: pure delight in a plain place. No lettering.
+`pages/08.png`: **Layout: two horizontal panels stacked, top panel larger than
+bottom, thin cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: Same
+backyard, low sun. Elijah, described exactly as above, is in the air about as
+high as a mailbox — feet clearly above the fence line — laughing openly, arms
+out, the cap sitting down over his eyebrows. Radial gold-yellow speed lines
+burst behind him; a faint speed-ghost of his own outline shows below him. BOTTOM
+PANEL: Elijah lands on his heels, out of breath and still laughing, already
+turning toward the house to run inside and tell Kinley. Long hard black shadows
+on the grass. Mood: pure delight in a plain place. No lettering.
 
 `pages/09.png`: **Layout: two vertical panels side by side, equal width.**
 [STYLE ANCHOR] LEFT PANEL: Elijah, described exactly as above but with the
@@ -238,25 +240,25 @@ beginning to lift her braided hand toward him. Composition of both panels:
 match camera height so his motion left and her stillness right read as a
 single beat. Mood: run-in meets already-knew. No lettering.
 
-`pages/10.png`: **Layout: single splash with one small square inset in the
-bottom-right corner.** [STYLE ANCHOR] Main image: same couch, medium two-shot.
-Kinley, described exactly as above, holds one of her braids out toward Elijah,
-described exactly as above, her steady face full-front to camera, mouth
-midway through a soft sentence. Elijah is beside her, cap down over his
-eyebrows, leaned in and looking at her hand. Warm indoor light, halftone soft.
-Inset panel bottom-right, small square, thin cream gutter, hard black border:
-extreme close-up of the end of that braid — three colorful beads and one
-absolutely still bead, framed to make the stillness visible. The still bead
-is centred. Composition: main scene relaxed and horizontal; inset is a hard
-zoom onto the tell. Mood: reveal, quiet, sibling gift. No lettering.
+`pages/10.png`: **Layout: one wide top panel over two smaller bottom panels,
+thin cream gutters, hard black borders.** [STYLE ANCHOR] TOP PANEL: Same couch,
+medium two-shot. Kinley, described exactly as above, holds one of her braids out
+toward Elijah, described exactly as above, her steady face full-front to camera,
+mouth midway through a soft sentence. Elijah is beside her, cap down over his
+eyebrows, leaned in and looking at her hand. BOTTOM LEFT PANEL: Extreme close-up
+of the end of that braid — three colorful beads and one absolutely still bead,
+framed to make the stillness visible. BOTTOM RIGHT PANEL: Elijah looking from
+the still bead back to Kinley, beginning to understand. Warm indoor light,
+halftone soft. Mood: reveal, quiet, sibling gift. No lettering.
 
-`pages/11.png`: **Layout: single splash.** [STYLE ANCHOR] Same couch and
-lamp. Kinley and Elijah, described exactly as above, are turned to face each
-other in a close two-shot, foreheads not quite touching, both hands relaxed.
-Elijah's cap sits between them on the couch cushion. Warm indoor light,
-tight framing, minimal halftone. Composition: close, both faces in three-
-quarter, the cap dead centre between them as the third character in the
-shot. Mood: the pact spoken. No lettering.
+`pages/11.png`: **Layout: two vertical panels side by side, equal width, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] LEFT PANEL: Same couch and
+lamp. Elijah, described exactly as above, sits thinking hard, the plain black
+cap on the cushion between him and Kinley. RIGHT PANEL: Kinley and Elijah,
+described exactly as above, are turned to face each other in a close two-shot,
+foreheads not quite touching, both hands relaxed, Kinley's beads clicking with
+small motion arcs. Warm indoor light, tight framing, minimal halftone. Mood: the
+pact spoken. No lettering.
 
 `pages/12.png`: **Layout: three horizontal panels stacked, equal height,
 thin cream gutters, hard black borders.** [STYLE ANCHOR] Three small saves in
@@ -274,39 +276,28 @@ foreground. All three panels flat daylight, hard shadows, calm inking, no
 motion speed lines. Composition: three even bands; every panel keeps its
 lower edge quiet. Mood: capable, unglamorous, ordinary. No lettering.
 
-`pages/13.png`: **Layout: single splash.** [STYLE ANCHOR] A green city park at
-the moment before a summer storm. A picnic blanket on the grass with the whole
-family on it: Elijah and Kinley described exactly as above (Elijah with the
-cap folded next to him, not on his head); Mama, a Black woman in her late
-thirties with warm brown skin, long dark wavy hair, an open bright smile, a
-fine gold chain, wearing an olive utility jacket over a black top; Dada, a
-Black man in his late thirties with warm deep-brown skin, a cleanly shaved
-head, a neat full dark beard, wearing a dark navy button-down with sleeves
-pushed up; Uncle Manav, a modern human father in his 40s of Indian/Gujarati
-heritage with warm medium-brown skin, short dark hair with close faded sides,
-a neatly trimmed full beard with subtle salt-and-pepper, dark kind eyes
-behind clear round frames, wearing a lightweight denim shirt; Auntie Indira,
-a modern human mother in her 40s of Colombian heritage with warm medium-brown
-skin, dark almond eyes, smooth shoulder-length dark hair, delicate gold
-jewelry, wearing a cream-and-charcoal striped top; and Azi, a preschool-age
-boy with warm medium-brown skin, soft round cheeks, large dark expressive
-eyes, dense tousled black curls in a rounded halo, a small red thread
-bracelet, wearing a yellow play shirt. The sky above them is a massive flat
-field of process blue overprinted with red into a bruised purple, inked storm
-clouds rolling in from one corner. Composition: wide, the whole group low in
-frame under an enormous sky. Mood: warm gathering, weather coming. No
-lettering.
+`pages/13.png`: **Layout: two horizontal panels stacked, top panel larger than
+bottom, thin cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: A
+green city park at the moment before a summer storm, a picnic blanket on the
+grass with the whole family on it: Elijah and Kinley described exactly as above
+(Elijah with the cap folded next to him, not on his head); Mama, Dada, Uncle
+Manav, Auntie Indira, and Azi, all described exactly as above in modern everyday
+clothes. BOTTOM PANEL: The sky above Piedmont Park turns the color of a plum,
+a massive flat field of process blue overprinted with red into bruised purple,
+inked storm clouds rolling in from one corner over the picnic blanket. Keep the
+family smaller in the lower edge of this panel so the weather takes over. Mood:
+warm gathering, weather coming. No lettering.
 
-`pages/14.png`: **Layout: single splash.** [STYLE ANCHOR] The Atlanta skyline
-across the park as the lights go out block by block — a hard diagonal edge of
-darkness crossing the city, flat gold-yellow buildings on one side of it,
-solid black and process blue on the other, rain beginning as fine ink
-hatching. Tiny inked figures on the grass in the foreground. Composition:
-very wide, the city as the subject, people small, bottom edge quiet. Mood:
-enormous and strange. **From here through page 18 the gold-yellow and red
-inks are withheld — process blue and black only, with newsprint cream
-showing through.** The only yellow permitted on this page is in the buildings
-that have not gone out yet. No lettering.
+`pages/14.png`: **Layout: two horizontal panels stacked, equal height, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: Thunder walks
+across the park, slow and enormous — storm clouds and rain hatching over tiny
+inked figures on the grass. BOTTOM PANEL: The Atlanta skyline across the park as
+the lights go out block by block — a hard diagonal edge of darkness crossing the
+city, flat gold-yellow buildings on one side of it, solid black and process blue
+on the other. Mood: enormous and strange. **From here through page 18 the
+gold-yellow and red inks are withheld — process blue and black only, with
+newsprint cream showing through.** The only yellow permitted on this page is in
+the buildings that have not gone out yet. No lettering.
 
 `pages/15.png`: **Layout: two horizontal panels stacked, equal height, thin
 cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: Full dark by a
@@ -317,34 +308,32 @@ into the dark canopy with her mouth open in a cry. A distant lightning flash
 throws her outline in hard cream against solid black. BOTTOM PANEL: Kinley,
 described exactly as above but hair now damp and clinging, is a step or two
 from the base of the same oak, both hands lifting one of her braids toward
-her face and staring down at the beads. The beads catch the lightning cream —
-several of them are visibly still, but her expression says she can't tell
-what she is seeing. Elijah stands just behind her at the edge of frame, cap
-already in his hand. Composition: top panel wide and lonely; bottom panel
-tighter on Kinley's confusion. Mood: her power stopped working. **Process
-blue and black only, newsprint cream for the lightning. No gold-yellow, no
-red.** No lettering.
+her face and staring down at the beads. The beads catch the lightning cream but
+hang with ordinary rain-weight and no stillness. Elijah stands just behind her
+at the edge of frame, cap already in his hand. Composition: top panel wide and
+lonely; bottom panel tighter on Kinley's confusion. Mood: her power stopped
+working. **Process blue and black only, newsprint cream for the lightning. No
+gold-yellow, no red.** No lettering.
 
-`pages/16.png`: **Layout: single splash.** [STYLE ANCHOR] Kinley, described
-exactly as above, is on the lowest big branch of the oak in the full dark
-and rain — one foot slipped off the branch and hanging in air, the other
-foot wedged against the trunk, both hands clamped around the trunk, cheek
-pressed to the bark. Her braids fall dark and dripping. Her eyes are closed
-and her jaw is set with the effort of holding still, not with fear. Rain in
-dense diagonal ink hatching around her. A lightning flash behind the trees
-throws her into hard cream silhouette. Composition: medium, Kinley just
-above the horizon line of the shot, tree bark textured in heavy black
-crosshatch behind her. Mood: stuck, holding, quiet. **Process blue and
-black only.** No lettering.
+`pages/16.png`: **Layout: two vertical panels side by side, equal width, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] LEFT PANEL: Kinley,
+described exactly as above, starts climbing the oak in the full dark and rain,
+reaching for the first big branch, braids dark and dripping. RIGHT PANEL:
+Kinley is on the lowest big branch — one foot slipped off and hanging in air,
+the other foot wedged against the trunk, both hands clamped around the bark,
+cheek pressed to the trunk. Her eyes are closed and her jaw is set with the
+effort of holding still, not with fear. A lightning flash behind the trees
+throws her into hard cream silhouette. Mood: stuck, holding, quiet. **Process
+blue and black only.** No lettering.
 
-`pages/17.png`: **Layout: single splash.** [STYLE ANCHOR] Elijah, described
-exactly as above, is pulling the plain black baseball cap down onto his head
-in the full dark and rain, knees bending, about to go. A lightning fork
-behind the trees throws him into stark silhouette with a hard cream rim
-along his shoulders and the brim of the cap. Low angle, strong
-foreshortening. Composition: medium, Elijah centred and coiled, the most
-classically heroic pose in the book — but the heroism is decision, not
-strain. Mood: decided. **Process blue and black only.** No lettering.
+`pages/17.png`: **Layout: two horizontal panels stacked, equal height, thin
+cream gutter, hard black borders.** [STYLE ANCHOR] TOP PANEL: Elijah,
+described exactly as above, pulls the plain black baseball cap down onto his
+head in the full dark and rain, knees bending, decision on his face. BOTTOM
+PANEL: Elijah launches upward from the wet grass, low angle and strong
+foreshortening, a lightning fork behind the trees throwing him into stark
+silhouette with a hard cream rim along his shoulders and the brim of the cap.
+Mood: decided. **Process blue and black only.** No lettering.
 
 `pages/18.png`: **Layout: two vertical panels side by side, equal width, thin
 cream gutter, hard black borders.** [STYLE ANCHOR] LEFT PANEL: Elijah,
@@ -362,37 +351,34 @@ both. Mood: two rescues, one after the other. **Process blue and black
 only — the tabby's coat reads cream, not ginger, because the light is
 gone.** No lettering.
 
-`pages/19.png`: **Layout: single splash.** [STYLE ANCHOR] The streetlights of
-the whole park slam back on at once — full-strength gold-yellow and red
-flooding the frame after five dark pages, radiating from the lamps in
-hard-edged rays. Elijah, described exactly as above, has just landed on the
-picnic blanket with Kinley beside him. The small girl from page 15 is on
-her knees on the wet grass in front of Elijah, hugging the tabby against
-her chest, mouth open in a relieved cry, the tabby's ginger coat now
-reading fully warm again. Mama has one arm around Elijah and one around
-Kinley; Dada is sitting down flat on the wet grass; Auntie Indira has both
-hands over her heart; Uncle Manav stands with a hand on Kinley's shoulder;
-Azi is on the blanket with his yellow shirt, holding on to Auntie Indira's
-sleeve. All adults described exactly as above. Everything wet and
-hard-edged, rain still falling through the light. Composition: medium-wide,
-the whole group collapsing inward toward the two children, the small girl
-and her cat as the emotional focal point in the lower foreground. Mood:
-relief that hasn't finished arriving. This is the brightest page in the
-book. No lettering.
+`pages/19.png`: **Layout: one wide top panel over two smaller bottom panels,
+thin cream gutters, hard black borders.** [STYLE ANCHOR] TOP PANEL: The
+streetlights of the whole park slam back on at once — full-strength
+gold-yellow and red flooding the frame after five dark pages, radiating from
+the lamps in hard-edged rays over the dripping park. BOTTOM LEFT PANEL: Elijah,
+described exactly as above, has just landed on the picnic blanket with Kinley
+beside him; Mama has one arm around Elijah and one around Kinley, and Dada is
+sitting down flat on the wet grass. BOTTOM RIGHT PANEL: The small girl from
+page 15 kneels on the wet grass hugging the tabby against her chest, mouth open
+in a relieved cry, the tabby's ginger coat now reading fully warm again, while
+Auntie Indira, Uncle Manav, and Azi lean in from the blanket. All adults
+described exactly as above. Mood: relief that hasn't finished arriving. This is
+the brightest page in the book. No lettering.
 
-`pages/20.png`: **Layout: single splash.** [STYLE ANCHOR] A small bedroom at
-night. Elijah, described exactly as above but in soft clean pajamas with
-damp hair, lies on his side under the covers looking at the plain black
-baseball cap hanging on the bedpost. Kinley, described exactly as above
-but in pajamas, stands in the lit doorway with one hand on the frame,
-looking back at her brother; her beaded braids catch the hall light and
-hang quiet with only the smallest motion arc on one bead. One warm
-gold-yellow lamp on the bedside table; rain running down the dark window
-in fine ink lines. Composition: medium, boy on the right in the lower
-half, doorway light and Kinley on the left, cap catching lamplight above
-Elijah. **Quiet inking — no speed lines, no radial bursts, no dramatic
-angle. Camera at Elijah's eye level, large calm flat colour fields,
-minimal halftone.** Mood: still, warm, done. No lettering.
+`pages/20.png`: **Layout: one wide top panel over two smaller bottom panels,
+thin cream gutters, hard black borders.** [STYLE ANCHOR] TOP PANEL: A small
+bedroom at night. Elijah, described exactly as above but in soft clean pajamas
+with damp hair, lies on his side under the covers looking at the plain black
+baseball cap hanging on the bedpost. One warm gold-yellow lamp on the bedside
+table; rain running down the dark window in fine ink lines. BOTTOM LEFT PANEL:
+Kinley, described exactly as above but in pajamas, stands in the lit doorway
+with one hand on the frame, looking back at her brother; her beaded braids catch
+the hall light and hang quiet with only the smallest motion arc on one bead.
+BOTTOM RIGHT PANEL: A pulled-back view through the doorway, Elijah small and
+sleepy in bed, cap on the bedpost, rain on the window. **Quiet inking — no speed
+lines, no radial bursts, no dramatic angle. Camera at Elijah's eye level, large
+calm flat colour fields, minimal halftone.** Mood: still, warm, done. No
+lettering.
 
 ---
 
@@ -400,20 +386,20 @@ minimal halftone.** Mood: still, warm, done. No lettering.
 
 The comic idiom peaks and releases on purpose:
 
-- **Pages 1–2** — ordinary world before the call, all splashes, moderate
+- **Pages 1–2** — ordinary world before the call, two-panel pages, moderate
   inking, warm gold flat fields.
-- **Pages 3–6** — the earning arc. Panels enter for the crowd reveal (03),
-  the climb (04), and the return (06). Splash for the top-of-tree find (05).
-- **Pages 7–8** — powers awaken. All splashes, one still and one lifted.
-- **Pages 9–11** — Kinley's reveal, told in a panel-splash-splash rhythm:
-  panels for the run-in / already-knew beat (09), splashes for the reveal
-  itself and the pact (10 with inset, 11).
-- **Page 12** — the practice montage. The only three-panel page in the book.
-- **Pages 13–14** — the storm sets in. Splashes only. Sky as subject on 14.
-- **Pages 15–18** — the rescue. Colour drains to two inks. Panels return for
-  the setup (15) and the two-part rescue (18); splashes carry the two
-  hardest emotional beats (16 Kinley stuck, 17 Elijah decided).
-- **Page 19** — the release. Full four-colour splash, brightest page.
-- **Page 20** — the comic vocabulary is deliberately switched off. Level
-  camera, flat calm colour, no motion lines, splash. A superhero comic that
-  keeps shouting through the last page is not a bedtime book.
+- **Pages 3–6** — the earning arc. Panels carry the crowd reveal, climb, top-of-
+  tree discovery, and return.
+- **Pages 7–8** — powers awaken. Two-panel pages show the before/after of the
+  cap and the first jump.
+- **Pages 9–11** — Kinley's reveal, told through boxes: run-in, bead reveal,
+  understanding, pact.
+- **Page 12** — the practice montage. Three horizontal panels.
+- **Pages 13–14** — the storm sets in through paired panels: family/weather,
+  thunder/blackout.
+- **Pages 15–18** — the rescue. Colour drains to two inks, with panels for the
+  stuck branch, the decision, and the two-part rescue.
+- **Page 19** — the release. The brightest page, but still paneled: lights,
+  family embrace, child and cat.
+- **Page 20** — the comic vocabulary softens but stays boxed. Level camera, flat
+  calm colour, no motion lines, two quiet panels.
