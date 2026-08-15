@@ -1,0 +1,44 @@
+# Household manifest — Matthias family.
+#
+# Reconstructed on 2026-08-14 from the docs/commerce/orders.csv row for order
+# test-26-08-0605. This folder had never existed on this machine; the UUIDs
+# below are the ones that row records as already provisioned in Supabase, so
+# do NOT re-run scripts/new-household.ts against this household without
+# checking — it would rotate the device token and break the delivered URL.
+
+household:
+  slug: matthias
+  name: "Matthias Family"               # UNVERIFIED — inferred from the notes
+                                        # field `household=matthias`. Confirm
+                                        # before this appears in buyer-facing copy.
+  provisioned_id: 6ba8fe25-4908-4ffe-8a19-306ae0e32073
+
+child:
+  name: "Averill"
+  band: "3-4"
+  provisioned_id: 7d6c7c28-5169-4d75-be96-df29df6aeaec
+
+parent:
+  display_name: null                    # orders.csv buyer_name was blank
+  email: "brownmanbeard@gmail.com"
+  provisioned_id: null                  # not recorded in orders.csv
+
+device:
+  label: null                           # not recorded
+  # Delivered as a readable magic URL (see docs/commerce/delivery-flow.md),
+  # not the /f/<token> form.
+  magic_url: "https://littlefables.app/read/take-it-with-you-averill/OIYvt9f5qNdnyVh6QiHjlCP_J2jK--xeSj5zNlxeyQ0"
+
+books:
+  # take-it-with-you was imported 2026-08-07 but its source folder is not on
+  # this machine and is not in git history — see README.md in this folder.
+  - take-it-with-you   # SOURCE FOLDER MISSING
+  - one-step-then-me   # authored 2026-08-14, art complete, status checking
+
+order:
+  etsy_order_id: "test-26-08-0605"      # test order, not a real Etsy sale
+  intake_at: 2026-08-07
+  delivered_at: null
+  notes: >
+    is_gift=yes. Style A locked 2026-08-07, preview round 1. Stage IMPORTED —
+    never marked delivered in orders.csv.

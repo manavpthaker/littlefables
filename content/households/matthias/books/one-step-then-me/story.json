@@ -1,0 +1,116 @@
+{
+  "id": "one-step-then-me",
+  "title": "One Step, Then Me",
+  "by": "Papa",
+  "kind": "quick",
+  "source": "family-original",
+  "status": "checking",
+  "coverEmoji": "🚒",
+  "originNote": "Coventry, Connecticut — Labor Day weekend, August 29–31, 2025.",
+  "pronunciations": {
+    "Skungamaug": "Skun-guh-mog"
+  },
+  "theme": {
+    "paper": "#f2e8d2",
+    "ink": "#33261a",
+    "accent": "#c8791f",
+    "hush": "#7d6a52"
+  },
+  "vocab": [
+    {
+      "word": "Skungamaug",
+      "syllables": ["Skun", "ga", "maug"],
+      "kidDefinition": "the creek in Coventry — a funny, bumpy name that is fun to shout"
+    },
+    {
+      "word": "creek",
+      "syllables": ["creek"],
+      "kidDefinition": "a little river, small enough to hop across on rocks"
+    },
+    {
+      "word": "Coventry",
+      "syllables": ["Cov", "en", "try"],
+      "kidDefinition": "the town with the big house and the horses, where Azi was"
+    },
+    {
+      "word": "station",
+      "syllables": ["sta", "tion"],
+      "kidDefinition": "the place where the fire trucks live when they are not working"
+    },
+    {
+      "word": "engine",
+      "syllables": ["en", "gine"],
+      "kidDefinition": "a fire truck — the big kind, with a number painted on the side"
+    },
+    {
+      "word": "monster",
+      "syllables": ["mon", "ster"],
+      "kidDefinition": "a monster truck — a truck with wheels taller than a grown-up"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "One Step, Then Me",
+      "pages": [
+        {
+          "text": "Averill had a little police car.\n\nIt fit right in his hand.\n\nHe took it all the way to Coventry."
+        },
+        {
+          "text": "The house was BIG.\n\nSo many doors!\n\nAnd Azi was there."
+        },
+        {
+          "text": "They found a creek in the woods.\n\nShhh, said the water.\n\nIts name was Skungamaug."
+        },
+        {
+          "text": "Azi hopped to a rock.\n\nHe looked back.\n\n\"One step,\" said Azi. \"Then you.\"\n\n\"Then me!\" said Averill.\n\nHop."
+        },
+        {
+          "text": "They found horses in a field.\n\nBig noses. Big feet.\n\nThe horses did not mind at all."
+        },
+        {
+          "text": "Then they found the fire station.\n\nThe door was wide, wide open.\n\nSomething huge was sleeping inside.\n\nBigger than a monster truck."
+        },
+        {
+          "text": "Averill stopped.\n\nHis feet went heavy.\n\nHe held his little car tight.\n\n\"You can watch from here,\" said Azi.\n\nSo they watched."
+        },
+        {
+          "text": "Then Azi took one step.\n\nHe looked back.\n\n\"One step,\" said Azi. \"Then you.\"\n\n\"Then me,\" said Averill."
+        },
+        {
+          "text": "Their hands held on.\n\nIn they went.\n\nBigger. Bigger. BIGGER."
+        },
+        {
+          "text": "Then Averill was inside!\n\nRed lights on the ceiling.\n\nA seat too big for him.\n\nAzi right there."
+        },
+        {
+          "text": "That night his little police car sat by the bed.\n\nStill little. Still his.\n\nBut now Averill knew.\n\nHe knew what the big ones look like inside."
+        }
+      ]
+    }
+  ],
+  "rubric": {
+    "story_core": {
+      "score": 19,
+      "notes": "Pattern §7 (fear of a specific thing) as a gradual-exposure ladder, now with the tool REHEARSED before it is needed. 'One step, then you / then me' is established at the creek on stepping stones, where the stakes are a wet sock, and repeated word-for-word at the fire station where the stakes are real. That is the structural fix from the first draft, where the phrase appeared once and had to carry the whole book cold."
+    },
+    "age_fit": {
+      "score": 19,
+      "notes": "Rewritten for 3.5. 11 pages, ~215 words, avg ~4.4 words/sentence — shorter than the first draft. Engagement devices a 3-year-old can actually use: an exact-repeat refrain to say along with, a sound word (Shhh), a one-word page-turn beat (Hop.), a three-beat crescendo (Bigger. Bigger. BIGGER.), and Skungamaug, which is simply a funny word to shout. Page count is one over the 8-10 band spec — stated deviation, see notes."
+    },
+    "personalization": {
+      "score": 20,
+      "notes": "Real weekend: the little die-cast police car in his fist (identified from a crop of IMG_8842 — 'POLICE' legible on the door), the big house with too many doors, the creek walk and the farm exploring (confirmed by the family), the horses over the paddock fence, the fire station, the held hands (IMG_8825). Stated interests: 'bigger than a monster truck' is his own unit of bigness, and the little-emergency-vehicle / big-emergency-vehicle rhyme runs the spine since he is obsessed with Cars. DELIBERATELY OMITTED: zoo, splashpad, indoor playground, wrestling, movie night — moved to parent-guide.md §7 as places to use the tool. Cramming them in is the 'highlight reel of the child's interests' failure the doctrine opens with."
+    },
+    "craft": {
+      "score": 18,
+      "notes": "Body-first at the fear beat: feet went heavy, holding tight. No compliment loop — Azi never praises Averill, he goes first and looks back. No stated moral. The creek and the horses are both bigness that does not mind you, which sets up bigness that might. Ends on stillness at the bedside."
+    },
+    "family_tool": {
+      "score": 19,
+      "notes": "parent-guide.md complete: The One-Step Way, key phrases, in-the-moment / preventive / after-the-storm scripts, plus §7 real-world rungs. The refrain now doubles as the tool's rehearsal script — a parent can run the creek version on any stepping stone, kerb, or step."
+    },
+    "total": 95,
+    "pattern_used": "story-patterns.md §7 — Fear of a specific thing (adapted)",
+    "notes": "ADAPTATION 1: §7 assumes fear; this is awe at something enormous, which has the same body and the same ladder. ADAPTATION 2: §7 requires a trusted adult to grant permission not to engage ('you can watch from here'). Doctrine §3.1 forbids inventing humans and no adult was named for this book, so the line goes to Azi, a named companion — which is also truer to the photos, where the permission came from the other kid. DEVIATION: 11 pages against the 8-10 band spec. The extra page is the creek rehearsal of the refrain; cutting it collapses the repetition that makes the book work aloud for a 3.5-year-old, and total word count stays mid-band. Doctrine §4 allows deviation with a stated reason. SOURCING: the creek walk and farm exploring come from the family's own account, not the photos — the Aug 30 photo run was deleted at their request and no creek frames exist."
+  }
+}
