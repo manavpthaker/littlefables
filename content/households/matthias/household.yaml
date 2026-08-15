@@ -1,0 +1,35 @@
+# Household manifest — populated by scripts/order-publish.ts.
+# Metadata only; not read at runtime. Kept in the repo so we can rebuild
+# the household deterministically or audit who has what.
+
+household:
+  slug: matthias
+  name: "Matthias Family"
+  provisioned_id: 6ba8fe25-4908-4ffe-8a19-306ae0e32073
+
+child:
+  name: "Averill"
+  band: "3-4"
+  provisioned_id: 7d6c7c28-5169-4d75-be96-df29df6aeaec
+
+parent:
+  display_name: "Matthias Family"
+  email: "brownmanbeard@gmail.com"
+  provisioned_id: 2015f62f-a928-48e1-9605-2f2e6c937eab
+
+device:
+  label: "Averill's iPad"
+  magic_url: "https://littlefables.app/read/take-it-with-you-averill/OIYvt9f5qNdnyVh6QiHjlCP_J2jK--xeSj5zNlxeyQ0"
+  expires_at: "2026-11-05T03:09:58.453Z"
+  gift_url: "https://littlefables.app/gift/PA308MGN"
+  gift_code: "PA30-8MGN"
+
+books:
+  - take-it-with-you
+
+order:
+  etsy_order_id: "test-26-08-0605"
+  intake_id: "e83ec0ca-0220-4ec9-9744-87af0e27ee55"
+  intake_at: "2026-08-07"
+  delivered_at: null
+  notes: ""

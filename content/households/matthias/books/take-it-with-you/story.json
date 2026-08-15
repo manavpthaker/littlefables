@@ -1,0 +1,84 @@
+{
+  "id": "take-it-with-you",
+  "title": "Take It With You, Averill",
+  "by": "Little Fables, for Averill · a gift from Bruncle Manav",
+  "kind": "quick",
+  "source": "family-original",
+  "status": "draft",
+  "theme": {
+    "paper": "#FFF6E5",
+    "ink": "#2A1B10",
+    "accent": "#E23A2E",
+    "hush": "#8A6F52"
+  },
+  "chapters": [
+    {
+      "title": "Take It With You",
+      "pages": [
+        { "text": "Averill has a screen. On the screen there is a race. VROOM! VROOM! A big red car goes fast. A monster truck ROARS. Averill roars too. \"AAAAAROOOOO!\" It is the best race ever." },
+        { "text": "\"Time to be done, buddy.\" Averill's smile goes small. His fists go tight. His whole body says NO." },
+        { "text": "But then — on the rug — someone waits. It is Zoom. Zoom is a small red race car who lives on the rug. Zoom is not on the screen. Zoom is right here." },
+        { "text": "\"Averill,\" says Zoom, in a Zoom-shaped voice. \"The race is not over. The next lap is out here.\" Averill blinks. Out here?" },
+        { "text": "\"Try it,\" says Zoom. \"Say the name. Do the thing. Pick where we go.\" Averill takes a big breath. He knows the name. \"ZOOM!\" he shouts. His voice is HUGE." },
+        { "text": "Now the thing. Averill puts his arms out wide like a monster truck. He STOMPS one foot. STOMP! He ROARS. \"AAAAAROOOOO!\" The room shakes just a little." },
+        { "text": "Now the where. Averill looks around. \"KITCHEN,\" he says. \"We go to the KITCHEN.\" And Zoom in his hand and the roar in his chest and the STOMPS in his feet — they all come with him. VROOM VROOM to the kitchen!" },
+        { "text": "Later, the world gets a little softer. The kitchen becomes the couch. The couch becomes the bath. The bath becomes the bed. And with every new place, Averill takes Zoom. And the roar. And the wild. All the way down to the pillow, where a small red race car parks in a small warm hand. \"Race track will still be there tomorrow,\" whispers Zoom. And Averill — wild, funny, giant Averill — closes his eyes with a very small VROOM." }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "lap",
+      "syllables": ["lap"],
+      "kidDefinition": "one time around the whole track — you finish one lap and then you start the next"
+    },
+    {
+      "word": "roar",
+      "syllables": ["roar"],
+      "kidDefinition": "a loud growly sound that comes from way down in your belly, like a lion or a monster truck"
+    },
+    {
+      "word": "stomp",
+      "syllables": ["stomp"],
+      "kidDefinition": "a big loud step where your foot lands hard on the ground on purpose"
+    },
+    {
+      "word": "parks",
+      "syllables": ["parks"],
+      "kidDefinition": "when a car finds its spot and stops there, all tucked in for a rest"
+    },
+    {
+      "word": "track",
+      "syllables": ["track"],
+      "kidDefinition": "the long looping road where the race cars go around and around"
+    }
+  ],
+  "pronunciations": {
+    "Averill": "AY-vrill"
+  },
+  "rubric": {
+    "story_core": {
+      "score": 18,
+      "notes": "Pattern §4 (transitions/rigidity) adapted for screen time. The 'plan' that gets disrupted is the screen; the 'wouldn't-have-found' is that the character/story/energy moves off the screen and into the room with Averill. Non-human mentor (Zoom the race car) hands over a named three-step tool. Not a highlight reel; the sticky moment (screen time meltdown) is the actual arc, not decoration."
+    },
+    "age_fit": {
+      "score": 17,
+      "notes": "8 pages · ~285 words total · sentences mostly 3-7 words per doctrine §4 age-band spec for 3-4. Sound-effect words carry a lot of pages (VROOM, ROAR, STOMP) which fits ages_2_3 + ages_4_5 vocab bands. One 12-word sentence on page 4 ('The race is not over. The next lap is out here.') split intentionally as two clauses. Page 8 is longer as the coda — deliberate — the arc lands there."
+    },
+    "personalization": {
+      "score": 19,
+      "notes": "Callbacks to every interest signal: race car (Cars), monster truck ROAR (monster trucks), STOMP/arms-out (wrestling), giant-energy language + a very brief Lion-King-adjacent 'AAAAAROOOOO' (lion roar) without naming the IP. Traits 'wild' and 'funny' are named verbatim in the coda ('wild, funny, giant Averill'). Sticky moment (screen time) IS the arc. This is Averill's book, not a template."
+    },
+    "craft": {
+      "score": 18,
+      "notes": "Kinetic Act 1 → moment of no → mentor arrives → three-beat tool taught + tried → progressive downregulation across page 8 (kitchen → couch → bath → bed) matching the bedtime pacing arc from reference/07-therapeutic-techniques.md. No compliment loops. No teaching voice. Ending is small — a whisper, a very small VROOM — no punchline. Bedtime-safe."
+    },
+    "family_tool": {
+      "score": 19,
+      "notes": "parent-guide.md ships the Take-It-With-You tool named the same as the book title, with the three-step (say the name, do the thing, pick where we go) explicit. Key phrases: 'take it with you' + 'the race track will still be there tomorrow.' In-moment / preventive / after-storm scripts all present. Parent reaches for the tool by title."
+    },
+    "total": 91,
+    "pattern_used": "story-patterns.md §4 — Transitions / plans changing / rigidity (adapted for screen time)",
+    "notes": "IP note: intentionally avoided all branded characters (Lightning McQueen, Simba, WWE wrestlers, Cars/Planes-specific vehicles). Instead used generic archetypes that echo the child's loves — a red race car (Zoom), a monster-truck ROAR, wrestler-arms-and-stomps, a wide-open growl. Same emotional register, no infringement. Gift order — the buyer is Bruncle Manav; the family is Matthias; recipient parent gets a gift certificate at delivery, not the magic URL directly."
+  }
+}
