@@ -14,18 +14,8 @@ import { FullFilmRow, StepLoop } from './landing/how-loops';
 // /gift/<code>; a parent who wants to manage settings clicks "Parent
 // sign-in" and OTPs into /login. See docs/commerce/delivery-flow.md.
 //
-// Design mirrors the Claude Design handoff at
-// /tmp/lf-landing-ds/etsy-landing-page-design (kept as reference, not
-// committed to the repo). The interactive cover builder is a client
-// component; every other section is server-rendered.
-
-const ETSY_SHOP = 'https://www.etsy.com/shop/LittleFablesStories';
-const PRICE_LINE = '$69';
-
-function utm(base: string, campaign: string): string {
-  const sep = base.includes('?') ? '&' : '?';
-  return `${base}${sep}utm_source=littlefables&utm_campaign=${campaign}`;
-}
+// The interactive cover builder is a client component; every other section
+// is server-rendered.
 
 export const metadata: Metadata = {
   title: 'Little Fables — stories made around a child’s real life',
@@ -47,9 +37,9 @@ export const metadata: Metadata = {
 const HOW_STEPS = [
   {
     label: 'step one',
-    heading: 'Tell us about your kid',
+    heading: 'Tell us who the story is about',
     body:
-      'After checkout, a short intake asks their name, age, and the things they love — the dog, the pond, the yellow boots.',
+      'After you share a few details, we ask about their name, age, and the things they love — the dog, the pond, the yellow boots.',
     video: '/landing/motion/loop-step-1.mp4',
     poster: '/landing/motion/loop-step-1-poster.png',
     alt: 'A short intake page in an iPad frame, a child’s name being typed.',
@@ -67,16 +57,16 @@ const HOW_STEPS = [
     label: 'step three',
     heading: 'We write, paint, narrate',
     body:
-      'Your kid becomes the main character. The story bends around what they love and what they’re working through. Every page is painted and read aloud in a warm voice — never generated, never rushed.',
+      'The child, family, or group becomes the heart of the story. It bends around what they love, notice, and are working through. Every page is painted and read aloud in a warm voice — never generated, never rushed.',
     video: '/landing/motion/loop-step-3.mp4',
     poster: '/landing/motion/loop-step-3-poster.jpg',
     alt: 'A page of the book developing from a desaturated wash to a finished painted scene, then the cover binding.',
   },
   {
     label: 'step four',
-    heading: 'It arrives on their iPad',
+    heading: 'It becomes theirs to read',
     body:
-      'We send a link the moment their book is ready. Open it once, save it to the home screen, and it lives on their iPad like a favourite app.',
+      'We send a private link when the story is ready. Open it on a phone, tablet, or computer, and return to it whenever the story calls for another reading.',
     video: '/landing/motion/loop-step-4.mp4',
     poster: '/landing/motion/loop-step-4-poster.png',
     alt: 'The delivery email in an iPad frame, then the book opening in the reader.',
@@ -120,7 +110,7 @@ const FAQS = [
   },
   {
     q: 'Can I gift it without spoiling the surprise?',
-    a: 'Yes. Every order includes a printable certificate with the child’s name, so there’s something to hand over while the book is being made.',
+    a: 'Yes. For family stories, we can include a printable keepsake with the child’s name. For group stories, we can make a shared printable version instead.',
   },
   {
     q: 'What if we don’t love it?',
@@ -147,30 +137,29 @@ const TRUST = [
 ];
 
 const INCLUDED_LIST = [
-  'A story written for your child, chapter by chapter',
+  'A story shaped around the child, family, or group',
   'Illustrations in the style you chose, look approved by you',
   'Warm read-aloud narration on every page',
-  'Delivered as an app saved to their iPad home screen',
-  'A printable gift certificate while it’s being made',
+  'A private reader that works on phones, tablets, and computers',
+  'A printable version when a story belongs on paper too',
 ];
 
 const FOOTER_LINKS = [
   { label: 'About', href: '#about' },
-  { label: 'Write to us', href: utm(ETSY_SHOP, 'contact') },
+  { label: 'Tell us your idea', href: '/contact' },
   { label: 'Privacy', href: '#trust' },
-  { label: 'Etsy shop', href: utm(ETSY_SHOP, 'footer') },
 ];
 
 export default async function LandingPage() {
   // If a parent is already signed in, swap the "Parent sign-in" link for
   // a direct handoff into the parent surface. Cache()-wrapped, cheap.
   const session = await getParentSession();
-  const navHref = utm(ETSY_SHOP, 'nav');
-  const heroHref = utm(ETSY_SHOP, 'hero');
-  const aboutHref = utm(ETSY_SHOP, 'about');
-  const giftHref = utm(ETSY_SHOP, 'gift');
-  const includedHref = utm(ETSY_SHOP, 'included');
-  const contactHref = utm(ETSY_SHOP, 'contact');
+  const navHref = '/contact';
+  const heroHref = '/contact';
+  const aboutHref = '/contact';
+  const giftHref = '/contact';
+  const includedHref = '/contact';
+  const contactHref = '/contact';
 
   return (
     <div
@@ -231,7 +220,7 @@ export default async function LandingPage() {
               href={navHref}
               style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
             >
-              Start your book
+              Tell us your story idea
             </a>
           </nav>
         </div>
@@ -266,7 +255,7 @@ export default async function LandingPage() {
                 color: 'var(--brass)',
               }}
             >
-              a book written for one child
+              a story written around a real life
             </span>
             <h1
               style={{
@@ -278,7 +267,7 @@ export default async function LandingPage() {
                 textWrap: 'pretty' as React.CSSProperties['textWrap'],
               }}
             >
-              Your kid, in their own storybook.
+              A story they can see themselves inside.
             </h1>
             <p
               style={{
@@ -318,7 +307,7 @@ export default async function LandingPage() {
                 href={heroHref}
                 style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
               >
-                Start your book
+                Tell us your story idea
               </a>
               <a
                 className="lf-btn lf-btn--secondary"
@@ -438,7 +427,7 @@ export default async function LandingPage() {
               margin: '10px 0 32px',
             }}
           >
-            How your book is made
+            How your story is made
           </h2>
           <div
             style={{
@@ -532,7 +521,7 @@ export default async function LandingPage() {
               margin: '10px 0 8px',
             }}
           >
-            Every book is illustrated to order
+            Every story is illustrated around its people
           </h2>
           <p
             style={{
@@ -542,11 +531,10 @@ export default async function LandingPage() {
               lineHeight: 'var(--text-body-lh)',
             }}
           >
-            We make every book by hand in the style you choose. Pick a world, type their name, and
-            watch a cover come together — take a screenshot, or start the real book when you’re
-            ready.
+            We make every story by hand in the style you choose. Try a name, a place, or a small
+            story detail in the preview, then tell us what you’re imagining when you’re ready.
           </p>
-          <CoverBuilder startBookUrl={ETSY_SHOP} />
+          <CoverBuilder startBookUrl="/contact" />
           <p
             style={{
               textAlign: 'center',
@@ -555,7 +543,7 @@ export default async function LandingPage() {
               margin: '40px 0 0',
             }}
           >
-            You’ll pick the final style and story details when you order. This is just a preview.
+            You’ll choose the final style and story details when we talk through the idea. This is just a preview.
           </p>
         </div>
       </section>
@@ -689,7 +677,7 @@ export default async function LandingPage() {
                 href={aboutHref}
                 style={{ textDecoration: 'none' }}
               >
-                Start your book
+                Tell us your story idea
               </a>
             </div>
           </div>
@@ -836,7 +824,7 @@ export default async function LandingPage() {
                 color: 'var(--brass)',
               }}
             >
-              most of our books are gifts
+              for families and learning groups
             </span>
             <h2
               style={{
@@ -846,20 +834,19 @@ export default async function LandingPage() {
                 margin: 0,
               }}
             >
-              A present that arrives before the book does
+              A story worth carrying with you
             </h2>
             <p style={{ ...aboutP, maxWidth: '32em' }}>
-              Grandparents are our best customers. Order from anywhere, and we include a printable
-              certificate to hand over on the day — birthdays, a new sibling, the first day of
-              school — while the book is being made.
+              Some stories begin with a family moment. Others begin with a class, co-op, or small
+              learning community trying to remember what the children discovered together.
             </p>
             <p style={{ ...aboutP, maxWidth: '32em' }}>
-              You don’t need to know their iPad from their tablet. The grown-up on the receiving end
-              gets a link that simply opens.
+              Tell us what you are imagining, and we’ll help you decide whether Little Fables is the
+              right format. There is no checkout, order number, or commitment at this stage.
             </p>
             <div style={{ marginTop: 6 }}>
               <a className="lf-btn lf-btn--secondary" href={giftHref} style={{ textDecoration: 'none' }}>
-                Gift a book
+                Start a conversation
               </a>
             </div>
             <p style={{ ...aboutP, maxWidth: '32em', margin: '4px 0 0' }}>
@@ -917,7 +904,7 @@ export default async function LandingPage() {
                   maxWidth: '14em',
                 }}
               >
-                a story being written just for her, from Grandma June.
+                a story written around her real life.
               </span>
               <div style={{ width: 44, borderTop: '1px solid var(--gilt)', margin: '6px 0 2px' }} />
               <span
@@ -941,7 +928,7 @@ export default async function LandingPage() {
                 maxWidth: '28em',
               }}
             >
-              The certificate to hand over on the day, while the book is being made.
+              A printable keepsake for a family story—or a shared version for a learning group.
             </figcaption>
           </figure>
         </div>
@@ -1038,7 +1025,7 @@ export default async function LandingPage() {
               color: 'var(--brass)',
             }}
           >
-            one book, made once
+            a story made with care
           </span>
           <h2
             style={{
@@ -1076,14 +1063,13 @@ export default async function LandingPage() {
               color: 'var(--ink-faint)',
             }}
           >
-            {PRICE_LINE}
           </p>
           <a
             className="lf-btn lf-btn--primary lf-btn--hero"
             href={includedHref}
             style={{ textDecoration: 'none' }}
           >
-            Start your book
+            Tell us what you’re imagining
           </a>
         </div>
       </section>
@@ -1133,7 +1119,7 @@ export default async function LandingPage() {
           ))}
           <div style={{ borderTop: '1px solid var(--border-ornament)' }} />
           <p style={{ textAlign: 'center', color: 'var(--ink-soft)', margin: '28px 0 0' }}>
-            Something else? <a href={contactHref}>Write to us</a> — we answer quickly.
+            Something else? <a href={contactHref}>Tell us what you’re imagining</a> — we answer quickly.
           </p>
         </div>
       </section>
@@ -1168,14 +1154,14 @@ export default async function LandingPage() {
             textOverflow: 'ellipsis',
           }}
         >
-          Little Fables · custom storybook
+          Little Fables · stories around real lives
         </span>
         <a
           className="lf-btn lf-btn--primary"
-          href={utm(ETSY_SHOP, 'sticky')}
+          href="/contact"
           style={{ textDecoration: 'none', flex: '0 0 auto' }}
         >
-          Start your book
+          Tell us your idea
         </a>
       </div>
 

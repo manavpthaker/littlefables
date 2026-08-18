@@ -143,7 +143,7 @@ export function CoverBuilder({ startBookUrl }: { startBookUrl: string }) {
   const displayName = name.trim() || 'Ada';
   const sub = useMemo(() => subtitleFor(thing), [thing]);
   const primaryReady = Boolean(name.trim() && thing.trim());
-  const builderLabel = primaryReady ? 'Continue on Etsy →' : 'Start your book';
+  const builderLabel = primaryReady ? 'Tell us what you’re imagining →' : 'Start with an idea';
   const builderUrl = utmUrl(startBookUrl, primaryReady ? 'cover_builder_completed' : 'cover_builder');
 
   async function downloadCover() {
@@ -367,7 +367,7 @@ export function CoverBuilder({ startBookUrl }: { startBookUrl: string }) {
                   overflowWrap: 'anywhere',
                 }}
               >
-                For {ready ? displayName : 'Ada'} —
+                For {ready ? displayName : 'your story'} —
               </span>
               <span
                 style={{
@@ -407,7 +407,7 @@ export function CoverBuilder({ startBookUrl }: { startBookUrl: string }) {
               color: 'var(--brass)',
             }}
           >
-            your child’s cover
+            try a name or story detail
           </label>
           <input
             id="lf-cover-name"
@@ -417,8 +417,8 @@ export function CoverBuilder({ startBookUrl }: { startBookUrl: string }) {
               setName(v);
               persist({ name: v });
             }}
-            placeholder="their name"
-            aria-label="their name"
+            placeholder="a name, place, or group"
+            aria-label="a name, place, or group"
             maxLength={24}
             style={{
               width: '100%',

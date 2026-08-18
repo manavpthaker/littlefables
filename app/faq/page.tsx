@@ -4,7 +4,7 @@ import { Wordmark } from '@ds/components/core/Wordmark.jsx';
 
 export const metadata: Metadata = {
   title: 'FAQ · Little Fables',
-  description: 'How Little Fables works — turnaround, revisions, refunds, ages, gift orders, privacy.',
+  description: 'How Little Fables works — stories, revisions, ages, family projects, learning communities, and privacy.',
 };
 
 // A small, real FAQ. Every question is one a buyer has actually asked
@@ -81,11 +81,12 @@ const QAS: { q: string; a: React.ReactNode }[] = [
     ),
   },
   {
-    q: 'Can I order a second book for the same child?',
+    q: 'Can I make another story for the same child or group?',
     a: (
       <>
-        Yes — cheaper the second time. Ask us on Etsy or reply to any of our
-        emails and we’ll set it up.
+        Yes. Write to us through the{' '}
+        <Link href="/contact" style={{ color: 'var(--oxblood-text)' }}>story idea form</Link>{' '}
+        and we’ll talk through what a second story could be.
       </>
     ),
   },
@@ -93,9 +94,9 @@ const QAS: { q: string; a: React.ReactNode }[] = [
     q: 'Who’s behind Little Fables?',
     a: (
       <>
-        One household. The person who reads your Etsy message is the person
-        who writes the story and reviews the art. That’s deliberate — it’s
-        what makes each book actually specific to your kid.
+        One small studio. The person who reads your note is the person who
+        writes the story and reviews the art. That’s deliberate — it’s what
+        makes each story specific to the child or group it is about.
       </>
     ),
   },
@@ -144,11 +145,12 @@ export default function FaqPage() {
               Frequently asked
             </span>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 44px)', margin: 0, color: 'var(--ink)', lineHeight: 1.1, fontWeight: 400 }}>
-              A few things people ask before they order.
+              A few things people ask before they begin.
             </h1>
             <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 17, lineHeight: 1.55 }}>
-              Something not here? Reply to us on Etsy or write to{' '}
-              <a href="mailto:hello@littlefables.app" style={{ color: 'var(--oxblood)' }}>hello@littlefables.app</a>{' '}
+              Something not here? Tell us through the{' '}
+              <Link href="/contact" style={{ color: 'var(--oxblood-text)' }}>story idea form</Link>{' '}
+              or write to <a href="mailto:hello@littlefables.app" style={{ color: 'var(--oxblood)' }}>hello@littlefables.app</a>{' '}
               — a real person answers within a few hours.
             </p>
           </div>
@@ -198,7 +200,7 @@ export default function FaqPage() {
         }}
       >
         <span>
-          Little Fables · a picture book made for one child ·{' '}
+          Little Fables · stories around real lives ·{' '}
           <Link href="/privacy" style={{ color: 'var(--ink-faint)' }}>
             Privacy
           </Link>
