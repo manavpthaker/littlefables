@@ -22,6 +22,15 @@ Target: first listing live **October 2026**, Christmas 2026 as the volume season
 | [`delivery-flow.md`](delivery-flow.md) | Landing / `/read/<slug>-<token>` / `/gift/<code>` — the three arrival states, and why gift orders get their own route. Supersedes steps 24/27/28 of the playbook. |
 | [`email-templates.md`](email-templates.md) | Six canned emails covering the whole order lifecycle |
 | [`market-research.md`](market-research.md) | Competitor pricing, audience data, channel findings |
+| [`pinterest-playbook.md`](pinterest-playbook.md) | The discovery channel we actually run. Boards, keywords, pin mix, ads |
+| [`instagram-copy.md`](instagram-copy.md) | **Paste-ready caption per image file**, in posting order. Keep open while posting. |
+| [`instagram-launch.md`](instagram-launch.md) | What Instagram is for, profile setup, the 21-post grid, which source assets are broken |
+| [`creator-seeding.md`](creator-seeding.md) | Micro-creator gifting — the cold-start proof engine. Targets, DMs, FTC and consent rules |
+| [`microschool-pilot-prospects.csv`](microschool-pilot-prospects.csv) | Research-backed co-op, microschool, forest-school, and homeschool-channel prospects; statuses are qualification state, not confirmed interest |
+| [`microschool-outreach.md`](microschool-outreach.md) | Email-first discovery outreach, qualified pilot offer, and restrained Instagram fallback |
+| [`microschool-email-drafts.md`](microschool-email-drafts.md) | Personalized first-touch drafts for direct prospects and research-only channel partners |
+| [`microschool-curriculum-opportunity.md`](microschool-curriculum-opportunity.md) | Discovery thesis and validation ladder for turning real group projects into story-based learning artifacts |
+| [`reddit-channel.md`](reddit-channel.md) | **Reddit: no-go as acquisition, yes as listening.** Then the load-bearing part — what the AI-illustration backlash means for positioning, the Etsy FAQ, and gift orders |
 | [`orders.csv`](orders.csv) | Order tracking template |
 
 ## The offer in one table

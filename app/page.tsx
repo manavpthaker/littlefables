@@ -28,13 +28,13 @@ function utm(base: string, campaign: string): string {
 }
 
 export const metadata: Metadata = {
-  title: 'Little Fables — a storybook made for one child',
+  title: 'Little Fables — stories made around a child’s real life',
   description:
-    'A picture book written, illustrated, and narrated for your child. Delivered in days on their iPad.',
+    'A quiet story written, illustrated, and narrated around a child’s real life—or a small group’s shared place, project, and questions.',
   openGraph: {
-    title: 'Little Fables — a storybook made for one child',
+    title: 'Little Fables — stories made around a child’s real life',
     description:
-      'A picture book written, illustrated, and narrated for your child. Delivered in days on their iPad.',
+      'A quiet story written, illustrated, and narrated around a child’s real life—or a small group’s shared place, project, and questions.',
     images: ['/landing/og-cover.jpg'],
     type: 'website',
   },
@@ -86,6 +86,10 @@ const HOW_STEPS = [
 ] as const;
 
 const FAQS = [
+  {
+    q: 'Can a story be made from a class or co-op project?',
+    a: 'That is an early pilot we are exploring: one real project, place, or season of learning, with adult approval before delivery. Children do not need to be named or photographed. If you lead a small learning community, write to us and tell us what the children are doing together.',
+  },
   {
     q: 'How long until it’s delivered?',
     a: 'Days, not weeks. We message you the moment their book is ready, with the link and simple saving instructions.',
@@ -289,6 +293,17 @@ export default async function LandingPage() {
               Written for who they are, illustrated in a style you helped choose, and read aloud in a
               warm voice. Delivered in days, saved to their iPad like a favorite app.
             </p>
+            <p
+              style={{
+                color: 'var(--ink-soft)',
+                maxWidth: '30em',
+                margin: 0,
+                lineHeight: 'var(--text-body-lh)',
+              }}
+            >
+              A story can be made for one child at home—or around the place, project, and questions
+              a small group shared together.
+            </p>
             <div
               style={{
                 display: 'flex',
@@ -308,11 +323,11 @@ export default async function LandingPage() {
               <a
                 className="lf-btn lf-btn--secondary"
                 href="/sample"
-                title="A real book we made for one kid — takes about two minutes."
-                aria-label="Read a sample book — a real book we made for one kid, takes about two minutes"
+                title="Read The Lantern of Round Pond — a Little Fables reader demo"
+                aria-label="Read The Lantern of Round Pond, a Little Fables reader demo"
                 style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
               >
-                Read a sample book
+                Read the demo story
               </a>
             </div>
             <p
@@ -651,10 +666,9 @@ export default async function LandingPage() {
                 why this works
               </span>
               <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.55 }}>
-                Personalized stories boost engagement and comprehension in early readers. Narrative
-                therapy research finds that kids move through hard feelings more easily when they
-                meet those feelings in a story than in a conversation. A book about your kid does
-                both.
+                A child can meet a difficult feeling or a new idea more safely when it arrives inside
+                a story. The story gives them room to notice, wonder, and recognize something in
+                themselves.
               </p>
             </div>
             <p style={aboutP}>
@@ -663,6 +677,11 @@ export default async function LandingPage() {
               narrate a book just for them. It arrives in days and lives on their iPad like a book
               lives on a shelf. Every story bends around your kid, quietly, the way the first one
               did.
+            </p>
+            <p style={aboutP}>
+              The same idea can hold a shared learning life: the place a group keeps returning to,
+              the project they built, the questions they asked, or the season they spent together.
+              We are exploring that version carefully, one adult-approved pilot at a time.
             </p>
             <div style={{ marginTop: 6 }}>
               <a
@@ -710,6 +729,17 @@ export default async function LandingPage() {
           >
             A warm voice reads along as words light up. No ads, no algorithm, no autoplay — just
             their book. Two modes, one for the day and one for bedtime.
+          </p>
+          <p
+            style={{
+              margin: '-12px 0 28px',
+              color: 'var(--ink-soft)',
+              maxWidth: '36em',
+              lineHeight: 'var(--text-body-lh)',
+            }}
+          >
+            “The Lantern of Round Pond” is a demo of the reader. A Little Fables story can follow
+            one child, a family, or a small group’s real learning life.
           </p>
           <div
             style={{
@@ -832,6 +862,12 @@ export default async function LandingPage() {
                 Gift a book
               </a>
             </div>
+            <p style={{ ...aboutP, maxWidth: '32em', margin: '4px 0 0' }}>
+              Have a class, co-op, or microschool project worth remembering?{' '}
+              <a href="mailto:hello@littlefables.app?subject=Learning community pilot">
+                Tell us about it →
+              </a>
+            </p>
           </div>
           <figure
             style={{
@@ -1175,4 +1211,3 @@ const aboutP: React.CSSProperties = {
   lineHeight: 'var(--text-body-lh)',
   maxWidth: '32em',
 };
-
