@@ -6,11 +6,7 @@ import Link from 'next/link';
 // via /sample. Deliberately quiet — the sample's promise is that nothing
 // interrupts the book, so the card only appears once the story is over.
 //
-// No price on this surface. The price lives on Etsy and the landing
-// page; a third source is how mismatches happen.
-
-const ETSY_URL =
-  'https://www.etsy.com/shop/LittleFablesStories?utm_source=littlefables&utm_campaign=sample_end';
+// The sample ends with an invitation to start a conversation, not a checkout.
 
 export function SampleClosingCard({ visible }: { visible: boolean }) {
   if (!visible) return null;
@@ -56,7 +52,7 @@ export function SampleClosingCard({ visible }: { visible: boolean }) {
             color: 'var(--ink)',
           }}
         >
-          This was Rosa&rsquo;s book, made for one real kid.
+          This was Rosa&rsquo;s story, made around one real life.
         </p>
         <p
           style={{
@@ -67,10 +63,10 @@ export function SampleClosingCard({ visible }: { visible: boolean }) {
             color: 'var(--ink)',
           }}
         >
-          Yours is written fresh &mdash; about your kid.
+          Yours can be written fresh &mdash; about a child, a family, or a group&rsquo;s shared story.
         </p>
         <a
-          href={ETSY_URL}
+          href="/contact"
           style={{
             marginTop: 'var(--space-2, 10px)',
             justifySelf: 'center',
@@ -87,7 +83,7 @@ export function SampleClosingCard({ visible }: { visible: boolean }) {
             letterSpacing: '0.01em',
           }}
         >
-          Start your book
+          Tell us your story idea
         </a>
         <Link
           href="/"
