@@ -6,7 +6,7 @@ the approved cover. Attach: `content/households/matthias/books/the-fort-in-coven
 
 ## Non-negotiable rules
 
-- **Cast:** Just Averill — no other humans in the art. No invented parents, coaches, siblings, or other humans.
+- **Cast:** Averill and Azi only — no other humans in the art. No invented parents, coaches, siblings, or other humans.
 - **Consistency:** keep the character block and style anchor **identical** across
   every page. Do not rewrite them.
 - **Consistency check every 3 pages:** hair silhouette, palette, props, lighting.
@@ -36,7 +36,7 @@ Averill counted them.
 
 Twelve doors. And they weren't home.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -89,7 +89,7 @@ Just their size.
 
 Just for them.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -144,7 +144,7 @@ And two big cushions.
 
 They pulled the blanket over the top.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -197,7 +197,7 @@ Dark inside. Warm. A little dusty.
 
 A slot of daylight came through the top.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -252,7 +252,7 @@ It had a radio, Averill knew.
 
 "Somewhere. Find him."
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -305,7 +305,7 @@ Azi went first, like always.
 
 Averill went second, like always.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -366,7 +366,7 @@ The water shushed them.
 
 No giant here.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -419,7 +419,7 @@ Out the other side.
 
 This time —
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -478,7 +478,7 @@ The horses did not mind at all.
 
 But no giant here.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -531,7 +531,7 @@ But no giant here.
 
 "Try."
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -588,7 +588,7 @@ One door standing wide, wide open.
 
 Bigger than any door in the big house.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -651,7 +651,7 @@ Bigger than a whale.
 
 Bigger than anything.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -704,7 +704,7 @@ Bigger than anything.
 
 "No," said Azi. "Not today."
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -763,7 +763,7 @@ Somewhere on the farm, the giant slept on.
 
 And they knew where.
 
-**Prompt:** Illustrate this beat in the approved style anchor below, following the character-notes.md block for Averill verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Just Averill — no other humans in the art.
+**Prompt:** Illustrate this beat in the approved style anchor below, following the relevant character-notes.md blocks verbatim. One clear focal moment per spread. No text, no logos, no watermarks, no photorealism. Cast rule: Averill and Azi only — no other humans in the art.
 
 **Style anchor (paste verbatim at the end of the prompt):**
 > STYLE ANCHOR — paste verbatim into every art prompt for *The Fort in Coventry*.
@@ -805,4 +805,3 @@ And they knew where.
 >   no invented humans — Averill and Azi only, no distant faceless figures
 >   no autumn foliage (the trip was late summer, everything full green)
 >   no cute or toy-sized fire engine on pages 11–12 — scale is the subject
-
