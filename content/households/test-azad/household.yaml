@@ -1,0 +1,33 @@
+# Household manifest — populated by scripts/order-publish.ts.
+# Metadata only; not read at runtime. Kept in the repo so we can rebuild
+# the household deterministically or audit who has what.
+
+household:
+  slug: test-azad
+  name: "Azad Family"
+  provisioned_id: 269f476b-f21f-453c-bfbd-7a64beb8121d
+
+child:
+  name: "Azad"
+  band: "3-4"
+  provisioned_id: b0f8b6a4-8096-4811-b5fc-35c6b9b1f80f
+
+parent:
+  display_name: "Azad's Parent"
+  email: "brownmanbeard@gmail.com"
+  provisioned_id: 5971102f-f7e4-47d1-a90a-5e0b2c85d1e9
+
+device:
+  label: "Azad's iPad"
+  magic_url: "https://littlefables.app/read/azad-zooms/xQC3AHqWA18SJ2qgTtm3lQc6FNDixOngCp1irbBUNY8"
+  expires_at: "2026-11-05T00:35:47.666Z"
+
+books:
+  - azad-zooms
+
+order:
+  etsy_order_id: "test-26-08-0602"
+  intake_id: "e0333e5d-272a-4f66-89dd-332b1a74f59f"
+  intake_at: "2026-08-07"
+  delivered_at: null
+  notes: ""

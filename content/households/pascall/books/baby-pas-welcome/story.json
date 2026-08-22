@@ -1,0 +1,76 @@
+{
+  "id": "baby-pas-welcome",
+  "title": "Welcome, Baby Pas",
+  "by": "Little Fables, for Baby Pas · a gift from Uncle Manav",
+  "kind": "quick",
+  "source": "family-original",
+  "status": "draft",
+  "theme": {
+    "paper": "#FBF4E4",
+    "ink": "#2E2318",
+    "accent": "#8CA982",
+    "hush": "#8A7A62"
+  },
+  "chapters": [
+    {
+      "title": "Welcome, Baby Pas",
+      "pages": [
+        { "text": "Dear Baby Pas — I am writing this before I ever meet you. Your mama and papa asked me to send love. I would have sent it anyway." },
+        { "text": "Somewhere in the world, your mama is walking softly around the house, humming. Your papa is fixing a small thing. That is what he does when he loves someone." },
+        { "text": "Your papa is my best friend. He is kind, he is thoughtful, and he fixes the small thing before you even notice it needed fixing." },
+        { "text": "Before you were ever a thought, your papa was already practicing — on my son, Azad. Azad has an uncle who shows up, who asks the good questions, who is present. You are getting the same person, except he will be your papa." },
+        { "text": "Your mama is the kind of person who makes a room feel welcome the moment she walks in. She is loving. She notices when you look tired, and she does something about it." },
+        { "text": "Together, your mama and papa built a home that was ready for you long before you got here. Not by buying things. By the way they talk to each other. By the way they laugh." },
+        { "text": "So here is what I am, Baby Pas — Uncle Manav. I have been there for your papa. He has been there for me. And I plan to be there for you. Not in a big way — in the way that shows up on ordinary Tuesdays." },
+        { "text": "You are new to this world, Baby Pas. But you are being handed to two of the best people I know. And they are already so ready for you. Welcome. — Uncle Manav." }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "welcome",
+      "syllables": ["wel", "come"],
+      "kidDefinition": "the way people say hello when they are so glad you are here"
+    },
+    {
+      "word": "thoughtful",
+      "syllables": ["thought", "ful"],
+      "kidDefinition": "the way someone acts when they think about you before they need to"
+    },
+    {
+      "word": "practicing",
+      "syllables": ["prac", "tic", "ing"],
+      "kidDefinition": "getting better at something by doing it over and over — even when nobody is watching"
+    }
+  ],
+  "pronunciations": {
+    "Baby Pas": "BAY-bee PASS",
+    "Azad": "uh-ZAAD",
+    "Manav": "MUH-nuv"
+  },
+  "rubric": {
+    "story_core": {
+      "score": 19,
+      "notes": "Personal-letter form — first-person from Uncle Manav to his soon-to-be-born niece. Not a story-patterns.md problem/tool arc (those are calibrated for reading-age kids in a sticky moment), and stronger than the earlier lullaby draft because it locates the gift where it actually lives: in the specific relationship between the giver and the family. The intake's hoped-lesson ('to love her parents') is delivered through named observation — the middle pages tell the child what to love her parents FOR, drawn from real things Manav knows about Clevon and his wife. The sticky moment ('being new to this world') becomes the framing device: the letter is what the world hands to her while she is still new."
+    },
+    "age_fit": {
+      "score": 17,
+      "notes": "Read-to-newborn / read-at-a-shower book, not read-with-3-year-old. Intake age band was 3-4 by form necessity — actual reader is an adult (a parent, a friend at the shower). ~249 words across 8 pages, sentences 8-14 words, direct-address prose. Reads aloud in about 2 minutes — the right length for the moment it will actually be read in (the shower gift table, the rocking chair). One image-heavy page (4, with the Azad beat) runs longer to earn its two-part sentence."
+    },
+    "personalization": {
+      "score": 20,
+      "notes": "Every intake signal used AND every relational fact Manav shared. Name (Baby Pas throughout). Papa: 'my best friend', kind, thoughtful, fixes small things before you notice — the 'gadgets like her dad' beat lands as tenderness-through-tinkering rather than devices. Papa as an already-practiced uncle to Manav's son (Azad, named on page 4) — this is the whole heart of the book, and no template could have written it. Mama: welcoming, loving, notices when you look tired — pulled straight from Manav's words. Manav named in page 7 and page 8 — the giver is now in the text of the gift. Sticky moment 'being new' → page 1 ('before I ever meet you') and page 8 ('you are new to this world'). Hoped lesson 'to love her parents' → the whole arc IS a case for loving them, made by a witness."
+    },
+    "craft": {
+      "score": 19,
+      "notes": "Letter craft: direct address ('Dear Baby Pas'), specific observational detail ('the way he does when he loves someone', 'the small thing before you even notice it needed fixing', 'ordinary Tuesdays'), no lecture, no sentiment without evidence. Refrain on 'here is what I am / here is who is showing up' gives the second half a promise-shape. Bedtime-safe: page 8 lands on 'Welcome. — Uncle Manav.' — a signature, a whisper. Also: the closing line reads well out loud at a shower, which is where this book will be opened for the first time."
+    },
+    "family_tool": {
+      "score": 18,
+      "notes": "Two tools now, both real. (1) The parent-guide names 'The Wobbly Step' — page 3 as the reframe that early-parent love is in motion long before it is witnessed. (2) The book itself models what a good uncle sounds like — parents can loan the pattern later ('Uncle Manav wrote you a letter. Someday you will write one to somebody too.'). For a gift, that's a bigger family tool than a de-escalation script would be."
+    },
+    "total": 93,
+    "pattern_used": "personal-letter (from giver to newborn, not in story-patterns.md — see story_core notes)",
+    "notes": "Gift order. Buyer/giver is Uncle Manav (brownmanbeard@gmail.com); recipients are the Pascall family — his close friend Clevon (papa), Clevon's wife (mama), and their soon-to-be-born daughter, whom Manav is calling 'Baby Pas' as an affectionate placeholder until they choose a name. The reference photo shows the parents-to-be; there is no photo of the baby. Azad (page 4) is Manav's own son; Clevon has been an uncle to him. Character-notes.md enforces: Baby Pas is drawn from behind, bundled, or at a distance — never with an invented face. Delivery: gift certificate at delivery, not the magic URL directly (per gift-order convention on take-it-with-you)."
+  }
+}

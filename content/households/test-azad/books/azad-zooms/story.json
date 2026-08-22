@@ -1,0 +1,59 @@
+{
+  "id": "azad-zooms",
+  "title": "Azad ZOOMS",
+  "by": "Little Fables, for Azad",
+  "kind": "quick",
+  "source": "family-original",
+  "status": "draft",
+  "theme": {
+    "paper": "#FFF4D6",
+    "ink": "#141414",
+    "accent": "#E63946",
+    "hush": "#5B6B7A"
+  },
+  "chapters": [
+    {
+      "title": "One Big Zoom Day",
+      "pages": [
+        { "text": "This is Azad. He is THREE. Sometimes FOUR. It depends on the day. But every single day — every single ONE — Azad is FAST. And FOCUSED. And STRONG." },
+        { "text": "MORNING! Grass still wet! The soccer ball wiggles up close. \"Kick me, Azad,\" it says. \"But — FOCUS.\" Azad squares his shoulders. Two eyes. One ball." },
+        { "text": "BOOT! WHOOSH! GOOOOOAL! The ball spins right into the net and cheers up at him: \"STRONG! That's you!\"" },
+        { "text": "AFTERNOON! Ice cold! The puck slides in sideways. \"Get me, Azad,\" it hums. \"But — FOCUS.\" Azad tightens his grip on the stick. Two eyes. One puck." },
+        { "text": "WHISH! CLACK! GOOOOOAL! The puck skids into the corner of the net and cheers: \"FOCUSED! That's you!\"" },
+        { "text": "SUNSET! The little red moto revs by the gate. \"Ride me, Azad,\" it rumbles. \"But — FOCUS.\" Azad grips the handlebars. Two eyes. One road. VROOM! VRRRRRROOOM! Down the path he zooms! The wind rushes past and cheers: \"STRONG AND FOCUSED! That's you!\"" },
+        { "text": "Home. Cleats off. Skates off. Helmet on the hook. The moon peeks in through the window. \"Big day,\" the moon says. \"Big DAY,\" says Azad." },
+        { "text": "\"One more thing to focus on, Azad. Your eyes... on my eyes.\" Deep breath in. Slow breath out. Eyes soft. Breath slow. And Azad — the FAST one, the FOCUSED one, the STRONG one — closes his eyes. And dreams the whole zoom-y day all over again." }
+      ]
+    }
+  ],
+  "vocab": [
+    {
+      "word": "focus",
+      "syllables": ["fo", "cus"],
+      "kidDefinition": "look at one thing so hard that nothing else can pull your eyes away"
+    },
+    {
+      "word": "puck",
+      "syllables": ["puck"],
+      "kidDefinition": "the small hard black circle that slides across the ice in a game of hockey"
+    },
+    {
+      "word": "moto",
+      "syllables": ["mo", "to"],
+      "kidDefinition": "a little motorcycle, quick and shiny, with two wheels and a very happy engine"
+    },
+    {
+      "word": "handlebars",
+      "syllables": ["han", "dle", "bars"],
+      "kidDefinition": "the two grips on the front of a bike or moto that you hold to steer"
+    },
+    {
+      "word": "rumbles",
+      "syllables": ["rum", "bles"],
+      "kidDefinition": "makes a low, deep, growly sound — like an engine warming up or thunder far away"
+    }
+  ],
+  "pronunciations": {
+    "Azad": "uh-ZAHD"
+  }
+}

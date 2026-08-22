@@ -1,0 +1,32 @@
+# Household manifest — populated by scripts/order-publish.ts.
+# Metadata only; not read at runtime. Kept in the repo so we can rebuild
+# the household deterministically or audit who has what.
+
+household:
+  slug: pascall
+  name: "Pascall Family"
+  provisioned_id: 2a8cb059-aa6f-4387-8f2b-6771e033bc60
+
+child:
+  name: "Baby Pas"
+  band: "3-4"
+  provisioned_id: fc0c16e6-60a0-4c57-a1bf-2a88c32beabd
+
+parent:
+  display_name: "Pascall Family"
+  email: "brownmanbeard@gmail.com"
+  provisioned_id: eae32592-aa5f-4796-8aff-dc8973cb874e
+
+device:
+  label: "Baby Pas's iPad"
+  magic_url: "https://littlefables.app/read/welcome-baby-pas/s0iKVOz5WvcgXsTrJVBSUEZmbBln8hjL9nwWRx1vnKg"
+
+books:
+  - baby-pas-welcome
+
+order:
+  etsy_order_id: "pascall-test0826"
+  intake_id: "e4bf34bd-0cd3-41c1-b66a-29f94d747639"
+  intake_at: "2026-08-11"
+  delivered_at: null
+  notes: ""
