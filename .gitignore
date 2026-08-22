@@ -87,3 +87,9 @@ video/public/broll/
 # Art bake-off output — generated images, regenerate with `pnpm art:bakeoff`.
 bakeoff-out/
 content/bakeoff/style-refs/
+
+# Local research, review, and generated marketing outputs
+content/bakeoff/chatgpt-arm/
+outputs/
+assets/pinterest/
+_to_delete/
